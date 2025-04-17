@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package ni.pythonpanel.v1;
+
+import "google/protobuf/any.proto";
+
+option cc_enable_arenas = true;
+option csharp_namespace = "NationalInstruments.PythonPanel.V1";
+option go_package = "pythonpanelv1";
+option java_multiple_files = true;
+option java_outer_classname = "PythonPanelServiceProto";
+option java_package = "com.ni.pythonpanel.v1";
+option objc_class_prefix = "NIPP";
+option php_namespace = "NI\\PythonPanel\\V1";
+option ruby_package = "NI::PythonPanel::V1";
+
+// Service interface for connecting to python panels
+service PythonPanelService {
+  // Connect to a panel and open it
+  // Status Codes for errors:
+  // - NOT_FOUND: the file for the panel was not found
+  rpc Connect(ConnectRequest) returns (ConnectResponse);
+
+  // Disconnect from a panel (does not close the panel)
+  // Status Codes for errors:
+  // - NOT_FOUND: the panel with the specified id was not found
+  rpc Disconnect(DisconnectRequest) returns (DisconnectResponse);
+
+  // Get a value for a control on the panel
+  // Status Codes for errors:
+  // - NOT_FOUND: the panel with the specified id was not found
+  rpc GetValue(GetValueRequest) returns (GetValueResponse);
+
+  // Set a value for a control on the panel
+  // Status Codes for errors:
+  // - NOT_FOUND: the panel with the specified id was not found
+  rpc SetValue(SetValueRequest) returns (SetValueResponse);
+}
+
+message ConnectRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Absolute path of the panel's file on disk, or network path to the file
+  string panel_uri = 2;
+}
+
+message ConnectResponse {  
+}
+
+message DisconnectRequest {
+  // Unique ID of the panel
+  string panel_id = 1;  
+}
+
+message DisconnectResponse {  
+}
+
+message GetValueRequest {
+  // Unique ID of the panel
+  string panel_id = 1;  
+
+  // Unique ID of value
+  string value_id = 2;
+}
+
+message GetValueResponse {
+  // The value
+  google.protobuf.Any value = 1;
+}
+
+message SetValueRequest {
+  // Unique ID of the panel
+  string panel_id = 1;  
+  
+  // Unique ID of the value
+  string value_id = 2;
+
+  // The value
+  google.protobuf.Any value = 3;
+}
+
+message SetValueResponse {  
+}
