@@ -1,1 +1,1 @@
-"""NI Panel"""
+"""The NI Panel."""
