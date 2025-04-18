@@ -1,0 +1,43 @@
+name: Check nipanel
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  POETRY_VERSION: 1.8.2
+  PYTHON_VERSION: 3.11.9
+
+jobs:
+  check_nipanel:
+    name: Check nipanel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v9
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Check for lock changes
+        run: poetry check --lock
+      - name: Cache virtualenv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Install nipanel
+        run: poetry install -v
+      - name: Lint
+        run: poetry run ni-python-styleguide lint
+      - name: Mypy static analysis (Linux)
+        run:  poetry run mypy
+      - name: Mypy static analysis (Windows)
+        run:  poetry run mypy --platform win32
+      - name: Bandit security checks
+        run:  poetry run bandit -c pyproject.toml -r src/nipanel

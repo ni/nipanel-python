@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "nipanel"
+version = "0.1.0"
+description = "NI Panel Python API"
+authors = ["NI <opensource@ni.com>"]
+readme = "README.md"
+packages = [{ include = "nipanel", from = "src" }, { include = "ni", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+grpcio = {version=">=1.49.0,<2.0"}
+protobuf = {version=">=4.21"}
+
+[tool.poetry.group.lint.dependencies]
+bandit = { version = ">=1.7", extras = ["toml"] }
+ni-python-styleguide = ">=0.4.1"
+mypy = ">=1.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = ">=7.2"
+pytest-cov = ">=4.0"
+pytest-mock = ">=3.0"
+
+[tool.poetry.group.codegen.dependencies]
+grpcio-tools = [
+  {version = "1.49.1", python = ">=3.9,<3.12"},
+  {version = "1.59.0", python = ">=3.12,<3.13"},
+  {version = "1.67.0", python = "^3.13"},
+]
+mypy-protobuf = ">=3.4"
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ni-python-styleguide]
+extend_exclude = ".tox,docs,src/ni/pythonpanel/v1"
+
+[tool.mypy]
+files = "examples/,src/nipanel/,tests/"
+namespace_packages = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = [
+  # https://github.com/ni/hightime/issues/4 - Add type annotations
+  "hightime.*",
+]
+ignore_missing_imports = true
+
+[tool.bandit]
+skips = [
+  "B101", # assert_used
+]
