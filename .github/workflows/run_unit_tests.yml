@@ -30,20 +30,13 @@ jobs:
         uses: Gr1N/setup-poetry@v9
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - name: Restore cached virtualenv
-        uses: actions/cache/restore@v4
-        id: restore-nipanel
+      - name: Cache virtualenv
+        uses: actions/cache@v4
         with:
           path: .venv
           key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install nipanel
         run: poetry install -v
-      - name: Save cached virtualenv
-        uses: actions/cache/save@v4
-        if: steps.restore-nipanel.outputs.cache-hit != 'true'
-        with:
-          path: .venv
-          key: ${{ steps.restore-nipanel.outputs.cache-primary-key }}
       - name: Run unit tests and code coverage
         run: poetry run pytest ./tests/unit -v --cov=nipanel --junitxml=test_results/nipanel-${{ matrix.os }}-py${{ matrix.python-version }}.xml
       - name: Upload test results

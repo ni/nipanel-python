@@ -26,22 +26,15 @@ jobs:
           poetry-version: ${{ env.POETRY_VERSION }}
       - name: Check for lock changes
         run: poetry check --lock
-      - name: Restore cached virtualenv
-        uses: actions/cache/restore@v4
-        id: restore-nipanel
+      - name: Cache virtualenv
+        uses: actions/cache@v4
         with:
           path: .venv
           key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install nipanel
         run: poetry install -v
-      - name: Save cached virtualenv
-        uses: actions/cache/save@v4
-        if: steps.restore-nipanel.outputs.cache-hit != 'true'
-        with:
-          path: .venv
-          key: ${{ steps.restore-nipanel.outputs.cache-primary-key }}
       - name: Lint
-        run: poetry run ni-python-styleguide lint ./src/nipanel ./tests ./examples
+        run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (Linux)
         run:  poetry run mypy
       - name: Mypy static analysis (Windows)
