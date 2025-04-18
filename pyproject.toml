@@ -16,6 +16,11 @@ bandit = { version = ">=1.7", extras = ["toml"] }
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
 
+[tool.poetry.group.test.dependencies]
+pytest = ">=7.2"
+pytest-cov = ">=4.0"
+pytest-mock = ">=3.0"
+
 [tool.poetry.group.codegen.dependencies]
 grpcio-tools = [
   {version = "1.49.1", python = ">=3.9,<3.12"},
