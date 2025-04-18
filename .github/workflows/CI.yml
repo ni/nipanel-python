@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  check_nipanel:
+    name: Check
+    uses: ./.github/workflows/check_nipanel.yml
+  run_unit_tests:
+    name: Run unit tests
+    uses: ./.github/workflows/run_unit_tests.yml
+    needs: [check_nipanel]
+  report_test_results:
+    name: Report test results
+    uses: ./.github/workflows/report_test_results.yml
+    needs: [run_unit_tests]
+    if: always()

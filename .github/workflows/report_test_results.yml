@@ -1,0 +1,31 @@
+name: Report test results
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  report_test_results:
+    name: Report test results
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          path: test_results
+          pattern: test_results_*
+          merge-multiple: true
+      - name: List downloaded files
+        run: ls -lR
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "test_results/**/*.xml"
+        if: always()

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import python_panel_service_pb2 as python__panel__service__pb2
+from ni.pythonpanel.v1 import python_panel_service_pb2 as ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2
 
 
 class PythonPanelServiceStub(object):
@@ -17,23 +17,23 @@ class PythonPanelServiceStub(object):
         """
         self.Connect = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/Connect',
-                request_serializer=python__panel__service__pb2.ConnectRequest.SerializeToString,
-                response_deserializer=python__panel__service__pb2.ConnectResponse.FromString,
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.FromString,
                 )
         self.Disconnect = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/Disconnect',
-                request_serializer=python__panel__service__pb2.DisconnectRequest.SerializeToString,
-                response_deserializer=python__panel__service__pb2.DisconnectResponse.FromString,
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.FromString,
                 )
         self.GetValue = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/GetValue',
-                request_serializer=python__panel__service__pb2.GetValueRequest.SerializeToString,
-                response_deserializer=python__panel__service__pb2.GetValueResponse.FromString,
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
                 )
         self.SetValue = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/SetValue',
-                request_serializer=python__panel__service__pb2.SetValueRequest.SerializeToString,
-                response_deserializer=python__panel__service__pb2.SetValueResponse.FromString,
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
                 )
 
 
@@ -82,23 +82,23 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Connect': grpc.unary_unary_rpc_method_handler(
                     servicer.Connect,
-                    request_deserializer=python__panel__service__pb2.ConnectRequest.FromString,
-                    response_serializer=python__panel__service__pb2.ConnectResponse.SerializeToString,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.SerializeToString,
             ),
             'Disconnect': grpc.unary_unary_rpc_method_handler(
                     servicer.Disconnect,
-                    request_deserializer=python__panel__service__pb2.DisconnectRequest.FromString,
-                    response_serializer=python__panel__service__pb2.DisconnectResponse.SerializeToString,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.SerializeToString,
             ),
             'GetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.GetValue,
-                    request_deserializer=python__panel__service__pb2.GetValueRequest.FromString,
-                    response_serializer=python__panel__service__pb2.GetValueResponse.SerializeToString,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.SerializeToString,
             ),
             'SetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.SetValue,
-                    request_deserializer=python__panel__service__pb2.SetValueRequest.FromString,
-                    response_serializer=python__panel__service__pb2.SetValueResponse.SerializeToString,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -123,8 +123,8 @@ class PythonPanelService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/Connect',
-            python__panel__service__pb2.ConnectRequest.SerializeToString,
-            python__panel__service__pb2.ConnectResponse.FromString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -140,8 +140,8 @@ class PythonPanelService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/Disconnect',
-            python__panel__service__pb2.DisconnectRequest.SerializeToString,
-            python__panel__service__pb2.DisconnectResponse.FromString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -157,8 +157,8 @@ class PythonPanelService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/GetValue',
-            python__panel__service__pb2.GetValueRequest.SerializeToString,
-            python__panel__service__pb2.GetValueResponse.FromString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -174,7 +174,7 @@ class PythonPanelService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValue',
-            python__panel__service__pb2.SetValueRequest.SerializeToString,
-            python__panel__service__pb2.SetValueResponse.FromString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
