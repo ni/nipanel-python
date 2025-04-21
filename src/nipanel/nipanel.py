@@ -4,19 +4,22 @@ from google.protobuf import any_pb2
 import ni.pythonpanel.v1.python_panel_service_pb2 as python_panel_service_pb2
 import ni.pythonpanel.v1.python_panel_service_pb2_grpc as python_panel_service_pb2_grpc
 
+
 class NiPanel:
     """
     This class allows you to access controls on the panel
     """
+
     def __init__(self):
-        self._stub = None # will be a PythonPanelServiceStub
+        self._stub = None  # will be a PythonPanelServiceStub
         self.panel_uri = None
         self.panel_id = None
 
     def __enter__(self):
         self.connect()
+        return self
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, exc_traceback):
         self.disconnect()
 
     @classmethod
@@ -35,10 +38,10 @@ class NiPanel:
         panel.panel_id = str(uuid.uuid4())
         return panel
 
-    def connect(self): 
+    def connect(self):
         """
         Connect to the panel and open it.
-        """       
+        """
         # TODO: AB#3095680 - Use gRPC pool management from the Measurement Plugin SDK, create the _stub, and call _stub.Connect
         pass
 
