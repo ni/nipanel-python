@@ -1,31 +1,37 @@
+"""NI Panel."""
+
 import uuid
-import grpc
-from google.protobuf import any_pb2
-import ni.pythonpanel.v1.python_panel_service_pb2 as python_panel_service_pb2
-import ni.pythonpanel.v1.python_panel_service_pb2_grpc as python_panel_service_pb2_grpc
+from types import TracebackType
+from typing import Optional, Type
 
 
 class NiPanel:
-    """
-    This class allows you to access controls on the panel
-    """
+    """This class allows you to access controls on the panel."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the NiPanel instance."""
         self._stub = None  # will be a PythonPanelServiceStub
-        self.panel_uri = None
-        self.panel_id = None
+        self.panel_uri = ""
+        self.panel_id = ""
 
-    def __enter__(self):
+    def __enter__(self) -> "NiPanel":
+        """Enter the runtime context related to this object."""
         self.connect()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(
+        self,
+        exctype: Optional[Type[BaseException]],
+        excinst: Optional[BaseException],
+        exctb: Optional[TracebackType],
+    ) -> Optional[bool]:
+        """Exit the runtime context related to this object."""
         self.disconnect()
+        return None
 
     @classmethod
-    def streamlit_panel(cls, streamlit_script_path: str):
-        """
-        Create a panel using a streamlit script for the user interface
+    def streamlit_panel(cls, streamlit_script_path: str) -> "NiPanel":
+        """Create a panel using a streamlit script for the user interface.
 
         Args:
             streamlit_script_path: The file path of the streamlit script
@@ -38,23 +44,18 @@ class NiPanel:
         panel.panel_id = str(uuid.uuid4())
         return panel
 
-    def connect(self):
-        """
-        Connect to the panel and open it.
-        """
-        # TODO: AB#3095680 - Use gRPC pool management from the Measurement Plugin SDK, create the _stub, and call _stub.Connect
+    def connect(self) -> None:
+        """Connect to the panel and open it."""
+        # TODO: AB#3095680 - Use gRPC pool management, create the _stub, and call _stub.Connect
         pass
 
-    def disconnect(self):
-        """
-        Disconnect from the panel (does not close the panel).
-        """
-        # TODO: AB#3095680 - Use gRPC pool management from the Measurement Plugin SDK, call _stub.Disconnect
+    def disconnect(self) -> None:
+        """Disconnect from the panel (does not close the panel)."""
+        # TODO: AB#3095680 - Use gRPC pool management, call _stub.Disconnect
         pass
 
-    def get_value(self, value_id: str):
-        """
-        Get the value for a control on the panel
+    def get_value(self, value_id: str) -> object:
+        """Get the value for a control on the panel.
 
         Args:
             value_id: The id of the value
@@ -62,12 +63,11 @@ class NiPanel:
         Returns:
             object: The value
         """
-        # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type to return it
+        # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type
         return "placeholder value"
 
-    def set_value(self, value_id: str, value):
-        """
-        Set the value for a control on the panel
+    def set_value(self, value_id: str, value: object) -> None:
+        """Set the value for a control on the panel.
 
         Args:
             value_id: The id of the value
