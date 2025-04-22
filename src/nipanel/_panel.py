@@ -1,20 +1,29 @@
-"""NI Panel."""
+from __future__ import annotations
 
+import sys
 import uuid
 from types import TracebackType
-from typing import Optional, Type
+from typing import Optional, Type, TYPE_CHECKING
+
+from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 
-class NiPanel:
-    """This class allows you to access controls on the panel."""
+class Panel:
+    """This class allows you to connect to a panel and specify values for its controls."""
 
-    def __init__(self) -> None:
-        """Initialize the NiPanel instance."""
-        self._stub = None  # will be a PythonPanelServiceStub
-        self.panel_uri = ""
-        self.panel_id = ""
+    _stub: PythonPanelServiceStub | None
+    _panel_uri: str
+    _panel_id: str
 
-    def __enter__(self) -> "NiPanel":
+    __slots__ = ["_stub", "_panel_uri", "_panel_id", "__weakref__"]
+
+    def __enter__(self) -> Self:
         """Enter the runtime context related to this object."""
         self.connect()
         return self
@@ -30,18 +39,18 @@ class NiPanel:
         return None
 
     @classmethod
-    def streamlit_panel(cls, streamlit_script_path: str) -> "NiPanel":
+    def streamlit_panel(cls, streamlit_script_path: str) -> Self:
         """Create a panel using a streamlit script for the user interface.
 
         Args:
             streamlit_script_path: The file path of the streamlit script
 
         Returns:
-            NiPanel: A new panel associated with the streamlit script
+            A new panel associated with the streamlit script
         """
         panel = cls()
-        panel.panel_uri = streamlit_script_path
-        panel.panel_id = str(uuid.uuid4())
+        panel._panel_uri = streamlit_script_path
+        panel._panel_id = str(uuid.uuid4())
         return panel
 
     def connect(self) -> None:
@@ -61,7 +70,7 @@ class NiPanel:
             value_id: The id of the value
 
         Returns:
-            object: The value
+            The value
         """
         # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type
         return "placeholder value"
