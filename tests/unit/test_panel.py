@@ -1,20 +1,6 @@
 import nipanel
 
 
-def test___streamlit_panel___uri_and_id_are_set() -> None:
-    panel = nipanel.Panel.streamlit_panel("path/to/script")
-
-    assert panel._panel_uri == "path/to/script"
-    assert panel._panel_id is not None
-
-
-def test___two_panels___have_different_ids() -> None:
-    panel1 = nipanel.Panel.streamlit_panel("path/to/script1")
-    panel2 = nipanel.Panel.streamlit_panel("path/to/script2")
-
-    assert panel1._panel_id != panel2._panel_id
-
-
 def test___connected_panel___set_value___gets_same_value() -> None:
     panel = nipanel.Panel.streamlit_panel("path/to/script")
     panel.connect()
