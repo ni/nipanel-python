@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-import uuid
 from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type, TYPE_CHECKING
@@ -24,10 +23,20 @@ class Panel(ABC):
 
     __slots__ = ["_stub", "_panel_uri", "_panel_id", "__weakref__"]
 
-    def __init__(self, panel_uri: str) -> None:
+    def __init__(self, panel_uri: str, panel_id: str) -> None:
         """Initialize the panel."""
         self._panel_uri = panel_uri
-        self._panel_id = str(uuid.uuid4())
+        self._panel_id = panel_id
+
+    @property
+    def panel_uri(self) -> str:
+        """Read-only accessor for the panel URI."""
+        return self._panel_uri
+
+    @property
+    def panel_id(self) -> str:
+        """Read-only accessor for the panel ID."""
+        return self._panel_id
 
     def __enter__(self) -> Self:
         """Enter the runtime context related to this object."""
