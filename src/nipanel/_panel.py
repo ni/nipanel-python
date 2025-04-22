@@ -18,6 +18,17 @@ if TYPE_CHECKING:
 class Panel(ABC):
     """This class allows you to connect to a panel and specify values for its controls."""
 
+    _stub: PythonPanelServiceStub | None
+    _panel_uri: str
+    _panel_id: str
+
+    __slots__ = ["_stub", "_panel_uri", "_panel_id", "__weakref__"]
+
+    def __init__(self, panel_uri: str) -> None:
+        """Initialize the panel."""
+        self._panel_uri = panel_uri
+        self._panel_id = str(uuid.uuid4())
+
     def __enter__(self) -> Self:
         """Enter the runtime context related to this object."""
         self.connect()
@@ -33,17 +44,16 @@ class Panel(ABC):
         self.disconnect()
         return None
 
-    @abstractmethod
     def connect(self) -> None:
         """Connect to the panel and open it."""
-        pass
+        # TODO: AB#3095680 - Use gRPC pool management, create the _stub, and call _stub.Connect
+        self._resolve_service_location()
 
-    @abstractmethod
     def disconnect(self) -> None:
         """Disconnect from the panel (does not close the panel)."""
+        # TODO: AB#3095680 - Use gRPC pool management, call _stub.Disconnect
         pass
 
-    @abstractmethod
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.
 
@@ -53,9 +63,9 @@ class Panel(ABC):
         Returns:
             The value
         """
-        pass
+        # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type
+        return "placeholder value"
 
-    @abstractmethod
     def set_value(self, value_id: str, value: object) -> None:
         """Set the value for a control on the panel.
 
@@ -63,46 +73,10 @@ class Panel(ABC):
             value_id: The id of the value
             value: The value
         """
-        pass
-
-    @classmethod
-    def streamlit_panel(cls, streamlit_script_path: str) -> Panel:
-        """Create a panel using a streamlit script for the user interface.
-
-        Args:
-            streamlit_script_path: The file path of the Streamlit script.
-
-        Returns:
-            A new StreamlitPanel instance.
-        """
-        return _StreamlitPanel(streamlit_script_path)
-
-
-class _StreamlitPanel(Panel):
-
-    _stub: PythonPanelServiceStub | None
-    _streamlit_script_uri: str
-    _panel_id: str
-
-    __slots__ = ["_stub", "_streamlit_script_uri", "_panel_id"]
-
-    def __init__(self, streamlit_script_uri: str):
-        self._streamlit_script_uri = streamlit_script_uri
-        self._panel_id = str(uuid.uuid4())
-        self._stub = None  # Initialize the gRPC stub
-
-    def connect(self) -> None:
-        # TODO: AB#3095680 - Use gRPC pool management, create the _stub, and call _stub.Connect
-        pass
-
-    def disconnect(self) -> None:
-        # TODO: AB#3095680 - Use gRPC pool management, call _stub.Disconnect
-        pass
-
-    def get_value(self, value_id: str) -> object:
-        # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type
-        return "placeholder value"
-
-    def set_value(self, value_id: str, value: object) -> None:
         # TODO: AB#3095681 - Convert the value to an Any and pass it to _stub.SetValue
         pass
+
+    @abstractmethod
+    def _resolve_service_location(self) -> str:
+        """Resolve the service location for the panel."""
+        raise NotImplementedError

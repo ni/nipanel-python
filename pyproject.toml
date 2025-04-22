@@ -52,3 +52,7 @@ ignore_missing_imports = true
 skips = [
   "B101", # assert_used
 ]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --strict-markers"
+testpaths = ["src/nipanel", "tests"]
