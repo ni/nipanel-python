@@ -1,4 +1,6 @@
 from nipanel._panel import Panel
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 
 class StreamlitPanel(Panel):
@@ -18,6 +20,10 @@ class StreamlitPanel(Panel):
         """
         super().__init__(panel_id, streamlit_script_uri)
 
-    def _resolve_service_location(self) -> str:
-        # TODO: AB#3095680 - resolve to the Streamlit PythonPanelService
-        return ""
+    def _get_channel_url(self) -> str:
+        with GrpcChannelPool() as grpc_channel_pool:
+            discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
+            service_location = discovery_client.resolve_service(
+                "ni.pythonpanel.v1.PythonPanelService"
+            )
+        return service_location.insecure_address

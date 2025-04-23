@@ -10,6 +10,7 @@ packages = [{ include = "nipanel", from = "src" }, { include = "ni", from = "src
 python = "^3.9"
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
+ni-measurement-plugin-sdk = {version=">=2.3"}
 
 [tool.poetry.group.lint.dependencies]
 bandit = { version = ">=1.7", extras = ["toml"] }
@@ -56,3 +57,8 @@ skips = [
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --strict-markers"
 testpaths = ["src/nipanel", "tests"]
+
+[tool.black]
+extend-exclude = '''
+/src/ni/pythonpanel/v1/
+'''

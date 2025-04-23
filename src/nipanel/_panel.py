@@ -5,6 +5,9 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type, TYPE_CHECKING
 
+import grpc
+from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest
+from ni.pythonpanel.v1.python_panel_service_pb2 import DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 if TYPE_CHECKING:
@@ -55,13 +58,20 @@ class Panel(ABC):
 
     def connect(self) -> None:
         """Connect to the panel and open it."""
-        # TODO: AB#3095680 - Use gRPC pool management, create the _stub, and call _stub.Connect
-        self._resolve_service_location()
+        # TODO: use the channel pool
+        channel = grpc.insecure_channel(self._get_channel_url())
+        self._stub = PythonPanelServiceStub(channel)
+        connect_request = ConnectRequest(
+            panel_id=self._panel_id, panel_uri=self._panel_uri
+        )
+        self._stub.Connect(connect_request)
 
     def disconnect(self) -> None:
         """Disconnect from the panel (does not close the panel)."""
-        # TODO: AB#3095680 - Use gRPC pool management, call _stub.Disconnect
-        pass
+        disconnect_request = DisconnectRequest(self._panel_id)
+        self._stub.Disconnect(disconnect_request)
+        self._stub = None
+        # TODO: channel pool cleanup?
 
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.
@@ -86,6 +96,6 @@ class Panel(ABC):
         pass
 
     @abstractmethod
-    def _resolve_service_location(self) -> str:
+    def _get_channel_url(self) -> str:
         """Resolve the service location for the panel."""
         raise NotImplementedError
