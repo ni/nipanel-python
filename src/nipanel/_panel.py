@@ -5,10 +5,12 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type, TYPE_CHECKING
 
-import grpc
+from grpc import RpcError, StatusCode, insecure_channel
 from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2 import DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+
+from nipanel._panel_not_found_error import PanelNotFoundError
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):
@@ -59,17 +61,36 @@ class Panel(ABC):
     def connect(self) -> None:
         """Connect to the panel and open it."""
         # TODO: use the channel pool
-        channel = grpc.insecure_channel(self._get_channel_url())
+        channel = insecure_channel(self._get_channel_url())
         self._stub = PythonPanelServiceStub(channel)
+    
         connect_request = ConnectRequest(
             panel_id=self._panel_id, panel_uri=self._panel_uri
         )
-        self._stub.Connect(connect_request)
+
+        try:
+            self._stub.Connect(connect_request)
+        except RpcError as e:
+            if e.code() == StatusCode.NOT_FOUND:
+                raise PanelNotFoundError(self._panel_id, self._panel_uri) from e
+            else:
+                raise
 
     def disconnect(self) -> None:
         """Disconnect from the panel (does not close the panel)."""
-        disconnect_request = DisconnectRequest(self._panel_id)
-        self._stub.Disconnect(disconnect_request)
+        disconnect_request = DisconnectRequest(panel_id=self._panel_id)
+
+        if self._stub is None:
+            raise RuntimeError("connect() must be called before disconnect()")
+        
+        try:
+            self._stub.Disconnect(disconnect_request)
+        except RpcError as e:
+            if e.code() == StatusCode.NOT_FOUND:
+                raise PanelNotFoundError(self._panel_id, self._panel_uri) from e
+            else:
+                raise
+
         self._stub = None
         # TODO: channel pool cleanup?
 

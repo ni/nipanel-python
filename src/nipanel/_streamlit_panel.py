@@ -1,6 +1,7 @@
-from nipanel._panel import Panel
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+
+from nipanel._panel import Panel
 
 
 class StreamlitPanel(Panel):
