@@ -18,25 +18,25 @@ class Panel(ABC):
     """This class allows you to connect to a panel and specify values for its controls."""
 
     _stub: PythonPanelServiceStub | None
-    _panel_uri: str
     _panel_id: str
+    _panel_uri: str
 
-    __slots__ = ["_stub", "_panel_uri", "_panel_id", "__weakref__"]
+    __slots__ = ["_stub", "_panel_id", "_panel_uri", "__weakref__"]
 
-    def __init__(self, panel_uri: str, panel_id: str) -> None:
+    def __init__(self, panel_id: str, panel_uri: str) -> None:
         """Initialize the panel."""
-        self._panel_uri = panel_uri
         self._panel_id = panel_id
-
-    @property
-    def panel_uri(self) -> str:
-        """Read-only accessor for the panel URI."""
-        return self._panel_uri
+        self._panel_uri = panel_uri
 
     @property
     def panel_id(self) -> str:
         """Read-only accessor for the panel ID."""
         return self._panel_id
+
+    @property
+    def panel_uri(self) -> str:
+        """Read-only accessor for the panel URI."""
+        return self._panel_uri
 
     def __enter__(self) -> Self:
         """Enter the runtime context related to this object."""

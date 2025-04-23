@@ -6,17 +6,17 @@ class StreamlitPanel(Panel):
 
     __slots__ = ()
 
-    def __init__(self, streamlit_script_uri: str, panel_id: str) -> None:
+    def __init__(self, panel_id: str, streamlit_script_uri: str) -> None:
         """Create a panel using a Streamlit script for the user interface.
 
         Args:
-            streamlit_script_uri: The file path of the Streamlit script.
             panel_id: A unique identifier for the panel.
+            streamlit_script_uri: The file path of the Streamlit script.
 
         Returns:
             A new StreamlitPanel instance.
         """
-        super().__init__(streamlit_script_uri, panel_id)
+        super().__init__(panel_id, streamlit_script_uri)
 
     def _resolve_service_location(self) -> str:
         # TODO: AB#3095680 - resolve to the Streamlit PythonPanelService
