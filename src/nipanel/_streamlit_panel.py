@@ -21,7 +21,7 @@ class StreamlitPanel(Panel):
         """
         super().__init__(panel_id, streamlit_script_uri)
 
-    def _get_channel_url(self) -> str:
+    def _resolve_service_address(self) -> str:
         with GrpcChannelPool() as grpc_channel_pool:
             discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
             service_location = discovery_client.resolve_service(

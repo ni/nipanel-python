@@ -60,7 +60,7 @@ class Panel(ABC):
     def connect(self) -> None:
         """Connect to the panel and open it."""
         # TODO: use the channel pool
-        channel = insecure_channel(self._get_channel_url())
+        channel = insecure_channel(self._resolve_service_address())
         self._stub = PythonPanelServiceStub(channel)
         connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
 
@@ -113,6 +113,6 @@ class Panel(ABC):
         pass
 
     @abstractmethod
-    def _get_channel_url(self) -> str:
+    def _resolve_service_address(self) -> str:
         """Resolve the service location for the panel."""
         raise NotImplementedError

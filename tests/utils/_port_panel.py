@@ -1,11 +1,11 @@
 from nipanel._panel import Panel
 
 
-class FakePanel(Panel):
-    """This class allows you to connect to the FakePythonPanelService, for testing."""
+class PortPanel(Panel):
+    """This class allows you to connect to the PythonPanelService with a specified port, for testing."""
 
     def __init__(self, port: int, panel_id: str, panel_uri: str) -> None:
-        """Create a fake panel, for testing.
+        """Create a panel and connect to a specified port, for testing.
 
         Args:
             port: The port number for the gRPC server.
@@ -18,5 +18,5 @@ class FakePanel(Panel):
         super().__init__(panel_id, panel_uri)
         self.port = port
 
-    def _get_channel_url(self) -> str:
+    def _resolve_service_address(self) -> str:
         return f"localhost:{self.port}"
