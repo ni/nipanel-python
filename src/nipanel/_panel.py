@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 import sys
+import time
 from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Type
 
-from grpc import RpcError, StatusCode
+from grpc import RpcError
 from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
-
-from nipanel._panel_not_found_error import PanelNotFoundError
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):
@@ -22,6 +21,8 @@ if TYPE_CHECKING:
 class Panel(ABC):
     """This class allows you to connect to a panel and specify values for its controls."""
 
+    RETRY_WAIT_TIME = 1  # time in seconds to wait before retrying connection
+
     _channel_pool: GrpcChannelPool
     _stub: PythonPanelServiceStub | None
     _panel_id: str
@@ -32,6 +33,7 @@ class Panel(ABC):
     def __init__(self, panel_id: str, panel_uri: str) -> None:
         """Initialize the panel."""
         self._channel_pool = GrpcChannelPool()
+        self._stub = None
         self._panel_id = panel_id
         self._panel_uri = panel_uri
 
@@ -65,31 +67,22 @@ class Panel(ABC):
         address = self._resolve_service_address()
         channel = self._channel_pool.get_channel(address)
         self._stub = PythonPanelServiceStub(channel)
-        connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
 
+        connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
         try:
             self._stub.Connect(connect_request)
-        except RpcError as e:
-            if e.code() == StatusCode.NOT_FOUND:
-                raise PanelNotFoundError(self._panel_id, self._panel_uri) from e
-            else:
-                raise
+        except RpcError:
+            # retry the connection if it fails, but only once
+            time.sleep(self.RETRY_WAIT_TIME)
+            self._stub.Connect(connect_request)
 
     def disconnect(self) -> None:
         """Disconnect from the panel (does not close the panel)."""
-        disconnect_request = DisconnectRequest(panel_id=self._panel_id)
-
         if self._stub is None:
             raise RuntimeError("connect() must be called before disconnect()")
 
-        try:
-            self._stub.Disconnect(disconnect_request)
-        except RpcError as e:
-            if e.code() == StatusCode.NOT_FOUND:
-                raise PanelNotFoundError(self._panel_id, self._panel_uri) from e
-            else:
-                raise
-
+        disconnect_request = DisconnectRequest(panel_id=self._panel_id)
+        self._stub.Disconnect(disconnect_request)
         self._stub = None
         self._channel_pool.close()
 

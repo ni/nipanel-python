@@ -18,9 +18,13 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     """Fake implementation of the PythonPanelServicer for testing."""
 
     _values = {"test_value": any_pb2.Any()}
+    _fail_next_connect = False
 
     def Connect(self, request: ConnectRequest, context: Any) -> ConnectResponse:  # noqa: N802
         """Just a trivial implementation for testing."""
+        if self._fail_next_connect:
+            self._fail_next_connect = False
+            raise ValueError("Simulate a failure to Connect.")
         return ConnectResponse()
 
     def Disconnect(  # noqa: N802
@@ -38,3 +42,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         """Just a trivial implementation for testing."""
         self._values[request.value_id] = request.value
         return SetValueResponse()
+
+    @classmethod
+    def fail_next_connect(cls) -> None:
+        """Set whether the Connect method should fail the next time it is called."""
+        cls._fail_next_connect = True
