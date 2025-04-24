@@ -5,9 +5,10 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Type
 
-from grpc import RpcError, StatusCode, insecure_channel
+from grpc import RpcError, StatusCode
 from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_not_found_error import PanelNotFoundError
 
@@ -21,14 +22,16 @@ if TYPE_CHECKING:
 class Panel(ABC):
     """This class allows you to connect to a panel and specify values for its controls."""
 
+    _channel_pool: GrpcChannelPool
     _stub: PythonPanelServiceStub | None
     _panel_id: str
     _panel_uri: str
 
-    __slots__ = ["_stub", "_panel_id", "_panel_uri", "__weakref__"]
+    __slots__ = ["_channel_pool", "_stub", "_panel_id", "_panel_uri", "__weakref__"]
 
     def __init__(self, panel_id: str, panel_uri: str) -> None:
         """Initialize the panel."""
+        self._channel_pool = GrpcChannelPool()
         self._panel_id = panel_id
         self._panel_uri = panel_uri
 
@@ -59,8 +62,8 @@ class Panel(ABC):
 
     def connect(self) -> None:
         """Connect to the panel and open it."""
-        # TODO: use the channel pool
-        channel = insecure_channel(self._resolve_service_address())
+        address = self._resolve_service_address()
+        channel = self._channel_pool.get_channel(address)
         self._stub = PythonPanelServiceStub(channel)
         connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
 
@@ -88,7 +91,7 @@ class Panel(ABC):
                 raise
 
         self._stub = None
-        # TODO: channel pool cleanup?
+        self._channel_pool.close()
 
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.
