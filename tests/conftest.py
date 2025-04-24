@@ -1,4 +1,4 @@
-"""Fixtures for testing gRPC services."""
+"""Fixtures for testing."""
 
 from concurrent import futures
 from typing import Any, Generator
@@ -14,24 +14,23 @@ from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
 
 
 @pytest.fixture
-def fake_python_panel_service() -> Generator[tuple[grpc.Server, int], Any, None]:
+def fake_python_panel_service() -> Generator[tuple[FakePythonPanelServicer, int], Any, None]:
     """Fixture to create a FakePythonPanelServicer for testing."""
-    # Create an in-process gRPC server
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    thread_pool = futures.ThreadPoolExecutor(max_workers=10)
+    server = grpc.server(thread_pool)
     servicer = FakePythonPanelServicer()
-
     add_PythonPanelServiceServicer_to_server(servicer, server)
-    port = server.add_insecure_port("[::]:0")  # Bind to an available port
+    port = server.add_insecure_port("[::]:0")
     server.start()
-    yield server, port
+    yield servicer, port
     server.stop(None)
 
 
 @pytest.fixture
 def fake_python_panel_service_stub(
-    fake_python_panel_service: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
 ) -> Generator[PythonPanelServiceStub, Any, None]:
-    """Fixture to create a gRPC stub for the FakePythonPanelService."""
+    """Fixture to attach a PythonPanelSericeStub to a FakePythonPanelService."""
     _, port = fake_python_panel_service
     channel = grpc.insecure_channel(f"localhost:{port}")
     yield PythonPanelServiceStub(channel)

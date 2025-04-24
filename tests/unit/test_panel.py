@@ -1,4 +1,3 @@
-import grpc
 import pytest
 
 from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
@@ -12,7 +11,7 @@ def test___panel___has_panel_id_and_panel_uri() -> None:
 
 
 def test___connected_panel___set_value___gets_same_value(
-    fake_python_panel_service: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
 ) -> None:
     _, port = fake_python_panel_service
     panel = PortPanel(port, "my_panel", "path/to/script")
@@ -26,7 +25,7 @@ def test___connected_panel___set_value___gets_same_value(
 
 
 def test___with_panel___set_value___gets_same_value(
-    fake_python_panel_service: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
 ) -> None:
     _, port = fake_python_panel_service
     with PortPanel(port, "my_panel", "path/to/script") as panel:
@@ -37,7 +36,7 @@ def test___with_panel___set_value___gets_same_value(
 
 
 def test___new_panel___disconnect___raises_runtime_error(
-    fake_python_panel_service: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
 ) -> None:
     _, port = fake_python_panel_service
     panel = PortPanel(port, "my_panel", "path/to/script")
@@ -47,12 +46,12 @@ def test___new_panel___disconnect___raises_runtime_error(
 
 
 def test___first_connect_fails___connect___gets_value(
-    fake_python_panel_service: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
 ) -> None:
     """Test that panel.connect() will automatically retry once."""
+    servicer, port = fake_python_panel_service
     # Simulate a failure on the first connect attempt
-    FakePythonPanelServicer.fail_next_connect()
-    _, port = fake_python_panel_service
+    servicer.fail_next_connect()
     panel = PortPanel(port, "my_panel", "path/to/script")
 
     panel.connect()
