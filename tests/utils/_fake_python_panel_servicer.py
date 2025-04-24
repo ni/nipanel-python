@@ -1,9 +1,6 @@
-import time
-from concurrent import futures
 from typing import Any
 
 import google.protobuf.any_pb2 as any_pb2
-import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     ConnectRequest,
     ConnectResponse,
@@ -14,10 +11,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     SetValueRequest,
     SetValueResponse,
 )
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
-    PythonPanelServiceServicer,
-    add_PythonPanelServiceServicer_to_server,
-)
+from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceServicer
 
 
 class FakePythonPanelServicer(PythonPanelServiceServicer):
@@ -44,21 +38,3 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         """Just a trivial implementation for testing."""
         self._values[request.value_id] = request.value
         return SetValueResponse()
-
-
-def serve() -> None:
-    """Run the gRPC server."""
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    add_PythonPanelServiceServicer_to_server(FakePythonPanelServicer(), server)
-    server.add_insecure_port("[::]:50051")  # TODO: do we need to find a free port?
-    server.start()
-    print("Server is running on port 50051...")
-    try:
-        while True:
-            time.sleep(86400)  # Keep the server running
-    except KeyboardInterrupt:
-        server.stop(0)
-
-
-if __name__ == "__main__":
-    serve()
