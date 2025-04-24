@@ -12,6 +12,10 @@ grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 
+[tool.poetry.group.dev.dependencies]
+grpc-stubs = "^1.53"
+types-protobuf = ">=4.21"
+
 [tool.poetry.group.lint.dependencies]
 bandit = { version = ">=1.7", extras = ["toml"] }
 ni-python-styleguide = ">=0.4.1"

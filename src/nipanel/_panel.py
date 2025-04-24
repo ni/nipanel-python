@@ -3,11 +3,10 @@ from __future__ import annotations
 import sys
 from abc import ABC, abstractmethod
 from types import TracebackType
-from typing import Optional, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Type
 
 from grpc import RpcError, StatusCode, insecure_channel
-from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest
-from ni.pythonpanel.v1.python_panel_service_pb2 import DisconnectRequest
+from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 from nipanel._panel_not_found_error import PanelNotFoundError
@@ -63,10 +62,7 @@ class Panel(ABC):
         # TODO: use the channel pool
         channel = insecure_channel(self._get_channel_url())
         self._stub = PythonPanelServiceStub(channel)
-    
-        connect_request = ConnectRequest(
-            panel_id=self._panel_id, panel_uri=self._panel_uri
-        )
+        connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
 
         try:
             self._stub.Connect(connect_request)
@@ -82,7 +78,7 @@ class Panel(ABC):
 
         if self._stub is None:
             raise RuntimeError("connect() must be called before disconnect()")
-        
+
         try:
             self._stub.Disconnect(disconnect_request)
         except RpcError as e:
