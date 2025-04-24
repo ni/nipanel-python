@@ -20,8 +20,8 @@ from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
 )
 
 
-class FakePythonPanelService(PythonPanelServiceServicer):
-    """Fake implementation of the PythonPanelService for testing."""
+class FakePythonPanelServicer(PythonPanelServiceServicer):
+    """Fake implementation of the PythonPanelServicer for testing."""
 
     _values = {"test_value": any_pb2.Any()}
 
@@ -49,7 +49,7 @@ class FakePythonPanelService(PythonPanelServiceServicer):
 def serve() -> None:
     """Run the gRPC server."""
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    add_PythonPanelServiceServicer_to_server(FakePythonPanelService(), server)
+    add_PythonPanelServiceServicer_to_server(FakePythonPanelServicer(), server)
     server.add_insecure_port("[::]:50051")  # TODO: do we need to find a free port?
     server.start()
     print("Server is running on port 50051...")

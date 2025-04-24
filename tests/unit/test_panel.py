@@ -1,28 +1,6 @@
-from concurrent import futures
-from typing import Generator
-
 import grpc
-import pytest
-from google.protobuf.any_pb2 import Any
 
 from tests.utils._fake_panel import FakePanel
-from tests.utils._fake_python_panel_service import FakePythonPanelService
-
-
-@pytest.fixture
-def grpc_server() -> Generator[tuple[grpc.Server, int], Any, None]:
-    # Create an in-process gRPC server
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    servicer = FakePythonPanelService()
-    from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
-        add_PythonPanelServiceServicer_to_server,
-    )
-
-    add_PythonPanelServiceServicer_to_server(servicer, server)
-    port = server.add_insecure_port("[::]:0")  # Bind to an available port
-    server.start()
-    yield server, port
-    server.stop(None)
 
 
 def test___panel___has_panel_id_and_panel_uri() -> None:
@@ -32,9 +10,9 @@ def test___panel___has_panel_id_and_panel_uri() -> None:
 
 
 def test___connected_panel___set_value___gets_same_value(
-    grpc_server: tuple[grpc.Server, int],
+    fake_python_panel_service: tuple[grpc.Server, int],
 ) -> None:
-    _, port = grpc_server
+    _, port = fake_python_panel_service
     panel = FakePanel(port, "my_panel", "path/to/script")
     panel.connect()
 
@@ -45,8 +23,10 @@ def test___connected_panel___set_value___gets_same_value(
     panel.disconnect()
 
 
-def test___with_panel___set_value___gets_same_value(grpc_server: tuple[grpc.Server, int]) -> None:
-    _, port = grpc_server
+def test___with_panel___set_value___gets_same_value(
+    fake_python_panel_service: tuple[grpc.Server, int],
+) -> None:
+    _, port = fake_python_panel_service
     with FakePanel(port, "my_panel", "path/to/script") as panel:
         panel.set_value("test_id", "test_value")
 
