@@ -1,6 +1,7 @@
 from typing import Any
 
 import google.protobuf.any_pb2 as any_pb2
+import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     ConnectRequest,
     ConnectResponse,
@@ -24,7 +25,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         """Trivial implementation for testing."""
         if self._fail_next_connect:
             self._fail_next_connect = False
-            raise ValueError("Simulate a failure to Connect.")
+            context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated connection failure")
         return ConnectResponse()
 
     def Disconnect(  # noqa: N802

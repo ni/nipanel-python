@@ -1,3 +1,5 @@
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+
 from nipanel._panel import Panel
 
 
@@ -18,5 +20,5 @@ class PortPanel(Panel):
         super().__init__(panel_id, panel_uri)
         self.port = port
 
-    def _resolve_service_address(self) -> str:
+    def _resolve_service_address(self, discovery_client: DiscoveryClient) -> str:
         return f"localhost:{self.port}"

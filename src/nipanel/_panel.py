@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import sys
-import time
 from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Type
 
-from grpc import RpcError
-from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+
+from nipanel._panel_client import PanelClient
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 11):
@@ -21,19 +19,15 @@ if TYPE_CHECKING:
 class Panel(ABC):
     """This class allows you to connect to a panel and specify values for its controls."""
 
-    RETRY_WAIT_TIME = 1  # time in seconds to wait before retrying connection
-
-    _channel_pool: GrpcChannelPool
-    _stub: PythonPanelServiceStub | None
+    _panel_client: PanelClient
     _panel_id: str
     _panel_uri: str
 
-    __slots__ = ["_channel_pool", "_stub", "_panel_id", "_panel_uri", "__weakref__"]
+    __slots__ = ["_panel_client", "_panel_id", "_panel_uri", "__weakref__"]
 
     def __init__(self, panel_id: str, panel_uri: str) -> None:
         """Initialize the panel."""
-        self._channel_pool = GrpcChannelPool()
-        self._stub = None
+        self._panel_client = PanelClient(self._resolve_service_address)
         self._panel_id = panel_id
         self._panel_uri = panel_uri
 
@@ -64,27 +58,11 @@ class Panel(ABC):
 
     def connect(self) -> None:
         """Connect to the panel and open it."""
-        address = self._resolve_service_address()
-        channel = self._channel_pool.get_channel(address)
-        self._stub = PythonPanelServiceStub(channel)
-
-        connect_request = ConnectRequest(panel_id=self._panel_id, panel_uri=self._panel_uri)
-        try:
-            self._stub.Connect(connect_request)
-        except RpcError:
-            # retry the connection if it fails, but only once
-            time.sleep(self.RETRY_WAIT_TIME)
-            self._stub.Connect(connect_request)
+        self._panel_client.connect(self._panel_id, self._panel_uri)
 
     def disconnect(self) -> None:
         """Disconnect from the panel (does not close the panel)."""
-        if self._stub is None:
-            raise RuntimeError("connect() must be called before disconnect()")
-
-        disconnect_request = DisconnectRequest(panel_id=self._panel_id)
-        self._stub.Disconnect(disconnect_request)
-        self._stub = None
-        self._channel_pool.close()
+        self._panel_client.disconnect(self._panel_id)
 
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.
@@ -95,7 +73,7 @@ class Panel(ABC):
         Returns:
             The value
         """
-        # TODO: AB#3095681 - get the Any from _stub.GetValue and convert it to the correct type
+        # TODO: AB#3095681 - get the Any from _client.get_value and convert it to the correct type
         return "placeholder value"
 
     def set_value(self, value_id: str, value: object) -> None:
@@ -105,10 +83,10 @@ class Panel(ABC):
             value_id: The id of the value
             value: The value
         """
-        # TODO: AB#3095681 - Convert the value to an Any and pass it to _stub.SetValue
+        # TODO: AB#3095681 - Convert the value to an Any and pass it to _client.set_value
         pass
 
     @abstractmethod
-    def _resolve_service_address(self) -> str:
-        """Resolve the service location for the panel."""
+    def _resolve_service_address(self, discovery_client: DiscoveryClient) -> str:
+        """Resolve the service address for the panel."""
         raise NotImplementedError

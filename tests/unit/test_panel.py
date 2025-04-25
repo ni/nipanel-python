@@ -1,5 +1,3 @@
-import pytest
-
 from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
 from tests.utils._port_panel import PortPanel
 
@@ -33,16 +31,6 @@ def test___with_panel___set_value___gets_same_value(
 
         # TODO: AB#3095681 - change asserted value to test_value
         assert panel.get_value("test_id") == "placeholder value"
-
-
-def test___new_panel___disconnect___raises_runtime_error(
-    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
-) -> None:
-    _, port = fake_python_panel_service
-    panel = PortPanel(port, "my_panel", "path/to/script")
-
-    with pytest.raises(RuntimeError):
-        panel.disconnect()
 
 
 def test___first_connect_fails___connect___gets_value(
