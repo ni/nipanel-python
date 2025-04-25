@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import sys
-from abc import ABC, abstractmethod
+from abc import ABC
 from types import TracebackType
 from typing import TYPE_CHECKING
 
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+import grpc
 
 from nipanel._panel_client import PanelClient
 
@@ -25,9 +25,21 @@ class Panel(ABC):
 
     __slots__ = ["_panel_client", "_panel_id", "_panel_uri", "__weakref__"]
 
-    def __init__(self, panel_id: str, panel_uri: str) -> None:
+    def __init__(
+        self,
+        *,
+        panel_id: str,
+        panel_uri: str,
+        provided_interface: str,
+        service_class: str,
+        grpc_channel: grpc.Channel | None = None,
+    ) -> None:
         """Initialize the panel."""
-        self._panel_client = PanelClient(self._resolve_service_address)
+        self._panel_client = PanelClient(
+            provided_interface=provided_interface,
+            service_class=service_class,
+            grpc_channel=grpc_channel,
+        )
         self._panel_id = panel_id
         self._panel_uri = panel_uri
 
@@ -85,8 +97,3 @@ class Panel(ABC):
         """
         # TODO: AB#3095681 - Convert the value to an Any and pass it to _client.set_value
         pass
-
-    @abstractmethod
-    def _resolve_service_address(self, discovery_client: DiscoveryClient) -> str:
-        """Resolve the service address for the panel."""
-        raise NotImplementedError

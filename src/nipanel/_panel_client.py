@@ -21,8 +21,9 @@ class PanelClient:
 
     def __init__(
         self,
-        resolve_service_address_fn: Callable[[DiscoveryClient], str],
         *,
+        provided_interface: str,
+        service_class: str,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel: grpc.Channel | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
@@ -30,19 +31,19 @@ class PanelClient:
         """Initialize the panel client.
 
         Args:
-            resolve_service_address_fn: A function to resolve the service location.
+            provided_interface: The interface provided by the service.
+            service_class: The class of the service.
             discovery_client: An optional discovery client.
             grpc_channel: An optional panel gRPC channel.
             grpc_channel_pool: An optional gRPC channel pool.
         """
         self._initialization_lock = threading.Lock()
-        self._resolve_service_address_fn = resolve_service_address_fn
+        self._provided_interface = provided_interface
+        self._service_class = service_class
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
+        self._grpc_channel = grpc_channel
         self._stub: PythonPanelServiceStub | None = None
-
-        if grpc_channel is not None:
-            self._stub = PythonPanelServiceStub(grpc_channel)
 
     def connect(self, panel_id: str, panel_uri: str) -> None:
         """Connect to the panel and open it."""
@@ -56,18 +57,24 @@ class PanelClient:
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:
-            with self._initialization_lock:
-                if self._grpc_channel_pool is None:
-                    _logger.debug("Creating unshared GrpcChannelPool.")
-                    self._grpc_channel_pool = GrpcChannelPool()
-                if self._discovery_client is None:
-                    _logger.debug("Creating unshared DiscoveryClient.")
-                    self._discovery_client = DiscoveryClient(
-                        grpc_channel_pool=self._grpc_channel_pool
+            if self._grpc_channel is not None:
+                self._stub = PythonPanelServiceStub(self._grpc_channel)
+            else:
+                with self._initialization_lock:
+                    if self._grpc_channel_pool is None:
+                        _logger.debug("Creating unshared GrpcChannelPool.")
+                        self._grpc_channel_pool = GrpcChannelPool()
+                    if self._discovery_client is None:
+                        _logger.debug("Creating unshared DiscoveryClient.")
+                        self._discovery_client = DiscoveryClient(
+                            grpc_channel_pool=self._grpc_channel_pool
+                        )
+
+                    service_location = self._discovery_client.resolve_service(
+                        provided_interface=self._provided_interface,
+                        service_class=self._service_class,
                     )
-                if self._stub is None:
-                    service_address = self._resolve_service_address_fn(self._discovery_client)
-                    channel = self._grpc_channel_pool.get_channel(service_address)
+                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
                     self._stub = PythonPanelServiceStub(channel)
         return self._stub
 
