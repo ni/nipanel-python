@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from abc import ABC, abstractmethod
 from types import TracebackType
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING
 
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 
@@ -48,10 +48,10 @@ class Panel(ABC):
 
     def __exit__(
         self,
-        exctype: Optional[Type[BaseException]],
-        excinst: Optional[BaseException],
-        exctb: Optional[TracebackType],
-    ) -> Optional[bool]:
+        exctype: type[BaseException] | None,
+        excinst: BaseException | None,
+        exctb: TracebackType | None,
+    ) -> bool | None:
         """Exit the runtime context related to this object."""
         self.disconnect()
         return None

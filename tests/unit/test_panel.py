@@ -1,4 +1,4 @@
-from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
+from tests.utils._fake_python_panel_service import FakePythonPanelService
 from tests.utils._port_panel import PortPanel
 
 
@@ -9,10 +9,10 @@ def test___panel___has_panel_id_and_panel_uri() -> None:
 
 
 def test___connected_panel___set_value___gets_same_value(
-    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
+    fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    _, port = fake_python_panel_service
-    panel = PortPanel(port, "my_panel", "path/to/script")
+    service = fake_python_panel_service
+    panel = PortPanel(service.port, "my_panel", "path/to/script")
     panel.connect()
 
     panel.set_value("test_id", "test_value")
@@ -23,10 +23,10 @@ def test___connected_panel___set_value___gets_same_value(
 
 
 def test___with_panel___set_value___gets_same_value(
-    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
+    fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    _, port = fake_python_panel_service
-    with PortPanel(port, "my_panel", "path/to/script") as panel:
+    service = fake_python_panel_service
+    with PortPanel(service.port, "my_panel", "path/to/script") as panel:
         panel.set_value("test_id", "test_value")
 
         # TODO: AB#3095681 - change asserted value to test_value
@@ -34,13 +34,13 @@ def test___with_panel___set_value___gets_same_value(
 
 
 def test___first_connect_fails___connect___gets_value(
-    fake_python_panel_service: tuple[FakePythonPanelServicer, int],
+    fake_python_panel_service: FakePythonPanelService,
 ) -> None:
     """Test that panel.connect() will automatically retry once."""
-    servicer, port = fake_python_panel_service
+    service = fake_python_panel_service
     # Simulate a failure on the first connect attempt
-    servicer.fail_next_connect()
-    panel = PortPanel(port, "my_panel", "path/to/script")
+    service.servicer.fail_next_connect()
+    panel = PortPanel(service.port, "my_panel", "path/to/script")
 
     panel.connect()
 

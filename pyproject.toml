@@ -15,6 +15,7 @@ ni-measurement-plugin-sdk = {version=">=2.3"}
 [tool.poetry.group.dev.dependencies]
 grpc-stubs = "^1.53"
 types-protobuf = ">=4.21"
+pyupgrade = "^3.19.1"
 
 [tool.poetry.group.lint.dependencies]
 bandit = { version = ">=1.7", extras = ["toml"] }
@@ -41,6 +42,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.ni-python-styleguide]
 extend_exclude = ".tox,docs,src/ni/pythonpanel/v1"
 
+[tool.black]
+extend-exclude = '\.tox/|docs/|src/ni/pythonpanel/v1/'
+
 [tool.mypy]
 files = "examples/,src/nipanel/,tests/"
 namespace_packages = true
@@ -61,8 +65,3 @@ skips = [
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --strict-markers"
 testpaths = ["src/nipanel", "tests"]
-
-[tool.black]
-extend-exclude = '''
-/src/ni/pythonpanel/v1/
-'''

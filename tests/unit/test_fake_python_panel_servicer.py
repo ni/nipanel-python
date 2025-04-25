@@ -1,4 +1,5 @@
 from google.protobuf.any_pb2 import Any
+from google.protobuf.wrappers_pb2 import StringValue
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     ConnectRequest,
     DisconnectRequest,
@@ -8,37 +9,38 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 
-def test___connect___gets_response(fake_python_panel_service_stub: PythonPanelServiceStub) -> None:
+def test___connect___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
     request = ConnectRequest(panel_id="test_panel", panel_uri="path/to/panel")
-    response = fake_python_panel_service_stub.Connect(request)
+    response = python_panel_service_stub.Connect(request)
 
     assert response is not None  # Ensure response is returned
 
 
 def test___disconnect___gets_response(
-    fake_python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PythonPanelServiceStub,
 ) -> None:
     request = DisconnectRequest(panel_id="test_panel")
-    response = fake_python_panel_service_stub.Disconnect(request)
+    response = python_panel_service_stub.Disconnect(request)
 
     assert response is not None  # Ensure response is returned
 
 
 def test___get_value___gets_response(
-    fake_python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PythonPanelServiceStub,
 ) -> None:
     request = GetValueRequest(panel_id="test_panel", value_id="test_value")
-    response = fake_python_panel_service_stub.GetValue(request)
+    response = python_panel_service_stub.GetValue(request)
 
     assert response is not None  # Ensure response is returned
     assert isinstance(response.value, Any)  # Ensure the value is of type `Any`
 
 
 def test___set_value___gets_response(
-    fake_python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PythonPanelServiceStub,
 ) -> None:
-    test_value = Any(value=b"test_data")
+    test_value = Any()
+    test_value.Pack(StringValue(value="test_value"))
     request = SetValueRequest(panel_id="test_panel", value_id="test_value", value=test_value)
-    response = fake_python_panel_service_stub.SetValue(request)
+    response = python_panel_service_stub.SetValue(request)
 
     assert response is not None  # Ensure response is returned
