@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import logging
 import threading
-from typing import Any, Callable
+from typing import Callable
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from typing_extensions import ParamSpec, TypeVar
 
 _logger = logging.getLogger(__name__)
 
@@ -43,6 +44,16 @@ class PanelClient:
         if grpc_channel is not None:
             self._stub = PythonPanelServiceStub(grpc_channel)
 
+    def connect(self, panel_id: str, panel_uri: str) -> None:
+        """Connect to the panel and open it."""
+        connect_request = ConnectRequest(panel_id=panel_id, panel_uri=panel_uri)
+        self._invoke_with_retry(self._get_stub().Connect, connect_request)
+
+    def disconnect(self, panel_id: str) -> None:
+        """Disconnect from the panel (does not close the panel)."""
+        disconnect_request = DisconnectRequest(panel_id=panel_id)
+        self._invoke_with_retry(self._get_stub().Disconnect, disconnect_request)
+
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:
             with self._initialization_lock:
@@ -60,7 +71,12 @@ class PanelClient:
                     self._stub = PythonPanelServiceStub(channel)
         return self._stub
 
-    def _invoke_with_retry(self, method: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
+    _T = TypeVar("_T")
+    _P = ParamSpec("_P")
+
+    def _invoke_with_retry(
+        self, method: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
+    ) -> _T:
         """Invoke a gRPC method with retry logic."""
         try:
             return method(*args, **kwargs)
@@ -69,13 +85,4 @@ class PanelClient:
                 # if the service is unavailable, we can retry the connection
                 self._stub = None
                 return method(*args, **kwargs)
-
-    def connect(self, panel_id: str, panel_uri: str) -> None:
-        """Connect to the panel and open it."""
-        connect_request = ConnectRequest(panel_id=panel_id, panel_uri=panel_uri)
-        self._invoke_with_retry(self._get_stub().Connect, connect_request)
-
-    def disconnect(self, panel_id: str) -> None:
-        """Disconnect from the panel (does not close the panel)."""
-        disconnect_request = DisconnectRequest(panel_id=panel_id)
-        self._invoke_with_retry(self._get_stub().Disconnect, disconnect_request)
+            raise
