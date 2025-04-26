@@ -15,7 +15,6 @@ ni-measurement-plugin-sdk = {version=">=2.3"}
 [tool.poetry.group.dev.dependencies]
 grpc-stubs = "^1.53"
 types-protobuf = ">=4.21"
-pyupgrade = "^3.19.1"
 
 [tool.poetry.group.lint.dependencies]
 bandit = { version = ">=1.7", extras = ["toml"] }

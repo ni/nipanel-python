@@ -6,6 +6,8 @@ from types import TracebackType
 from typing import TYPE_CHECKING
 
 import grpc
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
+from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_client import PanelClient
 
@@ -32,12 +34,16 @@ class Panel(ABC):
         panel_uri: str,
         provided_interface: str,
         service_class: str,
+        discovery_client: DiscoveryClient | None = None,
+        grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
         """Initialize the panel."""
         self._panel_client = PanelClient(
             provided_interface=provided_interface,
             service_class=service_class,
+            discovery_client=discovery_client,
+            grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
         self._panel_id = panel_id
