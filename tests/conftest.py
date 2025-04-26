@@ -23,20 +23,20 @@ def fake_python_panel_service() -> Generator[FakePythonPanelService]:
 
 
 @pytest.fixture
-def grpc_channel_and_fake_panel_service(
+def grpc_channel_for_fake_panel_service(
     fake_python_panel_service: FakePythonPanelService,
-) -> Generator[tuple[grpc.Channel, FakePythonPanelService]]:
+) -> Generator[grpc.Channel]:
     """Fixture to get a channel to the FakePythonPanelService."""
     service = fake_python_panel_service
     channel = grpc.insecure_channel(f"localhost:{service.port}")
-    yield channel, service
+    yield channel
     channel.close()
 
 
 @pytest.fixture
 def python_panel_service_stub(
-    grpc_channel_and_fake_panel_service: tuple[grpc.Channel, FakePythonPanelService],
+    grpc_channel_for_fake_panel_service: grpc.Channel,
 ) -> Generator[PythonPanelServiceStub]:
     """Fixture to get a PythonPanelServiceStub, attached to a FakePythonPanelService."""
-    channel, _ = grpc_channel_and_fake_panel_service
+    channel = grpc_channel_for_fake_panel_service
     yield PythonPanelServiceStub(channel)
