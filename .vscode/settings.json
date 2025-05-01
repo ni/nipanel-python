@@ -5,9 +5,6 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "debug.allowBreakpointsEverywhere": true,
-    "isort.interpreter": [
-        "C:\\Users\\<user>\\.pyenv\\pyenv-win\\versions\\<version>\\python.exe"
-    ],
     "flake8.path": [
         "ni-python-styleguide",
         "lint"
