@@ -1,7 +1,26 @@
 {
     "python.testing.pytestArgs": [
-        "."
+        "--no-cov"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "debug.allowBreakpointsEverywhere": true,
+    "isort.interpreter": [
+        "C:\\Users\\<user>\\.pyenv\\pyenv-win\\versions\\<version>\\python.exe"
+    ],
+    "flake8.path": [
+        "ni-python-styleguide",
+        "lint"
+    ],
+    "python.analysis.includeAliasesFromUserFiles": true,
+    "black-formatter.args": [
+        "--line-length",
+        "100"
+    ],
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.rulers": [
+            100
+        ]
+    }
 }
