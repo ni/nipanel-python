@@ -1,21 +1,14 @@
 from __future__ import annotations
 
-import sys
 from abc import ABC
 from types import TracebackType
-from typing import TYPE_CHECKING
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_client import PanelClient
-
-if TYPE_CHECKING:
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
+from nipanel._typing import Self
 
 
 class Panel(ABC):

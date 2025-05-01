@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import threading
-from typing import TYPE_CHECKING, Callable, TypeVar
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
@@ -12,12 +11,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceSt
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-_T = TypeVar("_T")
-
-if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
-
-    _P = ParamSpec("_P")
+from nipanel._typing import Callable, _T, _P
 
 
 _logger = logging.getLogger(__name__)
