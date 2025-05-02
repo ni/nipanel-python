@@ -10,7 +10,7 @@ from nipanel._panel_client import PanelClient
 
 
 class Panel(ABC):
-    """This class allows you to open to a panel and specify values for its controls."""
+    """This class allows you to open a panel and specify values for its controls."""
 
     _panel_client: PanelClient
     _panel_id: str
