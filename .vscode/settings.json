@@ -1,7 +1,20 @@
 {
-    "python.testing.pytestArgs": [
-        "."
-    ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "debug.allowBreakpointsEverywhere": true,
+    "flake8.path": [
+        "ni-python-styleguide",
+        "lint"
+    ],
+    "python.analysis.includeAliasesFromUserFiles": true,
+    "black-formatter.args": [
+        "--line-length",
+        "100"
+    ],
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.rulers": [
+            100
+        ]
+    }
 }
