@@ -7,7 +7,7 @@ import threading
 from typing import TYPE_CHECKING, Callable, TypeVar
 
 import grpc
-from ni.pythonpanel.v1.python_panel_service_pb2 import ConnectRequest, DisconnectRequest
+from ni.pythonpanel.v1.python_panel_service_pb2 import OpenPanelRequest
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
@@ -52,15 +52,10 @@ class PanelClient:
         self._grpc_channel = grpc_channel
         self._stub: PythonPanelServiceStub | None = None
 
-    def connect(self, panel_id: str, panel_uri: str) -> None:
-        """Connect to the panel and open it."""
-        connect_request = ConnectRequest(panel_id=panel_id, panel_uri=panel_uri)
-        self._invoke_with_retry(self._get_stub().Connect, connect_request)
-
-    def disconnect(self, panel_id: str) -> None:
-        """Disconnect from the panel (does not close the panel)."""
-        disconnect_request = DisconnectRequest(panel_id=panel_id)
-        self._invoke_with_retry(self._get_stub().Disconnect, disconnect_request)
+    def open_panel(self, panel_id: str, panel_uri: str) -> None:
+        """Open the panel."""
+        open_panel_request = OpenPanelRequest(panel_id=panel_id, panel_uri=panel_uri)
+        self._invoke_with_retry(self._get_stub().OpenPanel, open_panel_request)
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:

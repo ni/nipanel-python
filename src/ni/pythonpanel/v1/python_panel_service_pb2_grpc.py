@@ -6,7 +6,7 @@ from ni.pythonpanel.v1 import python_panel_service_pb2 as ni_dot_pythonpanel_dot
 
 
 class PythonPanelServiceStub(object):
-    """Service interface for connecting to python panels
+    """Service interface for interacting with python panels
     """
 
     def __init__(self, channel):
@@ -15,15 +15,10 @@ class PythonPanelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Connect = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/Connect',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.FromString,
-                )
-        self.Disconnect = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/Disconnect',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.FromString,
+        self.OpenPanel = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/OpenPanel',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelResponse.FromString,
                 )
         self.GetValue = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/GetValue',
@@ -38,22 +33,13 @@ class PythonPanelServiceStub(object):
 
 
 class PythonPanelServiceServicer(object):
-    """Service interface for connecting to python panels
+    """Service interface for interacting with python panels
     """
 
-    def Connect(self, request, context):
-        """Connect to a panel and open it
+    def OpenPanel(self, request, context):
+        """Open a panel
         Status Codes for errors:
         - NOT_FOUND: the file for the panel was not found
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Disconnect(self, request, context):
-        """Disconnect from a panel (does not close the panel)
-        Status Codes for errors:
-        - NOT_FOUND: the panel with the specified id was not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -80,15 +66,10 @@ class PythonPanelServiceServicer(object):
 
 def add_PythonPanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Connect': grpc.unary_unary_rpc_method_handler(
-                    servicer.Connect,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.SerializeToString,
-            ),
-            'Disconnect': grpc.unary_unary_rpc_method_handler(
-                    servicer.Disconnect,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.SerializeToString,
+            'OpenPanel': grpc.unary_unary_rpc_method_handler(
+                    servicer.OpenPanel,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelResponse.SerializeToString,
             ),
             'GetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.GetValue,
@@ -108,11 +89,11 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class PythonPanelService(object):
-    """Service interface for connecting to python panels
+    """Service interface for interacting with python panels
     """
 
     @staticmethod
-    def Connect(request,
+    def OpenPanel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -122,26 +103,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/Connect',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ConnectResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def Disconnect(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/Disconnect',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.DisconnectResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/OpenPanel',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
