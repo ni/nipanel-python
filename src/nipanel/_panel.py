@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import sys
 from abc import ABC
-from types import TracebackType
-from typing import TYPE_CHECKING
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -11,15 +8,9 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_client import PanelClient
 
-if TYPE_CHECKING:
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
-
 
 class Panel(ABC):
-    """This class allows you to connect to a panel and specify values for its controls."""
+    """This class allows you to open a panel and specify values for its controls."""
 
     _panel_client: PanelClient
     _panel_id: str
@@ -59,28 +50,9 @@ class Panel(ABC):
         """Read-only accessor for the panel URI."""
         return self._panel_uri
 
-    def __enter__(self) -> Self:
-        """Enter the runtime context related to this object."""
-        self.connect()
-        return self
-
-    def __exit__(
-        self,
-        exctype: type[BaseException] | None,
-        excinst: BaseException | None,
-        exctb: TracebackType | None,
-    ) -> bool | None:
-        """Exit the runtime context related to this object."""
-        self.disconnect()
-        return None
-
-    def connect(self) -> None:
-        """Connect to the panel and open it."""
-        self._panel_client.connect(self._panel_id, self._panel_uri)
-
-    def disconnect(self) -> None:
-        """Disconnect from the panel (does not close the panel)."""
-        self._panel_client.disconnect(self._panel_id)
+    def open_panel(self) -> None:
+        """Open the panel."""
+        self._panel_client.open_panel(self._panel_id, self._panel_uri)
 
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.

@@ -12,7 +12,7 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class ConnectRequest(google.protobuf.message.Message):
+class OpenPanelRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
@@ -29,43 +29,17 @@ class ConnectRequest(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_uri", b"panel_uri"]) -> None: ...
 
-global___ConnectRequest = ConnectRequest
+global___OpenPanelRequest = OpenPanelRequest
 
 @typing.final
-class ConnectResponse(google.protobuf.message.Message):
+class OpenPanelResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ConnectResponse = ConnectResponse
-
-@typing.final
-class DisconnectRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    PANEL_ID_FIELD_NUMBER: builtins.int
-    panel_id: builtins.str
-    """Unique ID of the panel"""
-    def __init__(
-        self,
-        *,
-        panel_id: builtins.str = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id"]) -> None: ...
-
-global___DisconnectRequest = DisconnectRequest
-
-@typing.final
-class DisconnectResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    def __init__(
-        self,
-    ) -> None: ...
-
-global___DisconnectResponse = DisconnectResponse
+global___OpenPanelResponse = OpenPanelResponse
 
 @typing.final
 class GetValueRequest(google.protobuf.message.Message):

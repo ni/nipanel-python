@@ -8,7 +8,7 @@ from nipanel._panel import Panel
 
 
 class StreamlitPanel(Panel):
-    """This class allows you to connect to a Streamlit panel and specify values for its controls."""
+    """This class allows you to open a Streamlit panel and specify values for its controls."""
 
     PYTHON_PANEL_SERVICE = "ni.pythonpanel.v1.PythonPanelService"
 

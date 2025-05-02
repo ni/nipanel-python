@@ -14,17 +14,12 @@ option objc_class_prefix = "NIPP";
 option php_namespace = "NI\\PythonPanel\\V1";
 option ruby_package = "NI::PythonPanel::V1";
 
-// Service interface for connecting to python panels
+// Service interface for interacting with python panels
 service PythonPanelService {
-  // Connect to a panel and open it
+  // Open a panel
   // Status Codes for errors:
   // - NOT_FOUND: the file for the panel was not found
-  rpc Connect(ConnectRequest) returns (ConnectResponse);
-
-  // Disconnect from a panel (does not close the panel)
-  // Status Codes for errors:
-  // - NOT_FOUND: the panel with the specified id was not found
-  rpc Disconnect(DisconnectRequest) returns (DisconnectResponse);
+  rpc OpenPanel(OpenPanelRequest) returns (OpenPanelResponse);
 
   // Get a value for a control on the panel
   // Status Codes for errors:
@@ -37,7 +32,7 @@ service PythonPanelService {
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
-message ConnectRequest {
+message OpenPanelRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
@@ -45,15 +40,7 @@ message ConnectRequest {
   string panel_uri = 2;
 }
 
-message ConnectResponse {  
-}
-
-message DisconnectRequest {
-  // Unique ID of the panel
-  string panel_id = 1;  
-}
-
-message DisconnectResponse {  
+message OpenPanelResponse {  
 }
 
 message GetValueRequest {
