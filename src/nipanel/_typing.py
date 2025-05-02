@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 if sys.version_info >= (3, 11):
     from typing import Self
@@ -13,17 +13,11 @@ else:
     Self = None
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec, TypeVar
-
-    _P = ParamSpec("_P")
-    _T = TypeVar("_T")
+    from typing_extensions import ParamSpec
 else:
-    _P = None
-    _T = None
+    from typing import TypeVar as ParamSpec
 
 __all__ = [
-    "Callable",
     "Self",
-    "_P",
-    "_T",
+    "ParamSpec",
 ]
