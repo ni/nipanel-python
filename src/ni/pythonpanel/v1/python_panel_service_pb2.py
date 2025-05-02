@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"5\n\x0e\x43onnectRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_uri\x18\x02 \x01(\t\"\x11\n\x0f\x43onnectResponse\"%\n\x11\x44isconnectRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\"\x14\n\x12\x44isconnectResponse\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"Z\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\"\x12\n\x10SetValueResponse2\xeb\x02\n\x12PythonPanelService\x12P\n\x07\x43onnect\x12!.ni.pythonpanel.v1.ConnectRequest\x1a\".ni.pythonpanel.v1.ConnectResponse\x12Y\n\nDisconnect\x12$.ni.pythonpanel.v1.DisconnectRequest\x1a%.ni.pythonpanel.v1.DisconnectResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"7\n\x10OpenPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_uri\x18\x02 \x01(\t\"\x13\n\x11OpenPanelResponse\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"Z\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\"\x12\n\x10SetValueResponse2\x96\x02\n\x12PythonPanelService\x12V\n\tOpenPanel\x12#.ni.pythonpanel.v1.OpenPanelRequest\x1a$.ni.pythonpanel.v1.OpenPanelResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.pythonpanel.v1.python_panel_service_pb2', globals())
@@ -22,22 +22,18 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\025com.ni.pythonpanel.v1B\027PythonPanelServiceProtoP\001Z\rpythonpanelv1\370\001\001\242\002\004NIPP\252\002\"NationalInstruments.PythonPanel.V1\312\002\021NI\\PythonPanel\\V1\352\002\023NI::PythonPanel::V1'
-  _CONNECTREQUEST._serialized_start=94
-  _CONNECTREQUEST._serialized_end=147
-  _CONNECTRESPONSE._serialized_start=149
-  _CONNECTRESPONSE._serialized_end=166
-  _DISCONNECTREQUEST._serialized_start=168
-  _DISCONNECTREQUEST._serialized_end=205
-  _DISCONNECTRESPONSE._serialized_start=207
-  _DISCONNECTRESPONSE._serialized_end=227
-  _GETVALUEREQUEST._serialized_start=229
-  _GETVALUEREQUEST._serialized_end=282
-  _GETVALUERESPONSE._serialized_start=284
-  _GETVALUERESPONSE._serialized_end=339
-  _SETVALUEREQUEST._serialized_start=341
-  _SETVALUEREQUEST._serialized_end=431
-  _SETVALUERESPONSE._serialized_start=433
-  _SETVALUERESPONSE._serialized_end=451
-  _PYTHONPANELSERVICE._serialized_start=454
-  _PYTHONPANELSERVICE._serialized_end=817
+  _OPENPANELREQUEST._serialized_start=94
+  _OPENPANELREQUEST._serialized_end=149
+  _OPENPANELRESPONSE._serialized_start=151
+  _OPENPANELRESPONSE._serialized_end=170
+  _GETVALUEREQUEST._serialized_start=172
+  _GETVALUEREQUEST._serialized_end=225
+  _GETVALUERESPONSE._serialized_start=227
+  _GETVALUERESPONSE._serialized_end=282
+  _SETVALUEREQUEST._serialized_start=284
+  _SETVALUEREQUEST._serialized_end=374
+  _SETVALUERESPONSE._serialized_start=376
+  _SETVALUERESPONSE._serialized_end=394
+  _PYTHONPANELSERVICE._serialized_start=397
+  _PYTHONPANELSERVICE._serialized_end=675
 # @@protoc_insertion_point(module_scope)

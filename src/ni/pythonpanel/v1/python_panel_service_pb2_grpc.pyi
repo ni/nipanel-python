@@ -18,25 +18,16 @@ class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type:
     ...
 
 class PythonPanelServiceStub:
-    """Service interface for connecting to python panels"""
+    """Service interface for interacting with python panels"""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    Connect: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ConnectRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ConnectResponse,
+    OpenPanel: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse,
     ]
-    """Connect to a panel and open it
+    """Open a panel
     Status Codes for errors:
     - NOT_FOUND: the file for the panel was not found
-    """
-
-    Disconnect: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.DisconnectRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.DisconnectResponse,
-    ]
-    """Disconnect from a panel (does not close the panel)
-    Status Codes for errors:
-    - NOT_FOUND: the panel with the specified id was not found
     """
 
     GetValue: grpc.UnaryUnaryMultiCallable[
@@ -58,24 +49,15 @@ class PythonPanelServiceStub:
     """
 
 class PythonPanelServiceAsyncStub:
-    """Service interface for connecting to python panels"""
+    """Service interface for interacting with python panels"""
 
-    Connect: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ConnectRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ConnectResponse,
+    OpenPanel: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse,
     ]
-    """Connect to a panel and open it
+    """Open a panel
     Status Codes for errors:
     - NOT_FOUND: the file for the panel was not found
-    """
-
-    Disconnect: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.DisconnectRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.DisconnectResponse,
-    ]
-    """Disconnect from a panel (does not close the panel)
-    Status Codes for errors:
-    - NOT_FOUND: the panel with the specified id was not found
     """
 
     GetValue: grpc.aio.UnaryUnaryMultiCallable[
@@ -97,28 +79,17 @@ class PythonPanelServiceAsyncStub:
     """
 
 class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
-    """Service interface for connecting to python panels"""
+    """Service interface for interacting with python panels"""
 
     @abc.abstractmethod
-    def Connect(
+    def OpenPanel(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.ConnectRequest,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.ConnectResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.ConnectResponse]]:
-        """Connect to a panel and open it
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse]]:
+        """Open a panel
         Status Codes for errors:
         - NOT_FOUND: the file for the panel was not found
-        """
-
-    @abc.abstractmethod
-    def Disconnect(
-        self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.DisconnectRequest,
-        context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.DisconnectResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.DisconnectResponse]]:
-        """Disconnect from a panel (does not close the panel)
-        Status Codes for errors:
-        - NOT_FOUND: the panel with the specified id was not found
         """
 
     @abc.abstractmethod

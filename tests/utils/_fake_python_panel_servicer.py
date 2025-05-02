@@ -3,10 +3,8 @@ from typing import Any
 import google.protobuf.any_pb2 as any_pb2
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    ConnectRequest,
-    ConnectResponse,
-    DisconnectRequest,
-    DisconnectResponse,
+    OpenPanelRequest,
+    OpenPanelResponse,
     GetValueRequest,
     GetValueResponse,
     SetValueRequest,
@@ -19,20 +17,14 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     """Fake implementation of the PythonPanelServicer for testing."""
 
     _values = {"test_value": any_pb2.Any()}
-    _fail_next_connect = False
+    _fail_next_open_panel = False
 
-    def Connect(self, request: ConnectRequest, context: Any) -> ConnectResponse:  # noqa: N802
+    def OpenPanel(self, request: OpenPanelRequest, context: Any) -> OpenPanelResponse:  # noqa: N802
         """Trivial implementation for testing."""
-        if self._fail_next_connect:
-            self._fail_next_connect = False
-            context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated connection failure")
-        return ConnectResponse()
-
-    def Disconnect(  # noqa: N802
-        self, request: DisconnectRequest, context: Any
-    ) -> DisconnectResponse:
-        """Trivial implementation for testing."""
-        return DisconnectResponse()
+        if self._fail_next_open_panel:
+            self._fail_next_open_panel = False
+            context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
+        return OpenPanelResponse()
 
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""
@@ -44,6 +36,6 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._values[request.value_id] = request.value
         return SetValueResponse()
 
-    def fail_next_connect(self) -> None:
-        """Set whether the Connect method should fail the next time it is called."""
-        self._fail_next_connect = True
+    def fail_next_open_panel(self) -> None:
+        """Set whether the OpenPanel method should fail the next time it is called."""
+        self._fail_next_open_panel = True

@@ -1,26 +1,16 @@
 from google.protobuf.any_pb2 import Any
 from google.protobuf.wrappers_pb2 import StringValue
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    ConnectRequest,
-    DisconnectRequest,
+    OpenPanelRequest,
     GetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 
-def test___connect___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
-    request = ConnectRequest(panel_id="test_panel", panel_uri="path/to/panel")
-    response = python_panel_service_stub.Connect(request)
-
-    assert response is not None  # Ensure response is returned
-
-
-def test___disconnect___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
-) -> None:
-    request = DisconnectRequest(panel_id="test_panel")
-    response = python_panel_service_stub.Disconnect(request)
+def test___open_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
+    request = OpenPanelRequest(panel_id="test_panel", panel_uri="path/to/panel")
+    response = python_panel_service_stub.OpenPanel(request)
 
     assert response is not None  # Ensure response is returned
 
