@@ -304,20 +304,6 @@ pycodestyle = "*"
 setuptools = "*"
 
 [[package]]
-name = "grpc-stubs"
-version = "1.53.0.5"
-description = "Mypy stubs for gRPC"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "grpc-stubs-1.53.0.5.tar.gz", hash = "sha256:3e1b642775cbc3e0c6332cfcedfccb022176db87e518757bef3a1241397be406"},
-    {file = "grpc_stubs-1.53.0.5-py3-none-any.whl", hash = "sha256:04183fb65a1b166a1febb9627e3d9647d3926ccc2dfe049fe7b6af243428dbe1"},
-]
-
-[package.dependencies]
-grpcio = "*"
-
-[[package]]
 name = "grpcio"
 version = "1.71.0"
 description = "HTTP/2-based RPC framework"
@@ -1282,13 +1268,13 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "setuptools"
-version = "79.0.1"
+version = "80.0.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "setuptools-79.0.1-py3-none-any.whl", hash = "sha256:e147c0549f27767ba362f9da434eab9c5dc0045d5304feb602a0af001089fc51"},
-    {file = "setuptools-79.0.1.tar.gz", hash = "sha256:128ce7b8f33c3079fd1b067ecbb4051a66e8526e7b65f6cec075dfc650ddfa88"},
+    {file = "setuptools-80.0.0-py3-none-any.whl", hash = "sha256:a38f898dcd6e5380f4da4381a87ec90bd0a7eec23d204a5552e80ee3cab6bd27"},
+    {file = "setuptools-80.0.0.tar.gz", hash = "sha256:c40a5b3729d58dd749c0f08f1a07d134fb8a0a3d7f87dc33e7c5e1f762138650"},
 ]
 
 [package.extras]
@@ -1388,6 +1374,20 @@ files = [
 ]
 
 [[package]]
+name = "types-grpcio"
+version = "1.0.0.20250429"
+description = "Typing stubs for grpcio"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_grpcio-1.0.0.20250429-py3-none-any.whl", hash = "sha256:4b7a9f612f887fa3fa6459d4e664e95f496d28ffa07114cdea1aca28bfa3af7b"},
+    {file = "types_grpcio-1.0.0.20250429.tar.gz", hash = "sha256:864fa552966fd33d7f97af4bb2853d9bbe9f2c69c595ed51c603cc27f0b9f447"},
+]
+
+[package.dependencies]
+types-protobuf = "*"
+
+[[package]]
 name = "types-protobuf"
 version = "5.29.1.20250403"
 description = "Typing stubs for protobuf"
@@ -1412,4 +1412,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "681a64f5d10bd10d379d6dcfd3984a20e57bae9ecd298965676528cf5258d81c"
+content-hash = "8f60befb298fc183823a63f1d02835395b93ece3ef563b535673cb54a0b046e4"
