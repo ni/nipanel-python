@@ -13,7 +13,7 @@ breakage when upgrading these packages.
 
 Do not add project-specific types to this submodule.
 
-Many of these symbosl are references to `None` at run time. Clients of this submodule should use
+Many of these symbols are references to `None` at run time. Clients of this submodule should use
 `from __future__ import annotations` to avoid parsing type hints at run time.
 """
 
