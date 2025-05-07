@@ -1,4 +1,4 @@
-# Contributing to nipanel-python 
+# Contributing to nipanel-python
 
 Contributions to nipanel-python are welcome from all!
 
@@ -26,7 +26,26 @@ This is the command to generate the files in /src/ni/pythonpanel/v1/:
 
 # Testing
 
-- TODO: include testing steps here.
+## Simple development loop
+
+```
+# Create a new branch
+git fetch
+git switch --create users/{username}/{branch-purpose} origin/main
+
+# Install the project dependencies
+poetry install --sync
+
+# ✍ Make source changes
+
+# Run the analyzers -- see files in .github/workflows for details
+poetry run ni-python-styleguide lint
+poetry run mypy
+poetry run bandit -c pyproject.toml -r src/nipanel
+
+# Run the tests
+poetry run pytest -v
+```
 
 # Developer Certificate of Origin (DCO)
 
