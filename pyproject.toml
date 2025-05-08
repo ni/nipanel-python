@@ -35,6 +35,18 @@ grpcio-tools = [
 ]
 mypy-protobuf = ">=3.4"
 
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+# The latest Sphinx requires a recent Python version.
+Sphinx = { version = ">=8.2", python = "^3.11" }
+sphinx-rtd-theme = ">=1.0.0"
+sphinx-autoapi = ">=1.8.4"
+m2r2 = ">=0.3.2"
+toml = ">=0.10.2"
+tomlkit = ">=0.11.0"
+
 [build-system]
 requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
