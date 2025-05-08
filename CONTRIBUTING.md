@@ -34,7 +34,7 @@ git fetch
 git switch --create users/{username}/{branch-purpose} origin/main
 
 # Install the project dependencies
-poetry install
+poetry install --with docs
 
 # ✍ Make source changes
 
@@ -45,6 +45,10 @@ poetry run bandit -c pyproject.toml -r src/nipanel
 
 # Run the tests
 poetry run pytest -v
+
+# Build and inspect the documentation
+poetry run sphinx-build docs docs/_build --builder html --fail-on-warning
+start docs\_build\index.html
 ```
 
 # Developer Certificate of Origin (DCO)
