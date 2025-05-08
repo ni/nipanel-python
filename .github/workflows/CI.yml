@@ -10,8 +10,11 @@ on:
 
 jobs:
   check_nipanel:
-    name: Check
+    name: Check nipanel
     uses: ./.github/workflows/check_nipanel.yml
+  check_docs:
+    name: Check docs
+    uses: ./.github/workflows/check_docs.yml
   run_unit_tests:
     name: Run unit tests
     uses: ./.github/workflows/run_unit_tests.yml
