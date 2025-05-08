@@ -34,7 +34,7 @@ git fetch
 git switch --create users/{username}/{branch-purpose} origin/main
 
 # Install the project dependencies
-poetry install --sync
+poetry install
 
 # ✍ Make source changes
 
