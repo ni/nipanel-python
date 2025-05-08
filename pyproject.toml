@@ -11,6 +11,7 @@ python = "^3.9"
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
+typing-extensions = ">=4.13.2"
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
