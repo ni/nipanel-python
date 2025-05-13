@@ -43,6 +43,9 @@ poetry run nps lint
 poetry run mypy
 poetry run bandit -c pyproject.toml -r src/nipanel
 
+# Apply safe fixes
+poetry run nps fix
+
 # Run the tests
 poetry run pytest -v
 

@@ -17,10 +17,11 @@ def test___opened_panel___set_value___gets_same_value(
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=channel)
     panel.open_panel()
 
-    panel.set_value("test_id", "test_value")
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
 
-    # TODO: AB#3095681 - change asserted value to test_value
-    assert panel.get_value("test_id") == "placeholder value"
+    assert panel.get_value(value_id) == string_value
 
 
 def test___first_open_panel_fails___open_panel___gets_value(
@@ -36,6 +37,7 @@ def test___first_open_panel_fails___open_panel___gets_value(
 
     panel.open_panel()
 
-    panel.set_value("test_id", "test_value")
-    # TODO: AB#3095681 - change asserted value to test_value
-    assert panel.get_value("test_id") == "placeholder value"
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+    assert panel.get_value(value_id) == string_value
