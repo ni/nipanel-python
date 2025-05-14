@@ -12,6 +12,15 @@ import google.protobuf.wrappers_pb2
 _logger = logging.getLogger(__name__)
 
 
+_builtin_protobuf_type = (
+    google.protobuf.wrappers_pb2.BoolValue
+    | google.protobuf.wrappers_pb2.BytesValue
+    | google.protobuf.wrappers_pb2.DoubleValue
+    | google.protobuf.wrappers_pb2.Int64Value
+    | google.protobuf.wrappers_pb2.StringValue
+)
+
+
 class ConvertibleType(typing.NamedTuple):
     """A Python type that can be converted to and from a protobuf Any."""
 
@@ -24,7 +33,7 @@ class ConvertibleType(typing.NamedTuple):
     protobuf_typename: str
     """The protobuf name for the type."""
 
-    protobuf_initializer: typing.Callable[..., google.protobuf.message.Message]
+    protobuf_initializer: typing.Callable[..., _builtin_protobuf_type]
     """A callable that can be used to create an instance of the protobuf type."""
 
 
