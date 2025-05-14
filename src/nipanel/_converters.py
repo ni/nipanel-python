@@ -6,7 +6,6 @@ import logging
 import typing
 
 import google.protobuf.any_pb2
-import google.protobuf.message
 import google.protobuf.wrappers_pb2
 
 _logger = logging.getLogger(__name__)
