@@ -1,4 +1,5 @@
 import grpc
+import pytest
 
 from nipanel._streamlit_panel import StreamlitPanel
 from tests.utils._fake_python_panel_service import FakePythonPanelService
@@ -57,10 +58,22 @@ def test___unopened_panel___set_value___sets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___unopened_panel___get_value___gets_value(
+def test___unopened_panel___get_unset_value___raises_exception(
     grpc_channel_for_fake_panel_service: grpc.Channel,
 ) -> None:
-    """Test that get_value() succeeds before the user opens the panel."""
+    """Test that get_value() raises an exception for an unset value."""
+    channel = grpc_channel_for_fake_panel_service
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=channel)
+
+    value_id = "test_id"
+    with pytest.raises(grpc.RpcError):
+        panel.get_value(value_id)
+
+
+def test___unopened_panel___get_set_value___gets_value(
+    grpc_channel_for_fake_panel_service: grpc.Channel,
+) -> None:
+    """Test that get_value() succeeds for a set value before the user opens the panel."""
     channel = grpc_channel_for_fake_panel_service
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=channel)
 
