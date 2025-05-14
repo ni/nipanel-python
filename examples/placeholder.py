@@ -30,11 +30,9 @@ class MyStrEnum(enum.StrEnum):
 
 
 if __name__ == "__main__":
-    my_panel = nipanel.Panel(
+    my_panel = nipanel.StreamlitPanel(
         panel_id="placeholder",
-        panel_uri=__file__,
-        provided_interface="ni.pythonpanel.v1.PythonPanelService",
-        service_class="ni.pythonpanel.v1.PythonPanelService",
+        streamlit_script_uri=__file__,
     )
 
     my_types = {
