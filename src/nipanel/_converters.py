@@ -6,18 +6,18 @@ import logging
 from typing import Callable, NamedTuple, Union
 
 import google.protobuf.any_pb2
-import google.protobuf.wrappers_pb2
+from google.protobuf import wrappers_pb2
 from typing_extensions import TypeAlias
 
 _logger = logging.getLogger(__name__)
 
 
 _builtin_protobuf_type: TypeAlias = Union[
-    google.protobuf.wrappers_pb2.BoolValue,
-    google.protobuf.wrappers_pb2.BytesValue,
-    google.protobuf.wrappers_pb2.DoubleValue,
-    google.protobuf.wrappers_pb2.Int64Value,
-    google.protobuf.wrappers_pb2.StringValue,
+    wrappers_pb2.BoolValue,
+    wrappers_pb2.BytesValue,
+    wrappers_pb2.DoubleValue,
+    wrappers_pb2.Int64Value,
+    wrappers_pb2.StringValue,
 ]
 
 
