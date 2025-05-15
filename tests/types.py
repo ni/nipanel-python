@@ -1,4 +1,4 @@
-"""Types that support conversion to and from protobuf."""
+"""Types that exercise conversion to and from protobuf."""
 
 import enum
 
