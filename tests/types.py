@@ -1,6 +1,16 @@
 """Types that exercise conversion to and from protobuf."""
 
 import enum
+import sys
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+
+    class StrEnum(str, enum.Enum):
+        """Example of a mixin string enum."""
+
+        pass
 
 
 class MyIntFlags(enum.IntFlag):
@@ -27,7 +37,7 @@ class MixinIntEnum(int, enum.Enum):
     VALUE33 = 33
 
 
-class MyStrEnum(enum.StrEnum):
+class MyStrEnum(StrEnum):
     """Example of a StrEnum enum."""
 
     VALUE1 = "value1"

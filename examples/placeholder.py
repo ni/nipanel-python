@@ -21,8 +21,8 @@ class MyIntEnum(enum.IntEnum):
     VALUE30 = 30
 
 
-class MyStrEnum(enum.StrEnum):
-    """Example of a StrEnum enum."""
+class MyStrEnum(str, enum.Enum):
+    """Example of a mixin string enum."""
 
     VALUE1 = "value1"
     VALUE2 = "value2"
