@@ -3,24 +3,25 @@
 from __future__ import annotations
 
 import logging
-import typing
+from typing import Callable, NamedTuple, Union
 
 import google.protobuf.any_pb2
 import google.protobuf.wrappers_pb2
+from typing_extensions import TypeAlias
 
 _logger = logging.getLogger(__name__)
 
 
-_builtin_protobuf_type = (
-    google.protobuf.wrappers_pb2.BoolValue
-    | google.protobuf.wrappers_pb2.BytesValue
-    | google.protobuf.wrappers_pb2.DoubleValue
-    | google.protobuf.wrappers_pb2.Int64Value
-    | google.protobuf.wrappers_pb2.StringValue
-)
+_builtin_protobuf_type: TypeAlias = Union[
+    google.protobuf.wrappers_pb2.BoolValue,
+    google.protobuf.wrappers_pb2.BytesValue,
+    google.protobuf.wrappers_pb2.DoubleValue,
+    google.protobuf.wrappers_pb2.Int64Value,
+    google.protobuf.wrappers_pb2.StringValue,
+]
 
 
-class ConvertibleType(typing.NamedTuple):
+class ConvertibleType(NamedTuple):
     """A Python type that can be converted to and from a protobuf Any."""
 
     name: str
@@ -32,7 +33,7 @@ class ConvertibleType(typing.NamedTuple):
     protobuf_typename: str
     """The protobuf name for the type."""
 
-    protobuf_initializer: typing.Callable[..., _builtin_protobuf_type]
+    protobuf_initializer: Callable[..., _builtin_protobuf_type]
     """A callable that can be used to create an instance of the protobuf type."""
 
 
