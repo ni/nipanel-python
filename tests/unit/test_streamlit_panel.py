@@ -1,6 +1,7 @@
 import grpc
 import pytest
 
+import tests.types as test_types
 from nipanel._streamlit_panel import StreamlitPanel
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
@@ -92,6 +93,9 @@ def test___unopened_panel___get_set_value___gets_value(
         3.14,
         True,
         b"robotext",
+        test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4,
+        test_types.MyIntEnum.VALUE20,
+        test_types.MyStrEnum.VALUE3,
     ],
 )
 def test___builtin_scalar_type___set_value___gets_same_value(
