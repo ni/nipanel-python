@@ -24,9 +24,6 @@ _builtin_protobuf_type: TypeAlias = Union[
 class ConvertibleType(NamedTuple):
     """A Python type that can be converted to and from a protobuf Any."""
 
-    name: str
-    """The human name of the type."""
-
     python_typename: str
     """The Python name for the type."""
 
@@ -37,44 +34,39 @@ class ConvertibleType(NamedTuple):
     """A callable that can be used to create an instance of the protobuf type."""
 
 
-_CONVERTIBLE_TYPES = {
-    "bool": ConvertibleType(
-        name="Boolean",
+_CONVERTIBLE_TYPES = [
+    ConvertibleType(
         python_typename=bool.__name__,
         protobuf_typename=google.protobuf.wrappers_pb2.BoolValue.DESCRIPTOR.full_name,
         protobuf_initializer=google.protobuf.wrappers_pb2.BoolValue,
     ),
-    "bytes": ConvertibleType(
-        name="Bytes",
+    ConvertibleType(
         python_typename=bytes.__name__,
         protobuf_typename=google.protobuf.wrappers_pb2.BytesValue.DESCRIPTOR.full_name,
         protobuf_initializer=google.protobuf.wrappers_pb2.BytesValue,
     ),
-    "float": ConvertibleType(
-        name="Float",
+    ConvertibleType(
         python_typename=float.__name__,
         protobuf_typename=google.protobuf.wrappers_pb2.DoubleValue.DESCRIPTOR.full_name,
         protobuf_initializer=google.protobuf.wrappers_pb2.DoubleValue,
     ),
-    "int": ConvertibleType(
-        name="Integer",
+    ConvertibleType(
         python_typename=int.__name__,
         protobuf_typename=google.protobuf.wrappers_pb2.Int64Value.DESCRIPTOR.full_name,
         protobuf_initializer=google.protobuf.wrappers_pb2.Int64Value,
     ),
-    "str": ConvertibleType(
-        name="String",
+    ConvertibleType(
         python_typename=str.__name__,
         protobuf_typename=google.protobuf.wrappers_pb2.StringValue.DESCRIPTOR.full_name,
         protobuf_initializer=google.protobuf.wrappers_pb2.StringValue,
     ),
-}
+]
 
 
 def to_any(python_value: object) -> google.protobuf.any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
     protobuf_wrapper_for_type = {
-        entry.python_typename: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES.values()
+        entry.python_typename: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES
     }
     supported_types = set(protobuf_wrapper_for_type.keys())
     underlying_parents = [
@@ -100,7 +92,7 @@ def to_any(python_value: object) -> google.protobuf.any_pb2.Any:
 def from_any(protobuf_any: google.protobuf.any_pb2.Any) -> object:
     """Convert a protobuf Any to a Python object."""
     protobuf_wrapper_for_type = {
-        entry.protobuf_typename: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES.values()
+        entry.protobuf_typename: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES
     }
     if not isinstance(protobuf_any, google.protobuf.any_pb2.Any):
         raise ValueError(f"Unexpected type: {type(protobuf_any)}")
