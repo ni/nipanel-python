@@ -23,7 +23,7 @@ def fake_python_panel_service() -> Generator[FakePythonPanelService]:
 
 
 @pytest.fixture
-def grpc_channel_for_fake_panel_service(
+def fake_panel_channel(
     fake_python_panel_service: FakePythonPanelService,
 ) -> Generator[grpc.Channel]:
     """Fixture to get a channel to the FakePythonPanelService."""
@@ -35,8 +35,7 @@ def grpc_channel_for_fake_panel_service(
 
 @pytest.fixture
 def python_panel_service_stub(
-    grpc_channel_for_fake_panel_service: grpc.Channel,
+    fake_panel_channel: grpc.Channel,
 ) -> Generator[PythonPanelServiceStub]:
     """Fixture to get a PythonPanelServiceStub, attached to a FakePythonPanelService."""
-    channel = grpc_channel_for_fake_panel_service
-    yield PythonPanelServiceStub(channel)
+    yield PythonPanelServiceStub(fake_panel_channel)

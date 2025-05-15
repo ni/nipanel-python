@@ -21,6 +21,7 @@ class MyIntEnum(enum.IntEnum):
 
 class MixinIntEnum(int, enum.Enum):
     """Example of an IntEnum using a mixin."""
+
     VALUE11 = 11
     VALUE22 = 22
     VALUE33 = 33
@@ -36,6 +37,7 @@ class MyStrEnum(enum.StrEnum):
 
 class MixinStrEnum(str, enum.Enum):
     """Example of a StrEnum using a mixin."""
+
     VALUE11 = "value11"
     VALUE22 = "value22"
     VALUE33 = "value33"
