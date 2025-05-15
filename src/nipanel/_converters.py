@@ -23,8 +23,8 @@ _builtin_protobuf_type: TypeAlias = Union[
 class ConvertibleType(NamedTuple):
     """A Python type that can be converted to and from a protobuf Any."""
 
-    python_typename: str
-    """The Python name for the type."""
+    python_type: type
+    """The Python type."""
 
     protobuf_typename: str
     """The protobuf name for the type."""
@@ -35,34 +35,34 @@ class ConvertibleType(NamedTuple):
 
 _CONVERTIBLE_TYPES = [
     ConvertibleType(
-        python_typename=bool.__name__,
+        python_type=bool,
         protobuf_typename=wrappers_pb2.BoolValue.DESCRIPTOR.full_name,
         protobuf_initializer=wrappers_pb2.BoolValue,
     ),
     ConvertibleType(
-        python_typename=bytes.__name__,
+        python_type=bytes,
         protobuf_typename=wrappers_pb2.BytesValue.DESCRIPTOR.full_name,
         protobuf_initializer=wrappers_pb2.BytesValue,
     ),
     ConvertibleType(
-        python_typename=float.__name__,
+        python_type=float,
         protobuf_typename=wrappers_pb2.DoubleValue.DESCRIPTOR.full_name,
         protobuf_initializer=wrappers_pb2.DoubleValue,
     ),
     ConvertibleType(
-        python_typename=int.__name__,
+        python_type=int,
         protobuf_typename=wrappers_pb2.Int64Value.DESCRIPTOR.full_name,
         protobuf_initializer=wrappers_pb2.Int64Value,
     ),
     ConvertibleType(
-        python_typename=str.__name__,
+        python_type=str,
         protobuf_typename=wrappers_pb2.StringValue.DESCRIPTOR.full_name,
         protobuf_initializer=wrappers_pb2.StringValue,
     ),
 ]
 
 _PROTOBUF_WRAPPER_FOR_PYTHON_TYPE = {
-    entry.python_typename: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES
+    entry.python_type: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES
 }
 
 _PROTOBUF_WRAPPER_FOR_GRPC_TYPE = {
@@ -74,10 +74,7 @@ _SUPPORTED_PYTHON_TYPES = _PROTOBUF_WRAPPER_FOR_PYTHON_TYPE.keys()
 
 def to_any(python_value: object) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
-    underlying_parents = [
-        parent.__name__
-        for parent in type(python_value).mro()  # This covers enum.IntEnum and similar
-    ]
+    underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
     best_matching_type = next(
         (parent for parent in underlying_parents if parent in _SUPPORTED_PYTHON_TYPES), None
