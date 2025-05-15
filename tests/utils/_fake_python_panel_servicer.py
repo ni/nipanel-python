@@ -1,7 +1,7 @@
 from typing import Any
 
-import google.protobuf.any_pb2 as any_pb2
 import grpc
+from google.protobuf import any_pb2
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
     OpenPanelResponse,
