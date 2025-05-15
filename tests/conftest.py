@@ -1,10 +1,10 @@
 """Fixtures for testing."""
 
 from collections.abc import Generator
-from concurrent import futures
 
 import grpc
 import pytest
+from grpc.framework.foundation import logging_pool  # type: ignore # types-grpcio does not cover this yet
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
     PythonPanelServiceStub,
 )
@@ -15,7 +15,7 @@ from tests.utils._fake_python_panel_service import FakePythonPanelService
 @pytest.fixture
 def fake_python_panel_service() -> Generator[FakePythonPanelService]:
     """Fixture to create a FakePythonPanelServicer for testing."""
-    with futures.ThreadPoolExecutor(max_workers=10) as thread_pool:
+    with logging_pool.pool(max_workers=10) as thread_pool:
         service = FakePythonPanelService()
         service.start(thread_pool)
         yield service
