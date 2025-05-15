@@ -84,31 +84,25 @@ def test___unopened_panel___get_set_value___gets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___builtin_scalar_types___set_value___gets_same_value(
+@pytest.mark.parametrize(
+    "value_payload",
+    [
+        "firstname bunchanumbers",
+        42,
+        3.14,
+        True,
+        b"robotext",
+    ],
+)
+def test___builtin_scalar_type___set_value___gets_same_value(
     grpc_channel_for_fake_panel_service: grpc.Channel,
+    value_payload: object,
 ) -> None:
     """Test that set_value() and get_value() work for builtin scalar types."""
     channel = grpc_channel_for_fake_panel_service
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=channel)
 
     value_id = "test_id"
-    string_value = "test_value"
-    int_value = 42
-    float_value = 3.14
-    bool_value = True
-    bytes_value = b"robotext"
+    panel.set_value(value_id, value_payload)
 
-    panel.set_value(value_id, string_value)
-    assert panel.get_value(value_id) == string_value
-
-    panel.set_value(value_id, int_value)
-    assert panel.get_value(value_id) == int_value
-
-    panel.set_value(value_id, float_value)
-    assert panel.get_value(value_id) == float_value
-
-    panel.set_value(value_id, bool_value)
-    assert panel.get_value(value_id) == bool_value
-
-    panel.set_value(value_id, bytes_value)
-    assert panel.get_value(value_id) == bytes_value
+    assert panel.get_value(value_id) == value_payload
