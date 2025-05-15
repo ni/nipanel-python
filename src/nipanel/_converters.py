@@ -37,7 +37,7 @@ class ConvertibleType(NamedTuple):
     """A callable that can be used to create an instance of the protobuf type."""
 
 
-_CONVERTIBLE_TYPES: dict[str, ConvertibleType] = {
+_CONVERTIBLE_TYPES = {
     "bool": ConvertibleType(
         name="Boolean",
         python_typename=bool.__name__,
