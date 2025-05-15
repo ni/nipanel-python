@@ -96,6 +96,8 @@ def test___unopened_panel___get_set_value___gets_value(
         test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4,
         test_types.MyIntEnum.VALUE20,
         test_types.MyStrEnum.VALUE3,
+        test_types.MixinIntEnum.VALUE33,
+        test_types.MixinStrEnum.VALUE11,
     ],
 )
 def test___builtin_scalar_type___set_value___gets_same_value(
@@ -110,3 +112,23 @@ def test___builtin_scalar_type___set_value___gets_same_value(
     panel.set_value(value_id, value_payload)
 
     assert panel.get_value(value_id) == value_payload
+
+
+@pytest.mark.parametrize(
+    "value_payload",
+    [
+        test_types.MyEnum.VALUE300,
+        test_types.MyFlags.VALUE8 | test_types.MyFlags.VALUE16,
+    ],
+)
+def test___unsupported_type___set_value___raises(
+    grpc_channel_for_fake_panel_service: grpc.Channel,
+    value_payload: object,
+) -> None:
+    """Test that set_value() raises for unsupported types."""
+    channel = grpc_channel_for_fake_panel_service
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=channel)
+
+    value_id = "test_id"
+    with pytest.raises(TypeError):
+        panel.set_value(value_id, value_payload)
