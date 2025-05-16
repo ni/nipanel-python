@@ -3,103 +3,146 @@
 from __future__ import annotations
 
 import logging
-from typing import Callable, NamedTuple, Union
+from typing import Protocol
 
 from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
-from typing_extensions import TypeAlias
 
 _logger = logging.getLogger(__name__)
 
 
-class ConvertibleType(NamedTuple):
-    """A Python type that can be converted to and from a protobuf Any."""
+class Converter(Protocol):
+    """A class that defines how to convert between Python and protobuf types."""
 
-    python_type: type
-    """The Python type."""
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
 
-    protobuf_typename: str
-    """The protobuf name for the type."""
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
 
-    protobuf_message: type
-    """The protobuf message for the type."""
+    def to_protobuf(self, value: object) -> Message:
+        """Convert a Python object to a protobuf message."""
 
-    protobuf_initializer: Callable[[object], Message]
-    """A callable that creates an instance of the protobuf type from a Python object."""
-
-
-def _bool_to_protobuf(value: object) -> wrappers_pb2.BoolValue:
-    """Convert a bool to a protobuf BoolValue."""
-    assert isinstance(value, bool), f"Expected bool, got {type(value)}"
-    return wrappers_pb2.BoolValue(value=value)
+    @property
+    def protobuf_typename(self) -> str:
+        """The protobuf name for the type."""
+        return self.protobuf_message.DESCRIPTOR.full_name
 
 
-def _bytes_to_protobuf(value: object) -> wrappers_pb2.BytesValue:
-    """Convert bytes to a protobuf BytesValue."""
-    assert isinstance(value, bytes), f"Expected bytes, got {type(value)}"
-    return wrappers_pb2.BytesValue(value=value)
+class BoolConverter(Converter):
+    """A converter for bool types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bool
+
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
+        return wrappers_pb2.BoolValue
+
+    def to_protobuf(self, value: object) -> wrappers_pb2.BoolValue:
+        """Convert a bool to a protobuf BoolValue."""
+        assert isinstance(value, bool), f"Expected bool, got {type(value)}"
+        return self.protobuf_message(value=value)
 
 
-def _float_to_protobuf(value: object) -> wrappers_pb2.DoubleValue:
-    """Convert a float to a protobuf DoubleValue."""
-    assert isinstance(value, float), f"Expected float, got {type(value)}"
-    return wrappers_pb2.DoubleValue(value=value)
+class BytesConverter(Converter):
+    """A converter for bytes types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bytes
+
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
+        return wrappers_pb2.BytesValue
+
+    def to_protobuf(self, value: object) -> wrappers_pb2.BytesValue:
+        """Convert bytes to a protobuf BytesValue."""
+        assert isinstance(value, bytes), f"Expected bytes, got {type(value)}"
+        return self.protobuf_message(value=value)
 
 
-def _int_to_protobuf(value: object) -> wrappers_pb2.Int64Value:
-    """Convert an int to a protobuf Int64Value."""
-    assert isinstance(value, int), f"Expected int, got {type(value)}"
-    return wrappers_pb2.Int64Value(value=value)
+class FloatConverter(Converter):
+    """A converter for float types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return float
+
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
+        return wrappers_pb2.DoubleValue
+
+    def to_protobuf(self, value: object) -> wrappers_pb2.DoubleValue:
+        """Convert a float to a protobuf DoubleValue."""
+        assert isinstance(value, float), f"Expected float, got {type(value)}"
+        return self.protobuf_message(value=value)
 
 
-def _str_to_protobuf(value: object) -> wrappers_pb2.StringValue:
-    """Convert a str to a protobuf StringValue."""
-    assert isinstance(value, str), f"Expected str, got {type(value)}"
-    return wrappers_pb2.StringValue(value=value)
+class IntConverter(Converter):
+    """A converter for int types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return int
+
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
+        return wrappers_pb2.Int64Value
+
+    def to_protobuf(self, value: object) -> wrappers_pb2.Int64Value:
+        """Convert an int to a protobuf Int64Value."""
+        assert isinstance(value, int), f"Expected int, got {type(value)}"
+        return self.protobuf_message(value=value)
+
+
+class StrConverter(Converter):
+    """A converter for str types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return str
+
+    @property
+    def protobuf_message(self) -> type:
+        """The protobuf message for the type."""
+        return wrappers_pb2.StringValue
+
+    def to_protobuf(self, value: object) -> wrappers_pb2.StringValue:
+        """Convert a str to a protobuf StringValue."""
+        assert isinstance(value, str), f"Expected str, got {type(value)}"
+        return self.protobuf_message(value=value)
 
 
 _CONVERTIBLE_TYPES = [
-    ConvertibleType(
-        python_type=bool,
-        protobuf_typename=wrappers_pb2.BoolValue.DESCRIPTOR.full_name,
-        protobuf_message=wrappers_pb2.BoolValue,
-        protobuf_initializer=_bool_to_protobuf,
-    ),
-    ConvertibleType(
-        python_type=bytes,
-        protobuf_typename=wrappers_pb2.BytesValue.DESCRIPTOR.full_name,
-        protobuf_message=wrappers_pb2.BytesValue,
-        protobuf_initializer=_bytes_to_protobuf,
-    ),
-    ConvertibleType(
-        python_type=float,
-        protobuf_typename=wrappers_pb2.DoubleValue.DESCRIPTOR.full_name,
-        protobuf_message=wrappers_pb2.DoubleValue,
-        protobuf_initializer=_float_to_protobuf,
-    ),
-    ConvertibleType(
-        python_type=int,
-        protobuf_typename=wrappers_pb2.Int64Value.DESCRIPTOR.full_name,
-        protobuf_message=wrappers_pb2.Int64Value,
-        protobuf_initializer=_int_to_protobuf,
-    ),
-    ConvertibleType(
-        python_type=str,
-        protobuf_typename=wrappers_pb2.StringValue.DESCRIPTOR.full_name,
-        protobuf_message=wrappers_pb2.StringValue,
-        protobuf_initializer=_str_to_protobuf,
-    ),
+    BoolConverter(),
+    BytesConverter(),
+    FloatConverter(),
+    IntConverter(),
+    StrConverter(),
 ]
 
-_PROTOBUF_WRAPPER_FOR_PYTHON_TYPE = {
-    entry.python_type: entry.protobuf_initializer for entry in _CONVERTIBLE_TYPES
+_CONVERTER_FOR_PYTHON_TYPE = {
+    entry.python_type: entry for entry in _CONVERTIBLE_TYPES
 }
 
-_PROTOBUF_WRAPPER_FOR_GRPC_TYPE = {
-    entry.protobuf_typename: entry.protobuf_message for entry in _CONVERTIBLE_TYPES
+_CONVERTER_FOR_GRPC_TYPE = {
+    entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES
 }
 
-_SUPPORTED_PYTHON_TYPES = _PROTOBUF_WRAPPER_FOR_PYTHON_TYPE.keys()
+_SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
 
 def to_any(python_value: object) -> any_pb2.Any:
@@ -116,7 +159,8 @@ def to_any(python_value: object) -> any_pb2.Any:
     _logger.debug(f"Best matching type for '{repr(python_value)}' resolved to {best_matching_type}")
 
     the_any = any_pb2.Any()
-    wrapped_value = _PROTOBUF_WRAPPER_FOR_PYTHON_TYPE[best_matching_type](python_value)
+    converter = _CONVERTER_FOR_PYTHON_TYPE[best_matching_type]
+    wrapped_value = converter.to_protobuf(python_value)
     the_any.Pack(wrapped_value)
     return the_any
 
@@ -129,9 +173,10 @@ def from_any(protobuf_any: any_pb2.Any) -> object:
     underlying_typename = protobuf_any.TypeName()
     _logger.debug(f"Unpacking type '{underlying_typename}'")
 
-    protobuf_wrapper = _PROTOBUF_WRAPPER_FOR_GRPC_TYPE[underlying_typename]()
-    did_unpack = protobuf_any.Unpack(protobuf_wrapper)
+    converter = _CONVERTER_FOR_GRPC_TYPE[underlying_typename]
+    protobuf_message = converter.protobuf_message()
+    did_unpack = protobuf_any.Unpack(protobuf_message)
     if not did_unpack:
         raise ValueError(f"Failed to unpack Any with underlying type '{underlying_typename}'")
 
-    return protobuf_wrapper.value
+    return protobuf_message.value
