@@ -134,13 +134,9 @@ _CONVERTIBLE_TYPES = [
     StrConverter(),
 ]
 
-_CONVERTER_FOR_PYTHON_TYPE = {
-    entry.python_type: entry for entry in _CONVERTIBLE_TYPES
-}
+_CONVERTER_FOR_PYTHON_TYPE = {entry.python_type: entry for entry in _CONVERTIBLE_TYPES}
 
-_CONVERTER_FOR_GRPC_TYPE = {
-    entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES
-}
+_CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES}
 
 _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
