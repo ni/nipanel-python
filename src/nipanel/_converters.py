@@ -19,11 +19,11 @@ class Converter(Protocol):
         """The Python type that this converter handles."""
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
 
     def to_protobuf(self, value: object) -> Message:
-        """Convert a Python object to a protobuf message."""
+        """Convert the Python object to its type-specific protobuf message."""
 
     @property
     def protobuf_typename(self) -> str:
@@ -40,8 +40,8 @@ class BoolConverter(Converter):
         return bool
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
         return wrappers_pb2.BoolValue
 
     def to_protobuf(self, value: object) -> wrappers_pb2.BoolValue:
@@ -59,8 +59,8 @@ class BytesConverter(Converter):
         return bytes
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
         return wrappers_pb2.BytesValue
 
     def to_protobuf(self, value: object) -> wrappers_pb2.BytesValue:
@@ -78,8 +78,8 @@ class FloatConverter(Converter):
         return float
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
         return wrappers_pb2.DoubleValue
 
     def to_protobuf(self, value: object) -> wrappers_pb2.DoubleValue:
@@ -97,8 +97,8 @@ class IntConverter(Converter):
         return int
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
         return wrappers_pb2.Int64Value
 
     def to_protobuf(self, value: object) -> wrappers_pb2.Int64Value:
@@ -116,8 +116,8 @@ class StrConverter(Converter):
         return str
 
     @property
-    def protobuf_message(self) -> type:
-        """The protobuf message for the type."""
+    def protobuf_message(self) -> Message:
+        """The matching protobuf message for the Python type."""
         return wrappers_pb2.StringValue
 
     def to_protobuf(self, value: object) -> wrappers_pb2.StringValue:
