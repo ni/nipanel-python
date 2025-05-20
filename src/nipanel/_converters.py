@@ -9,23 +9,23 @@ from typing import Any, Generic, Type, TypeVar
 from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
 
-TPythonType_co = TypeVar("TPythonType_co", covariant=True)
-TProtobufType_co = TypeVar("TProtobufType_co", bound=Message, covariant=True)
+_TPythonType_co = TypeVar("_TPythonType_co", covariant=True)
+_TProtobufType_co = TypeVar("_TProtobufType_co", bound=Message, covariant=True)
 
 _logger = logging.getLogger(__name__)
 
 
-class Converter(Generic[TPythonType_co, TProtobufType_co], ABC):
+class Converter(Generic[_TPythonType_co, _TProtobufType_co], ABC):
     """A class that defines how to convert between Python objects and protobuf Any messages."""
 
     @property
     @abstractmethod
-    def python_type(self) -> Type[TPythonType_co]:
+    def python_type(self) -> Type[_TPythonType_co]:
         """The Python type that this converter handles."""
 
     @property
     @abstractmethod
-    def protobuf_message(self) -> Type[TProtobufType_co]:
+    def protobuf_message(self) -> Type[_TProtobufType_co]:
         """The type-specific protobuf message for the Python type."""
 
     @property
@@ -38,7 +38,7 @@ class Converter(Generic[TPythonType_co, TProtobufType_co], ABC):
         """Convert the Python object to its type-specific message and pack it as any_pb2.Any."""
 
     @abstractmethod
-    def to_python(self, protobuf_value: any_pb2.Any) -> TPythonType_co:
+    def to_python(self, protobuf_value: any_pb2.Any) -> _TPythonType_co:
         """Convert the protobuf message to its matching Python type."""
 
 
