@@ -9,23 +9,23 @@ from typing import Any, Generic, Type, TypeVar
 from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
 
-_TPythonType_co = TypeVar("_TPythonType_co", covariant=True)
-_TProtobufType_co = TypeVar("_TProtobufType_co", bound=Message, covariant=True)
+_TPythonType = TypeVar("_TPythonType")
+_TProtobufType = TypeVar("_TProtobufType", bound=Message)
 
 _logger = logging.getLogger(__name__)
 
 
-class Converter(Generic[_TPythonType_co, _TProtobufType_co], ABC):
+class Converter(Generic[_TPythonType, _TProtobufType], ABC):
     """A class that defines how to convert between Python objects and protobuf Any messages."""
 
     @property
     @abstractmethod
-    def python_type(self) -> Type[_TPythonType_co]:
+    def python_type(self) -> Type[_TPythonType]:
         """The Python type that this converter handles."""
 
     @property
     @abstractmethod
-    def protobuf_message(self) -> Type[_TProtobufType_co]:
+    def protobuf_message(self) -> Type[_TProtobufType]:
         """The type-specific protobuf message for the Python type."""
 
     @property
@@ -44,9 +44,17 @@ class Converter(Generic[_TPythonType_co, _TProtobufType_co], ABC):
     def to_protobuf_message(self, python_value: Any) -> Message:
         """Convert the Python object to its type-specific message and pack it as any_pb2.Any."""
 
+    def to_python(self, protobuf_value: any_pb2.Any) -> _TPythonType:
+        """Convert the protobuf Any message to its matching Python type."""
+        protobuf_message = self.protobuf_message()
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return self.to_python_value(protobuf_message)
+
     @abstractmethod
-    def to_python(self, protobuf_value: any_pb2.Any) -> _TPythonType_co:
-        """Convert the protobuf message to its matching Python type."""
+    def to_python_value(self, protobuf_message: _TProtobufType) -> _TPythonType:
+        """Convert the protobuf wrapper message to its matching Python type."""
 
 
 class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
@@ -66,13 +74,9 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
         """Convert a bool to a protobuf Any."""
         return self.protobuf_message(value=python_value)
 
-    def to_python(self, protobuf_value: any_pb2.Any) -> bool:
+    def to_python_value(self, protobuf_value: wrappers_pb2.BoolValue) -> bool:
         """Convert the protobuf message to a Python bool."""
-        protobuf_message = self.protobuf_message()
-        did_unpack = protobuf_value.Unpack(protobuf_message)
-        if not did_unpack:
-            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-        return protobuf_message.value
+        return protobuf_value.value
 
 
 class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
@@ -92,13 +96,9 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
         """Convert bytes to a protobuf Any."""
         return self.protobuf_message(value=python_value)
 
-    def to_python(self, protobuf_value: any_pb2.Any) -> bytes:
+    def to_python_value(self, protobuf_value: wrappers_pb2.BytesValue) -> bytes:
         """Convert the protobuf message to Python bytes."""
-        protobuf_message = self.protobuf_message()
-        did_unpack = protobuf_value.Unpack(protobuf_message)
-        if not did_unpack:
-            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-        return protobuf_message.value
+        return protobuf_value.value
 
 
 class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
@@ -118,13 +118,9 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
         """Convert a float to a protobuf Any."""
         return self.protobuf_message(value=python_value)
 
-    def to_python(self, protobuf_value: any_pb2.Any) -> float:
+    def to_python_value(self, protobuf_value: wrappers_pb2.DoubleValue) -> float:
         """Convert the protobuf message to a Python float."""
-        protobuf_message = self.protobuf_message()
-        did_unpack = protobuf_value.Unpack(protobuf_message)
-        if not did_unpack:
-            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-        return protobuf_message.value
+        return protobuf_value.value
 
 
 class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
@@ -144,13 +140,9 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
         """Convert an int to a protobuf Any."""
         return self.protobuf_message(value=python_value)
 
-    def to_python(self, protobuf_value: any_pb2.Any) -> int:
+    def to_python_value(self, protobuf_value: wrappers_pb2.Int64Value) -> int:
         """Convert the protobuf message to a Python int."""
-        protobuf_message = self.protobuf_message()
-        did_unpack = protobuf_value.Unpack(protobuf_message)
-        if not did_unpack:
-            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-        return protobuf_message.value
+        return protobuf_value.value
 
 
 class StrConverter(Converter[str, wrappers_pb2.StringValue]):
@@ -170,17 +162,13 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
         """Convert a str to a protobuf Any."""
         return self.protobuf_message(value=python_value)
 
-    def to_python(self, protobuf_value: any_pb2.Any) -> str:
+    def to_python_value(self, protobuf_value: wrappers_pb2.StringValue) -> str:
         """Convert the protobuf message to a Python string."""
-        protobuf_message = self.protobuf_message()
-        did_unpack = protobuf_value.Unpack(protobuf_message)
-        if not did_unpack:
-            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-        return protobuf_message.value
+        return protobuf_value.value
 
 
 # FFV -- consider adding a RegisterConverter mechanism
-_CONVERTIBLE_TYPES = [
+_CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     BoolConverter(),
     BytesConverter(),
     FloatConverter(),
