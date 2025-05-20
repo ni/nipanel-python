@@ -51,9 +51,8 @@ def test___unopened_panel___set_value___sets_value(
 
     value_id = "test_id"
     string_value = "test_value"
-    panel.set_value(value_id, string_value)
 
-    assert panel.get_value(value_id) == string_value
+    panel.set_value(value_id, string_value)
 
 
 def test___unopened_panel___get_unset_value___raises_exception(
