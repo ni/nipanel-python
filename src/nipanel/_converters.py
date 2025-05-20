@@ -12,50 +12,11 @@ from google.protobuf.message import Message
 TPythonType = TypeVar("TPythonType", covariant=True)
 TProtobufType = TypeVar("TProtobufType", bound=Message, covariant=True)
 
-TBuiltinPythonType = TypeVar(
-    "TBuiltinPythonType",
-    bool,
-    bytes,
-    float,
-    int,
-    str,
-)
-TBuiltinProtobufMessage = TypeVar(
-    "TBuiltinProtobufMessage",
-    wrappers_pb2.BoolValue,
-    wrappers_pb2.BytesValue,
-    wrappers_pb2.DoubleValue,
-    wrappers_pb2.Int64Value,
-    wrappers_pb2.StringValue,
-)
-TBuiltinProtobufType = TypeVar(
-    "TBuiltinProtobufType",
-    Type[wrappers_pb2.BoolValue],
-    Type[wrappers_pb2.BytesValue],
-    Type[wrappers_pb2.DoubleValue],
-    Type[wrappers_pb2.Int64Value],
-    Type[wrappers_pb2.StringValue],
-)
-
 _logger = logging.getLogger(__name__)
 
 
-def _from_python_builtin(protobuf_message: TBuiltinProtobufType, python_value: TBuiltinPythonType) -> any_pb2.Any:
-    wrapped_value = protobuf_message(value=python_value)
-    as_any = any_pb2.Any()
-    as_any.Pack(wrapped_value)
-    return as_any
-
-
-def _to_python_builtin(protobuf_value: any_pb2.Any, protobuf_message: TBuiltinProtobufMessage) -> TBuiltinPythonType:
-    did_unpack = protobuf_value.Unpack(protobuf_message)
-    if not did_unpack:
-        raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
-    return protobuf_message.value
-
-
 class Converter(Generic[TPythonType, TProtobufType], ABC):
-    """A class that defines how to convert between Python and protobuf types."""
+    """A class that defines how to convert between Python objects and protobuf Any messages."""
 
     @property
     @abstractmethod
@@ -65,7 +26,7 @@ class Converter(Generic[TPythonType, TProtobufType], ABC):
     @property
     @abstractmethod
     def protobuf_message(self) -> Type[TProtobufType]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
 
     @property
     def protobuf_typename(self) -> str:
@@ -91,17 +52,23 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BoolValue]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
         return wrappers_pb2.BoolValue
 
     def to_protobuf(self, python_value: bool) -> any_pb2.Any:
-        """Convert a bool to a protobuf BoolValue."""
-        return _from_python_builtin(self.protobuf_message, python_value)
+        """Convert a bool to a protobuf Any."""
+        wrapped_value = self.protobuf_message(value=python_value)
+        as_any = any_pb2.Any()
+        as_any.Pack(wrapped_value)
+        return as_any
 
     def to_python(self, protobuf_value: any_pb2.Any) -> bool:
         """Convert the protobuf message to a Python bool."""
         protobuf_message = self.protobuf_message()
-        return _to_python_builtin(protobuf_value, protobuf_message)
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return protobuf_message.value
 
 
 class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
@@ -114,17 +81,23 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BytesValue]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
         return wrappers_pb2.BytesValue
 
     def to_protobuf(self, python_value: bytes) -> any_pb2.Any:
-        """Convert bytes to a protobuf BytesValue."""
-        return _from_python_builtin(self.protobuf_message, python_value)
+        """Convert bytes to a protobuf Any."""
+        wrapped_value = self.protobuf_message(value=python_value)
+        as_any = any_pb2.Any()
+        as_any.Pack(wrapped_value)
+        return as_any
 
     def to_python(self, protobuf_value: any_pb2.Any) -> bytes:
         """Convert the protobuf message to Python bytes."""
         protobuf_message = self.protobuf_message()
-        return _to_python_builtin(protobuf_value, protobuf_message)
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return protobuf_message.value
 
 
 class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
@@ -137,17 +110,23 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.DoubleValue]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
         return wrappers_pb2.DoubleValue
 
     def to_protobuf(self, python_value: float) -> any_pb2.Any:
-        """Convert a float to a protobuf DoubleValue."""
-        return _from_python_builtin(self.protobuf_message, python_value)
+        """Convert a float to a protobuf Any."""
+        wrapped_value = self.protobuf_message(value=python_value)
+        as_any = any_pb2.Any()
+        as_any.Pack(wrapped_value)
+        return as_any
 
     def to_python(self, protobuf_value: any_pb2.Any) -> float:
         """Convert the protobuf message to a Python float."""
         protobuf_message = self.protobuf_message()
-        return _to_python_builtin(protobuf_value, protobuf_message)
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return protobuf_message.value
 
 
 class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
@@ -160,17 +139,23 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.Int64Value]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
         return wrappers_pb2.Int64Value
 
     def to_protobuf(self, python_value: int) -> any_pb2.Any:
-        """Convert an int to a protobuf Int64Value."""
-        return _from_python_builtin(self.protobuf_message, python_value)
+        """Convert an int to a protobuf Any."""
+        wrapped_value = self.protobuf_message(value=python_value)
+        as_any = any_pb2.Any()
+        as_any.Pack(wrapped_value)
+        return as_any
 
     def to_python(self, protobuf_value: any_pb2.Any) -> int:
         """Convert the protobuf message to a Python int."""
         protobuf_message = self.protobuf_message()
-        return _to_python_builtin(protobuf_value, protobuf_message)
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return protobuf_message.value
 
 
 class StrConverter(Converter[str, wrappers_pb2.StringValue]):
@@ -183,19 +168,26 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.StringValue]:
-        """The matching protobuf message for the Python type."""
+        """The type-specific protobuf message for the Python type."""
         return wrappers_pb2.StringValue
 
     def to_protobuf(self, python_value: str) -> any_pb2.Any:
-        """Convert a str to a protobuf StringValue."""
-        return _from_python_builtin(self.protobuf_message, python_value)
+        """Convert a str to a protobuf Any."""
+        wrapped_value = self.protobuf_message(value=python_value)
+        as_any = any_pb2.Any()
+        as_any.Pack(wrapped_value)
+        return as_any
 
     def to_python(self, protobuf_value: any_pb2.Any) -> str:
         """Convert the protobuf message to a Python string."""
         protobuf_message = self.protobuf_message()
-        return _to_python_builtin(protobuf_value, protobuf_message)
+        did_unpack = protobuf_value.Unpack(protobuf_message)
+        if not did_unpack:
+            raise ValueError(f"Failed to unpack Any with type '{protobuf_value.TypeName()}'")
+        return protobuf_message.value
 
 
+# FFV -- consider adding a RegisterConverter mechanism
 _CONVERTIBLE_TYPES = [
     BoolConverter(),
     BytesConverter(),
@@ -204,13 +196,12 @@ _CONVERTIBLE_TYPES = [
     StrConverter(),
 ]
 
-# FFV -- consider adding a RegisterConverter mechanism
 _CONVERTER_FOR_PYTHON_TYPE = {entry.python_type: entry for entry in _CONVERTIBLE_TYPES}
 _CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES}
 _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
 
-def to_any(python_value: object) -> any_pb2.Any:
+def to_any(python_value: Any) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
@@ -227,7 +218,7 @@ def to_any(python_value: object) -> any_pb2.Any:
     return converter.to_protobuf(python_value)
 
 
-def from_any(protobuf_any: any_pb2.Any) -> object:
+def from_any(protobuf_any: any_pb2.Any) -> Any:
     """Convert a protobuf Any to a Python object."""
     if not isinstance(protobuf_any, any_pb2.Any):
         raise ValueError(f"Unexpected type: {type(protobuf_any)}")
