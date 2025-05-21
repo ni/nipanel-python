@@ -1,10 +1,10 @@
 """Fixtures for testing."""
 
 from collections.abc import Generator
-from concurrent import futures
 
 import grpc
 import pytest
+from grpc.framework.foundation import logging_pool
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
     PythonPanelServiceStub,
 )
@@ -15,7 +15,7 @@ from tests.utils._fake_python_panel_service import FakePythonPanelService
 @pytest.fixture
 def fake_python_panel_service() -> Generator[FakePythonPanelService]:
     """Fixture to create a FakePythonPanelServicer for testing."""
-    with futures.ThreadPoolExecutor(max_workers=10) as thread_pool:
+    with logging_pool.pool(max_workers=10) as thread_pool:
         service = FakePythonPanelService()
         service.start(thread_pool)
         yield service
@@ -23,7 +23,7 @@ def fake_python_panel_service() -> Generator[FakePythonPanelService]:
 
 
 @pytest.fixture
-def grpc_channel_for_fake_panel_service(
+def fake_panel_channel(
     fake_python_panel_service: FakePythonPanelService,
 ) -> Generator[grpc.Channel]:
     """Fixture to get a channel to the FakePythonPanelService."""
@@ -35,8 +35,7 @@ def grpc_channel_for_fake_panel_service(
 
 @pytest.fixture
 def python_panel_service_stub(
-    grpc_channel_for_fake_panel_service: grpc.Channel,
+    fake_panel_channel: grpc.Channel,
 ) -> Generator[PythonPanelServiceStub]:
     """Fixture to get a PythonPanelServiceStub, attached to a FakePythonPanelService."""
-    channel = grpc_channel_for_fake_panel_service
-    yield PythonPanelServiceStub(channel)
+    yield PythonPanelServiceStub(fake_panel_channel)

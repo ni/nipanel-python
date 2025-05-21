@@ -7,11 +7,20 @@ import threading
 from typing import Callable, TypeVar
 
 import grpc
-from ni.pythonpanel.v1.python_panel_service_pb2 import OpenPanelRequest
+from ni.pythonpanel.v1.python_panel_service_pb2 import (
+    GetValueRequest,
+    OpenPanelRequest,
+    SetValueRequest,
+)
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
+
+from nipanel._converters import (
+    from_any,
+    to_any,
+)
 
 _P = ParamSpec("_P")
 _T = TypeVar("_T")
@@ -52,6 +61,33 @@ class PanelClient:
         """Open the panel."""
         open_panel_request = OpenPanelRequest(panel_id=panel_id, panel_uri=panel_uri)
         self._invoke_with_retry(self._get_stub().OpenPanel, open_panel_request)
+
+    def set_value(self, panel_id: str, value_id: str, value: object) -> None:
+        """Set the value for the control with value_id.
+
+        Args:
+            panel_id: The ID of the panel.
+            value_id: The ID of the control.
+            value: The value to set.
+        """
+        new_any = to_any(value)
+        set_value_request = SetValueRequest(panel_id=panel_id, value_id=value_id, value=new_any)
+        self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
+
+    def get_value(self, panel_id: str, value_id: str) -> object:
+        """Get the value for the control with value_id.
+
+        Args:
+            panel_id: The ID of the panel.
+            value_id: The ID of the control.
+
+        Returns:
+            The value.
+        """
+        get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
+        response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
+        the_value = from_any(response.value)
+        return the_value
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:

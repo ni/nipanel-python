@@ -1,7 +1,7 @@
 from typing import Any
 
-import google.protobuf.any_pb2 as any_pb2
 import grpc
+from google.protobuf import any_pb2
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
     OpenPanelResponse,
@@ -16,8 +16,10 @@ from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceSe
 class FakePythonPanelServicer(PythonPanelServiceServicer):
     """Fake implementation of the PythonPanelServicer for testing."""
 
-    _values = {"test_value": any_pb2.Any()}
-    _fail_next_open_panel = False
+    def __init__(self) -> None:
+        """Initialize the fake PythonPanelServicer."""
+        self._values = {"test_value": any_pb2.Any()}
+        self._fail_next_open_panel = False
 
     def OpenPanel(self, request: OpenPanelRequest, context: Any) -> OpenPanelResponse:  # noqa: N802
         """Trivial implementation for testing."""

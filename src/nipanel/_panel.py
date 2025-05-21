@@ -63,8 +63,7 @@ class Panel(ABC):
         Returns:
             The value
         """
-        # TODO: AB#3095681 - get the Any from _client.get_value and convert it to the correct type
-        return "placeholder value"
+        return self._panel_client.get_value(self._panel_id, value_id)
 
     def set_value(self, value_id: str, value: object) -> None:
         """Set the value for a control on the panel.
@@ -73,5 +72,4 @@ class Panel(ABC):
             value_id: The id of the value
             value: The value
         """
-        # TODO: AB#3095681 - Convert the value to an Any and pass it to _client.set_value
-        pass
+        self._panel_client.set_value(self._panel_id, value_id, value)

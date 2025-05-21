@@ -67,6 +67,7 @@ strict = true
 module = [
   # https://github.com/ni/hightime/issues/4 - Add type annotations
   "hightime.*",
+  "grpc.framework.foundation.*",
 ]
 ignore_missing_imports = true
 

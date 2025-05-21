@@ -11,12 +11,10 @@ from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
 class FakePythonPanelService:
     """Encapsulates a fake PythonPanelService with a gRPC server for testing."""
 
-    _server: grpc.Server
-    _port: int
-    _servicer: FakePythonPanelServicer
-
     def __init__(self) -> None:
         """Initialize the fake PythonPanelService."""
+        self._server: grpc.Server
+        self._port: int
         self._servicer = FakePythonPanelServicer()
 
     def start(self, thread_pool: futures.ThreadPoolExecutor) -> None:
