@@ -181,7 +181,7 @@ _CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERT
 _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
 
-def to_any(python_value: Any) -> any_pb2.Any:
+def to_any(python_value: object) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
@@ -198,7 +198,7 @@ def to_any(python_value: Any) -> any_pb2.Any:
     return converter.to_protobuf_any(python_value)
 
 
-def from_any(protobuf_any: any_pb2.Any) -> Any:
+def from_any(protobuf_any: any_pb2.Any) -> object:
     """Convert a protobuf Any to a Python object."""
     if not isinstance(protobuf_any, any_pb2.Any):
         raise ValueError(f"Unexpected type: {type(protobuf_any)}")
