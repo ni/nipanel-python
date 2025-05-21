@@ -42,7 +42,7 @@ class Converter(Generic[_TPythonType, _TProtobufType], ABC):
 
     @abstractmethod
     def to_protobuf_message(self, python_value: Any) -> Message:
-        """Convert the Python object to its type-specific message and pack it as any_pb2.Any."""
+        """Convert the Python object to its type-specific message."""
 
     def to_python(self, protobuf_value: any_pb2.Any) -> _TPythonType:
         """Convert the protobuf Any message to its matching Python type."""
@@ -71,7 +71,7 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
         return wrappers_pb2.BoolValue
 
     def to_protobuf_message(self, python_value: bool) -> Message:
-        """Convert a bool to a protobuf Any."""
+        """Convert the Python bool to a protobuf wrappers_pb2.BoolValue."""
         return self.protobuf_message(value=python_value)
 
     def to_python_value(self, protobuf_value: wrappers_pb2.BoolValue) -> bool:
@@ -93,11 +93,11 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
         return wrappers_pb2.BytesValue
 
     def to_protobuf_message(self, python_value: bytes) -> Message:
-        """Convert bytes to a protobuf Any."""
+        """Convert the Python bytes string to a protobuf wrappers_pb2.BytesValue."""
         return self.protobuf_message(value=python_value)
 
     def to_python_value(self, protobuf_value: wrappers_pb2.BytesValue) -> bytes:
-        """Convert the protobuf message to Python bytes."""
+        """Convert the protobuf message to a Python bytes string."""
         return protobuf_value.value
 
 
@@ -115,7 +115,7 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
         return wrappers_pb2.DoubleValue
 
     def to_protobuf_message(self, python_value: float) -> Message:
-        """Convert a float to a protobuf Any."""
+        """Convert the Python float to a protobuf wrappers_pb2.DoubleValue."""
         return self.protobuf_message(value=python_value)
 
     def to_python_value(self, protobuf_value: wrappers_pb2.DoubleValue) -> float:
@@ -137,7 +137,7 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
         return wrappers_pb2.Int64Value
 
     def to_protobuf_message(self, python_value: int) -> Message:
-        """Convert an int to a protobuf Any."""
+        """Convert the Python int to a protobuf wrappers_pb2.Int64Value."""
         return self.protobuf_message(value=python_value)
 
     def to_python_value(self, protobuf_value: wrappers_pb2.Int64Value) -> int:
@@ -159,7 +159,7 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
         return wrappers_pb2.StringValue
 
     def to_protobuf_message(self, python_value: str) -> Message:
-        """Convert a str to a protobuf Any."""
+        """Convert the Python str to a protobuf wrappers_pb2.StringValue."""
         return self.protobuf_message(value=python_value)
 
     def to_python_value(self, protobuf_value: wrappers_pb2.StringValue) -> str:
