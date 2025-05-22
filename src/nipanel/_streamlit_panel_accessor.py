@@ -4,7 +4,7 @@ import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from nipanel._panel import PanelAccessor
+from nipanel._panel_accessor import PanelAccessor
 from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 
 

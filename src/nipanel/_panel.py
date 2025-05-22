@@ -27,7 +27,7 @@ class Panel(PanelAccessor, ABC):
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
-        """Initialize the Panel class."""
+        """Initialize the panel."""
         super().__init__(
             panel_id=panel_id,
             provided_interface=provided_interface,
