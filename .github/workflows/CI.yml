@@ -8,11 +8,6 @@ on:
   workflow_call:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  checks: write
-  pull-requests: write
-
 jobs:
   check_nipanel:
     name: Check nipanel
@@ -29,3 +24,7 @@ jobs:
     uses: ./.github/workflows/report_test_results.yml
     needs: [run_unit_tests]
     if: always()
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
