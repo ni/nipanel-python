@@ -6,17 +6,15 @@ import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from nipanel._panel_client import PanelClient
+from nipanel._panel_accessor import PanelAccessor
 
 
-class Panel(ABC):
+class Panel(PanelAccessor, ABC):
     """This class allows you to open a panel and specify values for its controls."""
 
-    _panel_client: PanelClient
-    _panel_id: str
     _panel_uri: str
 
-    __slots__ = ["_panel_client", "_panel_id", "_panel_uri", "__weakref__"]
+    __slots__ = PanelAccessor.__slots__ + ["_panel_uri", "__weakref__"]
 
     def __init__(
         self,
@@ -29,21 +27,16 @@ class Panel(ABC):
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
-        """Initialize the panel."""
-        self._panel_client = PanelClient(
+        """Initialize the Panel class."""
+        super().__init__(
+            panel_id=panel_id,
             provided_interface=provided_interface,
             service_class=service_class,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
-        self._panel_id = panel_id
         self._panel_uri = panel_uri
-
-    @property
-    def panel_id(self) -> str:
-        """Read-only accessor for the panel ID."""
-        return self._panel_id
 
     @property
     def panel_uri(self) -> str:
@@ -53,23 +46,3 @@ class Panel(ABC):
     def open_panel(self) -> None:
         """Open the panel."""
         self._panel_client.open_panel(self._panel_id, self._panel_uri)
-
-    def get_value(self, value_id: str) -> object:
-        """Get the value for a control on the panel.
-
-        Args:
-            value_id: The id of the value
-
-        Returns:
-            The value
-        """
-        return self._panel_client.get_value(self._panel_id, value_id)
-
-    def set_value(self, value_id: str, value: object) -> None:
-        """Set the value for a control on the panel.
-
-        Args:
-            value_id: The id of the value
-            value: The value
-        """
-        self._panel_client.set_value(self._panel_id, value_id, value)
