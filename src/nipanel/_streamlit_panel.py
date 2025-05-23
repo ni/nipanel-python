@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import final
+
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
@@ -8,6 +10,7 @@ from nipanel._panel import Panel
 from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 
 
+@final
 class StreamlitPanel(Panel):
     """This class allows you to open a Streamlit panel and specify values for its controls."""
 

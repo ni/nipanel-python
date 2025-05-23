@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from abc import ABC
+
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
@@ -7,7 +9,7 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from nipanel._panel_client import PanelClient
 
 
-class PanelAccessor:
+class PanelAccessor(ABC):
     """This class allows you to access values for a panel's controls."""
 
     _panel_client: PanelClient
