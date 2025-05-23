@@ -2,8 +2,7 @@ import grpc
 import pytest
 
 import tests.types as test_types
-from nipanel._streamlit_panel import StreamlitPanel
-from nipanel._streamlit_panel_accessor import StreamlitPanelAccessor
+from nipanel import StreamlitPanel, StreamlitPanelAccessor
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 

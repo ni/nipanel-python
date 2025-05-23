@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import grpc
-import streamlit.components.v1 as streamlit_components
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
@@ -37,9 +36,3 @@ class StreamlitPanelAccessor(PanelAccessor):
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
-        # TODO: get url of strefresh from discovery client
-        # TODO: instantiate the strefresh component
-        strefresh_component = streamlit_components.declare_component(
-            "panelComponent", url="http://localhost:5091/strefresh"
-        )
-        strefresh_component()
