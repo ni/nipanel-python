@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "nipanel", from = "src" }, { include = "ni", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9.13"
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
