@@ -6,17 +6,13 @@ import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from nipanel._panel_client import PanelClient
+from nipanel._panel_value_accessor import PanelValueAccessor
 
 
-class Panel(ABC):
+class Panel(PanelValueAccessor, ABC):
     """This class allows you to open a panel and specify values for its controls."""
 
-    _panel_client: PanelClient
-    _panel_id: str
-    _panel_uri: str
-
-    __slots__ = ["_panel_client", "_panel_id", "_panel_uri", "__weakref__"]
+    __slots__ = ["_panel_uri"]
 
     def __init__(
         self,
@@ -30,20 +26,15 @@ class Panel(ABC):
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
         """Initialize the panel."""
-        self._panel_client = PanelClient(
+        super().__init__(
+            panel_id=panel_id,
             provided_interface=provided_interface,
             service_class=service_class,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
-        self._panel_id = panel_id
         self._panel_uri = panel_uri
-
-    @property
-    def panel_id(self) -> str:
-        """Read-only accessor for the panel ID."""
-        return self._panel_id
 
     @property
     def panel_uri(self) -> str:
@@ -61,23 +52,3 @@ class Panel(ABC):
             reset: Whether to reset all storage associated with the panel.
         """
         self._panel_client.close_panel(self._panel_id, reset=reset)
-
-    def get_value(self, value_id: str) -> object:
-        """Get the value for a control on the panel.
-
-        Args:
-            value_id: The id of the value
-
-        Returns:
-            The value
-        """
-        return self._panel_client.get_value(self._panel_id, value_id)
-
-    def set_value(self, value_id: str, value: object) -> None:
-        """Set the value for a control on the panel.
-
-        Args:
-            value_id: The id of the value
-            value: The value
-        """
-        self._panel_client.set_value(self._panel_id, value_id, value)
