@@ -1,7 +1,6 @@
 from typing import Any
 
 import grpc
-from google.protobuf import any_pb2
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
     OpenPanelResponse,
@@ -22,7 +21,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
 
     def __init__(self) -> None:
         """Initialize the fake PythonPanelServicer."""
-        self._values = {"test_value": any_pb2.Any()}
+        self._values = {}
+        self._panel_ids = []
         self._fail_next_open_panel = False
 
     def OpenPanel(self, request: OpenPanelRequest, context: Any) -> OpenPanelResponse:  # noqa: N802
@@ -30,21 +30,21 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         if self._fail_next_open_panel:
             self._fail_next_open_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
+        self._panel_ids.append(request.panel_id)
         return OpenPanelResponse()
 
     def ClosePanel(  # noqa: N802
         self, request: ClosePanelRequest, context: Any
     ) -> ClosePanelResponse:
         """Trivial implementation for testing."""
-        # No action needed for close panel in this fake implementation.
+        self._panel_ids.remove(request.panel_id)
         return ClosePanelResponse()
 
     def EnumeratePanels(  # noqa: N802
         self, request: EnumeratePanelsRequest, context: Any
     ) -> EnumeratePanelsResponse:
         """Trivial implementation for testing."""
-        # Return a panel id.
-        return EnumeratePanelsResponse(panel_ids=["test_panel"])
+        return EnumeratePanelsResponse(panel_ids=self._panel_ids)
 
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""

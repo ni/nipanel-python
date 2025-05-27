@@ -17,7 +17,12 @@ def test___open_panel___gets_response(python_panel_service_stub: PythonPanelServ
     assert response is not None  # Ensure response is returned
 
 
-def test___close_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
+def test___open_panel___close_panel___gets_response(
+    python_panel_service_stub: PythonPanelServiceStub,
+) -> None:
+    open_request = OpenPanelRequest(panel_id="test_panel", panel_uri="path/to/panel")
+    python_panel_service_stub.OpenPanel(open_request)
+
     request = ClosePanelRequest(panel_id="test_panel", reset=False)
     response = python_panel_service_stub.ClosePanel(request)
 
@@ -31,17 +36,6 @@ def test___enumerate_panels___gets_response(
     response = python_panel_service_stub.EnumeratePanels(request)
 
     assert response is not None  # Ensure response is returned
-    assert len(response.panel_ids) > 0  # Ensure there is at least one panel ID
-
-
-def test___get_value___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
-) -> None:
-    request = GetValueRequest(panel_id="test_panel", value_id="test_value")
-    response = python_panel_service_stub.GetValue(request)
-
-    assert response is not None  # Ensure response is returned
-    assert isinstance(response.value, Any)  # Ensure the value is of type `Any`
 
 
 def test___set_value___gets_response(
@@ -53,3 +47,18 @@ def test___set_value___gets_response(
     response = python_panel_service_stub.SetValue(request)
 
     assert response is not None  # Ensure response is returned
+
+
+def test___set_value___get_value___gets_response(
+    python_panel_service_stub: PythonPanelServiceStub,
+) -> None:
+    test_value = Any()
+    test_value.Pack(StringValue(value="test_value"))
+    set_request = SetValueRequest(panel_id="test_panel", value_id="test_value", value=test_value)
+    python_panel_service_stub.SetValue(set_request)
+
+    request = GetValueRequest(panel_id="test_panel", value_id="test_value")
+    response = python_panel_service_stub.GetValue(request)
+
+    assert response is not None  # Ensure response is returned
+    assert response.value == test_value  # Ensure the value is correct
