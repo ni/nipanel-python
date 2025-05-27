@@ -2,7 +2,7 @@ import grpc
 import pytest
 
 import tests.types as test_types
-from nipanel._streamlit_panel import StreamlitPanel
+from nipanel import StreamlitPanel, StreamlitPanelValueAccessor
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 
@@ -10,6 +10,17 @@ def test___panel___has_panel_id_and_panel_uri() -> None:
     panel = StreamlitPanel("my_panel", "path/to/script")
     assert panel.panel_id == "my_panel"
     assert panel.panel_uri == "path/to/script"
+
+
+def test___different_panels___have_different_panel_ids_and_uris() -> None:
+    panel1 = StreamlitPanel("panel1", "path/to/script1")
+    panel2 = StreamlitPanel("panel2", "path/to/script2")
+
+    assert panel1.panel_id == "panel1"
+    assert panel2.panel_id == "panel2"
+    assert panel1._panel_uri == "path/to/script1"
+    assert panel2._panel_uri == "path/to/script2"
+    assert panel1._panel_client != panel2._panel_client
 
 
 def test___opened_panel___set_value___gets_same_value(
@@ -21,6 +32,34 @@ def test___opened_panel___set_value___gets_same_value(
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
+
+    assert panel.get_value(value_id) == string_value
+
+
+def test___opened_panel___panel_set_value___accessor_gets_same_value(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel.open_panel()
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    assert accessor.get_value(value_id) == string_value
+
+
+def test___opened_panel___accessor_set_value___panel_gets_same_value(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel.open_panel()
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    string_value = "test_value"
+    accessor.set_value(value_id, string_value)
 
     assert panel.get_value(value_id) == string_value
 
