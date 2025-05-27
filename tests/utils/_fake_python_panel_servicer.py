@@ -21,8 +21,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
 
     def __init__(self) -> None:
         """Initialize the fake PythonPanelServicer."""
-        self._values = {}
-        self._panel_ids = []
+        self._values: dict[str, Any] = {}
+        self._panel_ids: list[str] = []
         self._fail_next_open_panel = False
 
     def OpenPanel(self, request: OpenPanelRequest, context: Any) -> OpenPanelResponse:  # noqa: N802
@@ -38,6 +38,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     ) -> ClosePanelResponse:
         """Trivial implementation for testing."""
         self._panel_ids.remove(request.panel_id)
+        if request.reset:
+            self._values.clear()
         return ClosePanelResponse()
 
     def EnumeratePanels(  # noqa: N802
