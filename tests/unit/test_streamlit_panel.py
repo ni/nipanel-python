@@ -12,6 +12,17 @@ def test___panel___has_panel_id_and_panel_uri() -> None:
     assert panel.panel_uri == "path/to/script"
 
 
+def test___different_panels___have_different_panel_ids_and_uris() -> None:
+    panel1 = StreamlitPanel("panel1", "path/to/script1")
+    panel2 = StreamlitPanel("panel2", "path/to/script2")
+
+    assert panel1.panel_id == "panel1"
+    assert panel2.panel_id == "panel2"
+    assert panel1._panel_uri == "path/to/script1"
+    assert panel2._panel_uri == "path/to/script2"
+    assert panel1._panel_client != panel2._panel_client
+
+
 def test___opened_panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
