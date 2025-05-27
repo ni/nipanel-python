@@ -15,7 +15,7 @@ class PanelAccessor(ABC):
     _panel_client: PanelClient
     _panel_id: str
 
-    __slots__ = ["_panel_client", "_panel_id"]
+    __slots__ = ["_panel_client", "_panel_id", "__weakref__"]
 
     def __init__(
         self,

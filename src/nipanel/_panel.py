@@ -14,7 +14,7 @@ class Panel(PanelAccessor, ABC):
 
     _panel_uri: str
 
-    __slots__ = PanelAccessor.__slots__ + ["_panel_uri", "__weakref__"]
+    __slots__ = ["_panel_uri"]
 
     def __init__(
         self,
