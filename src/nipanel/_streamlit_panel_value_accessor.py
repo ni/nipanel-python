@@ -6,12 +6,12 @@ import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from nipanel._panel_accessor import PanelAccessor
+from nipanel._panel_value_accessor import PanelValueAccessor
 from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 
 
 @final
-class StreamlitPanelAccessor(PanelAccessor):
+class StreamlitPanelValueAccessor(PanelValueAccessor):
     """This class provides access to values for a Streamlit panel's controls."""
 
     def __init__(

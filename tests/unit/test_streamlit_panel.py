@@ -2,7 +2,7 @@ import grpc
 import pytest
 
 import tests.types as test_types
-from nipanel import StreamlitPanel, StreamlitPanelAccessor
+from nipanel import StreamlitPanel, StreamlitPanelValueAccessor
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 
@@ -30,13 +30,13 @@ def test___opened_panel___panel_set_value___accessor_gets_same_value(
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
     panel.open_panel()
-    panel_accessor = StreamlitPanelAccessor("my_panel", grpc_channel=fake_panel_channel)
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
 
-    assert panel_accessor.get_value(value_id) == string_value
+    assert accessor.get_value(value_id) == string_value
 
 
 def test___opened_panel___accessor_set_value___panel_gets_same_value(
@@ -44,11 +44,11 @@ def test___opened_panel___accessor_set_value___panel_gets_same_value(
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
     panel.open_panel()
-    panel_accessor = StreamlitPanelAccessor("my_panel", grpc_channel=fake_panel_channel)
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
-    panel_accessor.set_value(value_id, string_value)
+    accessor.set_value(value_id, string_value)
 
     assert panel.get_value(value_id) == string_value
 
