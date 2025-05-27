@@ -20,7 +20,7 @@ class Converter(Generic[_TPythonType, _TProtobufType], ABC):
 
     @property
     @abstractmethod
-    def python_type(self) -> Type[_TPythonType]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
 
     @property
@@ -61,9 +61,9 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
     """A converter for boolean types."""
 
     @property
-    def python_type(self) -> Type[bool]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return bool
+        return bool.__name__
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BoolValue]:
@@ -83,9 +83,9 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
     """A converter for byte string types."""
 
     @property
-    def python_type(self) -> Type[bytes]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return bytes
+        return bytes.__name__
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BytesValue]:
@@ -105,9 +105,9 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
     """A converter for floating point types."""
 
     @property
-    def python_type(self) -> Type[float]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return float
+        return float.__name__
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.DoubleValue]:
@@ -127,9 +127,9 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
     """A converter for integer types."""
 
     @property
-    def python_type(self) -> Type[int]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return int
+        return int.__name__
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.Int64Value]:
@@ -149,9 +149,9 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
     """A converter for text string types."""
 
     @property
-    def python_type(self) -> Type[str]:
+    def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return str
+        return str.__name__
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.StringValue]:
@@ -176,7 +176,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     StrConverter(),
 ]
 
-_CONVERTER_FOR_PYTHON_TYPE = {entry.python_type: entry for entry in _CONVERTIBLE_TYPES}
+_CONVERTER_FOR_PYTHON_TYPE = {entry.python_typename: entry for entry in _CONVERTIBLE_TYPES}
 _CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES}
 _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
@@ -186,7 +186,7 @@ def to_any(python_value: object) -> any_pb2.Any:
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
     best_matching_type = next(
-        (parent for parent in underlying_parents if parent in _SUPPORTED_PYTHON_TYPES), None
+        (parent.__name__ for parent in underlying_parents if parent.__name__ in _SUPPORTED_PYTHON_TYPES), None
     )
     if not best_matching_type:
         raise TypeError(
