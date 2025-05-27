@@ -8,8 +8,10 @@ from typing import Callable, TypeVar
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    GetValueRequest,
     OpenPanelRequest,
+    ClosePanelRequest,
+    EnumeratePanelsRequest,
+    GetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
@@ -58,9 +60,36 @@ class PanelClient:
         self._stub: PythonPanelServiceStub | None = None
 
     def open_panel(self, panel_id: str, panel_uri: str) -> None:
-        """Open the panel."""
+        """Open the panel.
+
+        Args:
+            panel_id: The ID of the panel to open.
+            panel_uri: The URI of the panel script.
+        """
         open_panel_request = OpenPanelRequest(panel_id=panel_id, panel_uri=panel_uri)
         self._invoke_with_retry(self._get_stub().OpenPanel, open_panel_request)
+
+    def close_panel(self, panel_id: str, reset: bool) -> None:
+        """Close the panel.
+
+        Args:
+            panel_id: The ID of the panel to close.
+            reset: Whether to reset all storage associated with panel.
+        """
+        close_panel_request = ClosePanelRequest(panel_id=panel_id, reset=reset)
+        self._invoke_with_retry(self._get_stub().ClosePanel, close_panel_request)
+
+    def enumerate_panels(self) -> list[str]:
+        """Enumerate all available panels.
+
+        Returns:
+            A list of panel IDs.
+        """
+        enumerate_panels_request = EnumeratePanelsRequest()
+        response = self._invoke_with_retry(
+            self._get_stub().EnumeratePanels, enumerate_panels_request
+        )
+        return list(response.panel_ids)
 
     def set_value(self, panel_id: str, value_id: str, value: object) -> None:
         """Set the value for the control with value_id.

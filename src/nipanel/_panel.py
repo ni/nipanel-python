@@ -54,6 +54,14 @@ class Panel(ABC):
         """Open the panel."""
         self._panel_client.open_panel(self._panel_id, self._panel_uri)
 
+    def close_panel(self, reset: bool) -> None:
+        """Close the panel.
+
+        Args:
+            reset: Whether to reset all storage associated with the panel.
+        """
+        self._panel_client.close_panel(self._panel_id, reset=reset)
+
     def get_value(self, value_id: str) -> object:
         """Get the value for a control on the panel.
 

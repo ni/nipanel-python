@@ -2,6 +2,8 @@ from google.protobuf.any_pb2 import Any
 from google.protobuf.wrappers_pb2 import StringValue
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
+    ClosePanelRequest,
+    EnumeratePanelsRequest,
     GetValueRequest,
     SetValueRequest,
 )
@@ -13,6 +15,23 @@ def test___open_panel___gets_response(python_panel_service_stub: PythonPanelServ
     response = python_panel_service_stub.OpenPanel(request)
 
     assert response is not None  # Ensure response is returned
+
+
+def test___close_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
+    request = ClosePanelRequest(panel_id="test_panel", reset=False)
+    response = python_panel_service_stub.ClosePanel(request)
+
+    assert response is not None  # Ensure response is returned
+
+
+def test___enumerate_panels___gets_response(
+    python_panel_service_stub: PythonPanelServiceStub,
+) -> None:
+    request = EnumeratePanelsRequest()
+    response = python_panel_service_stub.EnumeratePanels(request)
+
+    assert response is not None  # Ensure response is returned
+    assert len(response.panel_ids) > 0  # Ensure there is at least one panel ID
 
 
 def test___get_value___gets_response(

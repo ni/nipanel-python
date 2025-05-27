@@ -5,6 +5,10 @@ from google.protobuf import any_pb2
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
     OpenPanelResponse,
+    ClosePanelRequest,
+    ClosePanelResponse,
+    EnumeratePanelsRequest,
+    EnumeratePanelsResponse,
     GetValueRequest,
     GetValueResponse,
     SetValueRequest,
@@ -27,6 +31,20 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
             self._fail_next_open_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
         return OpenPanelResponse()
+
+    def ClosePanel(  # noqa: N802
+        self, request: ClosePanelRequest, context: Any
+    ) -> ClosePanelResponse:
+        """Trivial implementation for testing."""
+        # No action needed for close panel in this fake implementation.
+        return ClosePanelResponse()
+
+    def EnumeratePanels(  # noqa: N802
+        self, request: EnumeratePanelsRequest, context: Any
+    ) -> EnumeratePanelsResponse:
+        """Trivial implementation for testing."""
+        # Return a panel id.
+        return EnumeratePanelsResponse(panel_ids=["test_panel"])
 
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""
