@@ -12,8 +12,6 @@ from nipanel._panel_value_accessor import PanelValueAccessor
 class Panel(PanelValueAccessor, ABC):
     """This class allows you to open a panel and specify values for its controls."""
 
-    _panel_uri: str
-
     __slots__ = ["_panel_uri"]
 
     def __init__(
