@@ -1,5 +1,6 @@
-import nipanel
 import os
+
+import nipanel
 
 script_path = os.path.dirname(os.path.abspath(__file__))
 panel_script_path = os.path.join(script_path, "sample_panel.py")

@@ -1,9 +1,8 @@
-import nipanel
 import streamlit as st
 
-panel = nipanel.StreamlitPanelValueAccessor(
-    panel_id="sample_panel"
-)
+import nipanel
+
+panel = nipanel.StreamlitPanelValueAccessor(panel_id="sample_panel")
 
 st.title("Sample Panel")
 
