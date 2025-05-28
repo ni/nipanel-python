@@ -8,11 +8,11 @@ panel = nipanel.StreamlitPanel(
     panel_id="sample_panel",
     streamlit_script_uri=panel_script_path,
 )
+panel.open_panel()
 panel.set_value("sample_string", "Hello, World!")
 panel.set_value("sample_int", 42)
 panel.set_value("sample_float", 3.14)
 panel.set_value("sample_bool", True)
-panel.open_panel()
 
 input("Press Enter to close the panel...")
 
