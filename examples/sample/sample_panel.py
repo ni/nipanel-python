@@ -1,3 +1,5 @@
+"""Streamlit application script for displaying values using nipanel package."""
+
 import streamlit as st
 
 import nipanel

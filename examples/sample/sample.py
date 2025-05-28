@@ -1,3 +1,5 @@
+"""This example demonstrates how to open/update a Streamlit application using nipanel package."""
+
 import os
 
 import nipanel
