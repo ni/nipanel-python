@@ -64,6 +64,35 @@ def test___opened_panel___accessor_set_value___panel_gets_same_value(
     assert panel.get_value(value_id) == string_value
 
 
+def test___opened_panel_with_value___close_without_reset___gets_value(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel.open_panel()
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    panel.close_panel(reset=False)
+
+    assert panel.get_value(value_id) == string_value
+
+
+def test___opened_panel_with_value___close_with_reset___get_throws(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel.open_panel()
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    panel.close_panel(reset=True)
+
+    with pytest.raises(grpc.RpcError):
+        panel.get_value(value_id)
+
+
 def test___first_open_panel_fails___open_panel___gets_value(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,
