@@ -37,8 +37,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self, request: ClosePanelRequest, context: Any
     ) -> ClosePanelResponse:
         """Trivial implementation for testing."""
-        self._panel_ids.remove(request.panel_id)
         if request.reset:
+            self._panel_ids.remove(request.panel_id)
             self._values.clear()
         return ClosePanelResponse()
 

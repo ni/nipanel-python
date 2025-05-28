@@ -19,7 +19,19 @@ def test___open_panels___enumerate_has_panels(fake_panel_channel: grpc.Channel) 
     assert client.enumerate_panels() == ["panel1", "panel2"]
 
 
-def test___open_panels___close_panel_1___enumerate_has_panel_2(
+def test___open_panels___close_panel_1_with_reset___enumerate_has_panel_2(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    client = create_panel_client(fake_panel_channel)
+    client.open_panel("panel1", "uri1")
+    client.open_panel("panel2", "uri2")
+
+    client.close_panel("panel1", reset=True)
+
+    assert client.enumerate_panels() == ["panel2"]
+
+
+def test___open_panels___close_panel_1_without_reset___enumerate_has_both_panels(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = create_panel_client(fake_panel_channel)
@@ -28,7 +40,7 @@ def test___open_panels___close_panel_1___enumerate_has_panel_2(
 
     client.close_panel("panel1", reset=False)
 
-    assert client.enumerate_panels() == ["panel2"]
+    assert client.enumerate_panels() == ["panel1", "panel2"]
 
 
 def test___get_unset_value_raises_exception(fake_panel_channel: grpc.Channel) -> None:
