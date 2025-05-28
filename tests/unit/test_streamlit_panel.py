@@ -124,3 +124,14 @@ def test___unsupported_type___set_value___raises(
     value_id = "test_id"
     with pytest.raises(TypeError):
         panel.set_value(value_id, value_payload)
+
+
+def test___list_of_builtin_type___set_value___gets_same_value(fake_panel_channel: grpc.Channel) -> None:
+    """Test that set_value() succeeds before the user opens the panel."""
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    list_value = list(range(10))
+    panel.set_value(value_id, list_value)
+
+    assert panel.get_value(value_id) == list_value
