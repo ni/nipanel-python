@@ -80,7 +80,7 @@ class PanelClient:
         self._invoke_with_retry(self._get_stub().ClosePanel, close_panel_request)
 
     def enumerate_panels(self) -> dict[str, tuple[bool, list[str]]]:
-        """Enumerate all open panels.
+        """Enumerate all available panels.
 
         Returns:
             A dictionary mapping panel IDs to a tuple containing a boolean indicating if the panel

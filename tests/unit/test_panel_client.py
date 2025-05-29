@@ -22,7 +22,7 @@ def test___open_panels___both_panels_open_and_in_memory(fake_panel_channel: grpc
     }
 
 
-def test___open_panels___close_panel_1_with_reset___panel_1_not_in_memory(
+def test___open_panels___close_panel_1_with_reset___enumerate_has_panel_2(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = create_panel_client(fake_panel_channel)
@@ -36,7 +36,7 @@ def test___open_panels___close_panel_1_with_reset___panel_1_not_in_memory(
     }
 
 
-def test___open_panels___close_panel_1_without_reset___both_panels_in_memory(
+def test___open_panels___close_panel_1_without_reset___enumerate_has_both_panels(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = create_panel_client(fake_panel_channel)

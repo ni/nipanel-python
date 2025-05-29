@@ -111,7 +111,7 @@ def test___first_open_panel_fails___open_panel___gets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___unopened_panel___set_value___client_has_value(
+def test___unopened_panel___set_value___sets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that set_value() succeeds before the user opens the panel."""
@@ -210,7 +210,6 @@ def test___open_panel___panel_is_open_and_in_memory(
 def test___with_panel___opens_and_closes_panel(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    """Test that using the panel in a with statement opens and closes it."""
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     with panel:
@@ -224,7 +223,6 @@ def test___with_panel___opens_and_closes_panel(
 def test___with_panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    """Test that using the panel in a with statement allows setting and getting values."""
     with StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel) as panel:
         value_id = "test_id"
         string_value = "test_value"
