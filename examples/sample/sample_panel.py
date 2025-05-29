@@ -24,7 +24,7 @@ with col2:
     st.write(panel.get_value("sample_float"))
     st.write(panel.get_value("sample_bool"))
     st.line_chart(
-        data = pd.DataFrame(
+        data=pd.DataFrame(
             {
                 "x": panel.get_value("x_values"),
                 "y": panel.get_value("y_values"),

@@ -182,16 +182,22 @@ class BoolCollectionConverter(Converter[Collection[bool], python_panel_types_pb2
         """The type-specific protobuf message for the Python type."""
         return python_panel_types_pb2.BoolCollection
 
-    def to_protobuf_message(self, python_value: Collection[bool]) -> python_panel_types_pb2.BoolCollection:
+    def to_protobuf_message(
+        self, python_value: Collection[bool]
+    ) -> python_panel_types_pb2.BoolCollection:
         """Convert the Python collection of bools to a protobuf python_panel_types_pb2.BoolCollection."""
         return self.protobuf_message(values=python_value)
 
-    def to_python_value(self, protobuf_value: python_panel_types_pb2.BoolCollection) -> Collection[bool]:
+    def to_python_value(
+        self, protobuf_value: python_panel_types_pb2.BoolCollection
+    ) -> Collection[bool]:
         """Convert the protobuf message to a Python collection of bools."""
         return list(protobuf_value.values)
 
 
-class BytesCollectionConverter(Converter[Collection[bytes], python_panel_types_pb2.ByteStringCollection]):
+class BytesCollectionConverter(
+    Converter[Collection[bytes], python_panel_types_pb2.ByteStringCollection]
+):
     """A converter for a Collection of byte strings."""
 
     @property
@@ -204,16 +210,22 @@ class BytesCollectionConverter(Converter[Collection[bytes], python_panel_types_p
         """The type-specific protobuf message for the Python type."""
         return python_panel_types_pb2.ByteStringCollection
 
-    def to_protobuf_message(self, python_value: Collection[bytes]) -> python_panel_types_pb2.ByteStringCollection:
+    def to_protobuf_message(
+        self, python_value: Collection[bytes]
+    ) -> python_panel_types_pb2.ByteStringCollection:
         """Convert the Python collection of byte strings to a protobuf python_panel_types_pb2.ByteStringCollection."""
         return self.protobuf_message(values=python_value)
 
-    def to_python_value(self, protobuf_value: python_panel_types_pb2.ByteStringCollection) -> Collection[bytes]:
+    def to_python_value(
+        self, protobuf_value: python_panel_types_pb2.ByteStringCollection
+    ) -> Collection[bytes]:
         """Convert the protobuf message to a Python collection of byte strings."""
         return list(protobuf_value.values)
 
 
-class FloatCollectionConverter(Converter[Collection[float], python_panel_types_pb2.FloatCollection]):
+class FloatCollectionConverter(
+    Converter[Collection[float], python_panel_types_pb2.FloatCollection]
+):
     """A converter for a Collection of floats."""
 
     @property
@@ -226,11 +238,15 @@ class FloatCollectionConverter(Converter[Collection[float], python_panel_types_p
         """The type-specific protobuf message for the Python type."""
         return python_panel_types_pb2.FloatCollection
 
-    def to_protobuf_message(self, python_value: Collection[float]) -> python_panel_types_pb2.FloatCollection:
+    def to_protobuf_message(
+        self, python_value: Collection[float]
+    ) -> python_panel_types_pb2.FloatCollection:
         """Convert the Python collection of floats to a protobuf python_panel_types_pb2.FloatCollection."""
         return self.protobuf_message(values=python_value)
 
-    def to_python_value(self, protobuf_value: python_panel_types_pb2.FloatCollection) -> Collection[float]:
+    def to_python_value(
+        self, protobuf_value: python_panel_types_pb2.FloatCollection
+    ) -> Collection[float]:
         """Convert the protobuf message to a Python collection of floats."""
         return list(protobuf_value.values)
 
@@ -248,11 +264,15 @@ class IntCollectionConverter(Converter[Collection[int], python_panel_types_pb2.I
         """The type-specific protobuf message for the Python type."""
         return python_panel_types_pb2.IntCollection
 
-    def to_protobuf_message(self, python_value: Collection[int]) -> python_panel_types_pb2.IntCollection:
+    def to_protobuf_message(
+        self, python_value: Collection[int]
+    ) -> python_panel_types_pb2.IntCollection:
         """Convert the Python collection of integers to a protobuf python_panel_types_pb2.IntCollection."""
         return self.protobuf_message(values=python_value)
 
-    def to_python_value(self, protobuf_value: python_panel_types_pb2.IntCollection) -> Collection[int]:
+    def to_python_value(
+        self, protobuf_value: python_panel_types_pb2.IntCollection
+    ) -> Collection[int]:
         """Convert the protobuf message to a Python collection of integers."""
         return list(protobuf_value.values)
 
@@ -270,11 +290,15 @@ class StrCollectionConverter(Converter[Collection[str], python_panel_types_pb2.S
         """The type-specific protobuf message for the Python type."""
         return python_panel_types_pb2.StringCollection
 
-    def to_protobuf_message(self, python_value: Collection[str]) -> python_panel_types_pb2.StringCollection:
+    def to_protobuf_message(
+        self, python_value: Collection[str]
+    ) -> python_panel_types_pb2.StringCollection:
         """Convert the Python collection of strings to a protobuf python_panel_types_pb2.StringCollection."""
         return self.protobuf_message(values=python_value)
 
-    def to_python_value(self, protobuf_value: python_panel_types_pb2.StringCollection) -> Collection[str]:
+    def to_python_value(
+        self, protobuf_value: python_panel_types_pb2.StringCollection
+    ) -> Collection[str]:
         """Convert the protobuf message to a Python collection of strings."""
         return list(protobuf_value.values)
 
