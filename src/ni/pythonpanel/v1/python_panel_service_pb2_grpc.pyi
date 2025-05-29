@@ -25,7 +25,7 @@ class PythonPanelServiceStub:
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse,
     ]
-    """Enumerate the panels available in the system
+    """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
     """
 
@@ -74,7 +74,7 @@ class PythonPanelServiceAsyncStub:
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse,
     ]
-    """Enumerate the panels available in the system
+    """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
     """
 
@@ -125,7 +125,7 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
         request: ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
         context: _ServicerContext,
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse]]:
-        """Enumerate the panels available in the system
+        """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
         Status Codes for errors:
         """
 

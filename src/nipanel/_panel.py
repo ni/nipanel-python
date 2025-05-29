@@ -1,12 +1,21 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC
+from types import TracebackType
+from typing import TYPE_CHECKING
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_value_accessor import PanelValueAccessor
+
+if TYPE_CHECKING:
+    if sys.version_info >= (3, 11):
+        from typing import Self
+    else:
+        from typing_extensions import Self
 
 
 class Panel(PanelValueAccessor, ABC):
@@ -40,6 +49,21 @@ class Panel(PanelValueAccessor, ABC):
     def panel_uri(self) -> str:
         """Read-only accessor for the panel URI."""
         return self._panel_uri
+
+    def __enter__(self) -> Self:
+        """Enter the runtime context related to this object."""
+        self.open_panel()
+        return self
+
+    def __exit__(
+        self,
+        exctype: type[BaseException] | None,
+        excinst: BaseException | None,
+        exctb: TracebackType | None,
+    ) -> bool | None:
+        """Exit the runtime context related to this object."""
+        self.close_panel(reset=False)
+        return None
 
     def open_panel(self) -> None:
         """Open the panel."""

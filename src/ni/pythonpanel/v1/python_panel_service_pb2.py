@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"\x18\n\x16\x45numeratePanelsRequest\",\n\x17\x45numeratePanelsResponse\x12\x11\n\tpanel_ids\x18\x01 \x03(\t\"7\n\x10OpenPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_uri\x18\x02 \x01(\t\"\x13\n\x11OpenPanelResponse\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"Z\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\"\x12\n\x10SetValueResponse\"4\n\x11\x43losePanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x14\n\x12\x43losePanelResponse2\xdb\x03\n\x12PythonPanelService\x12h\n\x0f\x45numeratePanels\x12).ni.pythonpanel.v1.EnumeratePanelsRequest\x1a*.ni.pythonpanel.v1.EnumeratePanelsResponse\x12V\n\tOpenPanel\x12#.ni.pythonpanel.v1.OpenPanelRequest\x1a$.ni.pythonpanel.v1.OpenPanelResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponse\x12Y\n\nClosePanel\x12$.ni.pythonpanel.v1.ClosePanelRequest\x1a%.ni.pythonpanel.v1.ClosePanelResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"\x18\n\x16\x45numeratePanelsRequest\"H\n\x10PanelInformation\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x0f\n\x07is_open\x18\x02 \x01(\x08\x12\x11\n\tvalue_ids\x18\x03 \x03(\t\"N\n\x17\x45numeratePanelsResponse\x12\x33\n\x06panels\x18\x01 \x03(\x0b\x32#.ni.pythonpanel.v1.PanelInformation\"7\n\x10OpenPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_uri\x18\x02 \x01(\t\"\x13\n\x11OpenPanelResponse\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"Z\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\"\x12\n\x10SetValueResponse\"4\n\x11\x43losePanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x14\n\x12\x43losePanelResponse2\xdb\x03\n\x12PythonPanelService\x12h\n\x0f\x45numeratePanels\x12).ni.pythonpanel.v1.EnumeratePanelsRequest\x1a*.ni.pythonpanel.v1.EnumeratePanelsResponse\x12V\n\tOpenPanel\x12#.ni.pythonpanel.v1.OpenPanelRequest\x1a$.ni.pythonpanel.v1.OpenPanelResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponse\x12Y\n\nClosePanel\x12$.ni.pythonpanel.v1.ClosePanelRequest\x1a%.ni.pythonpanel.v1.ClosePanelResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.pythonpanel.v1.python_panel_service_pb2', globals())
@@ -24,24 +24,26 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._serialized_options = b'\n\025com.ni.pythonpanel.v1B\027PythonPanelServiceProtoP\001Z\rpythonpanelv1\370\001\001\242\002\004NIPP\252\002\"NationalInstruments.PythonPanel.V1\312\002\021NI\\PythonPanel\\V1\352\002\023NI::PythonPanel::V1'
   _ENUMERATEPANELSREQUEST._serialized_start=94
   _ENUMERATEPANELSREQUEST._serialized_end=118
-  _ENUMERATEPANELSRESPONSE._serialized_start=120
-  _ENUMERATEPANELSRESPONSE._serialized_end=164
-  _OPENPANELREQUEST._serialized_start=166
-  _OPENPANELREQUEST._serialized_end=221
-  _OPENPANELRESPONSE._serialized_start=223
-  _OPENPANELRESPONSE._serialized_end=242
-  _GETVALUEREQUEST._serialized_start=244
-  _GETVALUEREQUEST._serialized_end=297
-  _GETVALUERESPONSE._serialized_start=299
-  _GETVALUERESPONSE._serialized_end=354
-  _SETVALUEREQUEST._serialized_start=356
-  _SETVALUEREQUEST._serialized_end=446
-  _SETVALUERESPONSE._serialized_start=448
-  _SETVALUERESPONSE._serialized_end=466
-  _CLOSEPANELREQUEST._serialized_start=468
-  _CLOSEPANELREQUEST._serialized_end=520
-  _CLOSEPANELRESPONSE._serialized_start=522
-  _CLOSEPANELRESPONSE._serialized_end=542
-  _PYTHONPANELSERVICE._serialized_start=545
-  _PYTHONPANELSERVICE._serialized_end=1020
+  _PANELINFORMATION._serialized_start=120
+  _PANELINFORMATION._serialized_end=192
+  _ENUMERATEPANELSRESPONSE._serialized_start=194
+  _ENUMERATEPANELSRESPONSE._serialized_end=272
+  _OPENPANELREQUEST._serialized_start=274
+  _OPENPANELREQUEST._serialized_end=329
+  _OPENPANELRESPONSE._serialized_start=331
+  _OPENPANELRESPONSE._serialized_end=350
+  _GETVALUEREQUEST._serialized_start=352
+  _GETVALUEREQUEST._serialized_end=405
+  _GETVALUERESPONSE._serialized_start=407
+  _GETVALUERESPONSE._serialized_end=462
+  _SETVALUEREQUEST._serialized_start=464
+  _SETVALUEREQUEST._serialized_end=554
+  _SETVALUERESPONSE._serialized_start=556
+  _SETVALUERESPONSE._serialized_end=574
+  _CLOSEPANELREQUEST._serialized_start=576
+  _CLOSEPANELREQUEST._serialized_end=628
+  _CLOSEPANELRESPONSE._serialized_start=630
+  _CLOSEPANELRESPONSE._serialized_end=650
+  _PYTHONPANELSERVICE._serialized_start=653
+  _PYTHONPANELSERVICE._serialized_end=1128
 # @@protoc_insertion_point(module_scope)
