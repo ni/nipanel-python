@@ -23,6 +23,19 @@ def test___different_panels___have_different_panel_ids_and_uris() -> None:
     assert panel1._panel_client != panel2._panel_client
 
 
+def test___open_panel___panel_is_open_and_in_memory(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    assert not panel.is_open()
+    assert not panel.is_in_memory()
+
+    panel.open_panel()
+
+    assert panel.is_open()
+    assert panel.is_in_memory()
+
+
 def test___opened_panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
@@ -72,9 +85,12 @@ def test___opened_panel_with_value___close_without_reset___gets_value(
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
+    assert panel.is_open()
 
     panel.close_panel(reset=False)
 
+    assert panel.is_in_memory()
+    assert not panel.is_open()
     assert panel.get_value(value_id) == string_value
 
 
@@ -86,9 +102,11 @@ def test___opened_panel_with_value___close_with_reset___get_throws(
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
+    assert panel.is_open()
 
     panel.close_panel(reset=True)
 
+    assert not panel.is_in_memory()
     with pytest.raises(grpc.RpcError):
         panel.get_value(value_id)
 
@@ -111,7 +129,7 @@ def test___first_open_panel_fails___open_panel___gets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___unopened_panel___set_value___sets_value(
+def test___unopened_panel___set_value___has_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that set_value() succeeds before the user opens the panel."""
@@ -119,8 +137,23 @@ def test___unopened_panel___set_value___sets_value(
 
     value_id = "test_id"
     string_value = "test_value"
-
     panel.set_value(value_id, string_value)
+
+    assert panel.has_value(value_id)
+
+
+def test___set_value___clear_value___does_not_have_value(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    """Test that set_value() succeeds before the user opens the panel."""
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    panel.clear_value(value_id)
+
+    assert not panel.has_value(value_id)
 
 
 def test___unopened_panel___get_unset_value___raises_exception(
@@ -192,3 +225,29 @@ def test___unsupported_type___set_value___raises(
     value_id = "test_id"
     with pytest.raises(TypeError):
         panel.set_value(value_id, value_payload)
+
+
+def test___with_panel___opens_and_closes_panel(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    """Test that using the panel in a with statement opens and closes it."""
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    with panel:
+        assert panel.is_open()
+        assert panel.is_in_memory()
+
+    assert not panel.is_open()
+    assert panel.is_in_memory()
+
+
+def test___with_panel___set_value___gets_same_value(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    """Test that using the panel in a with statement allows setting and getting values."""
+    with StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel) as panel:
+        value_id = "test_id"
+        string_value = "test_value"
+        panel.set_value(value_id, string_value)
+
+        assert panel.get_value(value_id) == string_value

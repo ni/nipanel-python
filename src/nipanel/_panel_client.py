@@ -11,8 +11,10 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     OpenPanelRequest,
     ClosePanelRequest,
     EnumeratePanelsRequest,
+    PanelInformation,
     GetValueRequest,
     SetValueRequest,
+    ClearValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -79,17 +81,59 @@ class PanelClient:
         close_panel_request = ClosePanelRequest(panel_id=panel_id, reset=reset)
         self._invoke_with_retry(self._get_stub().ClosePanel, close_panel_request)
 
-    def enumerate_panels(self) -> list[str]:
-        """Enumerate all available panels.
-
-        Returns:
-            A list of panel IDs.
-        """
+    def _enumerate_panels(self) -> list[PanelInformation]:
         enumerate_panels_request = EnumeratePanelsRequest()
         response = self._invoke_with_retry(
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
-        return list(response.panel_ids)
+        return list(response.panels)
+
+    def get_panel_ids(self) -> list[str]:
+        """Get the IDs of all panels in memory.
+
+        Returns:
+            A list of panel IDs.
+        """
+        panels = self._enumerate_panels()
+        return [panel.panel_id for panel in panels]
+
+    def is_panel_in_memory(self, panel_id: str) -> bool:
+        """Check if the panel is in memory.
+
+        Args:
+            panel_id: The ID of the panel.
+
+        Returns:
+            True if the panel is in memory, False otherwise.
+        """
+        panels = self._enumerate_panels()
+        return any(panel.panel_id == panel_id for panel in panels)
+
+    def is_panel_open(self, panel_id: str) -> bool:
+        """Check if the panel is open.
+
+        Args:
+            panel_id: The ID of the panel.
+
+        Returns:
+            True if the panel is open, False otherwise.
+        """
+        panels = self._enumerate_panels()
+        panel = next((panel for panel in panels if panel.panel_id == panel_id), None)
+        return panel.is_open if panel else False
+
+    def get_value_ids(self, panel_id: str) -> list[str]:
+        """Get the IDs of all the values that have been set for the panel.
+
+        Args:
+            panel_id: The ID of the panel.
+
+        Returns:
+            A list of value IDs for the panel.
+        """
+        panels = self._enumerate_panels()
+        panel = next((panel for panel in panels if panel.panel_id == panel_id), None)
+        return list(panel.value_ids) if panel else []
 
     def set_value(self, panel_id: str, value_id: str, value: object) -> None:
         """Set the value for the control with value_id.
@@ -117,6 +161,16 @@ class PanelClient:
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
         the_value = from_any(response.value)
         return the_value
+
+    def clear_value(self, panel_id: str, value_id: str) -> None:
+        """Clear the value for the control with value_id.
+
+        Args:
+            panel_id: The ID of the panel.
+            value_id: The ID of the control.
+        """
+        clear_value_request = ClearValueRequest(panel_id=panel_id, value_id=value_id)
+        self._invoke_with_retry(self._get_stub().ClearValue, clear_value_request)
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:
