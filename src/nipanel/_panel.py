@@ -76,11 +76,3 @@ class Panel(PanelValueAccessor, ABC):
             reset: Whether to reset all storage associated with the panel.
         """
         self._panel_client.close_panel(self._panel_id, reset=reset)
-
-    def is_open(self) -> bool:
-        """Check if the panel is open."""
-        return self._panel_client.is_panel_open(self._panel_id)
-
-    def is_in_memory(self) -> bool:
-        """Check if the panel is in memory."""
-        return self._panel_client.is_panel_in_memory(self._panel_id)

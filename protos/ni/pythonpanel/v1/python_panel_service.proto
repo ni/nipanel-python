@@ -50,8 +50,7 @@ service PythonPanelService {
 message EnumeratePanelsRequest {
 }
 
-message PanelInformation
-{
+message PanelInformation {
   // Unique ID of the panel
   string panel_id = 1;
 

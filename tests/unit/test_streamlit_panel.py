@@ -23,19 +23,6 @@ def test___different_panels___have_different_panel_ids_and_uris() -> None:
     assert panel1._panel_client != panel2._panel_client
 
 
-def test___open_panel___panel_is_open_and_in_memory(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    assert not panel.is_open()
-    assert not panel.is_in_memory()
-
-    panel.open_panel()
-
-    assert panel.is_open()
-    assert panel.is_in_memory()
-
-
 def test___opened_panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
@@ -85,12 +72,9 @@ def test___opened_panel_with_value___close_without_reset___gets_value(
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
-    assert panel.is_open()
 
     panel.close_panel(reset=False)
 
-    assert panel.is_in_memory()
-    assert not panel.is_open()
     assert panel.get_value(value_id) == string_value
 
 
@@ -102,11 +86,9 @@ def test___opened_panel_with_value___close_with_reset___get_throws(
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
-    assert panel.is_open()
 
     panel.close_panel(reset=True)
 
-    assert not panel.is_in_memory()
     with pytest.raises(grpc.RpcError):
         panel.get_value(value_id)
 
@@ -227,6 +209,18 @@ def test___unsupported_type___set_value___raises(
         panel.set_value(value_id, value_payload)
 
 
+def test___open_panel___panel_is_open_and_in_memory(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    assert not is_panel_in_memory(panel)
+
+    panel.open_panel()
+
+    assert is_panel_in_memory(panel)
+    assert is_panel_open(panel)
+
+
 def test___with_panel___opens_and_closes_panel(
     fake_panel_channel: grpc.Channel,
 ) -> None:
@@ -234,11 +228,11 @@ def test___with_panel___opens_and_closes_panel(
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     with panel:
-        assert panel.is_open()
-        assert panel.is_in_memory()
+        assert is_panel_in_memory(panel)
+        assert is_panel_open(panel)
 
-    assert not panel.is_open()
-    assert panel.is_in_memory()
+    assert is_panel_in_memory(panel)
+    assert not is_panel_open(panel)
 
 
 def test___with_panel___set_value___gets_same_value(
@@ -251,3 +245,11 @@ def test___with_panel___set_value___gets_same_value(
         panel.set_value(value_id, string_value)
 
         assert panel.get_value(value_id) == string_value
+
+
+def is_panel_in_memory(panel: StreamlitPanel) -> bool:
+    return panel.panel_id in panel._panel_client.enumerate_panels().keys()
+
+
+def is_panel_open(panel: StreamlitPanel) -> bool:
+    return panel._panel_client.enumerate_panels()[panel.panel_id][0]

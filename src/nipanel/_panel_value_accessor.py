@@ -84,4 +84,4 @@ class PanelValueAccessor(ABC):
         Returns:
             A list of value IDs for the panel.
         """
-        return self._panel_client.get_value_ids(self._panel_id)
+        return self._panel_client.enumerate_panels()[self._panel_id][1]
