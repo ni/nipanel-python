@@ -4,13 +4,13 @@ import pytest
 from nipanel._panel_client import PanelClient
 
 
-def test___enumerate_panels_is_empty(fake_panel_channel: grpc.Channel) -> None:
+def test___enumerate_is_empty(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
     assert client.enumerate_panels() == {}
 
 
-def test___open_panels___both_panels_open_and_in_memory(fake_panel_channel: grpc.Channel) -> None:
+def test___open_panels___enumerate_has_panels(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
     client.open_panel("panel1", "uri1")
