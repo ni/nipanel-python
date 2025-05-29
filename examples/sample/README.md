@@ -1,6 +1,6 @@
 ## Sample
 
-This is a nipanel example that displays an interactive Streamlit app and update values.
+This is a nipanel example that displays an interactive Streamlit app and updates its values.
 
 ### Feature
 
