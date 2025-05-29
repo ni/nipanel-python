@@ -163,3 +163,56 @@ def test___unsupported_type___set_value___raises(
     value_id = "test_id"
     with pytest.raises(TypeError):
         panel.set_value(value_id, value_payload)
+
+
+@pytest.mark.parametrize(
+    "value_payload",
+    [
+        # Bool
+        list(x % 2 == 0 for x in range(0, 10)),
+        set(x % 2 == 0 for x in range(10, 20)),
+        frozenset(x % 2 == 0 for x in range(20, 30)),
+        tuple(x % 2 == 0 for x in range(30, 40)),
+        # Bytes
+        list(bytes(x) for x in range(0, 10)),
+        set(bytes(x) for x in range(10, 20)),
+        frozenset(bytes(x) for x in range(20, 30)),
+        tuple(bytes(x) for x in range(30, 40)),
+        # Float
+        list(float(x) for x in range(0, 10)),
+        set(float(x) for x in range(10, 20)),
+        frozenset(float(x) for x in range(20, 30)),
+        tuple(float(x) for x in range(30, 40)),
+        # Integer
+        list(range(0, 10)),
+        set(range(10, 20)),
+        frozenset(range(20, 30)),
+        tuple(range(30, 40)),
+        # String
+        list(str(x) for x in range(0, 10)),
+        set(str(x) for x in range(10, 20)),
+        frozenset(str(x) for x in range(20, 30)),
+        tuple(str(x) for x in range(30, 40)),
+        # Enum canaries
+        list(x for x in test_types.MixinIntEnum),
+        set(x for x in test_types.MixinIntEnum),
+        frozenset(x for x in test_types.MixinIntEnum),
+        tuple(x for x in test_types.MixinIntEnum),
+        list(x for x in test_types.MixinStrEnum),
+        set(x for x in test_types.MixinStrEnum),
+        frozenset(x for x in test_types.MixinStrEnum),
+        tuple(x for x in test_types.MixinStrEnum),
+    ],
+)
+def test___sequence_of_builtin_type___set_value___gets_same_value(
+    fake_panel_channel: grpc.Channel,
+    value_payload: object,
+) -> None:
+    """Test that set_value() succeeds before the user opens the panel."""
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    panel.set_value(value_id, value_payload)
+
+    received_value = panel.get_value(value_id)
+    assert list(received_value) == list(value_payload)  # type: ignore [call-overload]

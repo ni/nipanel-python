@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Collection
 from typing import Any, Generic, Type, TypeVar
 
 from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
+from ni.pythonpanel.v1 import python_panel_types_pb2
 
 _TPythonType = TypeVar("_TPythonType")
 _TProtobufType = TypeVar("_TProtobufType", bound=Message)
@@ -167,14 +169,138 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
         return protobuf_value.value
 
 
+class BoolCollectionConverter(Converter[Collection[bool], python_panel_types_pb2.BoolCollection]):
+    """A converter for a Collection of bools."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{bool.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[python_panel_types_pb2.BoolCollection]:
+        """The type-specific protobuf message for the Python type."""
+        return python_panel_types_pb2.BoolCollection
+
+    def to_protobuf_message(self, python_value: Collection[bool]) -> python_panel_types_pb2.BoolCollection:
+        """Convert the Python collection of bools to a protobuf python_panel_types_pb2.BoolCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_value: python_panel_types_pb2.BoolCollection) -> Collection[bool]:
+        """Convert the protobuf message to a Python collection of bools."""
+        return list(protobuf_value.values)
+
+
+class BytesCollectionConverter(Converter[Collection[bytes], python_panel_types_pb2.ByteStringCollection]):
+    """A converter for a Collection of byte strings."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{bytes.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[python_panel_types_pb2.ByteStringCollection]:
+        """The type-specific protobuf message for the Python type."""
+        return python_panel_types_pb2.ByteStringCollection
+
+    def to_protobuf_message(self, python_value: Collection[bytes]) -> python_panel_types_pb2.ByteStringCollection:
+        """Convert the Python collection of byte strings to a protobuf python_panel_types_pb2.ByteStringCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_value: python_panel_types_pb2.ByteStringCollection) -> Collection[bytes]:
+        """Convert the protobuf message to a Python collection of byte strings."""
+        return list(protobuf_value.values)
+
+
+class FloatCollectionConverter(Converter[Collection[float], python_panel_types_pb2.FloatCollection]):
+    """A converter for a Collection of floats."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{float.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[python_panel_types_pb2.FloatCollection]:
+        """The type-specific protobuf message for the Python type."""
+        return python_panel_types_pb2.FloatCollection
+
+    def to_protobuf_message(self, python_value: Collection[float]) -> python_panel_types_pb2.FloatCollection:
+        """Convert the Python collection of floats to a protobuf python_panel_types_pb2.FloatCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_value: python_panel_types_pb2.FloatCollection) -> Collection[float]:
+        """Convert the protobuf message to a Python collection of floats."""
+        return list(protobuf_value.values)
+
+
+class IntCollectionConverter(Converter[Collection[int], python_panel_types_pb2.IntCollection]):
+    """A converter for a Collection of integers."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{int.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[python_panel_types_pb2.IntCollection]:
+        """The type-specific protobuf message for the Python type."""
+        return python_panel_types_pb2.IntCollection
+
+    def to_protobuf_message(self, python_value: Collection[int]) -> python_panel_types_pb2.IntCollection:
+        """Convert the Python collection of integers to a protobuf python_panel_types_pb2.IntCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_value: python_panel_types_pb2.IntCollection) -> Collection[int]:
+        """Convert the protobuf message to a Python collection of integers."""
+        return list(protobuf_value.values)
+
+
+class StrCollectionConverter(Converter[Collection[str], python_panel_types_pb2.StringCollection]):
+    """A converter for a Collection of strings."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{str.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[python_panel_types_pb2.StringCollection]:
+        """The type-specific protobuf message for the Python type."""
+        return python_panel_types_pb2.StringCollection
+
+    def to_protobuf_message(self, python_value: Collection[str]) -> python_panel_types_pb2.StringCollection:
+        """Convert the Python collection of strings to a protobuf python_panel_types_pb2.StringCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_value: python_panel_types_pb2.StringCollection) -> Collection[str]:
+        """Convert the protobuf message to a Python collection of strings."""
+        return list(protobuf_value.values)
+
+
 # FFV -- consider adding a RegisterConverter mechanism
 _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
+    # Scalars first
     BoolConverter(),
     BytesConverter(),
     FloatConverter(),
     IntConverter(),
     StrConverter(),
+    # Containers next
+    BoolCollectionConverter(),
+    BytesCollectionConverter(),
+    FloatCollectionConverter(),
+    IntCollectionConverter(),
+    StrCollectionConverter(),
 ]
+
+_CONVERTIBLE_COLLECTION_TYPES = {
+    frozenset,
+    list,
+    set,
+    tuple,
+}
 
 _CONVERTER_FOR_PYTHON_TYPE = {entry.python_typename: entry for entry in _CONVERTIBLE_TYPES}
 _CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES}
@@ -185,12 +311,34 @@ def to_any(python_value: object) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
-    best_matching_type = next(
-        (parent.__name__ for parent in underlying_parents if parent.__name__ in _SUPPORTED_PYTHON_TYPES), None
-    )
+    container_type = None
+    value_is_collection = _CONVERTIBLE_COLLECTION_TYPES.intersection(underlying_parents)
+    if value_is_collection:
+        # Assume Sized -- Generators not supported, callers must use list(), set(), ... as desired
+        if not isinstance(python_value, Collection):
+            raise TypeError()
+        if len(python_value) == 0:
+            underlying_parents = type(None).mro()
+        else:
+            # Assume homogenous -- collections of mixed-types not supported
+            visitor = iter(python_value)
+            first_value = next(visitor)
+            underlying_parents = type(first_value).mro()
+        container_type = Collection
+
+    best_matching_type = None
+    candidates = [parent.__name__ for parent in underlying_parents]
+    for candidate in candidates:
+        python_typename = f"{container_type.__name__}.{candidate}" if container_type else candidate
+        if python_typename not in _SUPPORTED_PYTHON_TYPES:
+            continue
+        best_matching_type = python_typename
+        break
+
     if not best_matching_type:
+        payload_type = underlying_parents[0]
         raise TypeError(
-            f"Unsupported type: {type(python_value)} with parents {underlying_parents}. Supported types are: {_SUPPORTED_PYTHON_TYPES}"
+            f"Unsupported type: ({container_type}, {payload_type}) with parents {underlying_parents}. Supported types are: {_SUPPORTED_PYTHON_TYPES}"
         )
     _logger.debug(f"Best matching type for '{repr(python_value)}' resolved to {best_matching_type}")
 
