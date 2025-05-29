@@ -35,11 +35,6 @@ class PythonPanelServiceStub(object):
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
                 response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
                 )
-        self.ClearValue = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/ClearValue',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueResponse.FromString,
-                )
         self.ClosePanel = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/ClosePanel',
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelRequest.SerializeToString,
@@ -88,14 +83,6 @@ class PythonPanelServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ClearValue(self, request, context):
-        """Clear a value for a control on the panel
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def ClosePanel(self, request, context):
         """Close a panel
         Status Codes for errors:
@@ -127,11 +114,6 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
                     servicer.SetValue,
                     request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.FromString,
                     response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.SerializeToString,
-            ),
-            'ClearValue': grpc.unary_unary_rpc_method_handler(
-                    servicer.ClearValue,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueResponse.SerializeToString,
             ),
             'ClosePanel': grpc.unary_unary_rpc_method_handler(
                     servicer.ClosePanel,
@@ -214,23 +196,6 @@ class PythonPanelService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValue',
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ClearValue(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/ClearValue',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClearValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

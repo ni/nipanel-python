@@ -13,8 +13,6 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     GetValueResponse,
     SetValueRequest,
     SetValueResponse,
-    ClearValueRequest,
-    ClearValueResponse,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceServicer
 
@@ -68,14 +66,6 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._init_panel(request.panel_id)
         self._panel_value_ids[request.panel_id][request.value_id] = request.value
         return SetValueResponse()
-
-    def ClearValue(  # noqa: N802
-        self, request: ClearValueRequest, context: Any
-    ) -> ClearValueResponse:
-        """Trivial implementation for testing."""
-        if request.panel_id in self._panel_value_ids:
-            self._panel_value_ids[request.panel_id].pop(request.value_id, None)
-        return ClearValueResponse()
 
     def fail_next_open_panel(self) -> None:
         """Set whether the OpenPanel method should fail the next time it is called."""

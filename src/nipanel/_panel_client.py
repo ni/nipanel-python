@@ -13,7 +13,6 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     EnumeratePanelsRequest,
     GetValueRequest,
     SetValueRequest,
-    ClearValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -119,16 +118,6 @@ class PanelClient:
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
         the_value = from_any(response.value)
         return the_value
-
-    def clear_value(self, panel_id: str, value_id: str) -> None:
-        """Clear the value for the control with value_id.
-
-        Args:
-            panel_id: The ID of the panel.
-            value_id: The ID of the control.
-        """
-        clear_value_request = ClearValueRequest(panel_id=panel_id, value_id=value_id)
-        self._invoke_with_retry(self._get_stub().ClearValue, clear_value_request)
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:

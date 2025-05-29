@@ -58,30 +58,3 @@ class PanelValueAccessor(ABC):
             value: The value
         """
         self._panel_client.set_value(self._panel_id, value_id, value)
-
-    def clear_value(self, value_id: str) -> None:
-        """Clear the value for a control on the panel.
-
-        Args:
-            value_id: The id of the value
-        """
-        self._panel_client.clear_value(self._panel_id, value_id)
-
-    def has_value(self, value_id: str) -> bool:
-        """Check if the panel has a value with the given ID.
-
-        Args:
-            value_id: The id of the value
-
-        Returns:
-            True if the panel has the value, False otherwise.
-        """
-        return value_id in self.get_value_ids()
-
-    def get_value_ids(self) -> list[str]:
-        """Get the value IDs that have been set for the panel.
-
-        Returns:
-            A list of value IDs for the panel.
-        """
-        return self._panel_client.enumerate_panels()[self._panel_id][1]

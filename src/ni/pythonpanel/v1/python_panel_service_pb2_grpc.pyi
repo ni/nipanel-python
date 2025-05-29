@@ -58,14 +58,6 @@ class PythonPanelServiceStub:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-    ClearValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ClearValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ClearValueResponse,
-    ]
-    """Clear a value for a control on the panel
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    """
-
     ClosePanel: grpc.UnaryUnaryMultiCallable[
         ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelResponse,
@@ -112,14 +104,6 @@ class PythonPanelServiceAsyncStub:
     ]
     """Set a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    """
-
-    ClearValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ClearValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ClearValueResponse,
-    ]
-    """Clear a value for a control on the panel
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
@@ -177,16 +161,6 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse]]:
         """Set a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        """
-
-    @abc.abstractmethod
-    def ClearValue(
-        self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.ClearValueRequest,
-        context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.ClearValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.ClearValueResponse]]:
-        """Clear a value for a control on the panel
         - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
 

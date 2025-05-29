@@ -37,10 +37,6 @@ service PythonPanelService {
   // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 
-  // Clear a value for a control on the panel
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  rpc ClearValue(ClearValueRequest) returns (ClearValueResponse);
-
   // Close a panel
   // Status Codes for errors:
   // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
@@ -102,17 +98,6 @@ message SetValueRequest {
 }
 
 message SetValueResponse {
-}
-
-message ClearValueRequest {
-  // Unique ID of the panel
-  string panel_id = 1;
-
-  // Unique ID of the value
-  string value_id = 2;
-}
-
-message ClearValueResponse {
 }
 
 message ClosePanelRequest {

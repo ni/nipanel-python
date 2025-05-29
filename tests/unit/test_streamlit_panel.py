@@ -111,7 +111,7 @@ def test___first_open_panel_fails___open_panel___gets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___unopened_panel___set_value___has_value(
+def test___unopened_panel___set_value___client_has_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that set_value() succeeds before the user opens the panel."""
@@ -121,21 +121,7 @@ def test___unopened_panel___set_value___has_value(
     string_value = "test_value"
     panel.set_value(value_id, string_value)
 
-    assert panel.has_value(value_id)
-
-
-def test___set_value___clear_value___does_not_have_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    """Test that set_value() succeeds before the user opens the panel."""
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    value_id = "test_id"
-    string_value = "test_value"
-    panel.set_value(value_id, string_value)
-
-    panel.clear_value(value_id)
-
-    assert not panel.has_value(value_id)
+    assert panel._panel_client.enumerate_panels() == {"my_panel": (False, [value_id])}
 
 
 def test___unopened_panel___get_unset_value___raises_exception(

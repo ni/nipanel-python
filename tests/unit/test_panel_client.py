@@ -68,29 +68,6 @@ def test___set_value___enumerate_panels_shows_value(
     assert client.enumerate_panels() == {"panel1": (False, ["val1"])}
 
 
-def test___set_value___clear_value___enumerate_panels_shows_no_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    client = create_panel_client(fake_panel_channel)
-    client.set_value("panel1", "val1", "value1")
-
-    client.clear_value("panel1", "val1")
-
-    assert client.enumerate_panels() == {"panel1": (False, [])}
-
-
-def test___set_values___clear_value_2___enumerate_panels_has_value_1(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    client = create_panel_client(fake_panel_channel)
-    client.set_value("panel1", "val1", "value1")
-    client.set_value("panel1", "val2", "value2")
-
-    client.clear_value("panel1", "val2")
-
-    assert client.enumerate_panels() == {"panel1": (False, ["val1"])}
-
-
 def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
