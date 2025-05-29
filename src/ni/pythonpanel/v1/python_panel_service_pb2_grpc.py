@@ -15,6 +15,11 @@ class PythonPanelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.EnumeratePanels = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/EnumeratePanels',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.FromString,
+                )
         self.OpenPanel = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/OpenPanel',
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelRequest.SerializeToString,
@@ -30,15 +35,29 @@ class PythonPanelServiceStub(object):
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
                 response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
                 )
+        self.ClosePanel = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/ClosePanel',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelResponse.FromString,
+                )
 
 
 class PythonPanelServiceServicer(object):
     """Service interface for interacting with python panels
     """
 
+    def EnumeratePanels(self, request, context):
+        """Enumerate the panels available in the system
+        Status Codes for errors:
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def OpenPanel(self, request, context):
         """Open a panel
         Status Codes for errors:
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         - NOT_FOUND: the file for the panel was not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -48,7 +67,8 @@ class PythonPanelServiceServicer(object):
     def GetValue(self, request, context):
         """Get a value for a control on the panel
         Status Codes for errors:
-        - NOT_FOUND: the panel with the specified id was not found
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - NOT_FOUND: The value with the specified identifier was not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -57,7 +77,16 @@ class PythonPanelServiceServicer(object):
     def SetValue(self, request, context):
         """Set a value for a control on the panel
         Status Codes for errors:
-        - NOT_FOUND: the panel with the specified id was not found
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ClosePanel(self, request, context):
+        """Close a panel
+        Status Codes for errors:
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -66,6 +95,11 @@ class PythonPanelServiceServicer(object):
 
 def add_PythonPanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'EnumeratePanels': grpc.unary_unary_rpc_method_handler(
+                    servicer.EnumeratePanels,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.SerializeToString,
+            ),
             'OpenPanel': grpc.unary_unary_rpc_method_handler(
                     servicer.OpenPanel,
                     request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.OpenPanelRequest.FromString,
@@ -81,6 +115,11 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
                     request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.FromString,
                     response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.SerializeToString,
             ),
+            'ClosePanel': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClosePanel,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'ni.pythonpanel.v1.PythonPanelService', rpc_method_handlers)
@@ -91,6 +130,23 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
 class PythonPanelService(object):
     """Service interface for interacting with python panels
     """
+
+    @staticmethod
+    def EnumeratePanels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/EnumeratePanels',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def OpenPanel(request,
@@ -140,5 +196,22 @@ class PythonPanelService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValue',
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ClosePanel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/ClosePanel',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.ClosePanelResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -16,20 +16,39 @@ option ruby_package = "NI::PythonPanel::V1";
 
 // Service interface for interacting with python panels
 service PythonPanelService {
+  // Enumerate the panels available in the system
+  // Status Codes for errors:
+  rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
+
   // Open a panel
   // Status Codes for errors:
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   // - NOT_FOUND: the file for the panel was not found
   rpc OpenPanel(OpenPanelRequest) returns (OpenPanelResponse);
 
   // Get a value for a control on the panel
   // Status Codes for errors:
-  // - NOT_FOUND: the panel with the specified id was not found
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - NOT_FOUND: The value with the specified identifier was not found
   rpc GetValue(GetValueRequest) returns (GetValueResponse);
 
   // Set a value for a control on the panel
   // Status Codes for errors:
-  // - NOT_FOUND: the panel with the specified id was not found
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
+
+  // Close a panel
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  rpc ClosePanel(ClosePanelRequest) returns (ClosePanelResponse);
+}
+
+message EnumeratePanelsRequest {
+}
+
+message EnumeratePanelsResponse {
+  // The list of panels available in the system
+  repeated string panel_ids = 1;
 }
 
 message OpenPanelRequest {
@@ -40,12 +59,12 @@ message OpenPanelRequest {
   string panel_uri = 2;
 }
 
-message OpenPanelResponse {  
+message OpenPanelResponse {
 }
 
 message GetValueRequest {
   // Unique ID of the panel
-  string panel_id = 1;  
+  string panel_id = 1;
 
   // Unique ID of value
   string value_id = 2;
@@ -58,8 +77,8 @@ message GetValueResponse {
 
 message SetValueRequest {
   // Unique ID of the panel
-  string panel_id = 1;  
-  
+  string panel_id = 1;
+
   // Unique ID of the value
   string value_id = 2;
 
@@ -67,5 +86,16 @@ message SetValueRequest {
   google.protobuf.Any value = 3;
 }
 
-message SetValueResponse {  
+message SetValueResponse {
+}
+
+message ClosePanelRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Reset all storage associated with panel
+  bool reset = 2;
+}
+
+message ClosePanelResponse {
 }

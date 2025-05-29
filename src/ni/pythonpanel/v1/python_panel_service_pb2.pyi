@@ -4,12 +4,42 @@ isort:skip_file
 """
 
 import builtins
+import collections.abc
 import google.protobuf.any_pb2
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.message
 import typing
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+
+@typing.final
+class EnumeratePanelsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___EnumeratePanelsRequest = EnumeratePanelsRequest
+
+@typing.final
+class EnumeratePanelsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_IDS_FIELD_NUMBER: builtins.int
+    @property
+    def panel_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """The list of panels available in the system"""
+
+    def __init__(
+        self,
+        *,
+        panel_ids: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_ids", b"panel_ids"]) -> None: ...
+
+global___EnumeratePanelsResponse = EnumeratePanelsResponse
 
 @typing.final
 class OpenPanelRequest(google.protobuf.message.Message):
@@ -116,3 +146,33 @@ class SetValueResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___SetValueResponse = SetValueResponse
+
+@typing.final
+class ClosePanelRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    RESET_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    reset: builtins.bool
+    """Reset all storage associated with panel"""
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        reset: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "reset", b"reset"]) -> None: ...
+
+global___ClosePanelRequest = ClosePanelRequest
+
+@typing.final
+class ClosePanelResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___ClosePanelResponse = ClosePanelResponse
