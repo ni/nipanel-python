@@ -185,7 +185,7 @@ class BoolCollectionConverter(Converter[Collection[bool], python_panel_types_pb2
     def to_protobuf_message(
         self, python_value: Collection[bool]
     ) -> python_panel_types_pb2.BoolCollection:
-        """Convert the Python collection of bools to a protobuf python_panel_types_pb2.BoolCollection."""
+        """Convert the Python collection of bools to a protobuf python_panel_types_pb2.BoolCollection."""  # noqa: W505 - doc line too long
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
@@ -213,7 +213,7 @@ class BytesCollectionConverter(
     def to_protobuf_message(
         self, python_value: Collection[bytes]
     ) -> python_panel_types_pb2.ByteStringCollection:
-        """Convert the Python collection of byte strings to a protobuf python_panel_types_pb2.ByteStringCollection."""
+        """Convert the Python collection of byte strings to a protobuf python_panel_types_pb2.ByteStringCollection."""  # noqa: W505 - doc line too long
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
@@ -241,7 +241,7 @@ class FloatCollectionConverter(
     def to_protobuf_message(
         self, python_value: Collection[float]
     ) -> python_panel_types_pb2.FloatCollection:
-        """Convert the Python collection of floats to a protobuf python_panel_types_pb2.FloatCollection."""
+        """Convert the Python collection of floats to a protobuf python_panel_types_pb2.FloatCollection."""  # noqa: W505 - doc line too long
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
@@ -267,7 +267,7 @@ class IntCollectionConverter(Converter[Collection[int], python_panel_types_pb2.I
     def to_protobuf_message(
         self, python_value: Collection[int]
     ) -> python_panel_types_pb2.IntCollection:
-        """Convert the Python collection of integers to a protobuf python_panel_types_pb2.IntCollection."""
+        """Convert the Python collection of integers to a protobuf python_panel_types_pb2.IntCollection."""  # noqa: W505 - doc line too long
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
@@ -293,7 +293,7 @@ class StrCollectionConverter(Converter[Collection[str], python_panel_types_pb2.S
     def to_protobuf_message(
         self, python_value: Collection[str]
     ) -> python_panel_types_pb2.StringCollection:
-        """Convert the Python collection of strings to a protobuf python_panel_types_pb2.StringCollection."""
+        """Convert the Python collection of strings to a protobuf python_panel_types_pb2.StringCollection."""  # noqa: W505 - doc line too long
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
