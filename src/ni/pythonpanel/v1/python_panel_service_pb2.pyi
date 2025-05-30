@@ -24,20 +24,46 @@ class EnumeratePanelsRequest(google.protobuf.message.Message):
 global___EnumeratePanelsRequest = EnumeratePanelsRequest
 
 @typing.final
+class PanelInformation(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    IS_OPEN_FIELD_NUMBER: builtins.int
+    VALUE_IDS_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    is_open: builtins.bool
+    """Is the panel currently open?"""
+    @property
+    def value_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """IDs of all of the values associated with the panel"""
+
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        is_open: builtins.bool = ...,
+        value_ids: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["is_open", b"is_open", "panel_id", b"panel_id", "value_ids", b"value_ids"]) -> None: ...
+
+global___PanelInformation = PanelInformation
+
+@typing.final
 class EnumeratePanelsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    PANEL_IDS_FIELD_NUMBER: builtins.int
+    PANELS_FIELD_NUMBER: builtins.int
     @property
-    def panel_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    def panels(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PanelInformation]:
         """The list of panels available in the system"""
 
     def __init__(
         self,
         *,
-        panel_ids: collections.abc.Iterable[builtins.str] | None = ...,
+        panels: collections.abc.Iterable[global___PanelInformation] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_ids", b"panel_ids"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panels", b"panels"]) -> None: ...
 
 global___EnumeratePanelsResponse = EnumeratePanelsResponse
 

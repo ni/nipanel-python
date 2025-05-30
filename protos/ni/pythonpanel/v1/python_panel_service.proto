@@ -16,7 +16,7 @@ option ruby_package = "NI::PythonPanel::V1";
 
 // Service interface for interacting with python panels
 service PythonPanelService {
-  // Enumerate the panels available in the system
+  // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
   // Status Codes for errors:
   rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
 
@@ -46,9 +46,20 @@ service PythonPanelService {
 message EnumeratePanelsRequest {
 }
 
+message PanelInformation {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Is the panel currently open?
+  bool is_open = 2;
+
+  // IDs of all of the values associated with the panel
+  repeated string value_ids = 3;
+}
+
 message EnumeratePanelsResponse {
   // The list of panels available in the system
-  repeated string panel_ids = 1;
+  repeated PanelInformation panels = 1;
 }
 
 message OpenPanelRequest {

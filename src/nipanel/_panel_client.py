@@ -79,17 +79,18 @@ class PanelClient:
         close_panel_request = ClosePanelRequest(panel_id=panel_id, reset=reset)
         self._invoke_with_retry(self._get_stub().ClosePanel, close_panel_request)
 
-    def enumerate_panels(self) -> list[str]:
+    def enumerate_panels(self) -> dict[str, tuple[bool, list[str]]]:
         """Enumerate all available panels.
 
         Returns:
-            A list of panel IDs.
+            A dictionary mapping panel IDs to a tuple containing a boolean indicating if the panel
+            is open and a list of value IDs associated with the panel.
         """
         enumerate_panels_request = EnumeratePanelsRequest()
         response = self._invoke_with_retry(
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
-        return list(response.panel_ids)
+        return {panel.panel_id: (panel.is_open, list(panel.value_ids)) for panel in response.panels}
 
     def set_value(self, panel_id: str, value_id: str, value: object) -> None:
         """Set the value for the control with value_id.

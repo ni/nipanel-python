@@ -47,7 +47,7 @@ class PythonPanelServiceServicer(object):
     """
 
     def EnumeratePanels(self, request, context):
-        """Enumerate the panels available in the system
+        """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
         Status Codes for errors:
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
