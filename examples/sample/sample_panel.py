@@ -15,9 +15,11 @@ with col1:
     st.write("Integer")
     st.write("Float")
     st.write("Boolean")
+    st.write("List")
 
 with col2:
     st.write(panel.get_value("sample_string"))
     st.write(panel.get_value("sample_int"))
     st.write(panel.get_value("sample_float"))
     st.write(panel.get_value("sample_bool"))
+    st.write(panel.get_value("float_values"))
