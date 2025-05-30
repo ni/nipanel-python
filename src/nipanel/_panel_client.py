@@ -19,7 +19,7 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
 
-from nipanel._converters import (
+from nipanel._convert import (
     from_any,
     to_any,
 )
