@@ -1,6 +1,5 @@
 """Streamlit application script for displaying values using nipanel package."""
 
-import pandas as pd
 import streamlit as st
 
 import nipanel
@@ -16,22 +15,11 @@ with col1:
     st.write("Integer")
     st.write("Float")
     st.write("Boolean")
-    st.write("Line")
+    st.write("List")
 
 with col2:
     st.write(panel.get_value("sample_string"))
     st.write(panel.get_value("sample_int"))
     st.write(panel.get_value("sample_float"))
     st.write(panel.get_value("sample_bool"))
-    st.line_chart(
-        data=pd.DataFrame(
-            {
-                "x": panel.get_value("x_values"),
-                "y": panel.get_value("y_values"),
-            }
-        ),
-        x="x",
-        y="y",
-        x_label="x",
-        y_label="sin(x)",
-    )
+    st.write(panel.get_value("float_values"))
