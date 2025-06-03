@@ -32,7 +32,7 @@ class MyStrEnum(str, enum.Enum):
 if __name__ == "__main__":
     my_panel = nipanel.StreamlitPanel(
         panel_id="placeholder",
-        streamlit_script_uri=__file__,
+        streamlit_script_path=__file__,
     )
 
     my_types = {

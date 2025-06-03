@@ -16,15 +16,20 @@ option ruby_package = "NI::PythonPanel::V1";
 
 // Service interface for interacting with python panels
 service PythonPanelService {
-  // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
-  // Status Codes for errors:
-  rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
-
-  // Open a panel
+  // Start a panel (or connect to if it has already been started)
   // Status Codes for errors:
   // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   // - NOT_FOUND: the file for the panel was not found
-  rpc OpenPanel(OpenPanelRequest) returns (OpenPanelResponse);
+  rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
+
+  // Stop a panel
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  rpc StopPanel(StopPanelRequest) returns (StopPanelResponse);
+
+  // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
+  // Status Codes for errors:
+  rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
 
   // Get a value for a control on the panel
   // Status Codes for errors:
@@ -36,11 +41,30 @@ service PythonPanelService {
   // Status Codes for errors:
   // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
+}
 
-  // Close a panel
-  // Status Codes for errors:
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  rpc ClosePanel(ClosePanelRequest) returns (ClosePanelResponse);
+message StartPanelRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Absolute path of the panel script's file on disk, or network path to the file
+  string panel_script_path = 2;
+}
+
+message StartPanelResponse {
+  // Location of the panel's webpage 
+  string panel_url = 1; 
+}
+
+message StopPanelRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Reset all storage associated with panel
+  bool reset = 2;
+}
+
+message StopPanelResponse {
 }
 
 message EnumeratePanelsRequest {
@@ -50,8 +74,8 @@ message PanelInformation {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Is the panel currently open?
-  bool is_open = 2;
+  // Location of the panel's webpage
+  string panel_url = 2;
 
   // IDs of all of the values associated with the panel
   repeated string value_ids = 3;
@@ -60,17 +84,6 @@ message PanelInformation {
 message EnumeratePanelsResponse {
   // The list of panels available in the system
   repeated PanelInformation panels = 1;
-}
-
-message OpenPanelRequest {
-  // Unique ID of the panel
-  string panel_id = 1;
-
-  // Absolute path of the panel's file on disk, or network path to the file
-  string panel_uri = 2;
-}
-
-message OpenPanelResponse {
 }
 
 message GetValueRequest {
@@ -98,15 +111,4 @@ message SetValueRequest {
 }
 
 message SetValueResponse {
-}
-
-message ClosePanelRequest {
-  // Unique ID of the panel
-  string panel_id = 1;
-
-  // Reset all storage associated with panel
-  bool reset = 2;
-}
-
-message ClosePanelResponse {
 }

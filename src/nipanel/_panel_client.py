@@ -8,8 +8,8 @@ from typing import Callable, TypeVar
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    OpenPanelRequest,
-    ClosePanelRequest,
+    StartPanelRequest,
+    StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
     SetValueRequest,
@@ -59,38 +59,46 @@ class PanelClient:
         self._grpc_channel = grpc_channel
         self._stub: PythonPanelServiceStub | None = None
 
-    def open_panel(self, panel_id: str, panel_uri: str) -> None:
-        """Open the panel.
+    def start_panel(self, panel_id: str, panel_script_path: str) -> str:
+        """Start the panel.
 
         Args:
-            panel_id: The ID of the panel to open.
-            panel_uri: The URI of the panel script.
+            panel_id: The ID of the panel to start.
+            panel_script_path: The path of the panel script file.
+
+        Returns:
+            The URL of the panel.
         """
-        open_panel_request = OpenPanelRequest(panel_id=panel_id, panel_uri=panel_uri)
-        self._invoke_with_retry(self._get_stub().OpenPanel, open_panel_request)
+        start_panel_request = StartPanelRequest(
+            panel_id=panel_id, panel_script_path=panel_script_path
+        )
+        response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
+        return response.panel_url
 
-    def close_panel(self, panel_id: str, reset: bool) -> None:
-        """Close the panel.
+    def stop_panel(self, panel_id: str, reset: bool) -> None:
+        """Stop the panel.
 
         Args:
-            panel_id: The ID of the panel to close.
+            panel_id: The ID of the panel to stop.
             reset: Whether to reset all storage associated with panel.
         """
-        close_panel_request = ClosePanelRequest(panel_id=panel_id, reset=reset)
-        self._invoke_with_retry(self._get_stub().ClosePanel, close_panel_request)
+        stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
+        self._invoke_with_retry(self._get_stub().StopPanel, stop_panel_request)
 
-    def enumerate_panels(self) -> dict[str, tuple[bool, list[str]]]:
+    def enumerate_panels(self) -> dict[str, tuple[str, list[str]]]:
         """Enumerate all available panels.
 
         Returns:
-            A dictionary mapping panel IDs to a tuple containing a boolean indicating if the panel
-            is open and a list of value IDs associated with the panel.
+            A dictionary mapping panel IDs to a tuple containing the url of the panel (if it is
+            running) and a list of value IDs associated with the panel.
         """
         enumerate_panels_request = EnumeratePanelsRequest()
         response = self._invoke_with_retry(
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
-        return {panel.panel_id: (panel.is_open, list(panel.value_ids)) for panel in response.panels}
+        return {
+            panel.panel_id: (panel.panel_url, list(panel.value_ids)) for panel in response.panels
+        }
 
     def set_value(self, panel_id: str, value_id: str, value: object) -> None:
         """Set the value for the control with value_id.

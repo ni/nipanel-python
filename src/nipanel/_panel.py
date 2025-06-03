@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import sys
 from abc import ABC
-from types import TracebackType
-from typing import TYPE_CHECKING
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -11,23 +8,17 @@ from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_value_accessor import PanelValueAccessor
 
-if TYPE_CHECKING:
-    if sys.version_info >= (3, 11):
-        from typing import Self
-    else:
-        from typing_extensions import Self
-
 
 class Panel(PanelValueAccessor, ABC):
     """This class allows you to open a panel and specify values for its controls."""
 
-    __slots__ = ["_panel_uri"]
+    __slots__ = ["_panel_script_path", "_panel_url"]
 
     def __init__(
         self,
         *,
         panel_id: str,
-        panel_uri: str,
+        panel_script_path: str,
         provided_interface: str,
         service_class: str,
         discovery_client: DiscoveryClient | None = None,
@@ -43,36 +34,15 @@ class Panel(PanelValueAccessor, ABC):
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
-        self._panel_uri = panel_uri
+        self._panel_script_path = panel_script_path
+        self._panel_url = self._panel_client.start_panel(panel_id, panel_script_path)
 
     @property
-    def panel_uri(self) -> str:
-        """Read-only accessor for the panel URI."""
-        return self._panel_uri
+    def panel_script_path(self) -> str:
+        """Read-only accessor for the panel script path."""
+        return self._panel_script_path
 
-    def __enter__(self) -> Self:
-        """Enter the runtime context related to this object."""
-        self.open_panel()
-        return self
-
-    def __exit__(
-        self,
-        exctype: type[BaseException] | None,
-        excinst: BaseException | None,
-        exctb: TracebackType | None,
-    ) -> bool | None:
-        """Exit the runtime context related to this object."""
-        self.close_panel(reset=False)
-        return None
-
-    def open_panel(self) -> None:
-        """Open the panel."""
-        self._panel_client.open_panel(self._panel_id, self._panel_uri)
-
-    def close_panel(self, reset: bool) -> None:
-        """Close the panel.
-
-        Args:
-            reset: Whether to reset all storage associated with the panel.
-        """
-        self._panel_client.close_panel(self._panel_id, reset=reset)
+    @property
+    def panel_url(self) -> str:
+        """Read-only accessor for the panel URL."""
+        return self._panel_url

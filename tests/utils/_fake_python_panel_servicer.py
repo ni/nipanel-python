@@ -2,10 +2,10 @@ from typing import Any
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    OpenPanelRequest,
-    OpenPanelResponse,
-    ClosePanelRequest,
-    ClosePanelResponse,
+    StartPanelRequest,
+    StartPanelResponse,
+    StopPanelRequest,
+    StopPanelResponse,
     EnumeratePanelsRequest,
     EnumeratePanelsResponse,
     PanelInformation,
@@ -23,24 +23,24 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     def __init__(self) -> None:
         """Initialize the fake PythonPanelServicer."""
         self._panel_ids: list[str] = []
-        self._panel_is_open: dict[str, bool] = {}
+        self._panel_is_running: dict[str, bool] = {}
         self._panel_value_ids: dict[str, dict[str, Any]] = {}
-        self._fail_next_open_panel = False
+        self._fail_next_start_panel = False
 
-    def OpenPanel(self, request: OpenPanelRequest, context: Any) -> OpenPanelResponse:  # noqa: N802
+    def StartPanel(  # noqa: N802
+        self, request: StartPanelRequest, context: Any
+    ) -> StartPanelResponse:
         """Trivial implementation for testing."""
-        if self._fail_next_open_panel:
-            self._fail_next_open_panel = False
+        if self._fail_next_start_panel:
+            self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
-        self._open_panel(request.panel_id)
-        return OpenPanelResponse()
+        self._start_panel(request.panel_id)
+        return StartPanelResponse(panel_url=self._get_panel_url(request.panel_id))
 
-    def ClosePanel(  # noqa: N802
-        self, request: ClosePanelRequest, context: Any
-    ) -> ClosePanelResponse:
+    def StopPanel(self, request: StopPanelRequest, context: Any) -> StopPanelResponse:  # noqa: N802
         """Trivial implementation for testing."""
-        self._close_panel(request.reset, request.panel_id)
-        return ClosePanelResponse()
+        self._stop_panel(request.reset, request.panel_id)
+        return StopPanelResponse()
 
     def EnumeratePanels(  # noqa: N802
         self, request: EnumeratePanelsRequest, context: Any
@@ -50,7 +50,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         for panel_id in self._panel_ids:
             panel = PanelInformation(
                 panel_id=panel_id,
-                is_open=self._panel_is_open[panel_id],
+                panel_url=self._get_panel_url(panel_id),
                 value_ids=self._panel_value_ids[panel_id],
             )
             response.panels.append(panel)
@@ -67,28 +67,33 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._panel_value_ids[request.panel_id][request.value_id] = request.value
         return SetValueResponse()
 
-    def fail_next_open_panel(self) -> None:
-        """Set whether the OpenPanel method should fail the next time it is called."""
-        self._fail_next_open_panel = True
+    def fail_next_start_panel(self) -> None:
+        """Set whether the StartPanel method should fail the next time it is called."""
+        self._fail_next_start_panel = True
 
     def _init_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:
             self._panel_ids.append(panel_id)
-            self._panel_is_open[panel_id] = False
+            self._panel_is_running[panel_id] = False
             self._panel_value_ids[panel_id] = {}
 
-    def _open_panel(self, panel_id: str) -> None:
+    def _start_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:
             self._panel_ids.append(panel_id)
-            self._panel_is_open[panel_id] = True
+            self._panel_is_running[panel_id] = True
             self._panel_value_ids[panel_id] = {}
         else:
-            self._panel_is_open[panel_id] = True
+            self._panel_is_running[panel_id] = True
 
-    def _close_panel(self, reset: bool, panel_id: str) -> None:
+    def _stop_panel(self, reset: bool, panel_id: str) -> None:
         if reset:
             self._panel_ids.remove(panel_id)
-            self._panel_is_open.pop(panel_id)
+            self._panel_is_running.pop(panel_id)
             self._panel_value_ids.pop(panel_id)
         else:
-            self._panel_is_open[panel_id] = False
+            self._panel_is_running[panel_id] = False
+
+    def _get_panel_url(self, panel_id: str) -> str:
+        if not self._panel_is_running.get(panel_id, False):
+            return ""
+        return f"http://localhost:50051/{panel_id}"
