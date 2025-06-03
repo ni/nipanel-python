@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 from abc import ABC
 from types import TracebackType
 
