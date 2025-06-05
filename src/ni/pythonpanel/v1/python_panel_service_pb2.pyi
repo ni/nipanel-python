@@ -179,10 +179,13 @@ class SetValueRequest(google.protobuf.message.Message):
     PANEL_ID_FIELD_NUMBER: builtins.int
     VALUE_ID_FIELD_NUMBER: builtins.int
     VALUE_FIELD_NUMBER: builtins.int
+    NOTIFY_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
     value_id: builtins.str
     """Unique ID of the value"""
+    notify: builtins.bool
+    """Notify other clients of this new value"""
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
         """The value"""
@@ -193,9 +196,10 @@ class SetValueRequest(google.protobuf.message.Message):
         panel_id: builtins.str = ...,
         value_id: builtins.str = ...,
         value: google.protobuf.any_pb2.Any | None = ...,
+        notify: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "value", b"value", "value_id", b"value_id"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["notify", b"notify", "panel_id", b"panel_id", "value", b"value", "value_id", b"value_id"]) -> None: ...
 
 global___SetValueRequest = SetValueRequest
 

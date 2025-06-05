@@ -63,6 +63,32 @@ def test___panel___accessor_set_value___panel_gets_same_value(
     assert panel.get_value(value_id) == string_value
 
 
+def test___panel___set_value___notifies(
+    fake_python_panel_service: FakePythonPanelService,
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    service = fake_python_panel_service
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    assert service.servicer.notification_count == 0
+
+    panel.set_value("value_id", "string_value")
+
+    assert service.servicer.notification_count == 1
+
+
+def test___accessor___set_value___does_not_notify(
+    fake_python_panel_service: FakePythonPanelService,
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    service = fake_python_panel_service
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+    assert service.servicer.notification_count == 0
+
+    accessor.set_value("value_id", "string_value")
+
+    assert service.servicer.notification_count == 0
+
+
 def test___first_start_will_fail___start_panel___panel_is_functional(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,

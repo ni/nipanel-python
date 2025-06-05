@@ -12,7 +12,10 @@ from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 
 @final
 class StreamlitPanelValueAccessor(PanelValueAccessor):
-    """This class provides access to values for a Streamlit panel's controls."""
+    """This class provides access to values for a Streamlit panel's controls.
+
+    This class should only be used within a Streamlit script.
+    """
 
     def __init__(
         self,
@@ -35,6 +38,7 @@ class StreamlitPanelValueAccessor(PanelValueAccessor):
             panel_id=panel_id,
             provided_interface=STREAMLIT_PYTHON_PANEL_SERVICE,
             service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
+            notify_on_set_value=False,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,

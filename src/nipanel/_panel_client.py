@@ -100,16 +100,19 @@ class PanelClient:
             panel.panel_id: (panel.panel_url, list(panel.value_ids)) for panel in response.panels
         }
 
-    def set_value(self, panel_id: str, value_id: str, value: object) -> None:
+    def set_value(self, panel_id: str, value_id: str, value: object, notify: bool) -> None:
         """Set the value for the control with value_id.
 
         Args:
             panel_id: The ID of the panel.
             value_id: The ID of the control.
             value: The value to set.
+            notify: Whether to notify other clients of the new value.
         """
         new_any = to_any(value)
-        set_value_request = SetValueRequest(panel_id=panel_id, value_id=value_id, value=new_any)
+        set_value_request = SetValueRequest(
+            panel_id=panel_id, value_id=value_id, value=new_any, notify=notify
+        )
         self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
 
     def get_value(self, panel_id: str, value_id: str) -> object:

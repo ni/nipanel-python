@@ -108,6 +108,9 @@ message SetValueRequest {
 
   // The value
   google.protobuf.Any value = 3;
+
+  // Notify other clients of this new value
+  bool notify = 4;
 }
 
 message SetValueResponse {

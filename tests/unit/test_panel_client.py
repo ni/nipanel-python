@@ -63,7 +63,7 @@ def test___set_value___enumerate_panels_shows_value(
 ) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    client.set_value("panel1", "val1", "value1")
+    client.set_value("panel1", "val1", "value1", notify=False)
 
     assert client.enumerate_panels() == {"panel1": ("", ["val1"])}
 
@@ -71,7 +71,7 @@ def test___set_value___enumerate_panels_shows_value(
 def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    client.set_value("panel1", "val1", "value1")
+    client.set_value("panel1", "val1", "value1", notify=False)
 
     assert client.get_value("panel1", "val1") == "value1"
 
