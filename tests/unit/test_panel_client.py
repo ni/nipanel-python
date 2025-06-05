@@ -10,44 +10,44 @@ def test___enumerate_is_empty(fake_panel_channel: grpc.Channel) -> None:
     assert client.enumerate_panels() == {}
 
 
-def test___open_panels___enumerate_has_panels(fake_panel_channel: grpc.Channel) -> None:
+def test___start_panels___enumerate_has_panels(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    client.open_panel("panel1", "uri1")
-    client.open_panel("panel2", "uri2")
+    client.start_panel("panel1", "uri1")
+    client.start_panel("panel2", "uri2")
 
     assert client.enumerate_panels() == {
-        "panel1": (True, []),
-        "panel2": (True, []),
+        "panel1": ("http://localhost:50051/panel1", []),
+        "panel2": ("http://localhost:50051/panel2", []),
     }
 
 
-def test___open_panels___close_panel_1_with_reset___enumerate_has_panel_2(
+def test___start_panels___stop_panel_1_with_reset___enumerate_has_panel_2(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = create_panel_client(fake_panel_channel)
-    client.open_panel("panel1", "uri1")
-    client.open_panel("panel2", "uri2")
+    client.start_panel("panel1", "uri1")
+    client.start_panel("panel2", "uri2")
 
-    client.close_panel("panel1", reset=True)
+    client.stop_panel("panel1", reset=True)
 
     assert client.enumerate_panels() == {
-        "panel2": (True, []),
+        "panel2": ("http://localhost:50051/panel2", []),
     }
 
 
-def test___open_panels___close_panel_1_without_reset___enumerate_has_both_panels(
+def test___start_panels___stop_panel_1_without_reset___enumerate_has_both_panels(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = create_panel_client(fake_panel_channel)
-    client.open_panel("panel1", "uri1")
-    client.open_panel("panel2", "uri2")
+    client.start_panel("panel1", "uri1")
+    client.start_panel("panel2", "uri2")
 
-    client.close_panel("panel1", reset=False)
+    client.stop_panel("panel1", reset=False)
 
     assert client.enumerate_panels() == {
-        "panel1": (False, []),
-        "panel2": (True, []),
+        "panel1": ("", []),
+        "panel2": ("http://localhost:50051/panel2", []),
     }
 
 
@@ -65,7 +65,7 @@ def test___set_value___enumerate_panels_shows_value(
 
     client.set_value("panel1", "val1", "value1")
 
-    assert client.enumerate_panels() == {"panel1": (False, ["val1"])}
+    assert client.enumerate_panels() == {"panel1": ("", ["val1"])}
 
 
 def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:

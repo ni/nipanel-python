@@ -1,8 +1,8 @@
 from google.protobuf.any_pb2 import Any
 from google.protobuf.wrappers_pb2 import StringValue
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    OpenPanelRequest,
-    ClosePanelRequest,
+    StartPanelRequest,
+    StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
     SetValueRequest,
@@ -10,21 +10,21 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 
-def test___open_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
-    request = OpenPanelRequest(panel_id="test_panel", panel_uri="path/to/panel")
-    response = python_panel_service_stub.OpenPanel(request)
+def test___start_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
+    request = StartPanelRequest(panel_id="test_panel", panel_script_path="path/to/panel")
+    response = python_panel_service_stub.StartPanel(request)
 
-    assert response is not None  # Ensure response is returned
+    assert response.panel_url == "http://localhost:50051/test_panel"
 
 
-def test___open_panel___close_panel___gets_response(
+def test___start_panel___stop_panel___gets_response(
     python_panel_service_stub: PythonPanelServiceStub,
 ) -> None:
-    open_request = OpenPanelRequest(panel_id="test_panel", panel_uri="path/to/panel")
-    python_panel_service_stub.OpenPanel(open_request)
+    open_request = StartPanelRequest(panel_id="test_panel", panel_script_path="path/to/panel")
+    python_panel_service_stub.StartPanel(open_request)
 
-    request = ClosePanelRequest(panel_id="test_panel", reset=False)
-    response = python_panel_service_stub.ClosePanel(request)
+    request = StopPanelRequest(panel_id="test_panel", reset=False)
+    response = python_panel_service_stub.StopPanel(request)
 
     assert response is not None  # Ensure response is returned
 

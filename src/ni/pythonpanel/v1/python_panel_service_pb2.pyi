@@ -14,6 +14,72 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
+class StartPanelRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    PANEL_SCRIPT_PATH_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    panel_script_path: builtins.str
+    """Absolute path of the panel script's file on disk, or network path to the file"""
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        panel_script_path: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_script_path", b"panel_script_path"]) -> None: ...
+
+global___StartPanelRequest = StartPanelRequest
+
+@typing.final
+class StartPanelResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_URL_FIELD_NUMBER: builtins.int
+    panel_url: builtins.str
+    """Location of the panel's webpage"""
+    def __init__(
+        self,
+        *,
+        panel_url: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_url", b"panel_url"]) -> None: ...
+
+global___StartPanelResponse = StartPanelResponse
+
+@typing.final
+class StopPanelRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    RESET_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    reset: builtins.bool
+    """Reset all storage associated with panel"""
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        reset: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "reset", b"reset"]) -> None: ...
+
+global___StopPanelRequest = StopPanelRequest
+
+@typing.final
+class StopPanelResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___StopPanelResponse = StopPanelResponse
+
+@typing.final
 class EnumeratePanelsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -28,12 +94,12 @@ class PanelInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
-    IS_OPEN_FIELD_NUMBER: builtins.int
+    PANEL_URL_FIELD_NUMBER: builtins.int
     VALUE_IDS_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
-    is_open: builtins.bool
-    """Is the panel currently open?"""
+    panel_url: builtins.str
+    """Location of the panel's webpage"""
     @property
     def value_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """IDs of all of the values associated with the panel"""
@@ -42,10 +108,10 @@ class PanelInformation(google.protobuf.message.Message):
         self,
         *,
         panel_id: builtins.str = ...,
-        is_open: builtins.bool = ...,
+        panel_url: builtins.str = ...,
         value_ids: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["is_open", b"is_open", "panel_id", b"panel_id", "value_ids", b"value_ids"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_url", b"panel_url", "value_ids", b"value_ids"]) -> None: ...
 
 global___PanelInformation = PanelInformation
 
@@ -66,36 +132,6 @@ class EnumeratePanelsResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["panels", b"panels"]) -> None: ...
 
 global___EnumeratePanelsResponse = EnumeratePanelsResponse
-
-@typing.final
-class OpenPanelRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    PANEL_ID_FIELD_NUMBER: builtins.int
-    PANEL_URI_FIELD_NUMBER: builtins.int
-    panel_id: builtins.str
-    """Unique ID of the panel"""
-    panel_uri: builtins.str
-    """Absolute path of the panel's file on disk, or network path to the file"""
-    def __init__(
-        self,
-        *,
-        panel_id: builtins.str = ...,
-        panel_uri: builtins.str = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_uri", b"panel_uri"]) -> None: ...
-
-global___OpenPanelRequest = OpenPanelRequest
-
-@typing.final
-class OpenPanelResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    def __init__(
-        self,
-    ) -> None: ...
-
-global___OpenPanelResponse = OpenPanelResponse
 
 @typing.final
 class GetValueRequest(google.protobuf.message.Message):
@@ -172,33 +208,3 @@ class SetValueResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___SetValueResponse = SetValueResponse
-
-@typing.final
-class ClosePanelRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    PANEL_ID_FIELD_NUMBER: builtins.int
-    RESET_FIELD_NUMBER: builtins.int
-    panel_id: builtins.str
-    """Unique ID of the panel"""
-    reset: builtins.bool
-    """Reset all storage associated with panel"""
-    def __init__(
-        self,
-        *,
-        panel_id: builtins.str = ...,
-        reset: builtins.bool = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "reset", b"reset"]) -> None: ...
-
-global___ClosePanelRequest = ClosePanelRequest
-
-@typing.final
-class ClosePanelResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    def __init__(
-        self,
-    ) -> None: ...
-
-global___ClosePanelResponse = ClosePanelResponse

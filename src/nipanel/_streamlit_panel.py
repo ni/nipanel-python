@@ -17,7 +17,7 @@ class StreamlitPanel(Panel):
     def __init__(
         self,
         panel_id: str,
-        streamlit_script_uri: str,
+        streamlit_script_path: str,
         *,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
@@ -27,7 +27,7 @@ class StreamlitPanel(Panel):
 
         Args:
             panel_id: A unique identifier for the panel.
-            streamlit_script_uri: The file path of the Streamlit script.
+            streamlit_script_path: The file path of the Streamlit script.
             grpc_channel: An optional gRPC channel to use for communication with the panel service.
 
         Returns:
@@ -35,7 +35,7 @@ class StreamlitPanel(Panel):
         """
         super().__init__(
             panel_id=panel_id,
-            panel_uri=streamlit_script_uri,
+            panel_script_path=streamlit_script_path,
             provided_interface=STREAMLIT_PYTHON_PANEL_SERVICE,
             service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
             discovery_client=discovery_client,

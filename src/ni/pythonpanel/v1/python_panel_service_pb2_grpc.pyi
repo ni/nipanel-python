@@ -21,22 +21,31 @@ class PythonPanelServiceStub:
     """Service interface for interacting with python panels"""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
+    StartPanel: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
+    ]
+    """Start a panel (or connect to if it has already been started)
+    Status Codes for errors:
+    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - NOT_FOUND: the file for the panel was not found
+    """
+
+    StopPanel: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse,
+    ]
+    """Stop a panel
+    Status Codes for errors:
+    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    """
+
     EnumeratePanels: grpc.UnaryUnaryMultiCallable[
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse,
     ]
     """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
-    """
-
-    OpenPanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse,
-    ]
-    """Open a panel
-    Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    - NOT_FOUND: the file for the panel was not found
     """
 
     GetValue: grpc.UnaryUnaryMultiCallable[
@@ -58,17 +67,27 @@ class PythonPanelServiceStub:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-    ClosePanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelResponse,
+class PythonPanelServiceAsyncStub:
+    """Service interface for interacting with python panels"""
+
+    StartPanel: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
     ]
-    """Close a panel
+    """Start a panel (or connect to if it has already been started)
+    Status Codes for errors:
+    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - NOT_FOUND: the file for the panel was not found
+    """
+
+    StopPanel: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse,
+    ]
+    """Stop a panel
     Status Codes for errors:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
-
-class PythonPanelServiceAsyncStub:
-    """Service interface for interacting with python panels"""
 
     EnumeratePanels: grpc.aio.UnaryUnaryMultiCallable[
         ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
@@ -76,16 +95,6 @@ class PythonPanelServiceAsyncStub:
     ]
     """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
-    """
-
-    OpenPanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse,
-    ]
-    """Open a panel
-    Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    - NOT_FOUND: the file for the panel was not found
     """
 
     GetValue: grpc.aio.UnaryUnaryMultiCallable[
@@ -107,17 +116,31 @@ class PythonPanelServiceAsyncStub:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-    ClosePanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelResponse,
-    ]
-    """Close a panel
-    Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    """
-
 class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     """Service interface for interacting with python panels"""
+
+    @abc.abstractmethod
+    def StartPanel(
+        self,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse]]:
+        """Start a panel (or connect to if it has already been started)
+        Status Codes for errors:
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - NOT_FOUND: the file for the panel was not found
+        """
+
+    @abc.abstractmethod
+    def StopPanel(
+        self,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse]]:
+        """Stop a panel
+        Status Codes for errors:
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        """
 
     @abc.abstractmethod
     def EnumeratePanels(
@@ -127,18 +150,6 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse]]:
         """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
         Status Codes for errors:
-        """
-
-    @abc.abstractmethod
-    def OpenPanel(
-        self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelRequest,
-        context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.OpenPanelResponse]]:
-        """Open a panel
-        Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - NOT_FOUND: the file for the panel was not found
         """
 
     @abc.abstractmethod
@@ -160,17 +171,6 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse]]:
         """Set a value for a control on the panel
-        Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        """
-
-    @abc.abstractmethod
-    def ClosePanel(
-        self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelRequest,
-        context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.ClosePanelResponse]]:
-        """Close a panel
         Status Codes for errors:
         - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """

@@ -6,28 +6,29 @@ from nipanel import StreamlitPanel, StreamlitPanelValueAccessor
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 
-def test___panel___has_panel_id_and_panel_uri() -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script")
+def test___panel___has_panel_id_and_panel_script_path(fake_panel_channel: grpc.Channel) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
     assert panel.panel_id == "my_panel"
-    assert panel.panel_uri == "path/to/script"
+    assert panel.panel_script_path == "path/to/script"
 
 
-def test___different_panels___have_different_panel_ids_and_uris() -> None:
-    panel1 = StreamlitPanel("panel1", "path/to/script1")
-    panel2 = StreamlitPanel("panel2", "path/to/script2")
+def test___different_panels___have_different_panel_ids_and_panel_script_paths(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel1 = StreamlitPanel("panel1", "path/to/script1", grpc_channel=fake_panel_channel)
+    panel2 = StreamlitPanel("panel2", "path/to/script2", grpc_channel=fake_panel_channel)
 
     assert panel1.panel_id == "panel1"
     assert panel2.panel_id == "panel2"
-    assert panel1._panel_uri == "path/to/script1"
-    assert panel2._panel_uri == "path/to/script2"
+    assert panel1._panel_script_path == "path/to/script1"
+    assert panel2._panel_script_path == "path/to/script2"
     assert panel1._panel_client != panel2._panel_client
 
 
-def test___opened_panel___set_value___gets_same_value(
+def test___panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    panel.open_panel()
 
     value_id = "test_id"
     string_value = "test_value"
@@ -36,11 +37,10 @@ def test___opened_panel___set_value___gets_same_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___opened_panel___panel_set_value___accessor_gets_same_value(
+def test___panel___panel_set_value___accessor_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    panel.open_panel()
     accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -50,11 +50,10 @@ def test___opened_panel___panel_set_value___accessor_gets_same_value(
     assert accessor.get_value(value_id) == string_value
 
 
-def test___opened_panel___accessor_set_value___panel_gets_same_value(
+def test___panel___accessor_set_value___panel_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    panel.open_panel()
     accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -64,67 +63,41 @@ def test___opened_panel___accessor_set_value___panel_gets_same_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___opened_panel_with_value___close_without_reset___gets_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    panel.open_panel()
-    value_id = "test_id"
-    string_value = "test_value"
-    panel.set_value(value_id, string_value)
-
-    panel.close_panel(reset=False)
-
-    assert panel.get_value(value_id) == string_value
-
-
-def test___opened_panel_with_value___close_with_reset___get_throws(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    panel.open_panel()
-    value_id = "test_id"
-    string_value = "test_value"
-    panel.set_value(value_id, string_value)
-
-    panel.close_panel(reset=True)
-
-    with pytest.raises(grpc.RpcError):
-        panel.get_value(value_id)
-
-
-def test___first_open_panel_fails___open_panel___gets_value(
+def test___first_start_will_fail___start_panel___panel_is_functional(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    """Test that panel.open_panel() will automatically retry once."""
+    """Test that panel.start_panel() will automatically retry once."""
     service = fake_python_panel_service
     # Simulate a failure on the first attempt
-    service.servicer.fail_next_open_panel()
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    service.servicer.fail_next_start_panel()
 
-    panel.open_panel()
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
     assert panel.get_value(value_id) == string_value
+    assert panel._panel_client.enumerate_panels() == {
+        "my_panel": ("http://localhost:50051/my_panel", [value_id])
+    }
 
 
-def test___unopened_panel___set_value___sets_value(
+def test___panel___set_value___sets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    """Test that set_value() succeeds before the user opens the panel."""
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
 
-    assert panel._panel_client.enumerate_panels() == {"my_panel": (False, [value_id])}
+    assert panel._panel_client.enumerate_panels() == {
+        "my_panel": ("http://localhost:50051/my_panel", [value_id])
+    }
 
 
-def test___unopened_panel___get_unset_value___raises_exception(
+def test___panel___get_unset_value___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that get_value() raises an exception for an unset value."""
@@ -135,10 +108,9 @@ def test___unopened_panel___get_unset_value___raises_exception(
         panel.get_value(value_id)
 
 
-def test___unopened_panel___get_set_value___gets_value(
+def test___panel___set_value___gets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    """Test that get_value() succeeds for a set value before the user opens the panel."""
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -238,7 +210,6 @@ def test___sequence_of_builtin_type___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
     value_payload: object,
 ) -> None:
-    """Test that set_value() succeeds before the user opens the panel."""
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -248,45 +219,18 @@ def test___sequence_of_builtin_type___set_value___gets_same_value(
     assert list(received_value) == list(value_payload)  # type: ignore [call-overload]
 
 
-def test___open_panel___panel_is_open_and_in_memory(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    assert not is_panel_in_memory(panel)
-
-    panel.open_panel()
-
-    assert is_panel_in_memory(panel)
-    assert is_panel_open(panel)
-
-
-def test___with_panel___opens_and_closes_panel(
+def test___panel___panel_is_running_and_in_memory(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
-    with panel:
-        assert is_panel_in_memory(panel)
-        assert is_panel_open(panel)
-
     assert is_panel_in_memory(panel)
-    assert not is_panel_open(panel)
-
-
-def test___with_panel___set_value___gets_same_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    with StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel) as panel:
-        value_id = "test_id"
-        string_value = "test_value"
-        panel.set_value(value_id, string_value)
-
-        assert panel.get_value(value_id) == string_value
+    assert is_panel_running(panel)
 
 
 def is_panel_in_memory(panel: StreamlitPanel) -> bool:
     return panel.panel_id in panel._panel_client.enumerate_panels().keys()
 
 
-def is_panel_open(panel: StreamlitPanel) -> bool:
-    return panel._panel_client.enumerate_panels()[panel.panel_id][0]
+def is_panel_running(panel: StreamlitPanel) -> bool:
+    return panel._panel_client.enumerate_panels()[panel.panel_id][0] != ""
