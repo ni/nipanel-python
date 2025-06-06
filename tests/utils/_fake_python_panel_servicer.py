@@ -26,6 +26,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._panel_is_running: dict[str, bool] = {}
         self._panel_value_ids: dict[str, dict[str, Any]] = {}
         self._fail_next_start_panel = False
+        self._notification_count: int = 0
 
     def StartPanel(  # noqa: N802
         self, request: StartPanelRequest, context: Any
@@ -65,11 +66,18 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         """Trivial implementation for testing."""
         self._init_panel(request.panel_id)
         self._panel_value_ids[request.panel_id][request.value_id] = request.value
+        if request.notify:
+            self._notification_count += 1
         return SetValueResponse()
 
     def fail_next_start_panel(self) -> None:
         """Set whether the StartPanel method should fail the next time it is called."""
         self._fail_next_start_panel = True
+
+    @property
+    def notification_count(self) -> int:
+        """Get the number of notifications sent from SetValue."""
+        return self._notification_count
 
     def _init_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:

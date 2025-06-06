@@ -12,7 +12,7 @@ from nipanel._panel_client import PanelClient
 class PanelValueAccessor(ABC):
     """This class allows you to access values for a panel's controls."""
 
-    __slots__ = ["_panel_client", "_panel_id", "__weakref__"]
+    __slots__ = ["_panel_client", "_panel_id", "_notify_on_set_value", "__weakref__"]
 
     def __init__(
         self,
@@ -20,6 +20,7 @@ class PanelValueAccessor(ABC):
         panel_id: str,
         provided_interface: str,
         service_class: str,
+        notify_on_set_value: bool = True,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
@@ -33,6 +34,7 @@ class PanelValueAccessor(ABC):
             grpc_channel=grpc_channel,
         )
         self._panel_id = panel_id
+        self._notify_on_set_value = notify_on_set_value
 
     @property
     def panel_id(self) -> str:
@@ -57,4 +59,6 @@ class PanelValueAccessor(ABC):
             value_id: The id of the value
             value: The value
         """
-        self._panel_client.set_value(self._panel_id, value_id, value)
+        self._panel_client.set_value(
+            self._panel_id, value_id, value, notify=self._notify_on_set_value
+        )
