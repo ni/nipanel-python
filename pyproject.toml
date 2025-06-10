@@ -13,6 +13,7 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
+nitypes = ">=0.1.0dev1"
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
