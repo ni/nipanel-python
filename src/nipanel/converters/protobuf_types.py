@@ -9,7 +9,7 @@ from typing_extensions import TypeAlias
 from nipanel.converters import Converter
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
-SCALAR_TYPE_TO_PB_ATTR_MAP = {
+_SCALAR_TYPE_TO_PB_ATTR_MAP = {
     bool: "bool_value",
     int: "int32_value",
     float: "double_value",
@@ -35,7 +35,7 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
         message = self.protobuf_message()
         message.units = python_value.units
 
-        value_attr = SCALAR_TYPE_TO_PB_ATTR_MAP.get(type(python_value.value), None)
+        value_attr = _SCALAR_TYPE_TO_PB_ATTR_MAP.get(type(python_value.value), None)
         if not value_attr:
             raise TypeError(f"Unexpected type for python_value.value: {type(python_value.value)}")
         setattr(message, value_attr, python_value.value)
@@ -48,7 +48,7 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
             raise ValueError("protobuf.units cannot be None.")
 
         pb_type = str(protobuf_value.WhichOneof("value"))
-        if pb_type not in SCALAR_TYPE_TO_PB_ATTR_MAP.values():
+        if pb_type not in _SCALAR_TYPE_TO_PB_ATTR_MAP.values():
             raise ValueError(f"Unexpected value for protobuf_value.WhichOneOf: {pb_type}")
 
         value = getattr(protobuf_value, pb_type)
