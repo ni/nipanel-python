@@ -8,7 +8,7 @@ from ni.pythonpanel.v1 import python_panel_types_pb2
 
 from nipanel.converters import Converter
 
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform, WaveformAttributeValue
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import PrecisionTimestamp
 from nitypes.waveform import AnalogWaveform
 from nitypes.bintime import TimeDelta, DateTime
@@ -30,13 +30,27 @@ class DoubleAnalogWaveformConverter(Converter[bool, wrappers_pb2.BoolValue]):
 
     def to_protobuf_message(self, python_value: AnalogWaveform) -> DoubleAnalogWaveform:
         """Convert the Python bool to a protobuf wrappers_pb2.BoolValue."""
-        start_time = PrecisionTimestamp()
-        python_value.timing.start_time.timestamp
+        attributes = []
+        for key, value in python_value.extended_properties:
+            attr_value = WaveformAttributeValue()
+            if isinstance(value, bool):
+                attr_value.bool_value = value
+            elif isinstance(value, int):
+                attr_value.integer_value = value
+            elif isinstance(value, float):
+                attr_value.double_value = value
+            elif isinstance(value, str):
+                attr_value.string_value = value
+            else:
+                raise TypeError(f"Unexpected type for extended property value {type(value)}")
+
+            attributes[key] = attr_value
+
         return self.protobuf_message(
-            t0=python_value.timing.start_time,
-            dt=python_value.timing.sample_interval.seconds,  # Types don't match
+            t0=python_value.timing.start_time,  # Types don't match
+            dt=python_value.timing.sample_interval.total_seconds(),
             y_data=python_value.scaled_data,
-            attributes=python_value.extended_properties,  # Types don't match
+            attributes=attributes,
         )
 
     def to_python_value(self, protobuf_value: DoubleAnalogWaveform) -> AnalogWaveform:
