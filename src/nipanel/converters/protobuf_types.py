@@ -9,6 +9,12 @@ from typing_extensions import TypeAlias
 from nipanel.converters import Converter
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
+SCALAR_TYPE_TO_PB_ATTR_MAP = {
+    bool: "bool_value",
+    int: "int32_value",
+    float: "double_value",
+    str: "string_value",
+}
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
@@ -28,16 +34,11 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
         """Convert the Python Scalar to a protobuf scalar_pb2.ScalarData."""
         message = self.protobuf_message()
         message.units = python_value.units
-        if isinstance(python_value.value, bool):
-            message.bool_value = python_value.value
-        elif isinstance(python_value.value, int):
-            message.int32_value = python_value.value
-        elif isinstance(python_value.value, float):
-            message.double_value = python_value.value
-        elif isinstance(python_value.value, str):
-            message.string_value = python_value.value
-        else:
+
+        value_attr = SCALAR_TYPE_TO_PB_ATTR_MAP.get(type(python_value.value), None)
+        if not value_attr:
             raise TypeError(f"Unexpected type for python_value.value: {type(python_value.value)}")
+        setattr(message, value_attr, python_value.value)
 
         return message
 
@@ -46,14 +47,9 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
         if protobuf_value.units is None:
             raise ValueError("protobuf.units cannot be None.")
 
-        pb_type = protobuf_value.WhichOneof("value")
-        if pb_type == "bool_value":
-            return Scalar(protobuf_value.bool_value, protobuf_value.units)
-        elif pb_type == "int32_value":
-            return Scalar(protobuf_value.int32_value, protobuf_value.units)
-        elif pb_type == "double_value":
-            return Scalar(protobuf_value.double_value, protobuf_value.units)
-        elif pb_type == "string_value":
-            return Scalar(protobuf_value.string_value, protobuf_value.units)
-        else:
+        pb_type = str(protobuf_value.WhichOneof("value"))
+        if pb_type not in SCALAR_TYPE_TO_PB_ATTR_MAP.values():
             raise ValueError(f"Unexpected value for protobuf_value.WhichOneOf: {pb_type}")
+
+        value = getattr(protobuf_value, pb_type)
+        return Scalar(value, protobuf_value.units)
