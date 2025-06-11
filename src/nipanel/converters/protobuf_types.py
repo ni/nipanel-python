@@ -1,9 +1,10 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
-from typing import Type, TypeAlias, Union
+from typing import Type, Union
 
 from ni.protobuf.types import scalar_pb2
 from nitypes.scalar import Scalar
+from typing_extensions import TypeAlias
 
 from nipanel.converters import Converter
 
