@@ -1,14 +1,16 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
-from typing import Any, Type
+from typing import Type, TypeAlias, Union
 
 from ni.protobuf.types import scalar_pb2
 from nitypes.scalar import Scalar
 
 from nipanel.converters import Converter
 
+_AnyScalarType: TypeAlias = Union[bool, int, float, str]
 
-class ScalarConverter(Converter[Scalar[Any], scalar_pb2.ScalarData]):
+
+class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
     """A converter for Scalar objects."""
 
     @property
@@ -21,7 +23,7 @@ class ScalarConverter(Converter[Scalar[Any], scalar_pb2.ScalarData]):
         """The type-specific protobuf message for the Python type."""
         return scalar_pb2.ScalarData
 
-    def to_protobuf_message(self, python_value: Scalar[Any]) -> scalar_pb2.ScalarData:
+    def to_protobuf_message(self, python_value: Scalar[_AnyScalarType]) -> scalar_pb2.ScalarData:
         """Convert the Python Scalar to a protobuf scalar_pb2.ScalarData."""
         message = self.protobuf_message()
         message.units = python_value.units
@@ -38,7 +40,7 @@ class ScalarConverter(Converter[Scalar[Any], scalar_pb2.ScalarData]):
 
         return message
 
-    def to_python_value(self, protobuf_value: scalar_pb2.ScalarData) -> Scalar[Any]:
+    def to_python_value(self, protobuf_value: scalar_pb2.ScalarData) -> Scalar[_AnyScalarType]:
         """Convert the protobuf message to a Python Scalar."""
         if protobuf_value.units is None:
             raise ValueError("protobuf.units cannot be None.")

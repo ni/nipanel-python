@@ -74,7 +74,6 @@ def test___scalar_protobuf_value_unset___convert___throws_type_error() -> None:
 def test___scalar_protobuf_units_unset___convert___python_units_blank() -> None:
     protobuf_value = ScalarData()
     protobuf_value.bool_value = True
-    print(f"Protobuf units: {protobuf_value.units!r}")
 
     converter = ScalarConverter()
     python_value = converter.to_python_value(protobuf_value)

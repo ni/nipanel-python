@@ -13,8 +13,7 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-# Temporary dependency until ni-apis-python is available.
-nitypes = ">=0.1.0dev1"
+nitypes = {version=">=0.1.0dev1", allow-prereleases=true}
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
