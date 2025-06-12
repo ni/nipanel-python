@@ -1,13 +1,17 @@
 from __future__ import annotations
 
-from typing import final
+from typing import final, Any
 
 import grpc
+import streamlit.components.v1 as components
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_value_accessor import PanelValueAccessor
-from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
+from nipanel._streamlit_constants import (
+    STREAMLIT_PYTHON_PANEL_SERVICE,
+    STREAMLIT_REFRESH_COMPONENT_URL,
+)
 
 
 @final
@@ -43,3 +47,11 @@ class StreamlitPanelValueAccessor(PanelValueAccessor):
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
+
+    def refresh(self) -> Any:
+        """Get the Streamlit component for refreshing the panel."""
+        _panel_refresh_component = components.declare_component(
+            "panelRefreshComponent",
+            url=f"{STREAMLIT_REFRESH_COMPONENT_URL}/{self.panel_id}",
+        )
+        return _panel_refresh_component()
