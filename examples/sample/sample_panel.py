@@ -4,7 +4,7 @@ import streamlit as st
 
 import nipanel
 
-panel = nipanel.StreamlitPanelValueAccessor(panel_id="sample_panel")
+panel = nipanel.initialize_panel()
 
 st.title("Sample Panel")
 
@@ -16,6 +16,9 @@ with col1:
     st.write("Float")
     st.write("Boolean")
     st.write("List")
+
+    if st.button("Rerun app"):
+        st.rerun()
 
 with col2:
     st.write(panel.get_value("sample_string"))
