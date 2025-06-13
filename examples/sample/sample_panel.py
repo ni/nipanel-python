@@ -17,9 +17,6 @@ with col1:
     st.write("Boolean")
     st.write("List")
 
-    if st.button("Rerun app"):
-        st.rerun()
-
 with col2:
     st.write(panel.get_value("sample_string"))
     st.write(panel.get_value("sample_int"))

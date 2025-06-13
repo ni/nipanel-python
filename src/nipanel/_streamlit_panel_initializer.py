@@ -4,6 +4,8 @@ import streamlit as st
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
+PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
+
 
 def initialize_panel() -> StreamlitPanelValueAccessor:
     """Initialize and return the Streamlit panel value accessor.
@@ -16,10 +18,20 @@ def initialize_panel() -> StreamlitPanelValueAccessor:
     Returns:
         A StreamlitPanelValueAccessor instance for the current panel.
     """
-    if "StreamlitPanelValueAccessor" not in st.session_state:
-        # streamlit is launched with something like --server.baseUrlPath=/my_panel,
-        # which allows us to get the panel ID from the URL.
-        panel_id = st.get_option("server.baseUrlPath").split("/")[-1]
-        st.session_state["StreamlitPanelValueAccessor"] = StreamlitPanelValueAccessor(panel_id)
+    if PANEL_ACCESSOR_KEY not in st.session_state:
+        st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
 
-    return cast(StreamlitPanelValueAccessor, st.session_state["StreamlitPanelValueAccessor"])
+    panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
+    # TODO: declare the refresh component here
+    return panel
+
+
+def _initialize_panel_from_base_path() -> StreamlitPanelValueAccessor:
+    """Validate and parse the Streamlit base URL path and return a StreamlitPanelValueAccessor."""
+    base_url_path = st.get_option("server.baseUrlPath")
+    if not base_url_path.startswith("/"):
+        raise ValueError("Invalid or missing Streamlit server.baseUrlPath option.")
+    panel_id = base_url_path.split("/")[-1]
+    if not panel_id:
+        raise ValueError(f"Panel ID is empty in baseUrlPath: '{base_url_path}'")
+    return StreamlitPanelValueAccessor(panel_id)
