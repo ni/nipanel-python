@@ -4,7 +4,7 @@ import streamlit as st
 
 import nipanel
 
-panel = nipanel.StreamlitPanelValueAccessor(panel_id="sample_panel_3")
+panel = nipanel.initialize_panel()
 
 st.title("Sample Panel Three")
 
