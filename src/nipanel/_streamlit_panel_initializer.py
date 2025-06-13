@@ -17,7 +17,9 @@ def initialize_panel() -> StreamlitPanelValueAccessor:
         A StreamlitPanelValueAccessor instance for the current panel.
     """
     if "StreamlitPanelValueAccessor" not in st.session_state:
-        panel_id = "sample_panel"  # TODO: Replace with actual panel ID
+        # streamlit is launched with something like --server.baseUrlPath=/my_panel,
+        # which allows us to get the panel ID from the URL.
+        panel_id = st.get_option("server.baseUrlPath").split("/")[-1]
         st.session_state["StreamlitPanelValueAccessor"] = StreamlitPanelValueAccessor(panel_id)
 
     return cast(StreamlitPanelValueAccessor, st.session_state["StreamlitPanelValueAccessor"])
