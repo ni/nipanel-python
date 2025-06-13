@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ni.protobuf.types;
+
+option csharp_namespace = "NationalInstruments.Protobuf.Types";
+option go_package = "types";
+option java_multiple_files = true;
+option java_outer_classname = "ScalarProto";
+option java_package = "com.ni.protobuf.types";
+option objc_class_prefix = "NIPT";
+option php_namespace = "NI\\PROTOBUF\\TYPES";
+option ruby_package = "NI::Protobuf::Types";
+
+message ScalarData {
+ string units = 1;
+
+  oneof value {
+    double double_value = 2;
+    int32 int32_value = 3;
+    bool bool_value = 4;
+    string string_value = 5;
+  }
+}

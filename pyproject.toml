@@ -13,6 +13,8 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
+nitypes = {version=">=0.1.0dev1", allow-prereleases=true}
+debugpy = "^1.8.1"
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
@@ -52,10 +54,10 @@ requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
-extend_exclude = ".tox,docs,src/ni/pythonpanel/v1"
+extend_exclude = ".tox,docs,src/ni/pythonpanel/v1,src/ni/protobuf/types/"
 
 [tool.black]
-extend-exclude = '\.tox/|docs/|src/ni/pythonpanel/v1/'
+extend-exclude = '\.tox/|docs/|src/ni/pythonpanel/v1/|src/ni/protobuf/types/'
 line-length = 100
 
 [tool.mypy]
