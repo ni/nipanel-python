@@ -54,6 +54,49 @@ poetry run sphinx-build docs docs/_build --builder html --fail-on-warning
 start docs\_build\index.html
 ```
 
+# Debugging on the streamlit side
+
+Debugging the measurement script is just normal python debugging, but debugging the streamlit script, or code that is called from the streamlit script, is more challenging because it runs in a separate process that is launched by the PythonPanelServer. Here's how to use debugpy to attach the Visual Studio Code debugger to the streamlit script:
+
+## in the streamlit script, include this code snippet
+
+```python
+import debugpy  # type: ignore
+import streamlit as st
+
+import nipanel
+
+try:
+    debugpy.listen(("localhost", 5678))
+    debugpy.wait_for_client() 
+except RuntimeError as e:
+    if "debugpy.listen() has already been called on this process" not in str(e):
+        raise
+```
+
+`debugpy.listen()` exposes a port for the debugger to attach to. The port can be whatever, it just needs to match the port in launch.json below. Note that calling listen() more then once will throw an exception, so we put it in a try block so that when the script is rerun, it won't crash.
+
+`debug.wait_for_client()` will pause execution of the script until the debugger attaches. This is useful if you need to debug into initialization code, but you can omit this line otherwise.
+
+The `import debugpy` line has a type suppression to make mypy happy.
+
+## in launch.json, include this configuration 
+
+```json
+        {
+            "name": "Attach to Streamlit at localhost:5678",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "justMyCode": false
+        }
+```
+
+Once you have run your measurement script, and PythonPanelSever has run streamlit with your streamlit script, you can then click the "Attach to Streamlit at localost:5678" button in the VS Code "Run and Debug" tab. Then, you should be able to set breakpoints (and do all the other debugging stuff) in your streamlit script, and in any nipanel code that the streamlit script calls.
+
 # Developer Certificate of Origin (DCO)
 
    Developer's Certificate of Origin 1.1
