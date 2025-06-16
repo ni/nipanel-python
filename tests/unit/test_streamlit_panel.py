@@ -123,7 +123,7 @@ def test___panel___set_value___sets_value(
     }
 
 
-def test___panel___get_unset_value___raises_exception(
+def test___panel___get_unset_value_with_no_default___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that get_value() raises an exception for an unset value."""
@@ -144,6 +144,30 @@ def test___panel___set_value___gets_value(
     panel.set_value(value_id, string_value)
 
     assert panel.get_value(value_id) == string_value
+
+
+def test___set_value___get_value_ignores_default(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    assert panel.get_value(value_id, "default") == string_value
+
+
+def test___get_value_returns_default_when_value_not_set(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    assert panel.get_value("missing_string", "default") == "default"
+    assert panel.get_value("missing_int", 123) == 123
+    assert panel.get_value("missing_float", 1.23) == 1.23
+    assert panel.get_value("missing_bool", True) is True
+    assert panel.get_value("missing_list", [1, 2, 3]) == [1, 2, 3]
 
 
 @pytest.mark.parametrize(
