@@ -13,7 +13,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.wavefor
     DoubleAnalogWaveform,
     WaveformAttributeValue,
 )
-from nitypes.bintime import DateTime, TimeDelta
+from nitypes.bintime import DateTime, TimeValueTuple
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform, ExtendedPropertyDictionary, NoneScaleMode, Timing
 from typing_extensions import TypeAlias
@@ -53,8 +53,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
         else:
             precision_timestamp = PrecisionTimestamp(seconds=0, fractional_seconds=0)
 
-        # TODO: Replace with .has_sample_interval once available.
-        if python_value.timing._sample_interval is not None:
+        if python_value.timing.has_sample_interval:
             time_interval = python_value.timing.sample_interval.total_seconds()
         else:
             time_interval = 0
@@ -137,18 +136,13 @@ class PrecisionTimestampConverter(Converter[DateTime, PrecisionTimestamp]):
 
     def to_protobuf_message(self, python_value: DateTime) -> PrecisionTimestamp:
         """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
-        time_delta: TimeDelta = DateTime._to_offset(python_value._to_datetime_datetime())
-        # TODO: Replace with Datetime.to_tuple once available
-        ticks = TimeDelta._to_ticks(time_delta.total_seconds())
-        seconds = ticks >> 64
-        frac_seconds = ticks & ((1 << 64) - 1)
-        return self.protobuf_message(seconds=seconds, fractional_seconds=frac_seconds)
+        seconds, fractional_seconds = python_value.to_tuple()
+        return self.protobuf_message(seconds=seconds, fractional_seconds=fractional_seconds)
 
     def to_python_value(self, protobuf_value: PrecisionTimestamp) -> DateTime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
-        ticks = (protobuf_value.seconds << 64) | protobuf_value.fractional_seconds
-        # TODO: Replace with Datetime.from_tuple() once available
-        return DateTime.from_ticks(ticks)
+        time_value_tuple = TimeValueTuple(protobuf_value.seconds, protobuf_value.fractional_seconds)
+        return DateTime.from_tuple(time_value_tuple)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
