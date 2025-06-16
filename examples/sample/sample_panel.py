@@ -18,8 +18,8 @@ with col1:
     st.write("List")
 
 with col2:
-    st.write(panel.get_value("sample_string"))
-    st.write(panel.get_value("sample_int"))
-    st.write(panel.get_value("sample_float"))
-    st.write(panel.get_value("sample_bool"))
-    st.write(panel.get_value("float_values"))
+    st.write(panel.get_value("sample_string", ""))
+    st.write(panel.get_value("sample_int", 0))
+    st.write(panel.get_value("sample_float", 0.0))
+    st.write(panel.get_value("sample_bool", False))
+    st.write(panel.get_value("float_values", []))
