@@ -2,10 +2,10 @@
 
 from typing import Type, Union
 
-from ni.protobuf.types import scalar_pb2
 from nitypes.scalar import Scalar
 from typing_extensions import TypeAlias
 
+from ni.protobuf.types import scalar_pb2
 from nipanel.converters import Converter
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
@@ -42,14 +42,14 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
 
         return message
 
-    def to_python_value(self, protobuf_value: scalar_pb2.ScalarData) -> Scalar[_AnyScalarType]:
+    def to_python_value(self, protobuf_message: scalar_pb2.ScalarData) -> Scalar[_AnyScalarType]:
         """Convert the protobuf message to a Python Scalar."""
-        if protobuf_value.units is None:
+        if protobuf_message.units is None:
             raise ValueError("protobuf.units cannot be None.")
 
-        pb_type = str(protobuf_value.WhichOneof("value"))
+        pb_type = str(protobuf_message.WhichOneof("value"))
         if pb_type not in _SCALAR_TYPE_TO_PB_ATTR_MAP.values():
             raise ValueError(f"Unexpected value for protobuf_value.WhichOneOf: {pb_type}")
 
-        value = getattr(protobuf_value, pb_type)
-        return Scalar(value, protobuf_value.units)
+        value = getattr(protobuf_message, pb_type)
+        return Scalar(value, protobuf_message.units)

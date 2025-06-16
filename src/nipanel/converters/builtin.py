@@ -4,8 +4,8 @@ from collections.abc import Collection
 from typing import Type
 
 from google.protobuf import wrappers_pb2
-from ni.pythonpanel.v1 import python_panel_types_pb2
 
+from ni.pythonpanel.v1 import python_panel_types_pb2
 from nipanel.converters import Converter
 
 
@@ -26,9 +26,9 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
         """Convert the Python bool to a protobuf wrappers_pb2.BoolValue."""
         return self.protobuf_message(value=python_value)
 
-    def to_python_value(self, protobuf_value: wrappers_pb2.BoolValue) -> bool:
+    def to_python_value(self, protobuf_message: wrappers_pb2.BoolValue) -> bool:
         """Convert the protobuf message to a Python bool."""
-        return protobuf_value.value
+        return protobuf_message.value
 
 
 class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
@@ -48,9 +48,9 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
         """Convert the Python bytes string to a protobuf wrappers_pb2.BytesValue."""
         return self.protobuf_message(value=python_value)
 
-    def to_python_value(self, protobuf_value: wrappers_pb2.BytesValue) -> bytes:
+    def to_python_value(self, protobuf_message: wrappers_pb2.BytesValue) -> bytes:
         """Convert the protobuf message to a Python bytes string."""
-        return protobuf_value.value
+        return protobuf_message.value
 
 
 class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
@@ -70,9 +70,9 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
         """Convert the Python float to a protobuf wrappers_pb2.DoubleValue."""
         return self.protobuf_message(value=python_value)
 
-    def to_python_value(self, protobuf_value: wrappers_pb2.DoubleValue) -> float:
+    def to_python_value(self, protobuf_message: wrappers_pb2.DoubleValue) -> float:
         """Convert the protobuf message to a Python float."""
-        return protobuf_value.value
+        return protobuf_message.value
 
 
 class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
@@ -92,9 +92,9 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
         """Convert the Python int to a protobuf wrappers_pb2.Int64Value."""
         return self.protobuf_message(value=python_value)
 
-    def to_python_value(self, protobuf_value: wrappers_pb2.Int64Value) -> int:
+    def to_python_value(self, protobuf_message: wrappers_pb2.Int64Value) -> int:
         """Convert the protobuf message to a Python int."""
-        return protobuf_value.value
+        return protobuf_message.value
 
 
 class StrConverter(Converter[str, wrappers_pb2.StringValue]):
@@ -114,9 +114,9 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
         """Convert the Python str to a protobuf wrappers_pb2.StringValue."""
         return self.protobuf_message(value=python_value)
 
-    def to_python_value(self, protobuf_value: wrappers_pb2.StringValue) -> str:
+    def to_python_value(self, protobuf_message: wrappers_pb2.StringValue) -> str:
         """Convert the protobuf message to a Python string."""
-        return protobuf_value.value
+        return protobuf_message.value
 
 
 class BoolCollectionConverter(Converter[Collection[bool], python_panel_types_pb2.BoolCollection]):
@@ -139,10 +139,10 @@ class BoolCollectionConverter(Converter[Collection[bool], python_panel_types_pb2
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
-        self, protobuf_value: python_panel_types_pb2.BoolCollection
+        self, protobuf_message: python_panel_types_pb2.BoolCollection
     ) -> Collection[bool]:
         """Convert the protobuf message to a Python collection of bools."""
-        return list(protobuf_value.values)
+        return list(protobuf_message.values)
 
 
 class BytesCollectionConverter(
@@ -167,10 +167,10 @@ class BytesCollectionConverter(
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
-        self, protobuf_value: python_panel_types_pb2.ByteStringCollection
+        self, protobuf_message: python_panel_types_pb2.ByteStringCollection
     ) -> Collection[bytes]:
         """Convert the protobuf message to a Python collection of byte strings."""
-        return list(protobuf_value.values)
+        return list(protobuf_message.values)
 
 
 class FloatCollectionConverter(
@@ -195,10 +195,10 @@ class FloatCollectionConverter(
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
-        self, protobuf_value: python_panel_types_pb2.FloatCollection
+        self, protobuf_message: python_panel_types_pb2.FloatCollection
     ) -> Collection[float]:
         """Convert the protobuf message to a Python collection of floats."""
-        return list(protobuf_value.values)
+        return list(protobuf_message.values)
 
 
 class IntCollectionConverter(Converter[Collection[int], python_panel_types_pb2.IntCollection]):
@@ -221,10 +221,10 @@ class IntCollectionConverter(Converter[Collection[int], python_panel_types_pb2.I
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
-        self, protobuf_value: python_panel_types_pb2.IntCollection
+        self, protobuf_message: python_panel_types_pb2.IntCollection
     ) -> Collection[int]:
         """Convert the protobuf message to a Python collection of integers."""
-        return list(protobuf_value.values)
+        return list(protobuf_message.values)
 
 
 class StrCollectionConverter(Converter[Collection[str], python_panel_types_pb2.StringCollection]):
@@ -247,7 +247,7 @@ class StrCollectionConverter(Converter[Collection[str], python_panel_types_pb2.S
         return self.protobuf_message(values=python_value)
 
     def to_python_value(
-        self, protobuf_value: python_panel_types_pb2.StringCollection
+        self, protobuf_message: python_panel_types_pb2.StringCollection
     ) -> Collection[str]:
         """Convert the protobuf message to a Python collection of strings."""
-        return list(protobuf_value.values)
+        return list(protobuf_message.values)
