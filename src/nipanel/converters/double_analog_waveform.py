@@ -1,5 +1,6 @@
 """Classes to convert between builtin Python scalars and containers."""
 
+import collections.abc
 import datetime as dt
 from typing import Type
 
@@ -12,7 +13,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.wavefor
     WaveformAttributeValue,
 )
 from nitypes.bintime import DateTime, TimeDelta
-from nitypes.waveform import AnalogWaveform, NoneScaleMode, Timing
+from nitypes.waveform import AnalogWaveform, ExtendedPropertyDictionary, NoneScaleMode, Timing
 
 from nipanel.converters import Converter
 
@@ -33,9 +34,35 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
     def to_protobuf_message(
         self, python_value: AnalogWaveform[numpy.float64]
     ) -> DoubleAnalogWaveform:
-        """Convert the Python bool to a protobuf wrappers_pb2.BoolValue."""
+        """Convert the Python AnalogWaveform to a protobuf DoubleAnalogWaveform."""
+        if python_value.timing.has_timestamp:
+            pt_converter = PrecisionTimestampConverter()
+            bin_datetime = DateTime(python_value.timing.start_time)
+            precision_timestamp = pt_converter.to_protobuf_message(bin_datetime)
+        else:
+            precision_timestamp = PrecisionTimestamp(seconds=0, fractional_seconds=0)
+
+        # TODO: Replace with .has_sample_interval once available.
+        if python_value.timing._sample_interval is not None:
+            time_interval = python_value.timing.sample_interval.total_seconds()
+        else:
+            time_interval = 0
+
+        attributes = self._extended_properties_to_attributes(python_value.extended_properties)
+
+        return self.protobuf_message(
+            t0=precision_timestamp,
+            dt=time_interval,
+            y_data=python_value.scaled_data,
+            attributes=attributes,
+        )
+
+    def _extended_properties_to_attributes(
+        self,
+        extended_properties: ExtendedPropertyDictionary,
+    ) -> collections.abc.Mapping[str, WaveformAttributeValue]:
         attributes = {}
-        for key, value in python_value.extended_properties.items():
+        for key, value in extended_properties.items():
             attr_value = WaveformAttributeValue()
             if isinstance(value, bool):
                 attr_value.bool_value = value
@@ -50,40 +77,25 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
 
             attributes[key] = attr_value
 
-        if python_value.timing != Timing.empty:
-            pt_converter = PrecisionTimestampConverter()
-            bin_datetime = DateTime(python_value.timing.start_time)
-            precision_timestamp = pt_converter.to_protobuf_message(bin_datetime)
-            time_interval = python_value.timing.sample_interval.total_seconds()
-        else:
-            precision_timestamp = PrecisionTimestamp(seconds=0, fractional_seconds=0)
-            time_interval = 0
-
-        return self.protobuf_message(
-            t0=precision_timestamp,
-            dt=time_interval,
-            y_data=python_value.scaled_data,
-            attributes=attributes,
-        )
+        return attributes
 
     def to_python_value(
         self, protobuf_value: DoubleAnalogWaveform
     ) -> AnalogWaveform[numpy.float64]:
-        """Convert the protobuf message to a Python bool."""
-        extended_properties = {}
-        for key, value in protobuf_value.attributes.items():
-            attr_type = value.WhichOneof("attribute")
-            extended_properties[key] = getattr(value, str(attr_type))
-
+        """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
         pt_converter = PrecisionTimestampConverter()
         bin_datetime = pt_converter.to_python_value(protobuf_value.t0)
         timestamp = bin_datetime._to_datetime_datetime()
-        print(f"-- {timestamp}")
         sample_interval = dt.timedelta(seconds=protobuf_value.dt)
         timing = Timing.create_with_regular_interval(
             sample_interval,
             timestamp,
         )
+
+        extended_properties = {}
+        for key, value in protobuf_value.attributes.items():
+            attr_type = value.WhichOneof("attribute")
+            extended_properties[key] = getattr(value, str(attr_type))
 
         data_list = list(protobuf_value.y_data)
         return AnalogWaveform(
@@ -115,13 +127,14 @@ class PrecisionTimestampConverter(Converter[DateTime, PrecisionTimestamp]):
     def to_protobuf_message(self, python_value: DateTime) -> PrecisionTimestamp:
         """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
         time_delta: TimeDelta = DateTime._to_offset(python_value._to_datetime_datetime())
+        # TODO: Replace with Datetime.to_tuple once available
         ticks = TimeDelta._to_ticks(time_delta.total_seconds())
         seconds = ticks >> 64
         frac_seconds = ticks & ((1 << 64) - 1)
         return self.protobuf_message(seconds=seconds, fractional_seconds=frac_seconds)
 
     def to_python_value(self, protobuf_value: PrecisionTimestamp) -> DateTime:
-        """Convert the protobuf message to a Python DateTime."""
+        """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
         ticks = (protobuf_value.seconds << 64) | protobuf_value.fractional_seconds
-        print(f"ticks: {ticks}")
+        # TODO: Replace with Datetime.from_tuple() once available
         return DateTime.from_ticks(ticks)
