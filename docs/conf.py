@@ -73,7 +73,6 @@ def setup(sphinx):
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-# TODO: AB#3120159 - Update nipanel intersphinx mapping for nitypes
 intersphinx_mapping = {
     "grpc": ("https://grpc.github.io/grpc/python/", None),
     "measurement-plugin-python": (
