@@ -41,16 +41,23 @@ class PanelValueAccessor(ABC):
         """Read-only accessor for the panel ID."""
         return self._panel_id
 
-    def get_value(self, value_id: str) -> object:
-        """Get the value for a control on the panel.
+    def get_value(self, value_id: str, default_value: object = None) -> object:
+        """Get the value for a control on the panel with an optional default value.
 
         Args:
             value_id: The id of the value
+            default_value: The default value to return if the value is not set
 
         Returns:
-            The value
+            The value, or the default value if not set
         """
-        return self._panel_client.get_value(self._panel_id, value_id)
+        try:
+            return self._panel_client.get_value(self._panel_id, value_id)
+        except grpc.RpcError as e:
+            if e.code() == grpc.StatusCode.NOT_FOUND and default_value is not None:
+                return default_value
+            else:
+                raise e
 
     def set_value(self, value_id: str, value: object) -> None:
         """Set the value for a control on the panel.

@@ -56,7 +56,11 @@ start docs\_build\index.html
 
 # Debugging on the streamlit side
 
-Debugging the measurement script can be done using standard Python debugging techniques. However, debugging the Streamlit script—or any code invoked by the Streamlit script—is more complex because it runs in a separate process launched by the PythonPanelServer. To debug the Streamlit script, you can use debugpy to attach the Visual Studio Code debugger as follows:
+Debugging the measurement script can be done using standard Python debugging
+techniques. However, debugging the Streamlit script—or any code invoked by the
+Streamlit script—is more complex because it runs in a separate process launched
+by the PythonPanelServer. To debug the Streamlit script, you can use debugpy to
+attach the Visual Studio Code debugger as follows:
 
 ## Instrument Streamlit script to debug
 
@@ -73,9 +77,15 @@ except RuntimeError as e:
         raise
 ```
 
-The `debugpy.listen()` function opens a port that allows the debugger to attach to the running process. You can specify any available port, as long as it matches the port configured in the launch.json file shown below. Since calling listen() more than once will raise an exception, it is wrapped in a try block to prevent the script from crashing if it is rerun.
+The `debugpy.listen()` function opens a port that allows the debugger to attach
+to the running process. You can specify any available port, as long as it
+matches the port configured in the launch.json file shown below. Since calling
+listen() more than once will raise an exception, it is wrapped in a try block to
+prevent the script from crashing if it is rerun.
 
-The `debugpy.wait_for_client()` function pauses script execution until the debugger is attached. This is helpful if you need to debug initialization code, but you can omit this line if it is not required.
+The `debugpy.wait_for_client()` function pauses script execution until the
+debugger is attached. This is helpful if you need to debug initialization code,
+but you can omit this line if it is not required.
 
 The `import debugpy` statement includes a type suppression comment to satisfy mypy.
 
@@ -96,7 +106,12 @@ You will also need this configuration in your launch.json:
         }
 ```
 
-After running your measurement script and allowing the PythonPanelServer to launch Streamlit with your Streamlit script, you can attach the debugger by clicking the **Attach to Streamlit at localhost:5678** button in the VS Code **Run and Debug** tab. Once attached, you can set breakpoints and use all standard debugging features in your Streamlit script, as well as in any nipanel code invoked by the Streamlit script.
+After running your measurement script and allowing the PythonPanelServer to
+launch Streamlit with your Streamlit script, you can attach the debugger by
+clicking the **Attach to Streamlit at localhost:5678** button in the VS Code
+**Run and Debug** tab. Once attached, you can set breakpoints and use all
+standard debugging features in your Streamlit script, as well as in any nipanel
+code invoked by the Streamlit script.
 
 # Developer Certificate of Origin (DCO)
 
