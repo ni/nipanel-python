@@ -80,6 +80,7 @@ intersphinx_mapping = {
         "https://measurement-plugin-python.readthedocs.io/en/latest/",
         None,
     ),
+    "nitypes": ("https://nitypes.readthedocs.io/en/latest/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "protobuf": ("https://googleapis.dev/python/protobuf/latest/", None),
     "python": ("https://docs.python.org/3", None),
