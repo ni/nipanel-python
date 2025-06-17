@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import TypeVar, overload, cast
+from typing import TypeVar, overload
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
