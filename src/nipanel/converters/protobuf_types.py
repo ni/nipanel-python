@@ -1,6 +1,7 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
 import collections.abc
+import datetime as dt
 from typing import Type, Union
 
 import hightime as ht
@@ -15,6 +16,7 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.wavefor
 )
 from nitypes.bintime import DateTime, TimeValueTuple
 from nitypes.scalar import Scalar
+from nitypes.time import convert_datetime
 from nitypes.waveform import (
     AnalogWaveform,
     ExtendedPropertyDictionary,
@@ -110,7 +112,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
             # Timestamp
             pt_converter = PrecisionTimestampConverter()
             bin_datetime = pt_converter.to_python_value(protobuf_value.t0)
-            timestamp = bin_datetime._to_datetime_datetime()
+            timestamp = convert_datetime(dt.datetime, bin_datetime)
 
             # Sample Interval
             if not protobuf_value.dt:
