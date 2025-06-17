@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from abc import ABC
+from typing import TypeVar, overload
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_client import PanelClient
+
+_T = TypeVar("_T")
 
 
 class PanelValueAccessor(ABC):
@@ -41,7 +44,13 @@ class PanelValueAccessor(ABC):
         """Read-only accessor for the panel ID."""
         return self._panel_id
 
-    def get_value(self, value_id: str, default_value: object = None) -> object:
+    @overload
+    def get_value(self, value_id: str) -> object: ...
+
+    @overload
+    def get_value(self, value_id: str, default_value: _T) -> _T: ...
+
+    def get_value(self, value_id: str, default_value: _T | None = None) -> _T | object:
         """Get the value for a control on the panel with an optional default value.
 
         Args:
@@ -52,7 +61,11 @@ class PanelValueAccessor(ABC):
             The value, or the default value if not set
         """
         try:
-            return self._panel_client.get_value(self._panel_id, value_id)
+            value = self._panel_client.get_value(self._panel_id, value_id)
+            if default_value is not None and not isinstance(value, type(default_value)):
+                raise TypeError("Value type does not match default value type.")
+            return value
+
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.NOT_FOUND and default_value is not None:
                 return default_value
