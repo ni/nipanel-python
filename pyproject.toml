@@ -24,6 +24,7 @@ types-protobuf = ">=4.21"
 bandit = { version = ">=1.7", extras = ["toml"] }
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
+pyright = { version = ">=1.1.400", extras = ["nodejs"] }
 
 [tool.poetry.group.test.dependencies]
 pytest = ">=7.2"
@@ -81,3 +82,7 @@ skips = [
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --strict-markers"
 testpaths = ["src/nipanel", "tests"]
+
+[tool.pyright]
+include = ["examples/", "src/", "tests/"]
+exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/"]
