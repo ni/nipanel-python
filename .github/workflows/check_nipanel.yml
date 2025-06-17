@@ -33,3 +33,15 @@ jobs:
         run:  poetry run mypy --platform win32
       - name: Bandit security checks
         run:  poetry run bandit -c pyproject.toml -r src/nipanel
+      - name: Add virtualenv to the path for pyright-action
+        run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+      - name: Pyright static analysis (Linux)
+        uses: jakebailey/pyright-action@b5d50e5cde6547546a5c4ac92e416a8c2c1a1dfe # v2.3.2
+        with:
+          python-platform: Linux
+          version: PATH
+      - name: Pyright static analysis (Windows)
+        uses: jakebailey/pyright-action@b5d50e5cde6547546a5c4ac92e416a8c2c1a1dfe # v2.3.2
+        with:
+          python-platform: Windows
+          version: PATH
