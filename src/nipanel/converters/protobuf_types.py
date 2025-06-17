@@ -5,7 +5,8 @@ import datetime as dt
 from typing import Type, Union
 
 import hightime as ht
-import numpy
+import nitypes.bintime as bt
+import numpy as np
 from ni.protobuf.types import scalar_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
     PrecisionTimestamp,
@@ -14,12 +15,12 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.wavefor
     DoubleAnalogWaveform,
     WaveformAttributeValue,
 )
-from nitypes.bintime import DateTime, TimeValueTuple
 from nitypes.scalar import Scalar
 from nitypes.time import convert_datetime
 from nitypes.waveform import (
     AnalogWaveform,
     ExtendedPropertyDictionary,
+    ExtendedPropertyValue,
     NoneScaleMode,
     SampleIntervalMode,
     Timing,
@@ -37,8 +38,12 @@ _SCALAR_TYPE_TO_PB_ATTR_MAP = {
 }
 
 
-class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], DoubleAnalogWaveform]):
+class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], DoubleAnalogWaveform]):
     """A converter for AnalogWaveform types with scaled data (double)."""
+
+    def __init__(self) -> None:
+        """Initialize a DoubleAnalogWaveformConverter object."""
+        self._pt_converter = PrecisionTimestampConverter()
 
     @property
     def python_typename(self) -> str:
@@ -50,16 +55,13 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
         """The type-specific protobuf message for the Python type."""
         return DoubleAnalogWaveform
 
-    def to_protobuf_message(
-        self, python_value: AnalogWaveform[numpy.float64]
-    ) -> DoubleAnalogWaveform:
+    def to_protobuf_message(self, python_value: AnalogWaveform[np.float64]) -> DoubleAnalogWaveform:
         """Convert the Python AnalogWaveform to a protobuf DoubleAnalogWaveform."""
         if python_value.timing.has_timestamp:
-            pt_converter = PrecisionTimestampConverter()
-            bin_datetime = DateTime(python_value.timing.start_time)
-            precision_timestamp = pt_converter.to_protobuf_message(bin_datetime)
+            bin_datetime = convert_datetime(bt.DateTime, python_value.timing.start_time)
+            precision_timestamp = self._pt_converter.to_protobuf_message(bin_datetime)
         else:
-            precision_timestamp = PrecisionTimestamp(seconds=0, fractional_seconds=0)
+            precision_timestamp = None
 
         if python_value.timing.has_sample_interval:
             time_interval = python_value.timing.sample_interval.total_seconds()
@@ -79,48 +81,41 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
         self,
         extended_properties: ExtendedPropertyDictionary,
     ) -> collections.abc.Mapping[str, WaveformAttributeValue]:
-        attributes = {}
-        for key, value in extended_properties.items():
-            attr_value = WaveformAttributeValue()
-            if isinstance(value, bool):
-                attr_value.bool_value = value
-            elif isinstance(value, int):
-                attr_value.integer_value = value
-            elif isinstance(value, float):
-                attr_value.double_value = value
-            elif isinstance(value, str):
-                attr_value.string_value = value
-            else:
-                raise TypeError(f"Unexpected type for extended property value {type(value)}")
+        return {key: self._value_to_attribute(value) for key, value in extended_properties.items()}
 
-            attributes[key] = attr_value
+    def _value_to_attribute(self, value: ExtendedPropertyValue) -> WaveformAttributeValue:
+        attr_value = WaveformAttributeValue()
+        if isinstance(value, bool):
+            attr_value.bool_value = value
+        elif isinstance(value, int):
+            attr_value.integer_value = value
+        elif isinstance(value, float):
+            attr_value.double_value = value
+        elif isinstance(value, str):
+            attr_value.string_value = value
+        else:
+            raise TypeError(f"Unexpected type for extended property value {type(value)}")
 
-        return attributes
+        return attr_value
 
-    def to_python_value(
-        self, protobuf_value: DoubleAnalogWaveform
-    ) -> AnalogWaveform[numpy.float64]:
+    def to_python_value(self, protobuf_message: DoubleAnalogWaveform) -> AnalogWaveform[np.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
-        if (
-            not protobuf_value.dt
-            and not protobuf_value.t0.seconds
-            and not protobuf_value.t0.fractional_seconds
-        ):
-            # If both dt and t0 and unset, use Timing.empty.
+        if not protobuf_message.dt and not protobuf_message.HasField("t0"):
+            # If both dt and t0 are unset, use Timing.empty.
             timing = Timing.empty
         else:
             # Timestamp
             pt_converter = PrecisionTimestampConverter()
-            bin_datetime = pt_converter.to_python_value(protobuf_value.t0)
+            bin_datetime = pt_converter.to_python_value(protobuf_message.t0)
             timestamp = convert_datetime(dt.datetime, bin_datetime)
 
             # Sample Interval
-            if not protobuf_value.dt:
+            if not protobuf_message.dt:
                 sample_interval_mode = SampleIntervalMode.NONE
                 sample_interval = None
             else:
                 sample_interval_mode = SampleIntervalMode.REGULAR
-                sample_interval = ht.timedelta(seconds=protobuf_value.dt)
+                sample_interval = ht.timedelta(seconds=protobuf_message.dt)
 
             timing = Timing(
                 sample_interval_mode=sample_interval_mode,
@@ -129,17 +124,17 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
             )
 
         extended_properties = {}
-        for key, value in protobuf_value.attributes.items():
+        for key, value in protobuf_message.attributes.items():
             attr_type = value.WhichOneof("attribute")
             extended_properties[key] = getattr(value, str(attr_type))
 
-        data_list = list(protobuf_value.y_data)
+        data_array = np.array(protobuf_message.y_data)
         return AnalogWaveform(
-            sample_count=len(data_list),
-            dtype=numpy.float64,
-            raw_data=numpy.array(data_list),
+            sample_count=data_array.size,
+            dtype=np.float64,
+            raw_data=data_array,
             start_index=0,
-            capacity=len(data_list),
+            capacity=data_array.size,
             extended_properties=extended_properties,
             copy_extended_properties=True,
             timing=timing,
@@ -147,28 +142,30 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
         )
 
 
-class PrecisionTimestampConverter(Converter[DateTime, PrecisionTimestamp]):
+class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
     """A converter for bintime.DateTime types."""
 
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return DateTime.__name__
+        return bt.DateTime.__name__
 
     @property
     def protobuf_message(self) -> Type[PrecisionTimestamp]:
         """The type-specific protobuf message for the Python type."""
         return PrecisionTimestamp
 
-    def to_protobuf_message(self, python_value: DateTime) -> PrecisionTimestamp:
+    def to_protobuf_message(self, python_value: bt.DateTime) -> PrecisionTimestamp:
         """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
         seconds, fractional_seconds = python_value.to_tuple()
         return self.protobuf_message(seconds=seconds, fractional_seconds=fractional_seconds)
 
-    def to_python_value(self, protobuf_value: PrecisionTimestamp) -> DateTime:
+    def to_python_value(self, protobuf_message: PrecisionTimestamp) -> bt.DateTime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
-        time_value_tuple = TimeValueTuple(protobuf_value.seconds, protobuf_value.fractional_seconds)
-        return DateTime.from_tuple(time_value_tuple)
+        time_value_tuple = bt.TimeValueTuple(
+            protobuf_message.seconds, protobuf_message.fractional_seconds
+        )
+        return bt.DateTime.from_tuple(time_value_tuple)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):

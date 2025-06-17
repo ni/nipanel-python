@@ -3,9 +3,6 @@ import datetime as dt
 import numpy
 import pytest
 from ni.protobuf.types.scalar_pb2 import ScalarData
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
-    PrecisionTimestamp,
-)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
@@ -32,7 +29,7 @@ def test___default_analog_waveform___convert___valid_protobuf() -> None:
 
     assert not dbl_analog_waveform.attributes
     assert dbl_analog_waveform.dt == 0
-    assert dbl_analog_waveform.t0 == PrecisionTimestamp(seconds=0, fractional_seconds=0)
+    assert not dbl_analog_waveform.HasField("t0")
     assert list(dbl_analog_waveform.y_data) == []
 
 
