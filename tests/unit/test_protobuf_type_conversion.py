@@ -159,7 +159,7 @@ def test___dbl_analog_wfm_with_timing_no_dt___convert___valid_python_object() ->
 
 
 # ========================================================
-# ScalarData to Scalar
+# Scalar: Protobuf to Python
 # ========================================================
 def test___bool_scalar_protobuf___convert___valid_bool_scalar() -> None:
     protobuf_value = ScalarData()
@@ -237,7 +237,7 @@ def test___scalar_protobuf_units_unset___convert___python_units_blank() -> None:
 
 
 # ========================================================
-# Scalar to ScalarData
+# Scalar: Python to Protobuf
 # ========================================================
 def test___bool_scalar___convert___valid_bool_scalar_protobuf() -> None:
     python_value = Scalar(True, "volts")
