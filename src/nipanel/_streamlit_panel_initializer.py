@@ -1,10 +1,8 @@
-from streamlit.components.v1 import components
 from typing import cast
 
 import streamlit as st
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
-from nipanel._streamlit_constants import STREAMLIT_REFRESH_COMPONENT_URL
 from nipanel.panel_refresh import add_refresh_component
 
 PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
