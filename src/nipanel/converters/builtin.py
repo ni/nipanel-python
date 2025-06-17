@@ -4,8 +4,8 @@ from collections.abc import Collection
 from typing import Type
 
 from google.protobuf import wrappers_pb2
-
 from ni.pythonpanel.v1 import python_panel_types_pb2
+
 from nipanel.converters import Converter
 
 

@@ -2,10 +2,10 @@
 
 from typing import Type, Union
 
+from ni.protobuf.types import scalar_pb2
 from nitypes.scalar import Scalar
 from typing_extensions import TypeAlias
 
-from ni.protobuf.types import scalar_pb2
 from nipanel.converters import Converter
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
