@@ -1,9 +1,9 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
 import collections.abc
-import datetime as dt
 from typing import Type, Union
 
+import hightime as ht
 import numpy
 from ni.protobuf.types import scalar_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
@@ -15,7 +15,13 @@ from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.wavefor
 )
 from nitypes.bintime import DateTime, TimeValueTuple
 from nitypes.scalar import Scalar
-from nitypes.waveform import AnalogWaveform, ExtendedPropertyDictionary, NoneScaleMode, Timing
+from nitypes.waveform import (
+    AnalogWaveform,
+    ExtendedPropertyDictionary,
+    NoneScaleMode,
+    SampleIntervalMode,
+    Timing,
+)
 from typing_extensions import TypeAlias
 
 from nipanel.converters import Converter
@@ -93,14 +99,32 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[numpy.float64], Dou
         self, protobuf_value: DoubleAnalogWaveform
     ) -> AnalogWaveform[numpy.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
-        pt_converter = PrecisionTimestampConverter()
-        bin_datetime = pt_converter.to_python_value(protobuf_value.t0)
-        timestamp = bin_datetime._to_datetime_datetime()
-        sample_interval = dt.timedelta(seconds=protobuf_value.dt)
-        timing = Timing.create_with_regular_interval(
-            sample_interval,
-            timestamp,
-        )
+        if (
+            not protobuf_value.dt
+            and not protobuf_value.t0.seconds
+            and not protobuf_value.t0.fractional_seconds
+        ):
+            # If both dt and t0 and unset, use Timing.empty.
+            timing = Timing.empty
+        else:
+            # Timestamp
+            pt_converter = PrecisionTimestampConverter()
+            bin_datetime = pt_converter.to_python_value(protobuf_value.t0)
+            timestamp = bin_datetime._to_datetime_datetime()
+
+            # Sample Interval
+            if not protobuf_value.dt:
+                sample_interval_mode = SampleIntervalMode.NONE
+                sample_interval = None
+            else:
+                sample_interval_mode = SampleIntervalMode.REGULAR
+                sample_interval = ht.timedelta(seconds=protobuf_value.dt)
+
+            timing = Timing(
+                sample_interval_mode=sample_interval_mode,
+                timestamp=timestamp,
+                sample_interval=sample_interval,
+            )
 
         extended_properties = {}
         for key, value in protobuf_value.attributes.items():
