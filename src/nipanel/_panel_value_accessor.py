@@ -50,7 +50,7 @@ class PanelValueAccessor(ABC):
     @overload
     def get_value(self, value_id: str, default_value: _T) -> _T: ...
 
-    def get_value(self, value_id: str, default_value: _T | None = None) -> _T:
+    def get_value(self, value_id: str, default_value: _T | None = None) -> _T | object:
         """Get the value for a control on the panel with an optional default value.
 
         Args:
@@ -61,7 +61,7 @@ class PanelValueAccessor(ABC):
             The value, or the default value if not set
         """
         try:
-            value = cast(_T, self._panel_client.get_value(self._panel_id, value_id))
+            value = self._panel_client.get_value(self._panel_id, value_id)
             if default_value is not None and not isinstance(value, type(default_value)):
                 raise TypeError("Value type does not match default value type.")
             return value

@@ -147,7 +147,7 @@ def test___panel___set_value___gets_value(
     assert panel.get_value(value_id) == string_value
 
 
-def test___set_value___get_value_ignores_default(
+def test___panel___set_value___get_value_ignores_default(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
@@ -159,20 +159,7 @@ def test___set_value___get_value_ignores_default(
     assert panel.get_value(value_id, "default") == string_value
 
 
-def test___set_value___get_value_with_wrong_type_raises_exception(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-
-    value_id = "test_id"
-    string_value = "test_value"
-    panel.set_value(value_id, string_value)
-
-    with pytest.raises(TypeError):
-        panel.get_value(value_id, 0)
-
-
-def test___get_value_returns_default_when_value_not_set(
+def test___no_set_value___get_value_returns_default(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
@@ -182,60 +169,77 @@ def test___get_value_returns_default_when_value_not_set(
     assert panel.get_value("missing_float", 1.23) == 1.23
     assert panel.get_value("missing_bool", True) is True
     assert panel.get_value("missing_list", [1, 2, 3]) == [1, 2, 3]
-
-
-def test___set_value___get_value_returns_type_of_string_default_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-
-    value_id = "test_id"
-    string_value = "test_value"
-    panel.set_value(value_id, string_value)
-
-    value = panel.get_value(value_id, "")
-    assert_type(value, str)
-    assert value == string_value
-
-
-def test___set_value___get_value_returns_type_of_int_default_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-
-    value_id = "test_id"
-    int_value = 10
-    panel.set_value(value_id, int_value)
-
-    value = panel.get_value(value_id, 0)
-    assert_type(value, int)
-    assert value == int_value
-
-
-def test___set_value___get_value_returns_type_of_bool_default_value(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-
-    value_id = "test_id"
-    bool_value = True
-    panel.set_value(value_id, bool_value)
-
-    value = panel.get_value(value_id, False)
-    assert_type(value, bool)
-    assert value is bool_value
-
-
-def test___get_value_returns_correct_type_when_value_not_set(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-
     assert_type(panel.get_value("missing_string", "default"), str)
     assert_type(panel.get_value("missing_int", 123), int)
     assert_type(panel.get_value("missing_float", 1.23), float)
     assert_type(panel.get_value("missing_bool", True), bool)
     assert_type(panel.get_value("missing_list", [1, 2, 3]), list[int])
+
+
+def test___set_string_type___get_value_with_string_default___returns_string_type(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    value = panel.get_value(value_id, "")
+
+    assert_type(value, str)
+    assert value == string_value
+
+
+def test___set_int_type___get_value_with_int_default___returns_int_type(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    int_value = 10
+    panel.set_value(value_id, int_value)
+
+    value = panel.get_value(value_id, 0)
+
+    assert_type(value, int)
+    assert value == int_value
+
+
+def test___set_bool_type___get_value_with_bool_default___returns_bool_type(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    bool_value = True
+    panel.set_value(value_id, bool_value)
+
+    value = panel.get_value(value_id, False)
+
+    assert_type(value, bool)
+    assert value is bool_value
+
+
+def test___set_string_type___get_value_with_int_default___raises_exception(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    string_value = "test_value"
+    panel.set_value(value_id, string_value)
+
+    with pytest.raises(TypeError):
+        panel.get_value(value_id, 0)
+
+
+def test___set_int_type___get_value_with_bool_default___raises_exception(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    int_value = 10
+    panel.set_value(value_id, int_value)
+
+    with pytest.raises(TypeError):
+        panel.get_value(value_id, False)
 
 
 @pytest.mark.parametrize(
