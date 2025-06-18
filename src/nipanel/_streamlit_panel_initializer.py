@@ -1,9 +1,9 @@
 from typing import cast
 
 import streamlit as st
+from streamlit_components.refresh import initialize_refresh_component
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
-from nipanel.panel_refresh import add_refresh_component
 
 PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
 
@@ -23,7 +23,7 @@ def initialize_panel() -> StreamlitPanelValueAccessor:
         st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
 
     panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
-    refresh_component = add_refresh_component(panel.panel_id)
+    refresh_component = initialize_refresh_component(panel.panel_id)
     refresh_component()
     return panel
 
