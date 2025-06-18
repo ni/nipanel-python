@@ -13,7 +13,7 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev1", allow-prereleases=true}
+nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
 debugpy = ">=1.8.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -30,6 +30,8 @@ pyright = { version = ">=1.1.400", extras = ["nodejs"] }
 pytest = ">=7.2"
 pytest-cov = ">=4.0"
 pytest-mock = ">=3.0"
+# Use an unreleased version of hightime for testing.
+hightime = { git = "https://github.com/ni/hightime.git" }
 
 [tool.poetry.group.codegen.dependencies]
 grpcio-tools = [
