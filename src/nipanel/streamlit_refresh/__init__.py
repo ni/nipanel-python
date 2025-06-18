@@ -1,4 +1,4 @@
-"""Panel refresh component for Streamlit."""
+"""Initializes a refresh component for Streamlit."""
 
 from typing import Any
 
@@ -8,7 +8,7 @@ from nipanel._streamlit_constants import STREAMLIT_REFRESH_COMPONENT_URL
 
 
 def initialize_refresh_component(panel_id: str) -> Any:
-    """Add a refresh component to the Streamlit app."""
+    """Initialize a refresh component to the Streamlit app."""
     _refresh_component_func = components.declare_component(
         "panelRefreshComponent",
         url=f"{STREAMLIT_REFRESH_COMPONENT_URL}/{panel_id}",
