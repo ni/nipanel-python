@@ -107,7 +107,8 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
             bin_datetime = pt_converter.to_python_value(protobuf_message.t0)
             # TODO: We shouldn't need to convert to dt.datetime here.
             # I'm only doing this to avoid a mypy error. This needs to be fixed.
-            timestamp = bin_datetime._to_datetime_datetime()
+            # timestamp = bin_datetime._to_datetime_datetime()
+            timestamp = bin_datetime
 
             # Sample Interval
             if not protobuf_message.dt:
