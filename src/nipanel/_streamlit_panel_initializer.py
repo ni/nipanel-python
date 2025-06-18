@@ -1,7 +1,7 @@
 from typing import cast
 
 import streamlit as st
-from streamlit_components.refresh import initialize_refresh_component
+from nipanel.streamlit_components.refresh import initialize_refresh_component
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 

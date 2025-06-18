@@ -1,8 +1,7 @@
 """Streamlit application script for displaying values using nipanel package."""
 
-import streamlit as st
-
 import nipanel
+import streamlit as st
 
 panel = nipanel.initialize_panel()
 
