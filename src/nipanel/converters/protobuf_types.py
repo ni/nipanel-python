@@ -1,7 +1,6 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
 import collections.abc
-import datetime as dt
 from typing import Type, Union
 
 import hightime as ht
@@ -22,7 +21,6 @@ from nitypes.waveform import (
     ExtendedPropertyDictionary,
     ExtendedPropertyValue,
     NoneScaleMode,
-    SampleIntervalMode,
     Timing,
 )
 from typing_extensions import TypeAlias
@@ -107,21 +105,19 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
             # Timestamp
             pt_converter = PrecisionTimestampConverter()
             bin_datetime = pt_converter.to_python_value(protobuf_message.t0)
-            timestamp = convert_datetime(dt.datetime, bin_datetime)
+            # TODO: We shouldn't need to convert to dt.datetime here.
+            # I'm only doing this to avoid a mypy error. This needs to be fixed.
+            timestamp = bin_datetime._to_datetime_datetime()
 
             # Sample Interval
             if not protobuf_message.dt:
-                sample_interval_mode = SampleIntervalMode.NONE
-                sample_interval = None
+                timing = Timing.create_with_no_interval(timestamp=timestamp)
             else:
-                sample_interval_mode = SampleIntervalMode.REGULAR
                 sample_interval = ht.timedelta(seconds=protobuf_message.dt)
-
-            timing = Timing(
-                sample_interval_mode=sample_interval_mode,
-                timestamp=timestamp,
-                sample_interval=sample_interval,
-            )
+                timing = Timing.create_with_regular_interval(
+                    sample_interval=sample_interval,
+                    timestamp=timestamp,
+                )
 
         extended_properties = {}
         for key, value in protobuf_message.attributes.items():
