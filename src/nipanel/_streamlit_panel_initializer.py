@@ -3,7 +3,7 @@ from typing import cast
 import streamlit as st
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
-from nipanel.streamlit_components.refresh import initialize_refresh_component
+from nipanel.streamlit_refresh import initialize_refresh_component
 
 PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
 
