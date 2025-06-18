@@ -1,6 +1,7 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
 import collections.abc
+import datetime as dt
 from typing import Type, Union
 
 import hightime as ht
@@ -98,6 +99,8 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
 
     def to_python_value(self, protobuf_message: DoubleAnalogWaveform) -> AnalogWaveform[np.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
+        # Declare timing to accept both bintime and dt.datetime to satisfy mypy.
+        timing: Timing[bt.DateTime | dt.datetime]
         if not protobuf_message.dt and not protobuf_message.HasField("t0"):
             # If both dt and t0 are unset, use Timing.empty.
             timing = Timing.empty
@@ -105,19 +108,15 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
             # Timestamp
             pt_converter = PrecisionTimestampConverter()
             bin_datetime = pt_converter.to_python_value(protobuf_message.t0)
-            # TODO: We shouldn't need to convert to dt.datetime here.
-            # I'm only doing this to avoid a mypy error. This needs to be fixed.
-            # timestamp = bin_datetime._to_datetime_datetime()
-            timestamp = bin_datetime
 
             # Sample Interval
             if not protobuf_message.dt:
-                timing = Timing.create_with_no_interval(timestamp=timestamp)
+                timing = Timing.create_with_no_interval(timestamp=bin_datetime)
             else:
                 sample_interval = ht.timedelta(seconds=protobuf_message.dt)
                 timing = Timing.create_with_regular_interval(
                     sample_interval=sample_interval,
-                    timestamp=timestamp,
+                    timestamp=bin_datetime,
                 )
 
         extended_properties = {}
