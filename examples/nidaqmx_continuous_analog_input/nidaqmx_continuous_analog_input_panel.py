@@ -1,14 +1,17 @@
-"""Streamlit application script for displaying values using nipanel package."""
-import nipanel
+"""This is the panel that will use the logic."""
+
 import streamlit as st
 import streamlit.components.v1 as components
 from streamlit_echarts import st_echarts
 
+import nipanel
+
 panel = nipanel.StreamlitPanelValueAccessor(panel_id="nidaqmx_continuous_analog_input_panel")
 
 add_refresh_component = components.declare_component(
-            "panelRefreshComponent",
-            url=f"http://localhost:42001/panels/refresh/{panel.panel_id}",)
+    "panelRefreshComponent",
+    url=f"http://localhost:42001/panels/refresh/{panel.panel_id}",
+)
 add_refresh_component()
 
 
@@ -23,7 +26,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 
@@ -45,22 +48,17 @@ therm_amp_graph = {
     "legend": {"data": ["thermocouple_amplitude"]},
     "xAxis": {
         "type": "category",
-        "data":list(range(len(st.session_state.therm_history))),
-        "name": "Time"
+        "data": list(range(len(st.session_state.therm_history))),
+        "name": "Time",
     },
-    "yAxis": {
-        "type": "value",
-        "name": "Thermocouple Amplitude"
-    },
+    "yAxis": {"type": "value", "name": "Thermocouple Amplitude"},
     "series": [
         {
             "name": "thermocouple_amplitude",
             "type": "line",
             "data": st.session_state.therm_history,
-            "color": "red"
+            "color": "red",
         },
-     
-        
     ],
 }
 st_echarts(options=therm_amp_graph, height="400px")
@@ -71,19 +69,15 @@ voltage_amp_graph = {
     "xAxis": {
         "type": "category",
         "data": list(range(len(st.session_state.volts_history))),
-        "name": "Time"
+        "name": "Time",
     },
-    "yAxis": {
-        "type": "value",
-        "name": "Voltage Amplitude"
-    },
+    "yAxis": {"type": "value", "name": "Voltage Amplitude"},
     "series": [
         {
             "name": "voltage_amplitude",
             "type": "line",
             "data": st.session_state.volts_history,
         },
-        
     ],
 }
 st_echarts(options=voltage_amp_graph, height="400px")
@@ -95,18 +89,15 @@ voltage_therm_graph = {
     "xAxis": {
         "type": "category",
         "data": list(range(len(st.session_state.volts_history))),
-        "name": "Time"
+        "name": "Time",
     },
-    "yAxis": {
-        "type": "value",
-        "name": "Voltage and Thermocouple Amplitude"
-    },
+    "yAxis": {"type": "value", "name": "Voltage and Thermocouple Amplitude"},
     "series": [
         {
             "name": "voltage_amplitude",
             "type": "line",
             "data": st.session_state.volts_history,
-            "emphasis": {"focus":"series"},
+            "emphasis": {"focus": "series"},
             "smooth": True,
             "seriesLayoutBy": "row",
         },
@@ -115,7 +106,7 @@ voltage_therm_graph = {
             "type": "line",
             "data": st.session_state.therm_history,
             "color": "red",
-            "emphasis": {"focus":"series"},
+            "emphasis": {"focus": "series"},
             "smooth": True,
             "seriesLayoutBy": "row",
         },
@@ -129,14 +120,14 @@ with voltage_tab:
         st.selectbox(options=["Mod1/ai2"], label="Physical Channels", disabled=True)
         st.selectbox(options=["Off"], label="Logging Modes", disabled=False)
     with center_volt_tab:
-        st.selectbox(options=["-5"],label="Min Value")
-        st.selectbox(options=["5"],label="Max Value")
+        st.selectbox(options=["-5"], label="Min Value")
+        st.selectbox(options=["5"], label="Max Value")
         st.selectbox(options=["1000"], label="Samples per Loops", disabled=False)
     with right_volt_tab:
         st.selectbox(options=["default"], label="Terminal Configurations")
         st.selectbox(options=["OnboardClock"], label="Sample Clock Sources", disabled=False)
 
-        
+
 thermocouple_tab.header("Thermocouple")
 with thermocouple_tab:
     left, middle, right = st.columns(3)
@@ -145,24 +136,13 @@ with thermocouple_tab:
         st.selectbox(options=["0"], label="Min", disabled=False)
         st.selectbox(options=["100"], label="Max", disabled=False)
         st.selectbox(options=["Off"], label="Logging Mode", disabled=False)
-        
+
     with middle:
-        st.selectbox(options=["Deg C"], label = "Units", disabled=False)
+        st.selectbox(options=["Deg C"], label="Units", disabled=False)
         st.selectbox(options=["J"], label="Thermocouple Type", disabled=False)
         st.selectbox(options=["Constant Value"], label="CJC Source", disabled=False)
         st.selectbox(options=["1000"], label="Samples per Loop", disabled=False)
     with right:
-        st.selectbox(options=["25"],label="CJC Value", disabled=False)
+        st.selectbox(options=["25"], label="CJC Value", disabled=False)
         st.selectbox(options=["OnboardClock"], label="Sample Clock Source", disabled=False)
         st.selectbox(options=[" "], label="Actual Sample Rate", disabled=True)
-    
-
-
- 
-
-
-
-
-    
-  
-

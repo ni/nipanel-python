@@ -1,9 +1,11 @@
-"""This example demonstrates how to open/update a Streamlit application using nipanel package."""
+"""This is the logic that will read/set values to panel."""
 
-import nipanel
-import nidaqmx
 import pathlib
 import time
+
+import nidaqmx
+
+import nipanel
 
 script_path = pathlib.Path(__file__)
 panel_script_path = str(script_path.with_name("nidaqmx_continuous_analog_input_panel.py"))
@@ -23,16 +25,13 @@ with nidaqmx.Task() as task:
             data = task.read(number_of_samples_per_channel=3)
             read = len(data)
             total_read += read
-    
+
             data_arr.append(data)
             time.sleep(1)
-            panel.set_value("amplitude",data_arr[-1][-1])
-            panel.set_value("Volts",data_arr[-1][0])
+            panel.set_value("amplitude", data_arr[-1][-1])
+            panel.set_value("Volts", data_arr[-1][0])
     except KeyboardInterrupt:
-            pass
+        pass
     finally:
-            task.stop()
-            print(f"\nAcquired {total_read} total samples.")
-
-
-
+        task.stop()
+        print(f"\nAcquired {total_read} total samples.")
