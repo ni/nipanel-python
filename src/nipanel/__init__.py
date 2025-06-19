@@ -14,3 +14,4 @@ Panel.__module__ = __name__
 StreamlitPanel.__module__ = __name__
 
 __version__ = version(__name__)
+"""nipanel version string."""
