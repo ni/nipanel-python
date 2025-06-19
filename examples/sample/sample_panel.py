@@ -4,7 +4,7 @@ import streamlit as st
 
 import nipanel
 
-panel = nipanel.StreamlitPanelValueAccessor(panel_id="sample_panel")
+panel = nipanel.initialize_panel()
 
 st.title("Sample Panel")
 
@@ -18,8 +18,8 @@ with col1:
     st.write("List")
 
 with col2:
-    st.write(panel.get_value("sample_string"))
-    st.write(panel.get_value("sample_int"))
-    st.write(panel.get_value("sample_float"))
-    st.write(panel.get_value("sample_bool"))
-    st.write(panel.get_value("float_values"))
+    st.write(panel.get_value("sample_string", ""))
+    st.write(panel.get_value("sample_int", 0))
+    st.write(panel.get_value("sample_float", 0.0))
+    st.write(panel.get_value("sample_bool", False))
+    st.write(panel.get_value("float_values", []))
