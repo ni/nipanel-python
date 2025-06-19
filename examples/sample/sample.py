@@ -12,7 +12,7 @@ panel = nipanel.StreamlitPanel(
     streamlit_script_path=panel_script_path,
 )
 panel.set_value("sample_string", "Hello, World!")
-panel.set_value("sample_int", 42)
+panel.set_value("sample_int", 6)
 panel.set_value("sample_float", 3.14)
 panel.set_value("sample_bool", True)
 panel.set_value("float_values", [1.1, 2.2, 3.3])
