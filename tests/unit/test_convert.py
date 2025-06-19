@@ -122,9 +122,7 @@ def test___paneltype_value___from_any___valid_python_value(
 # ========================================================
 def _assert_any_and_unpack(packed_message: any_pb2.Any, unpack_destination: Any) -> None:
     assert isinstance(packed_message, any_pb2.Any)
-    did_unpack = packed_message.Unpack(unpack_destination)
-    if not did_unpack:
-        raise ValueError(f"Failed to unpack Any with type '{packed_message.TypeName()}'")
+    assert packed_message.Unpack(unpack_destination)
 
 
 def _pack_into_any(proto_value: Union[_AnyWrappersPb2, _AnyPanelPbTypes]) -> any_pb2.Any:
