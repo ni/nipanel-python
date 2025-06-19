@@ -1,18 +1,13 @@
-"""This is the panel that will use the logic."""
+"""Streamlit application script for displaying values using nipanel package."""
 
 import streamlit as st
-import streamlit.components.v1 as components
 from streamlit_echarts import st_echarts
 
 import nipanel
 
 panel = nipanel.StreamlitPanelValueAccessor(panel_id="nidaqmx_continuous_analog_input_panel")
 
-add_refresh_component = components.declare_component(
-    "panelRefreshComponent",
-    url=f"http://localhost:42001/panels/refresh/{panel.panel_id}",
-)
-add_refresh_component()
+panel = nipanel.initialize_panel()
 
 
 st.title("Analog Input - Voltage and Thermocouple in a Single Task")
@@ -30,57 +25,9 @@ st.markdown(
 )
 
 
-list_of_therm_amp = panel.get_value("amplitude")
-list_of_voltage_amp = panel.get_value("Volts")
+list_of_therm_amp = panel.get_value("thermocouple_data", [0.0])
+list_of_voltage_amp = panel.get_value("voltage_data", [0.0])
 
-if "therm_history" not in st.session_state:
-    st.session_state.therm_history = []
-if "volts_history" not in st.session_state:
-    st.session_state.volts_history = []
-
-for therm_amp in list_of_therm_amp:
-    st.session_state.therm_history.append(therm_amp)
-for voltage_amp in list_of_voltage_amp:
-    st.session_state.volts_history.append(voltage_amp)
-
-therm_amp_graph = {
-    "tooltip": {"trigger": "axis"},
-    "legend": {"data": ["thermocouple_amplitude"]},
-    "xAxis": {
-        "type": "category",
-        "data": list(range(len(st.session_state.therm_history))),
-        "name": "Time",
-    },
-    "yAxis": {"type": "value", "name": "Thermocouple Amplitude"},
-    "series": [
-        {
-            "name": "thermocouple_amplitude",
-            "type": "line",
-            "data": st.session_state.therm_history,
-            "color": "red",
-        },
-    ],
-}
-st_echarts(options=therm_amp_graph, height="400px")
-
-voltage_amp_graph = {
-    "tooltip": {"trigger": "axis"},
-    "legend": {"data": ["voltage_amplitude"]},
-    "xAxis": {
-        "type": "category",
-        "data": list(range(len(st.session_state.volts_history))),
-        "name": "Time",
-    },
-    "yAxis": {"type": "value", "name": "Voltage Amplitude"},
-    "series": [
-        {
-            "name": "voltage_amplitude",
-            "type": "line",
-            "data": st.session_state.volts_history,
-        },
-    ],
-}
-st_echarts(options=voltage_amp_graph, height="400px")
 
 st.header("Voltage & Thermocouple")
 voltage_therm_graph = {
@@ -88,7 +35,7 @@ voltage_therm_graph = {
     "legend": {"data": ["voltage_amplitude", "thermocouple_amplitude"]},
     "xAxis": {
         "type": "category",
-        "data": list(range(len(st.session_state.volts_history))),
+        "data": list(range(len(list_of_voltage_amp))), 
         "name": "Time",
     },
     "yAxis": {"type": "value", "name": "Voltage and Thermocouple Amplitude"},
@@ -96,7 +43,7 @@ voltage_therm_graph = {
         {
             "name": "voltage_amplitude",
             "type": "line",
-            "data": st.session_state.volts_history,
+            "data": list_of_voltage_amp,
             "emphasis": {"focus": "series"},
             "smooth": True,
             "seriesLayoutBy": "row",
@@ -104,7 +51,7 @@ voltage_therm_graph = {
         {
             "name": "thermocouple_amplitude",
             "type": "line",
-            "data": st.session_state.therm_history,
+            "data": list_of_therm_amp,
             "color": "red",
             "emphasis": {"focus": "series"},
             "smooth": True,
