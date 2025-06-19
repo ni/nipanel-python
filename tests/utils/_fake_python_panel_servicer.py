@@ -59,6 +59,8 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
 
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""
+        if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):
+            context.abort(grpc.StatusCode.NOT_FOUND, "Value ID not found in panel")
         value = self._panel_value_ids[request.panel_id][request.value_id]
         return GetValueResponse(value=value)
 
