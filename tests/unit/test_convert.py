@@ -71,6 +71,51 @@ def test___python_panel_collection___to_any___valid_paneltype_value(
 
 
 # ========================================================
+# _get_best_matching_type() tests
+# ========================================================
+@pytest.mark.parametrize(
+    "python_object, expected_type_string",
+    [
+        (False, "bool"),
+        (b"mystr", "bytes"),
+        (456.2, "float"),
+        (123, "int"),
+        ("mystr", "str"),
+        ([False, False], "Collection.bool"),
+        ([b"mystr", b"mystr"], "Collection.bytes"),
+        ([456.2, 1.0], "Collection.float"),
+        ([123, 456], "Collection.int"),
+        (["mystr", "mystr"], "Collection.str"),
+        ((False, False), "Collection.bool"),
+        ((b"mystr", b"mystr"), "Collection.bytes"),
+        ((456.2, 1.0), "Collection.float"),
+        ((123, 456), "Collection.int"),
+        (("mystr", "mystr"), "Collection.str"),
+        ((False, False), "Collection.bool"),
+        ((b"mystr", b"mystr"), "Collection.bytes"),
+        ((456.2, 1.0), "Collection.float"),
+        ((123, 456), "Collection.int"),
+        (("mystr", "mystr"), "Collection.str"),
+        (set([False, True]), "Collection.bool"),
+        (set([b"mystr", b"mystr2"]), "Collection.bytes"),
+        (set([456.2, 1.0]), "Collection.float"),
+        (set([123, 456]), "Collection.int"),
+        (set(["mystr", "mystr2"]), "Collection.str"),
+        (frozenset([False, True]), "Collection.bool"),
+        (frozenset([b"mystr", b"mystr2"]), "Collection.bytes"),
+        (frozenset([456.2, 1.0]), "Collection.float"),
+        (frozenset([123, 456]), "Collection.int"),
+        (frozenset(["mystr", "mystr2"]), "Collection.str"),
+    ],
+)
+def test___various_python_objects___get_best_matching_type___returns_correct_type_string(
+    python_object: object, expected_type_string: str
+) -> None:
+    type_string = nipanel._convert._get_best_matching_type(python_object)
+    assert type_string == expected_type_string
+
+
+# ========================================================
 # Protobuf to Python
 # ========================================================
 @pytest.mark.parametrize(
