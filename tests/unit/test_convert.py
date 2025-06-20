@@ -1,7 +1,8 @@
-from typing import Any, Type, Union
+from typing import Any, Union
 
 import pytest
 from google.protobuf import any_pb2, wrappers_pb2
+from google.protobuf.message import Message
 from ni.pythonpanel.v1 import python_panel_types_pb2
 from typing_extensions import TypeAlias
 
@@ -26,7 +27,7 @@ _AnyPanelPbTypes: TypeAlias = Union[
 
 
 # ========================================================
-# Python to Protobuf
+# Built-in Types: Python to Protobuf
 # ========================================================
 @pytest.mark.parametrize(
     "proto_type, default_value, expected_value",
@@ -39,7 +40,7 @@ _AnyPanelPbTypes: TypeAlias = Union[
     ],
 )
 def test___python_builtin_scalar___to_any___valid_wrapperpb2_value(
-    proto_type: Type[_AnyWrappersPb2], default_value: Any, expected_value: Any
+    proto_type: type[_AnyWrappersPb2], default_value: Any, expected_value: Any
 ) -> None:
     result = nipanel._convert.to_any(expected_value)
     unpack_dest = proto_type(value=default_value)
@@ -60,7 +61,7 @@ def test___python_builtin_scalar___to_any___valid_wrapperpb2_value(
     ],
 )
 def test___python_panel_collection___to_any___valid_paneltype_value(
-    proto_type: Type[_AnyPanelPbTypes], default_value: Any, expected_value: Any
+    proto_type: type[_AnyPanelPbTypes], default_value: Any, expected_value: Any
 ) -> None:
     result = nipanel._convert.to_any(expected_value)
     unpack_dest = proto_type(values=default_value)
@@ -71,7 +72,7 @@ def test___python_panel_collection___to_any___valid_paneltype_value(
 
 
 # ========================================================
-# Protobuf to Python
+# Built-in Types: Protobuf to Python
 # ========================================================
 @pytest.mark.parametrize(
     "proto_type, expected_value",
@@ -84,7 +85,7 @@ def test___python_panel_collection___to_any___valid_paneltype_value(
     ],
 )
 def test___wrapperpb2_value___from_any___valid_python_value(
-    proto_type: Type[_AnyWrappersPb2], expected_value: Any
+    proto_type: type[_AnyWrappersPb2], expected_value: Any
 ) -> None:
     pb_value = proto_type(value=expected_value)
     packed_any = _pack_into_any(pb_value)
@@ -106,7 +107,7 @@ def test___wrapperpb2_value___from_any___valid_python_value(
     ],
 )
 def test___paneltype_value___from_any___valid_python_value(
-    proto_type: Type[_AnyPanelPbTypes], expected_value: Any
+    proto_type: type[_AnyPanelPbTypes], expected_value: Any
 ) -> None:
     pb_value = proto_type(values=expected_value)
     packed_any = _pack_into_any(pb_value)
@@ -120,7 +121,7 @@ def test___paneltype_value___from_any___valid_python_value(
 # ========================================================
 # Pack/Unpack Helpers
 # ========================================================
-def _assert_any_and_unpack(packed_message: any_pb2.Any, unpack_destination: Any) -> None:
+def _assert_any_and_unpack(packed_message: any_pb2.Any, unpack_destination: Message) -> None:
     assert isinstance(packed_message, any_pb2.Any)
     assert packed_message.Unpack(unpack_destination)
 

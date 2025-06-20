@@ -8,6 +8,9 @@ import hightime as ht
 import nitypes.bintime as bt
 import numpy as np
 from ni.protobuf.types import scalar_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
     PrecisionTimestamp,
 )
@@ -35,6 +38,46 @@ _SCALAR_TYPE_TO_PB_ATTR_MAP = {
     float: "double_value",
     str: "string_value",
 }
+
+
+class Double2DArrayConverter(Converter[list[list[float]], Double2DArray]):
+    """A converter between list[list[float]] and Double2DArray."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{list.__name__}.{list.__name__}.{float.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[Double2DArray]:
+        """The type-specific protobuf message for the Python type."""
+        return Double2DArray
+
+    def to_protobuf_message(self, python_value: list[list[float]]) -> Double2DArray:
+        """Convert the Python list[list[float]] to a protobuf Double2DArray."""
+        rows = len(python_value)
+        columns = len(python_value[0]) if rows else 0
+        if not all(len(sublist) == columns for sublist in python_value):
+            raise ValueError("All sublists must have the same length.")
+
+        # Create a flat list in row major order.
+        flat_list = [item for sublist in python_value for item in sublist]
+        return Double2DArray(rows=rows, columns=columns, data=flat_list)
+
+    def to_python_value(self, protobuf_message: Double2DArray) -> list[list[float]]:
+        """Convert the protobuf Double2DArray to a Python list[list[float]]."""
+        if not protobuf_message.data:
+            return []
+        if len(protobuf_message.data) % protobuf_message.columns != 0:
+            raise ValueError("The length of the data list must be divisible by num columns.")
+
+        # Convert from a flat list in row major order into a list of lists.
+        list_of_lists = []
+        for i in range(0, len(protobuf_message.data), protobuf_message.columns):
+            row = protobuf_message.data[i : i + protobuf_message.columns]
+            list_of_lists.append(row)
+
+        return list_of_lists
 
 
 class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], DoubleAnalogWaveform]):
