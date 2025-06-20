@@ -1,13 +1,13 @@
 """Fixtures for testing."""
 
 from collections.abc import Generator
+from concurrent.futures import ThreadPoolExecutor
+from typing import cast
 
 import grpc
 import pytest
 from grpc.framework.foundation import logging_pool
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
-    PythonPanelServiceStub,
-)
+from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
@@ -16,6 +16,8 @@ from tests.utils._fake_python_panel_service import FakePythonPanelService
 def fake_python_panel_service() -> Generator[FakePythonPanelService]:
     """Fixture to create a FakePythonPanelServicer for testing."""
     with logging_pool.pool(max_workers=10) as thread_pool:
+        # _LoggingPool is not a ThreadPoolExecutor, but it's duck-typing compatible with one.
+        thread_pool = cast(ThreadPoolExecutor, thread_pool)
         service = FakePythonPanelService()
         service.start(thread_pool)
         yield service

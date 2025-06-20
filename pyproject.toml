@@ -13,8 +13,8 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev1", allow-prereleases=true}
-debugpy = "^1.8.1"
+nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
+debugpy = ">=1.8.1"
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
@@ -24,11 +24,14 @@ types-protobuf = ">=4.21"
 bandit = { version = ">=1.7", extras = ["toml"] }
 ni-python-styleguide = ">=0.4.1"
 mypy = ">=1.0"
+pyright = { version = ">=1.1.400", extras = ["nodejs"] }
 
 [tool.poetry.group.test.dependencies]
 pytest = ">=7.2"
 pytest-cov = ">=4.0"
 pytest-mock = ">=3.0"
+# Use an unreleased version of hightime for testing.
+hightime = { git = "https://github.com/ni/hightime.git" }
 
 [tool.poetry.group.codegen.dependencies]
 grpcio-tools = [
@@ -81,3 +84,7 @@ skips = [
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --strict-markers"
 testpaths = ["src/nipanel", "tests"]
+
+[tool.pyright]
+include = ["examples/", "src/", "tests/"]
+exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/"]
