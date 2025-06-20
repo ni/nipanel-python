@@ -1,16 +1,12 @@
 """This example demonstrates how to open/update a Streamlit application using nipanel package."""
 
-import pathlib
+from pathlib import Path
 
 import nipanel
 
-script_path = pathlib.Path(__file__)
-panel_script_path = str(script_path.with_name("sample_panel.py"))
+panel_script_path = Path(__file__).with_name("sample_panel.py")
+panel = nipanel.create_panel(panel_script_path)
 
-panel = nipanel.StreamlitPanel(
-    panel_id="sample_panel",
-    streamlit_script_path=panel_script_path,
-)
 panel.set_value("sample_string", "Hello, World!")
 panel.set_value("sample_int", 42)
 panel.set_value("sample_float", 3.14)

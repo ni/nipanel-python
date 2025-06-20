@@ -1,11 +1,36 @@
+from pathlib import Path
 from typing import cast
 
 import streamlit as st
 
+from nipanel._streamlit_panel import StreamlitPanel
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 from nipanel.streamlit_refresh import initialize_refresh_component
 
 PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
+
+
+def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
+    """Create a Streamlit panel with the specified script path.
+
+    This function initializes a Streamlit panel using the provided script path.
+    The panel ID will be derived from the script path, which is expected to be a valid Streamlit script.
+    It is typically used to create a new panel instance for use in a Streamlit application.
+
+    Args:
+        streamlit_script_path: The file path of the Streamlit script to be used for the panel.
+
+    Returns:
+        A StreamlitPanel instance initialized with the given panel ID.
+    """
+    path_str = str(streamlit_script_path)
+    if not path_str.endswith(".py"):
+        raise ValueError(
+            "The provided script path must be a valid Streamlit script ending with '.py'."
+        )
+
+    panel_id = path_str.replace("\\", "/").split("/")[-1].replace(".py", "")
+    return StreamlitPanel(panel_id, path_str)
 
 
 def initialize_panel() -> StreamlitPanelValueAccessor:
