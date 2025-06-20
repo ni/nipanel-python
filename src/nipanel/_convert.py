@@ -21,6 +21,7 @@ from nipanel.converters.builtin import (
     IntCollectionConverter,
     StrCollectionConverter,
 )
+from nipanel.converters.protobuf_types import DoubleAnalogWaveformConverter, ScalarConverter
 
 _logger = logging.getLogger(__name__)
 
@@ -38,6 +39,9 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     FloatCollectionConverter(),
     IntCollectionConverter(),
     StrCollectionConverter(),
+    # Protobuf Types
+    DoubleAnalogWaveformConverter(),
+    ScalarConverter(),
 ]
 
 _CONVERTIBLE_COLLECTION_TYPES = {
