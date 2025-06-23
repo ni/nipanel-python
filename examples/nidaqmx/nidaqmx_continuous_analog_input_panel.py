@@ -1,4 +1,4 @@
-"""Streamlit application script for displaying values using nipanel package."""
+"""Streamlit script for displaying values from nidaqmx_continuous_analog_input.py."""
 
 import streamlit as st
 from streamlit_echarts import st_echarts
