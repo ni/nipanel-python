@@ -6,7 +6,9 @@ import nipanel
 
 panel = nipanel.initialize_panel()
 
-st.title("Sample Panel")
+
+st.set_page_config(page_title="Sample Panel Example", page_icon="📊", layout="wide")
+st.title("Sample Panel Example")
 
 col1, col2 = st.columns([0.4, 0.6])
 

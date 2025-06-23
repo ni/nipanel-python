@@ -6,10 +6,11 @@ from streamlit_echarts import st_echarts  # type: ignore
 from nipanel import initialize_panel
 
 
-st.set_page_config(page_title="Simple Graph Example", page_icon="📈", layout="wide")
-st.title("Simple Sine Wave Visualization")
-
 panel = initialize_panel()
+
+st.set_page_config(page_title="Simple Graph Example", page_icon="📈", layout="wide")
+st.title("Simple Graph Example")
+
 time_points = panel.get_value("time_points", [0.0])
 sine_values = panel.get_value("sine_values", [0.0])
 amplitude = panel.get_value("amplitude", 1.0)
