@@ -18,8 +18,9 @@
       ]
     },
     {
-      // Update Python packages on weekends.
+      // Update Python packages on weekends, separate from lockFileMaintenance.
       "matchCategories": ["python"],
+      "matchUpdateTypes": ["major", "minor", "patch", "rollback", "replacement"],
       "groupName": "Python packages",
       "groupSlug": "python",
       "schedule": [
