@@ -13,7 +13,6 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-streamlit-echarts = ">=0.4.0"
 nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
 debugpy = ">=1.8.1"
 
@@ -52,6 +51,12 @@ sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
 m2r2 = ">=0.3.2"
 toml = ">=0.10.2"
+
+[tool.poetry.group.examples]
+optional = true
+
+[tool.poetry.group.examples.dependencies]
+streamlit-echarts = ">=0.4.0"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]

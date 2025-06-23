@@ -15,4 +15,4 @@ This example demonstrates using nipanel with Streamlit to display a dynamic sine
 
 ### Usage
 
-Run `poetry run examples/simple_graph/simple_graph.py`
+Run `poetry run python examples/simple_graph/simple_graph.py`

@@ -12,4 +12,4 @@ This is an example for `nipanel` that demonstrates all supported data types
 
 ### Usage
 
-Run `poetry run examples/all_types/all_types.py`
+Run `poetry run python examples/all_types/all_types.py`

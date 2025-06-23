@@ -1,7 +1,7 @@
 """Example of displaying a sine wave using streamlit-echarts in a nipanel."""
 
 import streamlit as st
-from streamlit_echarts import st_echarts
+from streamlit_echarts import st_echarts  # type: ignore
 
 from nipanel import initialize_panel
 

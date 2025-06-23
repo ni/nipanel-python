@@ -54,6 +54,17 @@ poetry run sphinx-build docs docs/_build --builder html --fail-on-warning
 start docs\_build\index.html
 ```
 
+## Running examples
+
+1. First, run the PythonPanelService (not part of this repo, provided seperately)
+2. Run the command `poetry run python examples/sample/sample.py`
+3. Open http://localhost:42001/panel-service/panels/sample_panel/ in your browser
+4. If there is an error about missing imports (especially nipanel), execute this
+   command to install the dependencies into the venv: `C:\Users\mprosser\AppData\Local\Temp\python_panel_service_venv\Scripts\python.exe
+   -m pip install C:\dev\fireserp\nipanel-python[examples,dev]`, then restart the PythonPanelService and re-run sample.py.
+
+You can see all running panels (and stop them) at: http://localhost:42001/panel-service/
+
 # Debugging on the streamlit side
 
 Debugging the measurement script can be done using standard Python debugging

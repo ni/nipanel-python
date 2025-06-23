@@ -12,4 +12,4 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Usage
 
-Run `poetry run examples/sample/sample.py`
+Run `poetry run python examples/sample/sample.py`

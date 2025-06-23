@@ -100,7 +100,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
     def to_python_value(self, protobuf_message: DoubleAnalogWaveform) -> AnalogWaveform[np.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
         # Declare timing to accept both bintime and dt.datetime to satisfy mypy.
-        timing: Timing[bt.DateTime | dt.datetime]
+        timing: Timing[Union[bt.DateTime, dt.datetime]]
         if not protobuf_message.dt and not protobuf_message.HasField("t0"):
             # If both dt and t0 are unset, use Timing.empty.
             timing = Timing.empty
