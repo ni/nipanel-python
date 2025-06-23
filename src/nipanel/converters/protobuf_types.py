@@ -1,5 +1,7 @@
 """Classes to convert between measurement specific protobuf types and containers."""
 
+from __future__ import annotations
+
 import datetime as dt
 from collections.abc import Collection, Mapping
 from typing import Type, Union
