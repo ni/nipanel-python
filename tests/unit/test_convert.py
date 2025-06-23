@@ -86,6 +86,10 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (((1.0, 2.0), (3.0, 4.0)), "Collection.Collection.float"),
         ((set([1.0, 2.0]), set([3.0, 4.0])), "Collection.Collection.float"),
         ((frozenset([1.0, 2.0]), frozenset([3.0, 4.0])), "Collection.Collection.float"),
+        (set([(1.0, 2.0), (3.0, 4.0)]), "Collection.Collection.float"),
+        (set([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]), "Collection.Collection.float"),
+        (frozenset([(1.0, 2.0), (3.0, 4.0)]), "Collection.Collection.float"),
+        (frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]), "Collection.Collection.float"),
     ],
 )
 def test___various_python_objects___get_best_matching_type___returns_correct_type_string(
@@ -224,8 +228,6 @@ def test___python_analog_waveform___to_any___valid_double_analog_waveform() -> N
         (((1.0, 2.0), (3.0, 4.0))),
         ((set([1.0, 2.0]), set([3.0, 4.0]))),
         ((frozenset([1.0, 2.0]), frozenset([3.0, 4.0]))),
-        # sets and frozensets of collections don't preserve order,
-        # so they need to be tested separately.
     ],
 )
 def test___python_2dcollection_of_float___to_any___valid_double2darray(
@@ -242,6 +244,32 @@ def test___python_2dcollection_of_float___to_any___valid_double2darray(
     assert unpack_dest.rows == expected_rows
     assert unpack_dest.columns == expected_columns
     assert unpack_dest.data == expected_data
+
+
+@pytest.mark.parametrize(
+    "python_value",
+    [
+        (set([(1.0, 2.0), (3.0, 4.0)])),
+        (set([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])])),
+        (frozenset([(1.0, 2.0), (3.0, 4.0)])),
+        (frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])])),
+    ],
+)
+def test___python_set_of_collection_of_float___to_any___valid_double2darray(
+    python_value: Collection[Collection[float]],
+) -> None:
+    expected_data = [1.0, 2.0, 3.0, 4.0]
+    expected_rows = 2
+    expected_columns = 2
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = Double2DArray()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, Double2DArray)
+    assert unpack_dest.rows == expected_rows
+    assert unpack_dest.columns == expected_columns
+    # Sets and frozensets don't maintain order, so sort before comparing.
+    assert sorted(unpack_dest.data) == sorted(expected_data)
 
 
 # ========================================================

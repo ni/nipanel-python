@@ -92,7 +92,7 @@ def _get_best_matching_type(python_value: object) -> str:
             underlying_parents = type(working_python_value).mro()
 
             # If this element is a collection, we want to continue traversing. Once we find a
-            # non-collection, underlying_elements will refer to the candidates for the non-
+            # non-collection, underlying_parents will refer to the candidates for the non-
             # collection type.
             value_is_collection = any(
                 _CONVERTIBLE_COLLECTION_TYPES.intersection(underlying_parents)
