@@ -32,13 +32,13 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
             "nipanel.create_panel() should not be called from a Streamlit script. Call nipanel.get_panel_accessor() instead."
         )
 
-    path_str = str(streamlit_script_path)
-    if not path_str.endswith(".py"):
+    if streamlit_script_path.suffix != ".py":
         raise ValueError(
             "The provided script path must be a valid Streamlit script ending with '.py'."
         )
 
     panel_id = streamlit_script_path.stem
+    path_str = str(streamlit_script_path)
     return StreamlitPanel(panel_id, path_str)
 
 
