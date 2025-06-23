@@ -20,9 +20,7 @@ with nidaqmx.Task() as task:
     task.ai_channels.add_ai_voltage_chan("Dev1/ai0")
     task.ai_channels.add_ai_thrmcpl_chan("Dev1/ai1")
     task.timing.cfg_samp_clk_timing(
-        rate=1000.0,  
-        sample_mode=AcquisitionType.CONTINUOUS,
-        samps_per_chan=3000  
+        rate=1000.0, sample_mode=AcquisitionType.CONTINUOUS, samps_per_chan=3000
     )
     task.start()
     try:
