@@ -104,7 +104,6 @@ def _get_best_matching_type(python_value: object) -> str:
     for candidate in candidates:
         containers_str = ".".join(container_types)
         python_typename = f"{containers_str}.{candidate}" if containers_str else candidate
-        print(python_typename)
         if python_typename not in _SUPPORTED_PYTHON_TYPES:
             continue
         best_matching_type = python_typename

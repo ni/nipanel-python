@@ -59,14 +59,14 @@ class Double2DArrayConverter(Converter[Collection[Collection[float]], Double2DAr
         if rows:
             visitor = iter(python_value)
             first_subcollection = next(visitor)
-            columns = len(first_subcollection) if rows else 0
+            columns = len(first_subcollection)
         else:
             columns = 0
-        if not all(len(sublist) == columns for sublist in python_value):
+        if not all(len(subcollection) == columns for subcollection in python_value):
             raise ValueError("All subcollections must have the same length.")
 
         # Create a flat list in row major order.
-        flat_list = [item for sublist in python_value for item in sublist]
+        flat_list = [item for subcollection in python_value for item in subcollection]
         return Double2DArray(rows=rows, columns=columns, data=flat_list)
 
     def to_python_value(self, protobuf_message: Double2DArray) -> Collection[Collection[float]]:
