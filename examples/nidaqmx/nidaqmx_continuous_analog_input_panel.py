@@ -1,4 +1,4 @@
-"""Streamlit script for displaying values from nidaqmx_continuous_analog_input.py."""
+"""Streamlit visualization script that displays the data acquired by nidaqmx_continuous_analog_input.py"""
 
 import streamlit as st
 from streamlit_echarts import st_echarts
@@ -21,24 +21,27 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-list_of_therm_amp = panel.get_value("thermocouple_data", [0.0])
-list_of_voltage_amp = panel.get_value("voltage_data", [0.0])
+thermocouple_data = panel.get_value("thermocouple_data", [0.0])
+voltage_data = panel.get_value("voltage_data", [0.0])
 
 st.header("Voltage & Thermocouple")
 voltage_therm_graph = {
     "tooltip": {"trigger": "axis"},
-    "legend": {"data": ["voltage_amplitude", "thermocouple_amplitude"]},
+    "legend": {"data": ["Voltage (V)", "Temperature (C)"]},
     "xAxis": {
         "type": "category",
-        "data": list(range(len(list_of_voltage_amp))),
+        "data": list(range(len(voltage_data))),
         "name": "Time",
+        "nameLocation": "center",
+        "nameGap": 40
     },
-    "yAxis": {"type": "value", "name": "Voltage and Thermocouple Amplitude"},
+    "yAxis": {"type": "value", "name": "Measurement", "nameRotate": 90,"nameLocation": "center", "nameGap": 40},
+    
     "series": [
         {
             "name": "voltage_amplitude",
             "type": "line",
-            "data": list_of_voltage_amp,
+            "data": voltage_data,
             "emphasis": {"focus": "series"},
             "smooth": True,
             "seriesLayoutBy": "row",
@@ -46,7 +49,7 @@ voltage_therm_graph = {
         {
             "name": "thermocouple_amplitude",
             "type": "line",
-            "data": list_of_therm_amp,
+            "data": thermocouple_data,
             "color": "red",
             "emphasis": {"focus": "series"},
             "smooth": True,

@@ -1,4 +1,4 @@
-"""Streamlit application script for displaying values using nipanel package."""
+"""Data acquisition script that continuously acquires analog input data."""
 
 import pathlib
 
