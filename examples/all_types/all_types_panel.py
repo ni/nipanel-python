@@ -1,4 +1,4 @@
-"""A Streamlit panel to demonstrate various types and their values."""
+"""A Streamlit visualization panel for the all_types.py example script."""
 
 import streamlit as st
 from define_types import all_types_with_values

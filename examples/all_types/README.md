@@ -1,6 +1,6 @@
 ## All Types Example
 
-This is a nipanel example that demonstrates all supported data types
+This is an example for `nipanel` that demonstrates all supported data types
 
 ### Feature
 

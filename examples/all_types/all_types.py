@@ -1,4 +1,4 @@
-"""example script for nipanel package demonstrating various data types."""
+"""An example that demonstrates the supported data types for nipanel scripts."""
 
 from pathlib import Path
 

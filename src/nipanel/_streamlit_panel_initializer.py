@@ -13,9 +13,13 @@ PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
 def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
     """Create a Streamlit panel with the specified script path.
 
-    This function initializes a Streamlit panel using the provided script path.
-    The panel ID will be derived from the script path, which is expected to be a valid Streamlit script.
-    It is typically used to create a new panel instance for use in a Streamlit application.
+    This function initializes a Streamlit panel using the provided script path. It derives the panel
+    ID from the script's path, which it expects to be a valid Streamlit script. For example, if the
+    value for streamlit_script_path is "c:/example/some_example.py", then the panel's ID becomes
+    "some_example".
+
+    Use this function when you want to create a new panel instance to use in a Streamlit
+    application.
 
     Args:
         streamlit_script_path: The file path of the Streamlit script to be used for the panel.
@@ -29,7 +33,7 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
             "The provided script path must be a valid Streamlit script ending with '.py'."
         )
 
-    panel_id = path_str.replace("\\", "/").split("/")[-1].replace(".py", "")
+    panel_id = streamlit_script_path.stem
     return StreamlitPanel(panel_id, path_str)
 
 
