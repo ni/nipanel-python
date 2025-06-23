@@ -1,4 +1,4 @@
-"""Streamlit application script for displaying values from nidaqmx_continuous_analog_input.py"""
+"""Streamlit application script for displaying values from nidaqmx_continuous_analog_input.py."""
 
 import pathlib
 
