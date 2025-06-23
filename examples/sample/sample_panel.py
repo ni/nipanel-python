@@ -4,7 +4,7 @@ import streamlit as st
 
 import nipanel
 
-panel = nipanel.initialize_panel()
+panel = nipanel.get_panel_accessor()
 
 
 st.set_page_config(page_title="Sample Panel Example", page_icon="📊", layout="wide")

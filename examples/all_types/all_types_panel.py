@@ -5,7 +5,7 @@ from define_types import all_types_with_values
 
 import nipanel
 
-panel = nipanel.initialize_panel()
+panel = nipanel.get_panel_accessor()
 
 st.set_page_config(page_title="All Types Example", page_icon="📊", layout="wide")
 st.title("All Types Example")

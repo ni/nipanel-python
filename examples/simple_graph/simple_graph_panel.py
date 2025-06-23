@@ -3,10 +3,10 @@
 import streamlit as st
 from streamlit_echarts import st_echarts  # type: ignore
 
-from nipanel import initialize_panel
+import nipanel
 
 
-panel = initialize_panel()
+panel = nipanel.get_panel_accessor()
 
 st.set_page_config(page_title="Simple Graph Example", page_icon="📈", layout="wide")
 st.title("Simple Graph Example")

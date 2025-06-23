@@ -19,7 +19,7 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
     "some_example".
 
     Use this function when you want to create a new panel instance to use in a Streamlit
-    application.
+    application. Do not call this function from within a Streamlit script.
 
     Args:
         streamlit_script_path: The file path of the Streamlit script to be used for the panel.
@@ -27,6 +27,11 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
     Returns:
         A StreamlitPanel instance initialized with the given panel ID.
     """
+    if st.get_option("server.baseUrlPath") != "":
+        raise RuntimeError(
+            "nipanel.create_panel() should not be called from a Streamlit script. Call nipanel.get_panel_accessor() instead."
+        )
+
     path_str = str(streamlit_script_path)
     if not path_str.endswith(".py"):
         raise ValueError(
@@ -37,17 +42,21 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
     return StreamlitPanel(panel_id, path_str)
 
 
-def initialize_panel() -> StreamlitPanelValueAccessor:
+def get_panel_accessor() -> StreamlitPanelValueAccessor:
     """Initialize and return the Streamlit panel value accessor.
 
     This function retrieves the Streamlit panel value accessor for the current Streamlit script.
-    It is typically used within a Streamlit script to access and manipulate panel values.
-    The accessor will be cached in the Streamlit session state to ensure that it is reused across
-    reruns of the script.
+    This function should only be called from within a Streamlit script. The accessor will be cached
+    in the Streamlit session state to ensure that it is reused across reruns of the script.
 
     Returns:
         A StreamlitPanelValueAccessor instance for the current panel.
     """
+    if st.get_option("server.baseUrlPath") == "":
+        raise RuntimeError(
+            "nipanel.get_panel_accessor() should only be called from a Streamlit script. Call nipanel.create_panel() instead."
+        )
+
     if PANEL_ACCESSOR_KEY not in st.session_state:
         st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
 
