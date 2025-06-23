@@ -4,10 +4,16 @@ from importlib.metadata import version
 
 from nipanel._panel import Panel
 from nipanel._streamlit_panel import StreamlitPanel
-from nipanel._streamlit_panel_initializer import initialize_panel
+from nipanel._streamlit_panel_initializer import create_panel, get_panel_accessor
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
-__all__ = ["Panel", "StreamlitPanel", "StreamlitPanelValueAccessor", "initialize_panel"]
+__all__ = [
+    "create_panel",
+    "get_panel_accessor",
+    "Panel",
+    "StreamlitPanel",
+    "StreamlitPanelValueAccessor",
+]
 
 # Hide that it was defined in a helper file
 Panel.__module__ = __name__
