@@ -1,0 +1,39 @@
+import streamlit as st
+from streamlit_echarts import st_echarts
+
+import nipanel
+
+panel = nipanel.get_panel_accessor()
+
+waveform = panel.get_value("Waveform")
+samples = panel.get_value("samples")
+graph = {
+    "tooltip": {"trigger": "axis"},
+    "legend": {"data": ["Amplitude (V)"]},
+    "xAxis": {
+        "type": "category",
+        "data": samples,
+        "name": "Samples",
+        "nameLocation": "center",
+        "nameGap": 40,
+    },
+    "yAxis": {
+        "type": "value",
+        "name": "Amplitude(V)",
+        "nameRotate": 90,
+        "nameLocation": "center",
+        "nameGap": 40,
+    },
+    "series": [
+        {
+            "name": "niscope data",
+            "type": "line",
+            "data": waveform,
+            "emphasis": {"focus": "series"},
+            "smooth": True,
+            "seriesLayoutBy": "row",
+        },
+     
+    ],
+}
+st_echarts(options=graph, height="400px")
