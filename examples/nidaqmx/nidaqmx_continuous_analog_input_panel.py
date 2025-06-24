@@ -1,11 +1,11 @@
-"""Streamlit visualization script that displays the data acquired by nidaqmx_continuous_analog_input.py"""
+"""Streamlit visualization script that displays the data acquired by nidaqmx_continuous_analog_input.py."""
 
 import streamlit as st
 from streamlit_echarts import st_echarts
 
 import nipanel
 
-panel = nipanel.initialize_panel()
+panel = nipanel.get_panel_accessor()
 
 st.title("Analog Input - Voltage and Thermocouple in a Single Task")
 voltage_tab, thermocouple_tab = st.tabs(["Voltage", "Thermocouple"])
@@ -24,19 +24,25 @@ st.markdown(
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
 
+sample_rate = panel.get_value("sample_rate")
 st.header("Voltage & Thermocouple")
 voltage_therm_graph = {
     "tooltip": {"trigger": "axis"},
     "legend": {"data": ["Voltage (V)", "Temperature (C)"]},
     "xAxis": {
         "type": "category",
-        "data": list(range(len(voltage_data))),
+        "data": [x / sample_rate for x in range(len(voltage_data))],
         "name": "Time",
         "nameLocation": "center",
-        "nameGap": 40
+        "nameGap": 40,
     },
-    "yAxis": {"type": "value", "name": "Measurement", "nameRotate": 90,"nameLocation": "center", "nameGap": 40},
-    
+    "yAxis": {
+        "type": "value",
+        "name": "Measurement",
+        "nameRotate": 90,
+        "nameLocation": "center",
+        "nameGap": 40,
+    },
     "series": [
         {
             "name": "voltage_amplitude",
