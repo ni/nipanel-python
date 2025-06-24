@@ -1,7 +1,7 @@
 """A Streamlit visualization panel for the simple_graph.py example script."""
 
 import streamlit as st
-from streamlit_echarts import st_echarts  # type: ignore
+from streamlit_echarts import st_echarts  
 
 import nipanel
 
