@@ -1,20 +1,14 @@
 """Data acquisition script that continuously acquires analog input data."""
 
-import pathlib
+from pathlib import Path
 
 import nidaqmx
 from nidaqmx.constants import AcquisitionType
 
 import nipanel
 
-script_path = pathlib.Path(__file__)
-panel_script_path = str(script_path.with_name("nidaqmx_continuous_analog_input_panel.py"))
-
-panel = nipanel.StreamlitPanel(
-    panel_id="nidaqmx_continuous_analog_input_panel",
-    streamlit_script_path=panel_script_path,
-)
-print(f"Panel URL: {panel.panel_url}")
+panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
+panel = nipanel.create_panel(panel_script_path)
 
 with nidaqmx.Task() as task:
     task.ai_channels.add_ai_voltage_chan("Dev1/ai0")
@@ -22,6 +16,7 @@ with nidaqmx.Task() as task:
     task.timing.cfg_samp_clk_timing(
         rate=1000.0, sample_mode=AcquisitionType.CONTINUOUS, samps_per_chan=3000
     )
+    panel.set_value("sample_rate", task._timing.samp_clk_rate)
     task.start()
     try:
         print(f"\nPress Ctrl + C to stop")
