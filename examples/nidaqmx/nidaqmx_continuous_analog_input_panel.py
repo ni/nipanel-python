@@ -24,7 +24,8 @@ st.markdown(
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
 
-sample_rate = panel.get_value("sample_rate")
+sample_rate = panel.get_value("sample_rate", 0)
+
 st.header("Voltage & Thermocouple")
 voltage_therm_graph = {
     "tooltip": {"trigger": "axis"},
