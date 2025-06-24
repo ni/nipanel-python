@@ -1,4 +1,4 @@
-"""Streamlit visualization script that displays the data acquired by nidaqmx_continuous_analog_input.py."""
+"""Streamlit visualization script to display data acquired by nidaqmx_continuous_analog_input.py."""
 
 import streamlit as st
 from streamlit_echarts import st_echarts
