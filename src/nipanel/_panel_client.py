@@ -13,6 +13,8 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     EnumeratePanelsRequest,
     GetValueRequest,
     SetValueRequest,
+    SetValuesRequest,
+    ValueInformation,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -114,6 +116,24 @@ class PanelClient:
             panel_id=panel_id, value_id=value_id, value=new_any, notify=notify
         )
         self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
+
+    def set_values(self, panel_id: str, values: dict[str, object], notify: bool) -> None:
+        """Set multiple values for controls in a panel at once.
+
+        Args:
+            panel_id: The ID of the panel.
+            values: A dictionary mapping value IDs to their corresponding values.
+            notify: Whether to notify other clients of the new values.
+        """
+        value_informations = []
+        for value_id, value in values.items():
+            new_any = to_any(value)
+            value_informations.append(ValueInformation(value_id=value_id, value=new_any))
+
+        set_values_request = SetValuesRequest(
+            panel_id=panel_id, values=value_informations, notify=notify
+        )
+        self._invoke_with_retry(self._get_stub().SetValues, set_values_request)
 
     def get_value(self, panel_id: str, value_id: str) -> object:
         """Get the value for the control with value_id.

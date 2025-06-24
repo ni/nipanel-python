@@ -356,3 +356,88 @@ def is_panel_in_memory(panel: StreamlitPanel) -> bool:
 
 def is_panel_running(panel: StreamlitPanel) -> bool:
     return panel._panel_client.enumerate_panels()[panel.panel_id][0] != ""
+
+
+def test___panel___set_values___gets_same_values(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    values = {
+        "string_id": "test_string",
+        "int_id": 42,
+        "bool_id": True,
+        "float_id": 3.14,
+    }
+    panel.set_values(values)
+
+    assert panel.get_value("string_id") == "test_string"
+    assert panel.get_value("int_id") == 42
+    assert panel.get_value("bool_id") is True
+    assert panel.get_value("float_id") == 3.14
+
+
+def test___panel___panel_set_values___accessor_gets_same_values(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+
+    values = {
+        "string_id": "test_string",
+        "int_id": 42,
+        "bool_id": True,
+    }
+    panel.set_values(values)
+
+    assert accessor.get_value("string_id") == "test_string"
+    assert accessor.get_value("int_id") == 42
+    assert accessor.get_value("bool_id") is True
+
+
+def test___panel___accessor_set_values___panel_gets_same_values(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+
+    values = {
+        "string_id": "test_string",
+        "int_id": 42,
+        "bool_id": True,
+    }
+    accessor.set_values(values)
+
+    assert panel.get_value("string_id") == "test_string"
+    assert panel.get_value("int_id") == 42
+    assert panel.get_value("bool_id") is True
+
+
+def test___panel___set_values_empty_dict___no_changes(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    panel.set_value("existing", "value")
+
+    panel.set_values({})
+
+    assert panel.get_value("existing") == "value"
+
+
+def test___panel___set_values_then_set_value___both_methods_work_together(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    panel.set_values(
+        {
+            "batch1": "value1",
+            "batch2": "value2",
+        }
+    )
+    panel.set_value("individual", "value3")
+
+    assert panel.get_value("batch1") == "value1"
+    assert panel.get_value("batch2") == "value2"
+    assert panel.get_value("individual") == "value3"

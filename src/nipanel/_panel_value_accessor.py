@@ -82,3 +82,11 @@ class PanelValueAccessor(ABC):
         self._panel_client.set_value(
             self._panel_id, value_id, value, notify=self._notify_on_set_value
         )
+
+    def set_values(self, values: dict[str, object]) -> None:
+        """Set multiple values for controls on the panel.
+
+        Args:
+            values: A dictionary mapping value IDs to their corresponding values.
+        """
+        self._panel_client.set_values(self._panel_id, values, notify=self._notify_on_set_value)

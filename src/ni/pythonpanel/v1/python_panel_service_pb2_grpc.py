@@ -40,6 +40,11 @@ class PythonPanelServiceStub(object):
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
                 response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
                 )
+        self.SetValues = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/SetValues',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesResponse.FromString,
+                )
 
 
 class PythonPanelServiceServicer(object):
@@ -92,6 +97,15 @@ class PythonPanelServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SetValues(self, request, context):
+        """Set values for multiple controls on the panel
+        Status Codes for errors:
+        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PythonPanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -119,6 +133,11 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
                     servicer.SetValue,
                     request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.FromString,
                     response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.SerializeToString,
+            ),
+            'SetValues': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetValues,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -213,5 +232,22 @@ class PythonPanelService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValue',
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SetValues(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValues',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValuesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

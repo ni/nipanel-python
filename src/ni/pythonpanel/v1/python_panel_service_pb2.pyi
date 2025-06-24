@@ -212,3 +212,62 @@ class SetValueResponse(google.protobuf.message.Message):
     ) -> None: ...
 
 global___SetValueResponse = SetValueResponse
+
+@typing.final
+class SetValuesRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    VALUES_FIELD_NUMBER: builtins.int
+    NOTIFY_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    notify: builtins.bool
+    """Notify other clients of these new values"""
+    @property
+    def values(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ValueInformation]:
+        """Value IDs and Values"""
+
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        values: collections.abc.Iterable[global___ValueInformation] | None = ...,
+        notify: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["notify", b"notify", "panel_id", b"panel_id", "values", b"values"]) -> None: ...
+
+global___SetValuesRequest = SetValuesRequest
+
+@typing.final
+class ValueInformation(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VALUE_ID_FIELD_NUMBER: builtins.int
+    VALUE_FIELD_NUMBER: builtins.int
+    value_id: builtins.str
+    """Unique ID of the value"""
+    @property
+    def value(self) -> google.protobuf.any_pb2.Any:
+        """The value"""
+
+    def __init__(
+        self,
+        *,
+        value_id: builtins.str = ...,
+        value: google.protobuf.any_pb2.Any | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value", "value_id", b"value_id"]) -> None: ...
+
+global___ValueInformation = ValueInformation
+
+@typing.final
+class SetValuesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___SetValuesResponse = SetValuesResponse

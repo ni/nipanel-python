@@ -41,6 +41,11 @@ service PythonPanelService {
   // Status Codes for errors:
   // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
+
+  // Set values for multiple controls on the panel
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  rpc SetValues(SetValuesRequest) returns (SetValuesResponse);
 }
 
 message StartPanelRequest {
@@ -114,4 +119,26 @@ message SetValueRequest {
 }
 
 message SetValueResponse {
+}
+
+message SetValuesRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Value IDs and Values
+  repeated ValueInformation values = 2;
+
+  // Notify other clients of these new values
+  bool notify = 3;
+}
+
+message ValueInformation {
+  // Unique ID of the value
+  string value_id = 1;
+
+  // The value
+  google.protobuf.Any value = 2;
+}
+
+message SetValuesResponse {
 }

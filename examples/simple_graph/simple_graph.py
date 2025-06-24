@@ -25,10 +25,19 @@ try:
         time_points = np.linspace(0, num_points, num_points)
         sine_values = amplitude * np.sin(frequency * time_points)
 
-        panel.set_value("time_points", time_points.tolist())
-        panel.set_value("sine_values", sine_values.tolist())
-        panel.set_value("amplitude", amplitude)
-        panel.set_value("frequency", frequency)
+        panel.set_values(
+            {
+                "time_points": time_points.tolist(),
+                "sine_values": sine_values.tolist(),
+                "amplitude": amplitude,
+                "frequency": frequency,
+            }
+        )
+
+        # panel.set_value("time_points", time_points.tolist())
+        # panel.set_value("sine_values", sine_values.tolist())
+        # panel.set_value("amplitude", amplitude)
+        # panel.set_value("frequency", frequency)
 
         # Slowly vary the frequency for a more dynamic visualization
         frequency = 1.0 + 0.5 * math.sin(time.time() / 5.0)

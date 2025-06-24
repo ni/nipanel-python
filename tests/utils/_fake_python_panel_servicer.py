@@ -13,6 +13,8 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     GetValueResponse,
     SetValueRequest,
     SetValueResponse,
+    SetValuesRequest,
+    SetValuesResponse,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceServicer
 
@@ -71,6 +73,15 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         if request.notify:
             self._notification_count += 1
         return SetValueResponse()
+
+    def SetValues(self, request: SetValuesRequest, context: Any) -> SetValuesResponse:  # noqa: N802
+        """Set multiple values for controls in a panel at once."""
+        self._init_panel(request.panel_id)
+        for value_info in request.values:
+            self._panel_value_ids[request.panel_id][value_info.value_id] = value_info.value
+        if request.notify:
+            self._notification_count += 1
+        return SetValuesResponse()
 
     def fail_next_start_panel(self) -> None:
         """Set whether the StartPanel method should fail the next time it is called."""
