@@ -21,6 +21,7 @@ from nipanel.converters.builtin import (
     IntCollectionConverter,
     StrCollectionConverter,
 )
+from nipanel.converters.protobuf_types import DoubleAnalogWaveformConverter, ScalarConverter
 
 _logger = logging.getLogger(__name__)
 
@@ -38,6 +39,9 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     FloatCollectionConverter(),
     IntCollectionConverter(),
     StrCollectionConverter(),
+    # Protobuf Types
+    DoubleAnalogWaveformConverter(),
+    ScalarConverter(),
 ]
 
 _CONVERTIBLE_COLLECTION_TYPES = {
@@ -54,6 +58,12 @@ _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
 def to_any(python_value: object) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
+    best_matching_type = _get_best_matching_type(python_value)
+    converter = _CONVERTER_FOR_PYTHON_TYPE[best_matching_type]
+    return converter.to_protobuf_any(python_value)
+
+
+def _get_best_matching_type(python_value: object) -> str:
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
 
     container_type = None
@@ -86,9 +96,7 @@ def to_any(python_value: object) -> any_pb2.Any:
             f"Unsupported type: ({container_type}, {payload_type}) with parents {underlying_parents}. Supported types are: {_SUPPORTED_PYTHON_TYPES}"
         )
     _logger.debug(f"Best matching type for '{repr(python_value)}' resolved to {best_matching_type}")
-
-    converter = _CONVERTER_FOR_PYTHON_TYPE[best_matching_type]
-    return converter.to_protobuf_any(python_value)
+    return best_matching_type
 
 
 def from_any(protobuf_any: any_pb2.Any) -> object:
