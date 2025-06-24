@@ -1341,6 +1341,25 @@ pycodestyle = [
 toml = ">=0.10.1"
 
 [[package]]
+name = "nidaqmx"
+version = "0.8.0"
+description = "NI-DAQmx Python API"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
+    {file = "nidaqmx-0.8.0.tar.gz", hash = "sha256:6c72ca4ec5da95e8603c1e6d5085d59bb3c1c2ea1f45bdfaa4acac40fe82ae0c"},
+]
+
+[package.dependencies]
+deprecation = ">=2.1"
+numpy = {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"4.0\""}
+
+[package.extras]
+docs = ["Sphinx (>=4.3,<5.0)", "sphinx_rtd_theme (>=1.0,<2.0)"]
+grpc = ["grpcio (>=1.49.0,<1.53)", "grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
+
+[[package]]
 name = "nitypes"
 version = "0.1.0.dev2"
 description = "Data types for NI Python APIs"
@@ -3062,4 +3081,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "c64cd9c0f5d982f9cc9cd04595b2bb21d91d9da143d32f9587840175624b0c43"
+content-hash = "7572c2b90e907a470ea74af8392c186b0a8c7c336f8b43022918a0d7b69b3207"
