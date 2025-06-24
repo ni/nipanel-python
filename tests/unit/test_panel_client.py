@@ -76,52 +76,6 @@ def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
     assert client.get_value("panel1", "val1") == "value1"
 
 
-def test___set_values___enumerate_panels_shows_values(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    client = create_panel_client(fake_panel_channel)
-
-    values = {"val1": "value1", "val2": 42, "val3": True}
-
-    client.set_values("panel1", values, notify=False)
-
-    assert client.enumerate_panels() == {"panel1": ("", ["val1", "val2", "val3"])}
-
-
-def test___set_values___gets_values(fake_panel_channel: grpc.Channel) -> None:
-    client = create_panel_client(fake_panel_channel)
-
-    values = {"val1": "value1", "val2": 42, "val3": True}
-
-    client.set_values("panel1", values, notify=False)
-
-    assert client.get_value("panel1", "val1") == "value1"
-    assert client.get_value("panel1", "val2") == 42
-    assert client.get_value("panel1", "val3") is True
-
-
-def test___set_values_empty_dict___has_no_effect(fake_panel_channel: grpc.Channel) -> None:
-    client = create_panel_client(fake_panel_channel)
-
-    client.set_values("panel1", {}, notify=False)
-
-    assert client.enumerate_panels() == {"panel1": ("", [])}
-
-
-def test___set_values_then_set_value___both_values_accessible(
-    fake_panel_channel: grpc.Channel,
-) -> None:
-    client = create_panel_client(fake_panel_channel)
-
-    client.set_values("panel1", {"val1": "batch value", "val2": 42}, notify=False)
-    client.set_value("panel1", "val3", "individual value", notify=False)
-
-    assert client.get_value("panel1", "val1") == "batch value"
-    assert client.get_value("panel1", "val2") == 42
-    assert client.get_value("panel1", "val3") == "individual value"
-    assert client.enumerate_panels() == {"panel1": ("", ["val1", "val2", "val3"])}
-
-
 def create_panel_client(fake_panel_channel: grpc.Channel) -> PanelClient:
     return PanelClient(
         provided_interface="iface",

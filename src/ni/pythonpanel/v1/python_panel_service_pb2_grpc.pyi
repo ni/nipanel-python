@@ -67,15 +67,6 @@ class PythonPanelServiceStub:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-    SetValues: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValuesRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValuesResponse,
-    ]
-    """Set values for multiple controls on the panel
-    Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    """
-
 class PythonPanelServiceAsyncStub:
     """Service interface for interacting with python panels"""
 
@@ -121,15 +112,6 @@ class PythonPanelServiceAsyncStub:
         ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse,
     ]
     """Set a value for a control on the panel
-    Status Codes for errors:
-    - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    """
-
-    SetValues: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValuesRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValuesResponse,
-    ]
-    """Set values for multiple controls on the panel
     Status Codes for errors:
     - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
@@ -189,17 +171,6 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
         context: _ServicerContext,
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse]]:
         """Set a value for a control on the panel
-        Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        """
-
-    @abc.abstractmethod
-    def SetValues(
-        self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.SetValuesRequest,
-        context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.SetValuesResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.SetValuesResponse]]:
-        """Set values for multiple controls on the panel
         Status Codes for errors:
         - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """

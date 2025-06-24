@@ -61,7 +61,7 @@ start docs\_build\index.html
 3. Open http://localhost:42001/panel-service/panels/hello_panel/ in your browser
 4. If there is an error about missing imports (especially nipanel), execute this
    command (from the nipanel-python directory) to install the dependencies into the venv: 
-   `%localappdata%\Temp\python_panel_service_venv\Scripts\python.exe -m pip install .\[examples,dev]`,
+   `%localappdata%\Temp\python_panel_service_venv\Scripts\python.exe -m pip install . streamlit-echarts>=0.4.0`,
     then restart the PythonPanelService and re-run hello.py.
 
 You can see all running panels (and stop them) at: http://localhost:42001/panel-service/
