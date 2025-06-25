@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import threading
-import time
 from typing import Callable, TypeVar
 
 import grpc
@@ -159,9 +158,7 @@ class PanelClient:
     ) -> _T:
         """Invoke a gRPC method with retry logic."""
         try:
-            retval = method(*args, **kwargs)
-            time.sleep(0.001)  # limit gRPC call rate to avoid overwhelming the server
-            return retval
+            return method(*args, **kwargs)
         except grpc.RpcError as e:
             if e.code() == grpc.StatusCode.UNAVAILABLE or e.code() == grpc.StatusCode.UNKNOWN:
                 # if the service is unavailable, we can retry the connection
