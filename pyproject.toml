@@ -58,6 +58,7 @@ optional = true
 
 [tool.poetry.group.examples.dependencies]
 streamlit-echarts = ">=0.4.0"
+nidaqmx = ">=0.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
@@ -77,9 +78,11 @@ strict = true
 
 [[tool.mypy.overrides]]
 module = [
-  # https://github.com/ni/hightime/issues/4 - Add type annotations
   "hightime.*",
   "grpc.framework.foundation.*",
+  "streamlit_echarts.*",
+  # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
+  "nidaqmx.*",
 ]
 ignore_missing_imports = true
 
@@ -94,4 +97,4 @@ testpaths = ["src/nipanel", "tests"]
 
 [tool.pyright]
 include = ["examples/", "src/", "tests/"]
-exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/"]
+exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py"]

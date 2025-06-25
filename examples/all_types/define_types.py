@@ -59,4 +59,9 @@ all_types_with_values = {
     # NI types
     "nitypes_Scalar": Scalar(42, "m"),
     "nitypes_AnalogWaveform": AnalogWaveform.from_array_1d(np.array([1.0, 2.0, 3.0])),
+    # supported 2D collections
+    "list_list_float": [[1.0, 2.0], [3.0, 4.0]],
+    "tuple_tuple_float": ((1.0, 2.0), (3.0, 4.0)),
+    "set_list_float": set([(1.0, 2.0), (3.0, 4.0)]),
+    "frozenset_frozenset_float": frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]),
 }

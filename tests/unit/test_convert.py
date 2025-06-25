@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Collection, Union
 
 import numpy as np
 import pytest
@@ -6,6 +6,9 @@ from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
 from ni.protobuf.types.scalar_pb2 import ScalarData
 from ni.pythonpanel.v1 import python_panel_types_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
 )
@@ -14,6 +17,7 @@ from nitypes.waveform import AnalogWaveform
 from typing_extensions import TypeAlias
 
 import nipanel._convert
+import tests.types
 
 
 _AnyWrappersPb2: TypeAlias = Union[
@@ -44,6 +48,11 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (456.2, "float"),
         (123, "int"),
         ("mystr", "str"),
+        (tests.types.MyIntFlags.VALUE1, "int"),
+        (tests.types.MyIntEnum.VALUE10, "int"),
+        (tests.types.MixinIntEnum.VALUE11, "int"),
+        (tests.types.MyStrEnum.VALUE1, "str"),
+        (tests.types.MixinStrEnum.VALUE11, "str"),
         ([False, False], "Collection.bool"),
         ([b"mystr", b"mystr"], "Collection.bytes"),
         ([456.2, 1.0], "Collection.float"),
@@ -69,6 +78,18 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (frozenset([456.2, 1.0]), "Collection.float"),
         (frozenset([123, 456]), "Collection.int"),
         (frozenset(["mystr", "mystr2"]), "Collection.str"),
+        ([[1.0, 2.0], [1.0, 2.0]], "Collection.Collection.float"),
+        ([(1.0, 2.0), (3.0, 4.0)], "Collection.Collection.float"),
+        ([set([1.0, 2.0]), set([3.0, 4.0])], "Collection.Collection.float"),
+        ([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])], "Collection.Collection.float"),
+        (([1.0, 2.0], [3.0, 4.0]), "Collection.Collection.float"),
+        (((1.0, 2.0), (3.0, 4.0)), "Collection.Collection.float"),
+        ((set([1.0, 2.0]), set([3.0, 4.0])), "Collection.Collection.float"),
+        ((frozenset([1.0, 2.0]), frozenset([3.0, 4.0])), "Collection.Collection.float"),
+        (set([(1.0, 2.0), (3.0, 4.0)]), "Collection.Collection.float"),
+        (set([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]), "Collection.Collection.float"),
+        (frozenset([(1.0, 2.0), (3.0, 4.0)]), "Collection.Collection.float"),
+        (frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]), "Collection.Collection.float"),
     ],
 )
 def test___various_python_objects___get_best_matching_type___returns_correct_type_string(
@@ -194,6 +215,63 @@ def test___python_analog_waveform___to_any___valid_double_analog_waveform() -> N
     assert list(unpack_dest.y_data) == [0.0, 0.0, 0.0]
 
 
+@pytest.mark.parametrize(
+    "python_value",
+    [
+        # lists of collections
+        ([[1.0, 2.0], [3.0, 4.0]]),
+        ([(1.0, 2.0), (3.0, 4.0)]),
+        ([set([1.0, 2.0]), set([3.0, 4.0])]),
+        ([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]),
+        # tuples of collections
+        (([1.0, 2.0], [3.0, 4.0])),
+        (((1.0, 2.0), (3.0, 4.0))),
+        ((set([1.0, 2.0]), set([3.0, 4.0]))),
+        ((frozenset([1.0, 2.0]), frozenset([3.0, 4.0]))),
+    ],
+)
+def test___python_2dcollection_of_float___to_any___valid_double2darray(
+    python_value: Collection[Collection[float]],
+) -> None:
+    expected_data = [1.0, 2.0, 3.0, 4.0]
+    expected_rows = 2
+    expected_columns = 2
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = Double2DArray()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, Double2DArray)
+    assert unpack_dest.rows == expected_rows
+    assert unpack_dest.columns == expected_columns
+    assert unpack_dest.data == expected_data
+
+
+@pytest.mark.parametrize(
+    "python_value",
+    [
+        (set([(1.0, 2.0), (3.0, 4.0)])),
+        (set([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])])),
+        (frozenset([(1.0, 2.0), (3.0, 4.0)])),
+        (frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])])),
+    ],
+)
+def test___python_set_of_collection_of_float___to_any___valid_double2darray(
+    python_value: Collection[Collection[float]],
+) -> None:
+    expected_data = [1.0, 2.0, 3.0, 4.0]
+    expected_rows = 2
+    expected_columns = 2
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = Double2DArray()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, Double2DArray)
+    assert unpack_dest.rows == expected_rows
+    assert unpack_dest.columns == expected_columns
+    # Sets and frozensets don't maintain order, so sort before comparing.
+    assert sorted(unpack_dest.data) == sorted(expected_data)
+
+
 # ========================================================
 # Protobuf Types: Protobuf to Python
 # ========================================================
@@ -217,6 +295,17 @@ def test___double_analog_waveform___from_any___valid_python_analog_waveform() ->
     assert isinstance(result, AnalogWaveform)
     assert result.sample_count == result.capacity == len(result.raw_data) == 3
     assert result.dtype == np.float64
+
+
+def test___double2darray___from_any___valid_python_2dcollection() -> None:
+    pb_value = Double2DArray(data=[1.0, 2.0, 3.0, 4.0], rows=2, columns=2)
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    expected_value = [[1.0, 2.0], [3.0, 4.0]]
+    assert isinstance(result, type(expected_value))
+    assert result == expected_value
 
 
 # ========================================================
