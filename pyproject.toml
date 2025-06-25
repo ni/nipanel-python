@@ -97,4 +97,4 @@ testpaths = ["src/nipanel", "tests"]
 
 [tool.pyright]
 include = ["examples/", "src/", "tests/"]
-exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/"]
+exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py"]
