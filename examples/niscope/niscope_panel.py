@@ -4,7 +4,7 @@ from streamlit_echarts import st_echarts
 import nipanel
 
 panel = nipanel.get_panel_accessor()
-
+st.title("NIScope EX Fetch Forever")
 waveform = panel.get_value("Waveform")
 samples = panel.get_value("samples")
 graph = {
@@ -12,7 +12,7 @@ graph = {
     "legend": {"data": ["Amplitude (V)"]},
     "xAxis": {
         "type": "category",
-        "data": samples,
+        "data": list(range(len(waveform))),
         "name": "Samples",
         "nameLocation": "center",
         "nameGap": 40,

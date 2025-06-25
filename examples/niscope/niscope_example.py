@@ -7,56 +7,51 @@ import nipanel
 from pathlib import Path
 import time
 import hightime
+
 pp = pprint.PrettyPrinter(indent=4, width=80)
 panel_script_path = Path(__file__).with_name("niscope_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
-
-
 def example(resource_name, channels, options, length, total_acquisition_time_in_seconds, voltage, sample_rate_in_hz, samples_per_fetch,):
     channels = [ch.strip() for ch in channels.split(",")]
+    
     num_channels = len(channels)
     
     num_records = 1000
     total_num_wfms = num_channels * num_records
-    current_pos = 0
-    # preallocate a single array for all samples in all waveforms
-    # Supported array types are: numpy.float64, numpy.int8, numpy.int16, numpy.int32
-    # int8, int16, int32 are for fetching unscaled data, which is the fastest way to fetch.
-    # Gain and Offset are stored in the returned WaveformInfo objects and can be applied to the data by the user later.
-    total_samples = int(total_acquisition_time_in_seconds * sample_rate_in_hz)
-    wfm = np.ndarray(length * total_num_wfms, dtype=np.int8)
+    current_pos = 0   
+    
     with niscope.Session(resource_name=resource_name, options=options) as session:
-        
-        session.configure_vertical(range=10, coupling=niscope.VerticalCoupling.DC, enabled=True)
-        session.configure_horizontal_timing(min_sample_rate=100000000, min_num_pts=length, ref_position=50.0, num_records=num_records, enforce_realtime=True)
-        max_points_per_fetch = 1000
-        session._fetch_meas_num_samples = max_points_per_fetch
+        session.configure_vertical(range=2, coupling=niscope.VerticalCoupling.DC, enabled=True)
+        session.configure_horizontal_timing(min_sample_rate=100000000, min_num_pts=1000, ref_position=50.0, num_records=num_records, enforce_realtime=True)
         session.configure_trigger_software()
         
         with session.initiate():
+            wfm = np.ndarray(length * total_num_wfms, dtype=np.int8)
             waveforms = session.channels[channels].fetch_into( relative_to=niscope.FetchRelativeTo.READ_POINTER,
-                                                         offset=0, record_number=0, timeout=hightime.timedelta(seconds=5.0), waveform=wfm, num_records=num_records)
-            offset = session._fetch_offset
-            gain = session.meas_array_gain
-            for i in range(len(waveforms)):
-                time.sleep(1)
-                amplitude_list = []
-                current_pos += samples_per_fetch
-                panel.set_value("samples", total_samples)               
-                
-                total_data = waveforms[i].samples.tolist()
-                print(waveforms[i])
-                for amplitude in total_data:
-                    amplitude = (amplitude * 10) * gain + offset
-                    amplitude_list.append(amplitude)
-                panel.set_value("Waveform", amplitude_list)
+                                                              offset=0, timeout=hightime.timedelta(seconds=5.0), waveform=wfm)
+            while True:
+                    offset = session._fetch_offset
+                    gain = session.meas_array_gain
+                    
+                    for i in range(len(waveforms)):
+                        panel.set_value("length",wfm.tolist())
+                        time.sleep(0.2)
+                        amplitude_list = []
+                        current_pos += samples_per_fetch
+                        panel.set_value("samples", sample_rate_in_hz)               
+                        total_data = waveforms[i].samples.tolist()
+                        for amplitude in total_data:
+                            amplitude = (amplitude * 10) * gain + offset
+                            amplitude_list.append(amplitude)
+
+                        panel.set_value("Waveform", amplitude_list)
 
 def _main(argsv):
     parser = argparse.ArgumentParser(description='Fetches data directly into a preallocated numpy array.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--resource-name', default='Dev2', help='Resource name of an NI digitizer.')
     parser.add_argument('-c', '--channels', default='0', help='Channel(s) to use')
-    parser.add_argument('-l', '--length', default=100, type=int, help='Measure record length')
+    parser.add_argument('-l', '--length', default=1000, type=int, help='Measure record length')
     parser.add_argument('-v', '--voltage', default=1.0, type=float, help='Voltage range (V)')
     parser.add_argument('-op', '--option-string', default='', type=str, help='Option string')
     parser.add_argument("-t", "--time", default=1, type=int, help="Time to sample (s)")
@@ -86,7 +81,7 @@ def test_example():
 
 
 def test_main():
-    cmd_line = ['--option-string', 'Simulate=1, RangeCheck=1, DriverSetup=Model:5124; BoardType:PXI', ]
+    cmd_line = ['--option-string', 'Simulate=1, DriverSetup=Model:5124; BoardType:PXI', ]
     _main(cmd_line)
 
 
