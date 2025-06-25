@@ -80,8 +80,8 @@ strict = true
 module = [
   "hightime.*",
   "grpc.framework.foundation.*",
-  # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
   "streamlit_echarts.*",
+  # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
   "nidaqmx.*",
 ]
 ignore_missing_imports = true
