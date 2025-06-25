@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-import collections.abc
 import datetime as dt
+from collections.abc import Collection, Mapping
 from typing import Type, Union
 
 import hightime as ht
 import nitypes.bintime as bt
 import numpy as np
 from ni.protobuf.types import scalar_pb2
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
     PrecisionTimestamp,
 )
@@ -37,6 +40,51 @@ _SCALAR_TYPE_TO_PB_ATTR_MAP = {
     float: "double_value",
     str: "string_value",
 }
+
+
+class Double2DArrayConverter(Converter[Collection[Collection[float]], Double2DArray]):
+    """A converter between Collection[Collection[float]] and Double2DArray."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{Collection.__name__}.{Collection.__name__}.{float.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[Double2DArray]:
+        """The type-specific protobuf message for the Python type."""
+        return Double2DArray
+
+    def to_protobuf_message(self, python_value: Collection[Collection[float]]) -> Double2DArray:
+        """Convert the Python Collection[Collection[float]] to a protobuf Double2DArray."""
+        rows = len(python_value)
+        if rows:
+            visitor = iter(python_value)
+            first_subcollection = next(visitor)
+            columns = len(first_subcollection)
+        else:
+            columns = 0
+        if not all(len(subcollection) == columns for subcollection in python_value):
+            raise ValueError("All subcollections must have the same length.")
+
+        # Create a flat list in row major order.
+        flat_list = [item for subcollection in python_value for item in subcollection]
+        return Double2DArray(rows=rows, columns=columns, data=flat_list)
+
+    def to_python_value(self, protobuf_message: Double2DArray) -> Collection[Collection[float]]:
+        """Convert the protobuf Double2DArray to a Python Collection[Collection[float]]."""
+        if not protobuf_message.data:
+            return []
+        if len(protobuf_message.data) % protobuf_message.columns != 0:
+            raise ValueError("The length of the data list must be divisible by num columns.")
+
+        # Convert from a flat list in row major order into a list of lists.
+        list_of_lists = []
+        for i in range(0, len(protobuf_message.data), protobuf_message.columns):
+            row = protobuf_message.data[i : i + protobuf_message.columns]
+            list_of_lists.append(row)
+
+        return list_of_lists
 
 
 class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], DoubleAnalogWaveform]):
@@ -81,7 +129,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
     def _extended_properties_to_attributes(
         self,
         extended_properties: ExtendedPropertyDictionary,
-    ) -> collections.abc.Mapping[str, WaveformAttributeValue]:
+    ) -> Mapping[str, WaveformAttributeValue]:
         return {key: self._value_to_attribute(value) for key, value in extended_properties.items()}
 
     def _value_to_attribute(self, value: ExtendedPropertyValue) -> WaveformAttributeValue:
