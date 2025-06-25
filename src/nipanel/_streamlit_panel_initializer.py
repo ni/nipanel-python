@@ -1,0 +1,77 @@
+from pathlib import Path
+from typing import cast
+
+import streamlit as st
+
+from nipanel._streamlit_panel import StreamlitPanel
+from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
+from nipanel.streamlit_refresh import initialize_refresh_component
+
+PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
+
+
+def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
+    """Create a Streamlit panel with the specified script path.
+
+    This function initializes a Streamlit panel using the provided script path. It derives the panel
+    ID from the script's path, which it expects to be a valid Streamlit script. For example, if the
+    value for streamlit_script_path is "c:/example/some_example.py", then the panel's ID becomes
+    "some_example".
+
+    Use this function when you want to create a new panel instance to use in a Streamlit
+    application. Do not call this function from within a Streamlit script.
+
+    Args:
+        streamlit_script_path: The file path of the Streamlit script to be used for the panel.
+
+    Returns:
+        A StreamlitPanel instance initialized with the given panel ID.
+    """
+    if st.get_option("server.baseUrlPath") != "":
+        raise RuntimeError(
+            "nipanel.create_panel() should not be called from a Streamlit script. Call nipanel.get_panel_accessor() instead."
+        )
+
+    if streamlit_script_path.suffix != ".py":
+        raise ValueError(
+            "The provided script path must be a valid Streamlit script ending with '.py'."
+        )
+
+    panel_id = streamlit_script_path.stem
+    path_str = str(streamlit_script_path)
+    return StreamlitPanel(panel_id, path_str)
+
+
+def get_panel_accessor() -> StreamlitPanelValueAccessor:
+    """Initialize and return the Streamlit panel value accessor.
+
+    This function retrieves the Streamlit panel value accessor for the current Streamlit script.
+    This function should only be called from within a Streamlit script. The accessor will be cached
+    in the Streamlit session state to ensure that it is reused across reruns of the script.
+
+    Returns:
+        A StreamlitPanelValueAccessor instance for the current panel.
+    """
+    if st.get_option("server.baseUrlPath") == "":
+        raise RuntimeError(
+            "nipanel.get_panel_accessor() should only be called from a Streamlit script. Call nipanel.create_panel() instead."
+        )
+
+    if PANEL_ACCESSOR_KEY not in st.session_state:
+        st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
+
+    panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
+    refresh_component = initialize_refresh_component(panel.panel_id)
+    refresh_component()
+    return panel
+
+
+def _initialize_panel_from_base_path() -> StreamlitPanelValueAccessor:
+    """Validate and parse the Streamlit base URL path and return a StreamlitPanelValueAccessor."""
+    base_url_path = st.get_option("server.baseUrlPath")
+    if not base_url_path.startswith("/"):
+        raise ValueError("Invalid or missing Streamlit server.baseUrlPath option.")
+    panel_id = base_url_path.split("/")[-1]
+    if not panel_id:
+        raise ValueError(f"Panel ID is empty in baseUrlPath: '{base_url_path}'")
+    return StreamlitPanelValueAccessor(panel_id)

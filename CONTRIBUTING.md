@@ -54,6 +54,77 @@ poetry run sphinx-build docs docs/_build --builder html --fail-on-warning
 start docs\_build\index.html
 ```
 
+## Running examples
+
+1. First, run the PythonPanelService (not part of this repo, provided seperately)
+2. Run the command `poetry run python examples/hello/hello.py`
+3. Open http://localhost:42001/panel-service/panels/hello_panel/ in your browser
+4. If there is an error about missing imports (especially nipanel), execute this
+   command (from the nipanel-python directory) to install the dependencies into the venv: 
+   `%localappdata%\Temp\python_panel_service_venv\Scripts\python.exe -m pip install .\[examples,dev]`,
+    then restart the PythonPanelService and re-run hello.py.
+
+You can see all running panels (and stop them) at: http://localhost:42001/panel-service/
+
+# Debugging on the streamlit side
+
+Debugging the measurement script can be done using standard Python debugging
+techniques. However, debugging the Streamlit script—or any code invoked by the
+Streamlit script—is more complex because it runs in a separate process launched
+by the PythonPanelServer. To debug the Streamlit script, you can use debugpy to
+attach the Visual Studio Code debugger as follows:
+
+## Instrument Streamlit script to debug
+
+To enable debugpy debugging, include this code in your streamlit script:
+
+```python
+import debugpy  # type: ignore
+
+try:
+    debugpy.listen(("localhost", 5678))
+    debugpy.wait_for_client() 
+except RuntimeError as e:
+    if "debugpy.listen() has already been called on this process" not in str(e):
+        raise
+```
+
+The `debugpy.listen()` function opens a port that allows the debugger to attach
+to the running process. You can specify any available port, as long as it
+matches the port configured in the launch.json file shown below. Since calling
+listen() more than once will raise an exception, it is wrapped in a try block to
+prevent the script from crashing if it is rerun.
+
+The `debugpy.wait_for_client()` function pauses script execution until the
+debugger is attached. This is helpful if you need to debug initialization code,
+but you can omit this line if it is not required.
+
+The `import debugpy` statement includes a type suppression comment to satisfy mypy.
+
+## Add debugpy configuration in launch.json 
+
+You will also need this configuration in your launch.json:
+
+```json
+        {
+            "name": "Attach to Streamlit at localhost:5678",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "justMyCode": false
+        }
+```
+
+After running your measurement script and allowing the PythonPanelServer to
+launch Streamlit with your Streamlit script, you can attach the debugger by
+clicking the **Attach to Streamlit at localhost:5678** button in the VS Code
+**Run and Debug** tab. Once attached, you can set breakpoints and use all
+standard debugging features in your Streamlit script, as well as in any nipanel
+code invoked by the Streamlit script.
+
 # Developer Certificate of Origin (DCO)
 
    Developer's Certificate of Origin 1.1
