@@ -56,4 +56,4 @@ options = {
 }
 
 # Display the chart
-st_echarts(options=options, height="400px")
+st_echarts(options=options, height="400px", key="graph")
