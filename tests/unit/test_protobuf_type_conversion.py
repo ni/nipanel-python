@@ -3,6 +3,9 @@ import datetime as dt
 import numpy
 import pytest
 from ni.protobuf.types.scalar_pb2 import ScalarData
+from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
+    Double2DArray,
+)
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
@@ -12,10 +15,86 @@ from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform, NoneScaleMode, SampleIntervalMode, Timing
 
 from nipanel.converters.protobuf_types import (
+    Double2DArrayConverter,
     DoubleAnalogWaveformConverter,
     PrecisionTimestampConverter,
     ScalarConverter,
 )
+
+
+# ========================================================
+# list[list[float]] to Double2DArray
+# Other collection types are tested in test_convert.py
+# ========================================================
+@pytest.mark.parametrize(
+    "list_of_lists, expected_data, expected_rows, expected_columns",
+    [
+        ([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 3, 2),
+        ([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], 2, 3),
+    ],
+)
+def test___list_of_lists___convert___valid_double2darray(
+    list_of_lists: list[list[float]],
+    expected_data: list[float],
+    expected_rows: int,
+    expected_columns: int,
+) -> None:
+    converter = Double2DArrayConverter()
+    result = converter.to_protobuf_message(list_of_lists)
+
+    assert result.data == expected_data
+    assert result.rows == expected_rows
+    assert result.columns == expected_columns
+
+
+def test___list_of_lists_inconsistent_column_length___convert___throws_value_error() -> None:
+    converter = Double2DArrayConverter()
+
+    with pytest.raises(ValueError):
+        _ = converter.to_protobuf_message([[1.0, 2.0], [3.0, 4.0, 5.0]])
+
+
+# ========================================================
+# Double2DArray to list[list[float]]
+# Other collection types are tested in test_convert.py
+# ========================================================
+@pytest.mark.parametrize(
+    "double2darray, expected_data",
+    [
+        (
+            Double2DArray(rows=3, columns=2, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]],
+        ),
+        (
+            Double2DArray(rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]],
+        ),
+    ],
+)
+def test___double2darray___convert___valid_list_of_lists(
+    double2darray: Double2DArray, expected_data: list[list[float]]
+) -> None:
+    converter = Double2DArrayConverter()
+    list_of_lists = converter.to_python_value(double2darray)
+
+    assert list_of_lists == expected_data
+
+
+def test___double2darray_invalid_num_columns___convert___throws_value_error() -> None:
+    double2darray = Double2DArray(rows=1, columns=2, data=[1.0, 2.0, 3.0])
+    converter = Double2DArrayConverter()
+
+    with pytest.raises(ValueError):
+        _ = converter.to_python_value(double2darray)
+
+
+def test___double2darray_empty_data___convert___returns_empty_list() -> None:
+    double2darray = Double2DArray(rows=0, columns=0, data=[])
+    converter = Double2DArrayConverter()
+
+    list_of_lists = converter.to_python_value(double2darray)
+
+    assert not list_of_lists
 
 
 # ========================================================
