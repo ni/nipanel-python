@@ -15,7 +15,7 @@ panel = nipanel.create_panel(panel_script_path)
 print(f"Panel URL: {panel.panel_url}")
 
 resource_name = "Dev1"
-channels = "0"
+channels = 0
 options = ""
 length = 1000
 samples_per_fetch = 1000
@@ -41,12 +41,12 @@ with niscope.Session(resource_name=resource_name, options=options) as session:
             waveform=wfm,
         )
         try:
-            print(f"\nPress Ctrl + C to stop")
+            print(f"Press Ctrl + C to stop")
             while True:
                 offset = session._fetch_offset
                 gain = session.meas_array_gain
                 for i in range(len(waveforms)):
-                    time.sleep(1)
+                    time.sleep(0.2)
                     amplitude_list = []
                     total_data = waveforms[i].samples.tolist()
                     for amplitude in total_data:

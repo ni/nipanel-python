@@ -64,7 +64,7 @@ voltage_therm_graph = {
         },
     ],
 }
-st_echarts(options=voltage_therm_graph, height="400px")
+st_echarts(options=voltage_therm_graph, height="400px", key="grpah")
 
 voltage_tab.header("Voltage")
 with voltage_tab:

@@ -5,13 +5,15 @@ from streamlit_echarts import st_echarts
 
 import nipanel
 
-panel = nipanel.get_panel_accessor()
-
+st.set_page_config(page_title="NI-SCOPE Example", page_icon="📈", layout="wide")
 st.title("NIScope EX Fetch Forever")
+
+panel = nipanel.get_panel_accessor()
 
 waveform = panel.get_value("Waveform", [0])
 
 graph = {
+    "animation": False,
     "tooltip": {"trigger": "axis"},
     "legend": {"data": ["Amplitude (V)"]},
     "xAxis": {
@@ -37,6 +39,8 @@ graph = {
             "smooth": True,
             "seriesLayoutBy": "row",
         },
+     
     ],
 }
-st_echarts(options=graph, height="400px", width="75%")
+st_echarts(options=graph, height="400px", width="75%", key="graph")
+ 
