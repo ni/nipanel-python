@@ -56,4 +56,3 @@ with niscope.Session(resource_name=resource_name, options=options) as session:
 
         except KeyboardInterrupt:
             pass
-
