@@ -16,5 +16,5 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Usage
 
-Run `poetry run examples/niscope/niscope_example.py`
+Run `poetry run examples/niscope/niscope_ex_fetch_forever.py`
 

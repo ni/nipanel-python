@@ -3,20 +3,18 @@
 import argparse
 import niscope
 import numpy as np
-import pprint
 import sys
 import nipanel
 from pathlib import Path
 import time
 import hightime
 
-pp = pprint.PrettyPrinter(indent=4, width=80)
 panel_script_path = Path(__file__).with_name("niscope_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
 print(f"Panel URL: {panel.panel_url}")
 
-def example(resource_name, channels, options, length, sample_rate_in_hz, samples_per_fetch,):
+def example(resource_name, channels, options, length, samples_per_fetch,):
     with niscope.Session(resource_name=resource_name, options=options) as session:
         session.configure_vertical(range=2, coupling=niscope.VerticalCoupling.DC, enabled=True)
         session.configure_horizontal_timing(min_sample_rate=100000000, min_num_pts=1000, ref_position=50.0, num_records=1000, enforce_realtime=True)
@@ -34,8 +32,6 @@ def example(resource_name, channels, options, length, sample_rate_in_hz, samples
                         for i in range(len(waveforms)):
                             time.sleep(0.5)
                             amplitude_list = []
-                            
-                            panel.set_value("samples", sample_rate_in_hz)               
                             total_data = waveforms[i].samples.tolist()
                             for amplitude in total_data:
                                 amplitude = (amplitude * 10) * gain + offset 
@@ -51,7 +47,6 @@ def _main(argsv):
     parser.add_argument('-c', '--channels', default='0', help='Channel(s) to use')
     parser.add_argument('-op', '--option-string', default='', type=str, help='Option string')
     parser.add_argument('-l', '--length', default=1000, type=int, help='Measure record length')
-    parser.add_argument("-r", "--sample-rate", default=1000.0, type=float, help="Sample Rate (Hz)")
     parser.add_argument(
         "-s", "--samples-per-fetch", default=1000, type=int, help="Samples per fetch"
     )
@@ -60,7 +55,6 @@ def _main(argsv):
         args.channels, 
         args.option_string, 
         args.length, 
-        args.sample_rate,
         args.samples_per_fetch)
 
 def main():
@@ -68,7 +62,7 @@ def main():
 
 def test_example():
     options = {'simulate': True, 'driver_setup': {'Model': '5124', 'BoardType': 'PXI', }, }
-    example("Dev2", options, 1, 1.0, 1000.0, 1000)
+    example("Dev2", options, 1, 1.0, 1000)
 
 def test_main():
     cmd_line = ['--option-string', 'Simulate=1, DriverSetup=Model:5124; BoardType:PXI', ]

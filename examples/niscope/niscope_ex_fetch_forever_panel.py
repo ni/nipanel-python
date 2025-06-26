@@ -39,4 +39,6 @@ graph = {
      
     ],
 }
-st_echarts(options=graph, height="400px")
+st_echarts(options=graph, height="400px", width="75%")
+
+ 

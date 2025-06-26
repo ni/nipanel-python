@@ -83,6 +83,7 @@ module = [
   "streamlit_echarts.*",
   # https://github.com/ni/nidaqmx-python/issues/209 - Support type annotations
   "nidaqmx.*",
+  "niscope.*",
 ]
 ignore_missing_imports = true
 
@@ -97,4 +98,4 @@ testpaths = ["src/nipanel", "tests"]
 
 [tool.pyright]
 include = ["examples/", "src/", "tests/"]
-exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py"]
+exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py","examples/niscope/niscope_ex_fetch_forever.py"]
