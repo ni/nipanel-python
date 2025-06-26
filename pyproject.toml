@@ -12,10 +12,7 @@ grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
-streamlit = [
-  {version=">=1.24,<1.33", python=">=3.9,<3.10"},
-  {version=">=1.24", python=">=3.10"}
-]
+streamlit = ">=1.24"
 nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
 numpy = [
   {version=">=1.20.0,<2.0.0", python=">=3.9,<3.10"},

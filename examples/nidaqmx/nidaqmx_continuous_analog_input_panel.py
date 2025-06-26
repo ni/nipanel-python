@@ -5,8 +5,8 @@ from streamlit_echarts import st_echarts
 
 import nipanel
 
-panel = nipanel.get_panel_accessor()
 
+st.set_page_config(page_title="NI-DAQmx Example", page_icon="📈", layout="wide")
 st.title("Analog Input - Voltage and Thermocouple in a Single Task")
 voltage_tab, thermocouple_tab = st.tabs(["Voltage", "Thermocouple"])
 
@@ -21,6 +21,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+panel = nipanel.get_panel_accessor()
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
 
