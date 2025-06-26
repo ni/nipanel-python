@@ -1,4 +1,5 @@
 """Streamlit dashboard for visualizing NI-SCOPE waveform data in real time."""
+
 import streamlit as st
 from streamlit_echarts import st_echarts
 
@@ -36,9 +37,6 @@ graph = {
             "smooth": True,
             "seriesLayoutBy": "row",
         },
-     
     ],
 }
 st_echarts(options=graph, height="400px", width="75%")
-
- 
