@@ -9,7 +9,7 @@ from pathlib import Path
 import time
 import hightime
 
-panel_script_path = Path(__file__).with_name("niscope_panel.py")
+panel_script_path = Path(__file__).with_name("niscope_ex_fetch_forever_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
 print(f"Panel URL: {panel.panel_url}")
