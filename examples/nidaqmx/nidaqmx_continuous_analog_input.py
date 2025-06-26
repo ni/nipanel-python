@@ -18,8 +18,9 @@ with nidaqmx.Task() as task:
     )
     panel.set_value("sample_rate", task._timing.samp_clk_rate)
     task.start()
+    print(f"Panel URL: {panel.panel_url}")
     try:
-        print(f"\nPress Ctrl + C to stop")
+        print(f"Press Ctrl + C to stop")
         while True:
             data = task.read(
                 number_of_samples_per_channel=1000  # pyright: ignore[reportArgumentType]

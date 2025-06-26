@@ -24,10 +24,11 @@ st.markdown(
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
 
-sample_rate = panel.get_value("sample_rate", 0)
+sample_rate = panel.get_value("sample_rate", 0.0)
 
 st.header("Voltage & Thermocouple")
 voltage_therm_graph = {
+    "animation": False,
     "tooltip": {"trigger": "axis"},
     "legend": {"data": ["Voltage (V)", "Temperature (C)"]},
     "xAxis": {
@@ -64,7 +65,7 @@ voltage_therm_graph = {
         },
     ],
 }
-st_echarts(options=voltage_therm_graph, height="400px")
+st_echarts(options=voltage_therm_graph, height="400px", key="voltage_therm_graph")
 
 voltage_tab.header("Voltage")
 with voltage_tab:
