@@ -4,7 +4,7 @@ Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/b
 
 ## Sample
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog input examples.
+This is a nipanel example that displays an interactive Streamlit app and updates and fetches data from device.
 
 ### Feature
 
@@ -16,5 +16,5 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Usage
 
-Run `poetry run examples/nidaqmx/nidaqmx_continuous_analog_input.py`
+Run `poetry run examples/niscope/niscope_example.py`
 

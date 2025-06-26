@@ -1,12 +1,15 @@
+"""Streamlit dashboard for visualizing NI-SCOPE waveform data in real time."""
 import streamlit as st
 from streamlit_echarts import st_echarts
 
 import nipanel
 
 panel = nipanel.get_panel_accessor()
+
 st.title("NIScope EX Fetch Forever")
-waveform = panel.get_value("Waveform")
-samples = panel.get_value("samples")
+
+waveform = panel.get_value("Waveform", [0])
+
 graph = {
     "tooltip": {"trigger": "axis"},
     "legend": {"data": ["Amplitude (V)"]},
