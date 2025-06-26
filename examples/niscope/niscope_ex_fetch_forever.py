@@ -20,7 +20,7 @@ options = ""
 length = 1000
 samples_per_fetch = 1000
 
-"""Example fetch data from device (Dev2)."""
+"""Example fetch data from device (Dev1)."""
 with niscope.Session(resource_name=resource_name, options=options) as session:
     session.configure_vertical(range=2, coupling=niscope.VerticalCoupling.DC, enabled=True)
     session.configure_horizontal_timing(
