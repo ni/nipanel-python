@@ -19,17 +19,21 @@ class StartPanelRequest(google.protobuf.message.Message):
 
     PANEL_ID_FIELD_NUMBER: builtins.int
     PANEL_SCRIPT_PATH_FIELD_NUMBER: builtins.int
+    PYTHON_PATH_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
     panel_script_path: builtins.str
     """Absolute path of the panel script's file on disk, or network path to the file"""
+    python_path: builtins.str
+    """Path to the python interpreter to use for the panel script."""
     def __init__(
         self,
         *,
         panel_id: builtins.str = ...,
         panel_script_path: builtins.str = ...,
+        python_path: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_script_path", b"panel_script_path"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_script_path", b"panel_script_path", "python_path", b"python_path"]) -> None: ...
 
 global___StartPanelRequest = StartPanelRequest
 

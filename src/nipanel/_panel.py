@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC
+from pathlib import Path
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -35,7 +37,8 @@ class Panel(PanelValueAccessor, ABC):
             grpc_channel=grpc_channel,
         )
         self._panel_script_path = panel_script_path
-        self._panel_url = self._panel_client.start_panel(panel_id, panel_script_path)
+        python_path = str(Path(sys.executable).resolve())
+        self._panel_url = self._panel_client.start_panel(panel_id, panel_script_path, python_path)
 
     @property
     def panel_script_path(self) -> str:
