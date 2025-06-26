@@ -21,7 +21,9 @@ with nidaqmx.Task() as task:
     try:
         print(f"\nPress Ctrl + C to stop")
         while True:
-            data = task.read(number_of_samples_per_channel=1000)
+            data = task.read(
+                number_of_samples_per_channel=1000  # pyright: ignore[reportArgumentType]
+            )
             panel.set_value("voltage_data", data[0])
             panel.set_value("thermocouple_data", data[1])
     except KeyboardInterrupt:
