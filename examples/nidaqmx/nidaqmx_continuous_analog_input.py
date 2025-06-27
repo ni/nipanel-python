@@ -10,6 +10,7 @@ import nipanel
 panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
+# How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
 with nidaqmx.Task() as task:
     task.ai_channels.add_ai_voltage_chan("Dev1/ai0")
     task.ai_channels.add_ai_thrmcpl_chan("Dev1/ai1")

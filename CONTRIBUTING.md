@@ -58,7 +58,7 @@ start docs\_build\index.html
 
 1. Run the **PythonPanelService** (not part of this repo, provided seperately)
 2. `poetry install --with examples` to get the dependencies needed for the examples
-3. Run the command(s):
+3. Run the examples with these command(s):
     - `poetry run python examples/hello/hello.py`
     - `poetry run python examples/all_types/all_types.py`
     - `poetry run python examples/simple_graph/simple_graph.py`
