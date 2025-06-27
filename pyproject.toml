@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "nipanel", from = "src" }, { include = "ni", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
+python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
