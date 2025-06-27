@@ -34,8 +34,8 @@ pyright = { version = ">=1.1.400", extras = ["nodejs"] }
 pytest = ">=7.2"
 pytest-cov = ">=4.0"
 pytest-mock = ">=3.0"
-# Use an unreleased version of hightime for testing.
-hightime = { git = "https://github.com/ni/hightime.git" }
+# Use a prerelease version of hightime for testing.
+hightime = { version = ">=0.2.2", allow-prereleases = true }
 
 [tool.poetry.group.codegen.dependencies]
 grpcio-tools = [
@@ -61,7 +61,7 @@ optional = true
 
 [tool.poetry.group.examples.dependencies]
 streamlit-echarts = ">=0.4.0"
-nidaqmx = ">=0.8.0"
+nidaqmx = { version = ">=0.8.0", allow-prereleases = true }
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
