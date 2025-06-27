@@ -51,10 +51,36 @@ class Panel(PanelValueAccessor, ABC):
         return self._panel_url
 
     def _get_python_path(self) -> str:
-        """Get the Python path for the panel."""
+        """Get the Python interpreter path for the panel that ensures the same environment."""
+        if sys.executable is None or sys.executable == "":
+            raise RuntimeError("Python environment not found")
         if getattr(sys, "frozen", False):
             raise RuntimeError("Panel cannot be used in a frozen application (e.g., PyInstaller).")
-        python_path = str(Path(sys.executable).resolve())
-        if python_path is None or python_path == "":
-            raise RuntimeError("Python environment not found")
+
+        if sys.prefix != sys.base_prefix:
+            # If we're in a virtual environment, build the path to the Python executable
+            # On Linux: .venv/bin/python, On Windows: .venv\Scripts\python.exe
+            if sys.platform.startswith("win"):
+                python_executable = "python.exe"
+                bin_dir = "Scripts"
+            else:
+                python_executable = "python"
+                bin_dir = "bin"
+
+            # Construct path to the Python in the virtual environment based on sys.prefix
+            python_path = str(Path(sys.prefix) / bin_dir / python_executable)
+
+            # Fall back to sys.executable if the constructed path doesn't exist
+            if not Path(python_path).exists():
+                python_path = str(Path(sys.executable).resolve())
+        else:
+            # If not in a .venv environment, use sys.executable
+            python_path = str(Path(sys.executable).resolve())
+
+        if sys.prefix not in python_path:
+            # Ensure the Python path is within the current environment
+            raise RuntimeError(
+                f"Python path '{python_path}' does not match the current environment prefix '{sys.prefix}'."
+            )
+
         return python_path
