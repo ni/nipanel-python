@@ -39,8 +39,6 @@ graph = {
             "smooth": True,
             "seriesLayoutBy": "row",
         },
-     
     ],
 }
 st_echarts(options=graph, height="400px", width="75%", key="graph")
- 
