@@ -33,7 +33,7 @@ with niscope.Session(resource_name=resource_name, options=options) as session:
     session.configure_trigger_software()
 
     with session.initiate():
-        wfm = np.ndarray(length * samples_per_fetch, dtype=np.int8)
+        wfm: np.ndarray = np.ndarray(length * samples_per_fetch, dtype=np.int8)
         waveforms = session.channels[channels].fetch_into(
             relative_to=niscope.FetchRelativeTo.READ_POINTER,
             offset=0,
