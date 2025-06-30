@@ -15,8 +15,11 @@ typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
 nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
 numpy = [
-  {version=">=1.20.0,<2.0.0", python=">=3.9,<3.10"},
-  {version=">=2.0.0", python=">=3.10"}
+  { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
+  { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
+  { version = ">=2.1", python = "^3.13", markers = "implementation_name != 'pypy'" },
+  { version = ">=2.1", python = ">=3.10,<3.11", markers = "implementation_name == 'pypy'" },
+  { version = ">=2.3", python = "^3.11", markers = "implementation_name == 'pypy'" },
 ]
 debugpy = ">=1.8.1"
 
