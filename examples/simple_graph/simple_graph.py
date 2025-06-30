@@ -21,7 +21,7 @@ try:
 
     # Generate and update the sine wave data periodically
     while True:
-        amplitude_enum = AmplitudeEnum(panel.get_value("amplitude_enum", AmplitudeEnum.SMALL.value))
+        amplitude_enum = panel.get_value("amplitude_enum", AmplitudeEnum.SMALL)
         base_frequency = panel.get_value("base_frequency", 1.0)
 
         # Slowly vary the total frequency for a more dynamic visualization

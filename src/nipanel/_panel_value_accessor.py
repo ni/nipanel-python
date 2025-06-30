@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 from abc import ABC
 from typing import TypeVar, overload
 
@@ -62,8 +63,16 @@ class PanelValueAccessor(ABC):
         """
         try:
             value = self._panel_client.get_value(self._panel_id, value_id)
+
             if default_value is not None and not isinstance(value, type(default_value)):
-                raise TypeError("Value type does not match default value type.")
+                if isinstance(default_value, enum.Enum):
+                    enum_type = type(default_value)
+                    return enum_type(value)
+
+                raise TypeError(
+                    f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
+                )
+
             return value
 
         except grpc.RpcError as e:
