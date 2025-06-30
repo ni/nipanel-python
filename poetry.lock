@@ -464,6 +464,17 @@ files = [
 packaging = "*"
 
 [[package]]
+name = "distro"
+version = "1.9.0"
+description = "Distro - an OS platform information API"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "distro-1.9.0-py3-none-any.whl", hash = "sha256:7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2"},
+    {file = "distro-1.9.0.tar.gz", hash = "sha256:2fa77c6fd8940f116ee1d6b94a2f90b13b5ea8d019b98bc8bafdcabcdd9bdbed"},
+]
+
+[[package]]
 name = "docutils"
 version = "0.21.2"
 description = "Docutils -- Python Documentation Utilities"
@@ -865,18 +876,14 @@ setuptools = "*"
 
 [[package]]
 name = "hightime"
-version = "0.3.0-dev1"
+version = "0.3.0.dev0"
 description = "Hightime Python API"
 optional = false
-python-versions = "^3.9"
-files = []
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/ni/hightime.git"
-reference = "HEAD"
-resolved_reference = "3f14a972cb52ceac7038c278afc66f9a83e5daa5"
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "hightime-0.3.0.dev0-py3-none-any.whl", hash = "sha256:777dd17ce9a6da40b650565992bf05f7016888076e1465740eae192a056ab292"},
+    {file = "hightime-0.3.0.dev0.tar.gz", hash = "sha256:a89308b5effa746995de29182eb6bb8bdb0293c39b3d99bb46b05a38615c2104"},
+]
 
 [[package]]
 name = "idna"
@@ -1342,22 +1349,31 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nidaqmx"
-version = "0.8.0"
+version = "1.2.0.dev1"
 description = "NI-DAQmx Python API"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "nidaqmx-0.8.0-py3-none-any.whl", hash = "sha256:7a5d5b3f78c125d31a8d00349f216f63bb8f6b887d0eca882001b729904d68bc"},
-    {file = "nidaqmx-0.8.0.tar.gz", hash = "sha256:6c72ca4ec5da95e8603c1e6d5085d59bb3c1c2ea1f45bdfaa4acac40fe82ae0c"},
+    {file = "nidaqmx-1.2.0.dev1-py3-none-any.whl", hash = "sha256:4141f844a4b6b9f5f979e3b6437c87899319b1a2dc6acaa938489ffa31d05bd6"},
+    {file = "nidaqmx-1.2.0.dev1.tar.gz", hash = "sha256:9241a429c41f35d40ad02d099e3063b377bc62f377fcd0444ab1933800a5fb29"},
 ]
 
 [package.dependencies]
+click = ">=8.0.0"
 deprecation = ">=2.1"
-numpy = {version = ">=1.22", markers = "python_version >= \"3.8\" and python_version < \"4.0\""}
+distro = {version = ">=1.9.0", markers = "sys_platform == \"linux\""}
+hightime = ">=0.2.2"
+numpy = [
+    {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.12\""},
+    {version = ">=1.26", markers = "python_version >= \"3.12\" and python_version < \"3.13\""},
+    {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
+]
+python-decouple = ">=3.8"
+requests = ">=2.25.0"
+tzlocal = ">=5.0,<6.0"
 
 [package.extras]
-docs = ["Sphinx (>=4.3,<5.0)", "sphinx_rtd_theme (>=1.0,<2.0)"]
-grpc = ["grpcio (>=1.49.0,<1.53)", "grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21,<5.0)"]
+grpc = ["grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21)"]
 
 [[package]]
 name = "nitypes"
@@ -3004,6 +3020,23 @@ files = [
 ]
 
 [[package]]
+name = "tzlocal"
+version = "5.3.1"
+description = "tzinfo object for the local timezone"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "tzlocal-5.3.1-py3-none-any.whl", hash = "sha256:eb1a66c3ef5847adf7a834f1be0800581b683b5608e74f86ecbcef8ab91bb85d"},
+    {file = "tzlocal-5.3.1.tar.gz", hash = "sha256:cceffc7edecefea1f595541dbd6e990cb1ea3d19bf01b2809f362a03dd7921fd"},
+]
+
+[package.dependencies]
+tzdata = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+devenv = ["check-manifest", "pytest (>=4.3)", "pytest-cov", "pytest-mock (>=3.3)", "zest.releaser"]
+
+[[package]]
 name = "urllib3"
 version = "2.5.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -3076,4 +3109,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "da0409c70e9138b6882d978889d8af2d9c94d68576adbe305e91662facc47251"
+content-hash = "a05544f202b0233be39ed9eae72cc6562c5d479f3e984cde1ec76d6d75ffe446"
