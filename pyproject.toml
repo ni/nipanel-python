@@ -13,7 +13,7 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
+nitypes = {version=">=0.1.0dev3", allow-prereleases=true}
 numpy = [
   { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
   { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
