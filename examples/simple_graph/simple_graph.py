@@ -21,17 +21,14 @@ try:
 
     # Generate and update the sine wave data periodically
     while True:
-        # not-found values need to be performant
-        not_found = panel.get_value("no_such_value", "Hello, World!")
-
-        amplitude_enum = panel.get_value("amplitude_enum", AmplitudeEnum.SMALL)
+        amplitude = panel.get_value("amplitude", AmplitudeEnum.SMALL)
         base_frequency = panel.get_value("base_frequency", 1.0)
 
         # Slowly vary the total frequency for a more dynamic visualization
         frequency = base_frequency + 0.5 * math.sin(time.time() / 5.0)
 
         time_points = np.linspace(0, num_points, num_points)
-        sine_values = amplitude_enum.value * np.sin(frequency * time_points)
+        sine_values = amplitude.value * np.sin(frequency * time_points)
 
         panel.set_value("frequency", frequency)
         panel.set_value("time_points", time_points.tolist())

@@ -12,25 +12,16 @@ st.title("Simple Graph Example")
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 
 panel = nipanel.get_panel_accessor()
-
-with col1:
-    amplitude_tuple = st.selectbox(
-        "Amplitude",
-        options=[(e.name, e.value) for e in AmplitudeEnum],
-        format_func=lambda x: x[0],
-        index=0,
-    )
-    amplitude_enum = AmplitudeEnum[amplitude_tuple[0]]
-    panel.set_value("amplitude_enum", amplitude_enum)
-with col2:
-    base_frequency = st.number_input("Base Frequency", value=1.0, step=0.1, key="base_frequency")
-
-with col3:
-    frequency = panel.get_value("frequency", 0.0)
-    st.metric("Frequency", f"{frequency:.2f} Hz")
-
+frequency = panel.get_value("frequency", 0.0)
 time_points = panel.get_value("time_points", [0.0])
 sine_values = panel.get_value("sine_values", [0.0])
+
+with col1:
+    nipanel.enum_selectbox(panel, label="Amplitude", value=AmplitudeEnum.MEDIUM, key="amplitude")
+with col2:
+    st.number_input("Base Frequency", value=1.0, step=0.5, key="base_frequency")
+with col3:
+    st.metric("Frequency", f"{frequency:.2f} Hz")
 with col4:
     st.metric("Min Value", f"{min(sine_values):.3f}")
 with col5:
