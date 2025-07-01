@@ -23,8 +23,7 @@ with col1:
     amplitude_enum = AmplitudeEnum[amplitude_tuple[0]]
     panel.set_value("amplitude_enum", amplitude_enum)
 with col2:
-    base_frequency = st.number_input("Base Frequency", value=1.0, step=0.1)
-    panel.set_value("base_frequency", base_frequency)
+    base_frequency = st.number_input("Base Frequency", value=1.0, step=0.1, key="base_frequency")
 
 with col3:
     frequency = panel.get_value("frequency", 0.0)

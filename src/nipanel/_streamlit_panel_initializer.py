@@ -3,6 +3,7 @@ from typing import cast
 
 import streamlit as st
 
+from nipanel._convert import is_supported_type
 from nipanel._streamlit_panel import StreamlitPanel
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 from nipanel.streamlit_refresh import initialize_refresh_component
@@ -61,6 +62,7 @@ def get_panel_accessor() -> StreamlitPanelValueAccessor:
         st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
 
     panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
+    _sync_session_state(panel)
     refresh_component = initialize_refresh_component(panel.panel_id)
     refresh_component()
     return panel
@@ -75,3 +77,11 @@ def _initialize_panel_from_base_path() -> StreamlitPanelValueAccessor:
     if not panel_id:
         raise ValueError(f"Panel ID is empty in baseUrlPath: '{base_url_path}'")
     return StreamlitPanelValueAccessor(panel_id)
+
+
+def _sync_session_state(panel):
+    """Automatically read keyed control values from the session state."""
+    for key in st.session_state.keys():
+        value = st.session_state[key]
+        if is_supported_type(value):
+            panel.set_value(str(key), value)
