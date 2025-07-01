@@ -79,7 +79,7 @@ def _initialize_panel_from_base_path() -> StreamlitPanelValueAccessor:
     return StreamlitPanelValueAccessor(panel_id)
 
 
-def _sync_session_state(panel):
+def _sync_session_state(panel: StreamlitPanelValueAccessor) -> None:
     """Automatically read keyed control values from the session state."""
     for key in st.session_state.keys():
         value = st.session_state[key]

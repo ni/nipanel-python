@@ -61,25 +61,22 @@ class PanelValueAccessor(ABC):
         Returns:
             The value, or the default value if not set
         """
-        try:
-            value = self._panel_client.get_value(self._panel_id, value_id)
-
-            if default_value is not None and not isinstance(value, type(default_value)):
-                if isinstance(default_value, enum.Enum):
-                    enum_type = type(default_value)
-                    return enum_type(value)
-
-                raise TypeError(
-                    f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
-                )
-
-            return value
-
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.NOT_FOUND and default_value is not None:
+        found, value = self._panel_client.get_value(self._panel_id, value_id)
+        if not found:
+            if default_value is not None:
                 return default_value
-            else:
-                raise e
+            raise KeyError(f"Value with id '{value_id}' not found on panel '{self._panel_id}'.")
+
+        if default_value is not None and not isinstance(value, type(default_value)):
+            if isinstance(default_value, enum.Enum):
+                enum_type = type(default_value)
+                return enum_type(value)
+
+            raise TypeError(
+                f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
+            )
+
+        return value
 
     def set_value(self, value_id: str, value: object) -> None:
         """Set the value for a control on the panel.

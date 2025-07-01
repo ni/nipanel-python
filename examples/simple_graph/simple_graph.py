@@ -21,6 +21,9 @@ try:
 
     # Generate and update the sine wave data periodically
     while True:
+        # not-found values need to be performant
+        not_found = panel.get_value("no_such_value", "Hello, World!")
+
         amplitude_enum = panel.get_value("amplitude_enum", AmplitudeEnum.SMALL)
         base_frequency = panel.get_value("base_frequency", 1.0)
 

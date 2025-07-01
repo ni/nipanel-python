@@ -131,7 +131,7 @@ def test___panel___get_unset_value_with_no_default___raises_exception(
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
-    with pytest.raises(grpc.RpcError):
+    with pytest.raises(KeyError):
         panel.get_value(value_id)
 
 

@@ -116,7 +116,7 @@ class PanelClient:
         )
         self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
 
-    def get_value(self, panel_id: str, value_id: str) -> object:
+    def get_value(self, panel_id: str, value_id: str) -> tuple[bool, object]:
         """Get the value for the control with value_id.
 
         Args:
@@ -128,8 +128,10 @@ class PanelClient:
         """
         get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
+        if not response.found:
+            return False, None
         the_value = from_any(response.value)
-        return the_value
+        return True, the_value
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:
