@@ -1,7 +1,6 @@
 """A Streamlit visualization panel for the all_types.py example script."""
 
 from enum import Enum, Flag
-from typing import cast
 
 import streamlit as st
 from define_types import all_types_with_values
@@ -24,15 +23,15 @@ for name in all_types_with_values.keys():
 
     with col2:
         if isinstance(default_value, bool):
-            st.checkbox(label=name, value=cast(bool, default_value), key=name)
+            st.checkbox(label=name, value=default_value, key=name)
         elif isinstance(default_value, Enum) and not isinstance(default_value, Flag):
-            nipanel.enum_selectbox(panel, label=name, value=cast(Enum, default_value), key=name)
+            nipanel.enum_selectbox(panel, label=name, value=default_value, key=name)
         elif isinstance(default_value, int) and not isinstance(default_value, Flag):
-            st.number_input(label=name, value=cast(int, default_value), key=name)
+            st.number_input(label=name, value=default_value, key=name)
         elif isinstance(default_value, float):
-            st.number_input(label=name, value=cast(float, default_value), key=name, format="%.2f")
+            st.number_input(label=name, value=default_value, key=name, format="%.2f")
         elif isinstance(default_value, str):
-            st.text_input(label=name, value=cast(str, default_value), key=name)
+            st.text_input(label=name, value=default_value, key=name)
 
     with col3:
         value = panel.get_value(name)

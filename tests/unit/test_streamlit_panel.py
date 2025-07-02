@@ -1,7 +1,8 @@
 import enum
+from datetime import datetime
+
 import grpc
 import pytest
-from datetime import datetime
 from typing_extensions import assert_type
 
 import tests.types as test_types
