@@ -4,7 +4,15 @@ import time
 from pathlib import Path
 
 import nidaqmx
-from nidaqmx.constants import AcquisitionType, TerminalConfiguration
+from nidaqmx.constants import (
+    AcquisitionType,
+    TerminalConfiguration,
+    CJCSource,
+    TemperatureUnits,
+    ThermocoupleType,
+    LoggingMode,
+    LoggingOperation,
+)
 
 import nipanel
 
@@ -35,9 +43,22 @@ try:
                 "Dev1/ai1",
                 min_val=panel.get_value("thermocouple_min_value", 0.0),
                 max_val=panel.get_value("thermocouple_max_value", 100.0),
+                units=panel.get_value("thermocouple_units", TemperatureUnits.DEG_C),
+                thermocouple_type=panel.get_value("thermocouple_type", ThermocoupleType.K),
+                cjc_source=panel.get_value(
+                    "thermocouple_cjc_source", CJCSource.CONSTANT_USER_VALUE
+                ),
+                cjc_val=panel.get_value("thermocouple_cjc_val", 25.0),
             )
             task.timing.cfg_samp_clk_timing(
-                rate=1000.0, sample_mode=AcquisitionType.CONTINUOUS, samps_per_chan=3000
+                rate=panel.get_value("sample_rate_input", 1000.0),
+                sample_mode=AcquisitionType.CONTINUOUS,
+                samps_per_chan=panel.get_value("samples_per_channel", 3000),
+            )
+            task.in_stream.configure_logging(
+                file_path=panel.get_value("tdms_file_path", "data.tdms"),
+                logging_mode=panel.get_value("logging_mode", LoggingMode.OFF),
+                operation=LoggingOperation.OPEN_OR_CREATE,
             )
             panel.set_value("sample_rate", task._timing.samp_clk_rate)
             try:

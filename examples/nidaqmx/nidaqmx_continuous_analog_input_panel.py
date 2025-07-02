@@ -1,7 +1,13 @@
 """Streamlit visualization script to display data acquired by nidaqmx_continuous_analog_input.py."""
 
 import streamlit as st
-from nidaqmx.constants import TerminalConfiguration
+from nidaqmx.constants import (
+    TerminalConfiguration,
+    CJCSource,
+    TemperatureUnits,
+    ThermocoupleType,
+    LoggingMode,
+)
 from streamlit_echarts import st_echarts
 
 import nipanel
@@ -97,25 +103,66 @@ with left_col:
                 key="thermocouple_max_value",
             )
         with channel_middle:
-            st.selectbox(options=["Deg C"], label="Units", disabled=False)
-            st.selectbox(options=["J"], label="Thermocouple Type", disabled=False)
+            nipanel.enum_selectbox(
+                panel,
+                label="Units",
+                value=TemperatureUnits.DEG_C,
+                disabled=panel.get_value("is_running", False),
+                key="thermocouple_units",
+            )
+            nipanel.enum_selectbox(
+                panel,
+                label="Thermocouple Type",
+                value=ThermocoupleType.K,
+                disabled=panel.get_value("is_running", False),
+                key="thermocouple_type",
+            )
         with channel_right:
-            st.selectbox(options=["Constant Value"], label="CJC Source", disabled=False)
-            st.selectbox(options=["25"], label="CJC Value", disabled=False)
+            nipanel.enum_selectbox(
+                panel,
+                label="CJC Source",
+                value=CJCSource.CONSTANT_USER_VALUE,
+                disabled=panel.get_value("is_running", False),
+                key="thermocouple_cjc_source",
+            )
+            st.number_input(
+                "CJC Value",
+                value=25.0,
+                step=1.0,
+                disabled=panel.get_value("is_running", False),
+                key="thermocouple_cjc_val",
+            )
 
     # Timing Settings section in left column
     st.header("Timing Settings")
     timing_left, timing_right = st.columns(2)
     with timing_left:
-        st.selectbox(options=["OnboardClock"], label="Sample Clock Source", disabled=False)
-        st.selectbox(options=["1000"], label="Samples per Loop", disabled=False)
-    with timing_right:
-        st.selectbox(options=[" "], label="Actual Sample Rate", disabled=True)
-        st.text_input(
-            label="Sample Rate",
+        st.selectbox(
+            options=["OnboardClock"],
+            label="Sample Clock Source",
             disabled=True,
+        )
+        st.number_input(
+            "Sample Rate",
+            value=1000.0,
+            step=100.0,
+            min_value=1.0,
+            disabled=panel.get_value("is_running", False),
+            key="sample_rate_input",
+        )
+    with timing_right:
+        st.number_input(
+            "Samples per Loop",
+            value=3000,
+            step=100,
+            min_value=10,
+            disabled=panel.get_value("is_running", False),
+            key="samples_per_channel",
+        )
+        st.text_input(
+            label="Actual Sample Rate",
             value=str(sample_rate) if sample_rate else "",
-            key="sample_rate_display",
+            key="actual_sample_rate_display",
         )
 
 # Right column - Graph and Logging Settings
@@ -168,11 +215,19 @@ with right_col:
     st.header("Logging Settings")
     logging_left, logging_right = st.columns(2)
     with logging_left:
-        st.selectbox(options=["Off"], label="Logging Mode", disabled=False)
-    with logging_right:
-        st.text_input(
-            label="TDMS File Path",
+        nipanel.enum_selectbox(
+            panel,
+            label="Logging Mode",
+            value=LoggingMode.OFF,
             disabled=panel.get_value("is_running", False),
-            value="",
-            key="tdms_file_path",
+            key="logging_mode",
         )
+    with logging_right:
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            tdms_file_path = st.text_input(
+                label="TDMS File Path",
+                disabled=panel.get_value("is_running", False),
+                value="data.tdms",
+                key="tdms_file_path",
+            )
