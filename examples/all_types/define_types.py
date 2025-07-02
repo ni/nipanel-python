@@ -15,6 +15,14 @@ class MyIntFlags(enum.IntFlag):
     VALUE4 = 4
 
 
+class MyIntableFlags(enum.Flag):
+    """Example of an Flag enum with int values."""
+
+    VALUE1 = 1
+    VALUE2 = 2
+    VALUE4 = 4
+
+
 class MyIntEnum(enum.IntEnum):
     """Example of an IntEnum enum."""
 
@@ -23,12 +31,36 @@ class MyIntEnum(enum.IntEnum):
     VALUE30 = 30
 
 
+class MyIntableEnum(enum.Enum):
+    """Example of an enum with int values."""
+
+    VALUE100 = 100
+    VALUE200 = 200
+    VALUE300 = 300
+
+
 class MyStrEnum(str, enum.Enum):
     """Example of a mixin string enum."""
 
     VALUE1 = "value1"
     VALUE2 = "value2"
     VALUE3 = "value3"
+
+
+class MyStringableEnum(enum.Enum):
+    """Example of an enum with string values."""
+
+    VALUE1 = "value1"
+    VALUE2 = "value2"
+    VALUE3 = "value3"
+
+
+class MyMixedEnum(enum.Enum):
+    """Example of an enum with mixed values."""
+
+    VALUE1 = "value1"
+    VALUE2 = 2
+    VALUE3 = 3.0
 
 
 all_types_with_values = {
@@ -42,6 +74,10 @@ all_types_with_values = {
     "intflags": MyIntFlags.VALUE1 | MyIntFlags.VALUE4,
     "intenum": MyIntEnum.VALUE20,
     "strenum": MyStrEnum.VALUE3,
+    "intableenum": MyIntableEnum.VALUE200,
+    "intableflags": MyIntableFlags.VALUE1 | MyIntableFlags.VALUE2,
+    "stringableenum": MyStringableEnum.VALUE2,
+    "mixedenum": MyMixedEnum.VALUE2,
     # NI types
     "nitypes_Scalar": Scalar(42, "m"),
     "nitypes_AnalogWaveform": AnalogWaveform.from_array_1d(np.array([1.0, 2.0, 3.0])),
@@ -62,6 +98,6 @@ all_types_with_values = {
     # supported 2D collections
     "list_list_float": [[1.0, 2.0], [3.0, 4.0]],
     "tuple_tuple_float": ((1.0, 2.0), (3.0, 4.0)),
-    "set_list_float": set([(1.0, 2.0), (3.0, 4.0)]),
+    "set_tuple_float": set([(1.0, 2.0), (3.0, 4.0)]),
     "frozenset_frozenset_float": frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]),
 }

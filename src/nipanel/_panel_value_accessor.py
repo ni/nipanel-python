@@ -72,9 +72,11 @@ class PanelValueAccessor(ABC):
                 enum_type = type(default_value)
                 return enum_type(value)
 
-            raise TypeError(
-                f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
-            )
+            # lists are allowed to not match, since sets and tuples are converted to lists
+            if not isinstance(value, list):
+                raise TypeError(
+                    f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
+                )
 
         return value
 
@@ -85,6 +87,9 @@ class PanelValueAccessor(ABC):
             value_id: The id of the value
             value: The value
         """
+        if isinstance(value, enum.Enum):
+            value = value.value
+
         self._panel_client.set_value(
             self._panel_id, value_id, value, notify=self._notify_on_set_value
         )
