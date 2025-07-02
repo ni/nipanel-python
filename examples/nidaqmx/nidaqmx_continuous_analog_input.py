@@ -31,7 +31,11 @@ try:
                     "terminal_configuration", TerminalConfiguration.DEFAULT
                 ),
             )
-            task.ai_channels.add_ai_thrmcpl_chan("Dev1/ai1")
+            task.ai_channels.add_ai_thrmcpl_chan(
+                "Dev1/ai1",
+                min_val=panel.get_value("thermocouple_min_value", 0.0),
+                max_val=panel.get_value("thermocouple_max_value", 100.0),
+            )
             task.timing.cfg_samp_clk_timing(
                 rate=1000.0, sample_mode=AcquisitionType.CONTINUOUS, samps_per_chan=3000
             )
