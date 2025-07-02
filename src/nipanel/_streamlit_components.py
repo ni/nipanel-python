@@ -1,7 +1,7 @@
 """Streamlit UI components for NI Panel."""
 
 from enum import Enum
-from typing import TypeVar
+from typing import Any, Callable, TypeVar
 
 import streamlit as st
 
@@ -10,7 +10,14 @@ from nipanel._panel_value_accessor import PanelValueAccessor
 T = TypeVar("T", bound=Enum)
 
 
-def enum_selectbox(panel: PanelValueAccessor, label: str, value: T, key: str) -> T:
+def enum_selectbox(
+    panel: PanelValueAccessor,
+    label: str,
+    value: T,
+    key: str,
+    disabled: bool = False,
+    format_func: Callable[[Any], str] = lambda x: x[0],
+) -> T:
     """Create a selectbox for an Enum.
 
     The selectbox will display the names of all the enum values, and when a value is selected,
@@ -39,10 +46,7 @@ def enum_selectbox(panel: PanelValueAccessor, label: str, value: T, key: str) ->
                 break
 
     box_tuple = st.selectbox(
-        label,
-        options=options,
-        format_func=lambda x: x[0],
-        index=default_index,
+        label, options=options, format_func=format_func, index=default_index, disabled=disabled
     )
     enum_value = enum_class[box_tuple[0]]
     panel.set_value(key, enum_value)
