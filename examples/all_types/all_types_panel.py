@@ -6,6 +6,7 @@ import streamlit as st
 from define_types import all_types_with_values
 
 import nipanel
+import nipanel.controls as ni
 
 
 st.set_page_config(page_title="All Types Example", page_icon="📊", layout="wide")
@@ -25,9 +26,9 @@ for name in all_types_with_values.keys():
         if isinstance(default_value, bool):
             st.checkbox(label=name, value=default_value, key=name)
         elif isinstance(default_value, Flag):
-            nipanel.flag_checkboxes(panel, label=name, value=default_value, key=name)
+            ni.flag_checkboxes(panel, label=name, value=default_value, key=name)
         elif isinstance(default_value, Enum) and not isinstance(default_value, Flag):
-            nipanel.enum_selectbox(panel, label=name, value=default_value, key=name)
+            ni.enum_selectbox(panel, label=name, value=default_value, key=name)
         elif isinstance(default_value, int) and not isinstance(default_value, Flag):
             st.number_input(label=name, value=default_value, key=name)
         elif isinstance(default_value, float):

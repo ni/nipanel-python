@@ -11,6 +11,7 @@ from nidaqmx.constants import (
 from streamlit_echarts import st_echarts
 
 import nipanel
+import nipanel.controls as ni
 
 
 st.markdown(
@@ -75,7 +76,7 @@ with left_col:
                     key="voltage_max_value",
                 )
             with channel_right:
-                nipanel.enum_selectbox(
+                ni.enum_selectbox(
                     panel,
                     label="Terminal Configuration",
                     value=TerminalConfiguration.DEFAULT,
@@ -103,14 +104,14 @@ with left_col:
                     key="thermocouple_max_value",
                 )
             with channel_middle:
-                nipanel.enum_selectbox(
+                ni.enum_selectbox(
                     panel,
                     label="Units",
                     value=TemperatureUnits.DEG_C,
                     disabled=panel.get_value("is_running", False),
                     key="thermocouple_units",
                 )
-                nipanel.enum_selectbox(
+                ni.enum_selectbox(
                     panel,
                     label="Thermocouple Type",
                     value=ThermocoupleType.K,
@@ -118,7 +119,7 @@ with left_col:
                     key="thermocouple_type",
                 )
             with channel_right:
-                nipanel.enum_selectbox(
+                ni.enum_selectbox(
                     panel,
                     label="CJC Source",
                     value=CJCSource.CONSTANT_USER_VALUE,
@@ -218,7 +219,7 @@ with right_col:
         st.header("Logging Settings")
         logging_left, logging_right = st.columns(2)
         with logging_left:
-            nipanel.enum_selectbox(
+            ni.enum_selectbox(
                 panel,
                 label="Logging Mode",
                 value=LoggingMode.OFF,
