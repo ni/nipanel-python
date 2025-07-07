@@ -40,7 +40,7 @@ def flag_checkboxes(
     if not issubclass(flag_type, Flag):
         raise TypeError(f"Expected a Flag enum type, got {type(value)}")
 
-    st.write(label + ":")
+    st.markdown(f"<small>{label}:</small>", unsafe_allow_html=True)
 
     # Get all individual flag values (skip composite values and zero value)
     flag_values = [
@@ -48,7 +48,7 @@ def flag_checkboxes(
     ]
 
     # Create a container for flag checkboxes
-    flag_container = st.container()
+    flag_container = st.container(border=True)
     selected_flags = flag_type(0)  # Start with no flags
 
     # If default value is set, use it as the initial state

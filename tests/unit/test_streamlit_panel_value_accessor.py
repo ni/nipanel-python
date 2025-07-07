@@ -44,7 +44,6 @@ def test___set_value_if_changed___different_value_ids___tracks_separately(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
-
     accessor.set_value_if_changed("id1", "value1")
     accessor.set_value_if_changed("id2", "value2")
 

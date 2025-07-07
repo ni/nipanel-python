@@ -124,7 +124,7 @@ class PanelClient:
             value_id: The ID of the control.
 
         Returns:
-            The value.
+            The value, and a boolean indicating if the value was found.
         """
         get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
