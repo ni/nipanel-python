@@ -24,6 +24,8 @@ for name in all_types_with_values.keys():
     with col2:
         if isinstance(default_value, bool):
             st.checkbox(label=name, value=default_value, key=name)
+        elif isinstance(default_value, Flag):
+            nipanel.flag_checkboxes(panel, label=name, value=default_value, key=name)
         elif isinstance(default_value, Enum) and not isinstance(default_value, Flag):
             nipanel.enum_selectbox(panel, label=name, value=default_value, key=name)
         elif isinstance(default_value, int) and not isinstance(default_value, Flag):

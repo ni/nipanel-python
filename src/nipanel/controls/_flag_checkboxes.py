@@ -1,0 +1,70 @@
+"""A set of checkboxes for selecting Flag enum values."""
+
+from enum import Flag
+from typing import TypeVar
+
+import streamlit as st
+
+from nipanel._panel_value_accessor import PanelValueAccessor
+
+T = TypeVar("T", bound=Flag)
+
+
+def flag_checkboxes(
+    panel: PanelValueAccessor,
+    label: str,
+    value: T,
+    key: str,
+    disabled: bool = False,
+) -> T:
+    """Create a set of checkboxes for a Flag enum.
+
+    This will display a checkbox for each individual flag value in the enum. When checkboxes
+    are selected or deselected, the combined Flag value will be stored in the panel under
+    the specified key.
+
+    Args:
+        panel: The panel
+        label: Label to display above the checkboxes
+        value: The default Flag enum value (also determines the specific Flag enum type)
+        key: Key to use for storing the Flag value in the panel
+        disabled: Whether the checkboxes should be disabled
+
+    Returns:
+        The selected Flag enum value with all selected flags combined
+    """
+    flag_type = type(value)
+    if not issubclass(flag_type, Flag):
+        raise TypeError(f"Expected a Flag enum type, got {type(value)}")
+
+    st.write(label + ":")
+
+    # Get all individual flag values (skip composite values and zero value)
+    flag_values = [
+        flag for flag in flag_type if flag.value & (flag.value - 1) == 0 and flag.value != 0
+    ]
+
+    # Create a container for flag checkboxes
+    flag_container = st.container()
+    selected_flags = flag_type(0)  # Start with no flags
+
+    # If default value is set, use it as the initial state
+    if value:
+        selected_flags = value
+
+    # Create a checkbox for each flag
+    for flag in flag_values:
+        is_selected = bool(selected_flags & flag)
+        if flag_container.checkbox(
+            label=str(flag.name),
+            value=is_selected,
+            key=f"{key}_{flag.name}",
+            disabled=disabled,
+        ):
+            selected_flags |= flag
+        else:
+            selected_flags &= ~flag
+
+    # Store the selected flags in the panel
+    panel.set_value(key, selected_flags)
+    return selected_flags
