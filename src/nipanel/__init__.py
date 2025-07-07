@@ -3,7 +3,7 @@
 from importlib.metadata import version
 
 from nipanel._panel import Panel
-from nipanel._streamlit_components import enum_selectbox
+from nipanel.controls._enum_selectbox import enum_selectbox
 from nipanel._streamlit_panel import StreamlitPanel
 from nipanel._streamlit_panel_initializer import create_panel, get_panel_accessor
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor

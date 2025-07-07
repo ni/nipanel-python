@@ -1,4 +1,4 @@
-"""Streamlit UI components for NI Panel."""
+"""A selectbox that allows selecting an Enum value."""
 
 from enum import Enum
 from typing import Any, Callable, TypeVar
