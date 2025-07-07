@@ -18,9 +18,9 @@ class MyIntFlags(enum.IntFlag):
 class MyIntableFlags(enum.Flag):
     """Example of an Flag enum with int values."""
 
-    VALUE1 = 1
-    VALUE2 = 2
-    VALUE4 = 4
+    VALUE8 = 8
+    VALUE16 = 16
+    VALUE32 = 32
 
 
 class MyIntEnum(enum.IntEnum):
@@ -75,7 +75,7 @@ all_types_with_values = {
     "intenum": MyIntEnum.VALUE20,
     "strenum": MyStrEnum.VALUE3,
     "intableenum": MyIntableEnum.VALUE200,
-    "intableflags": MyIntableFlags.VALUE1 | MyIntableFlags.VALUE2,
+    "intableflags": MyIntableFlags.VALUE8 | MyIntableFlags.VALUE32,
     "stringableenum": MyStringableEnum.VALUE2,
     "mixedenum": MyMixedEnum.VALUE2,
     # NI types
@@ -98,6 +98,6 @@ all_types_with_values = {
     # supported 2D collections
     "list_list_float": [[1.0, 2.0], [3.0, 4.0]],
     "tuple_tuple_float": ((1.0, 2.0), (3.0, 4.0)),
-    "set_tuple_float": set([(1.0, 2.0), (3.0, 4.0)]),
+    "set_list_float": set([(1.0, 2.0), (3.0, 4.0)]),
     "frozenset_frozenset_float": frozenset([frozenset([1.0, 2.0]), frozenset([3.0, 4.0])]),
 }

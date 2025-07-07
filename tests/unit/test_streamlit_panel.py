@@ -403,7 +403,7 @@ def test___set_int_enum_value___get_value___returns_int_enum(
     assert retrieved_value.name == enum_value.name
 
 
-def test___set_intable_enum_value___get_value___returns_enum(
+def test___set_intable_enum_value___get_value___returns_intable_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
@@ -435,7 +435,7 @@ def test___set_string_enum_value___get_value___returns_string_enum(
     assert retrieved_value.name == enum_value.name
 
 
-def test___set_stringable_enum_value___get_value___returns_enum(
+def test___set_stringable_enum_value___get_value___returns_stringable_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
@@ -451,7 +451,7 @@ def test___set_stringable_enum_value___get_value___returns_enum(
     assert retrieved_value.name == enum_value.name
 
 
-def test___set_mixed_enum_value___get_value___returns_enum(
+def test___set_mixed_enum_value___get_value___returns_mixed_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
@@ -482,7 +482,7 @@ def test___set_int_flags_value___get_value___returns_int_flags(
     assert retrieved_value.value == flags_value.value
 
 
-def test___set_intable_flags_value___get_value___returns_flags(
+def test___set_intable_flags_value___get_value___returns_intable_flags(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)

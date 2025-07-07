@@ -1,7 +1,7 @@
 """A set of checkboxes for selecting Flag enum values."""
 
 from enum import Flag
-from typing import TypeVar
+from typing import TypeVar, Callable
 
 import streamlit as st
 
@@ -16,6 +16,7 @@ def flag_checkboxes(
     value: T,
     key: str,
     disabled: bool = False,
+    label_formatter: Callable[[Flag], str] = lambda x: str(x.name),
 ) -> T:
     """Create a set of checkboxes for a Flag enum.
 
@@ -29,6 +30,8 @@ def flag_checkboxes(
         value: The default Flag enum value (also determines the specific Flag enum type)
         key: Key to use for storing the Flag value in the panel
         disabled: Whether the checkboxes should be disabled
+        label_formatter: Function that formats the flag to a string for display. Default
+                         uses flag.name.
 
     Returns:
         The selected Flag enum value with all selected flags combined
@@ -56,7 +59,7 @@ def flag_checkboxes(
     for flag in flag_values:
         is_selected = bool(selected_flags & flag)
         if flag_container.checkbox(
-            label=str(flag.name),
+            label=label_formatter(flag),
             value=is_selected,
             key=f"{key}_{flag.name}",
             disabled=disabled,
