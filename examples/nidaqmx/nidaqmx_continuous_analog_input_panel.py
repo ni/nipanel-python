@@ -14,6 +14,9 @@ import nipanel
 import nipanel.controls as ni
 
 
+st.set_page_config(page_title="NI-DAQmx Example", page_icon="📈", layout="wide")
+st.title("Analog Input - Voltage and Thermocouple in a Single Task")
+
 st.markdown(
     """
     <style>
@@ -30,9 +33,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-st.set_page_config(page_title="NI-DAQmx Example", page_icon="📈", layout="wide")
-st.title("Analog Input - Voltage and Thermocouple in a Single Task")
 
 panel = nipanel.get_panel_accessor()
 is_running = panel.get_value("is_running", False)
