@@ -5,13 +5,13 @@ from typing import TypeVar, Callable
 
 import streamlit as st
 
-from nipanel._panel_value_accessor import PanelValueAccessor
+from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
 T = TypeVar("T", bound=Flag)
 
 
 def flag_checkboxes(
-    panel: PanelValueAccessor,
+    panel: StreamlitPanelValueAccessor,
     label: str,
     value: T,
     key: str,
@@ -69,5 +69,5 @@ def flag_checkboxes(
             selected_flags &= ~flag
 
     # Store the selected flags in the panel
-    panel.set_value(key, selected_flags)
+    panel.set_value_if_changed(key, selected_flags)
     return selected_flags

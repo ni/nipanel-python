@@ -297,7 +297,7 @@ def test___enum_type___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
     value_payload: enum.Enum,
 ) -> None:
-    """Test that set_value() and get_value() work for builtin scalar types."""
+    """Test that set_value() and get_value() work for enum types."""
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"

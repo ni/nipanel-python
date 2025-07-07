@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 from typing import final
 
 import grpc
@@ -16,6 +17,8 @@ class StreamlitPanelValueAccessor(PanelValueAccessor):
 
     This class should only be used within a Streamlit script.
     """
+
+    __slots__ = ["_last_values"]
 
     def __init__(
         self,
@@ -43,3 +46,19 @@ class StreamlitPanelValueAccessor(PanelValueAccessor):
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
         )
+        self._last_values: collections.defaultdict[str, object] = collections.defaultdict(
+            lambda: object()
+        )
+
+    def set_value_if_changed(self, value_id: str, value: object) -> None:
+        """Set the value for a control on the panel only if it has changed since the last call.
+
+        This method helps reduce unnecessary updates when the value hasn't changed.
+
+        Args:
+            value_id: The id of the value
+            value: The value to set
+        """
+        if value != self._last_values[value_id]:
+            self.set_value(value_id, value)
+            self._last_values[value_id] = value

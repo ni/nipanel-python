@@ -5,13 +5,13 @@ from typing import Any, Callable, TypeVar
 
 import streamlit as st
 
-from nipanel._panel_value_accessor import PanelValueAccessor
+from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
 T = TypeVar("T", bound=Enum)
 
 
 def enum_selectbox(
-    panel: PanelValueAccessor,
+    panel: StreamlitPanelValueAccessor,
     label: str,
     value: T,
     key: str,
@@ -49,5 +49,5 @@ def enum_selectbox(
         label, options=options, format_func=format_func, index=default_index, disabled=disabled
     )
     enum_value = enum_class[box_tuple[0]]
-    panel.set_value(key, enum_value)
+    panel.set_value_if_changed(key, enum_value)
     return enum_value

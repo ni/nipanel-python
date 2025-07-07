@@ -84,4 +84,4 @@ def _sync_session_state(panel: StreamlitPanelValueAccessor) -> None:
     for key in st.session_state.keys():
         value = st.session_state[key]
         if is_supported_type(value):
-            panel.set_value(str(key), value)
+            panel.set_value_if_changed(str(key), value)
