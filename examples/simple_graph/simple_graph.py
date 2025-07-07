@@ -5,7 +5,6 @@ import time
 from pathlib import Path
 
 import numpy as np
-from amplitude_enum import AmplitudeEnum
 
 import nipanel
 
@@ -13,6 +12,8 @@ import nipanel
 panel_script_path = Path(__file__).with_name("simple_graph_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
+amplitude = 1.0
+frequency = 1.0
 num_points = 100
 
 try:
@@ -21,19 +22,16 @@ try:
 
     # Generate and update the sine wave data periodically
     while True:
-        amplitude = panel.get_value("amplitude", AmplitudeEnum.SMALL)
-        base_frequency = panel.get_value("base_frequency", 1.0)
-
-        # Slowly vary the total frequency for a more dynamic visualization
-        frequency = base_frequency + 0.5 * math.sin(time.time() / 5.0)
-
         time_points = np.linspace(0, num_points, num_points)
-        sine_values = amplitude.value * np.sin(frequency * time_points)
+        sine_values = amplitude * np.sin(frequency * time_points)
 
-        panel.set_value("frequency", frequency)
         panel.set_value("time_points", time_points.tolist())
         panel.set_value("sine_values", sine_values.tolist())
+        panel.set_value("amplitude", amplitude)
+        panel.set_value("frequency", frequency)
 
+        # Slowly vary the frequency for a more dynamic visualization
+        frequency = 1.0 + 0.5 * math.sin(time.time() / 5.0)
         time.sleep(0.1)
 
 except KeyboardInterrupt:
