@@ -49,6 +49,9 @@ message StartPanelRequest {
 
   // Absolute path of the panel script's file on disk, or network path to the file
   string panel_script_path = 2;
+
+  // Path to the python interpreter to use for the panel script.
+  string python_path = 3;
 }
 
 message StartPanelResponse {

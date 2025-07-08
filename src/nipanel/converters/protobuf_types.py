@@ -106,7 +106,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
 
     def to_protobuf_message(self, python_value: AnalogWaveform[np.float64]) -> DoubleAnalogWaveform:
         """Convert the Python AnalogWaveform to a protobuf DoubleAnalogWaveform."""
-        if python_value.timing.has_timestamp:
+        if python_value.timing.has_start_time:
             bin_datetime = convert_datetime(bt.DateTime, python_value.timing.start_time)
             precision_timestamp = self._pt_converter.to_protobuf_message(bin_datetime)
         else:
