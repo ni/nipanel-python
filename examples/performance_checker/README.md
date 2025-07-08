@@ -1,11 +1,11 @@
 # Performance checker Example
 
-This example demonstrates using nipanel with Streamlit to display a dynamic sine wave using the `streamlit-echarts` library.
+This example measures the performance of a stremlit panel with a graph.
 
 ## Features
 
 - Generates sine wave data with varying frequency
-- Displays the data in an chart
+- Displays the data in a graph
 - Updates rapidly
 - Shows timing information
 

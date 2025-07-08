@@ -1,4 +1,4 @@
-"""A Streamlit visualization panel for the perf_check.py example script."""
+"""A Streamlit visualization panel for the performance_checker.py example script."""
 
 import statistics
 import time
@@ -51,6 +51,16 @@ else:
     if len(st.session_state.refresh_history) > 10:
         st.session_state.refresh_history.pop(0)
 
+if st.session_state.refresh_history:
+    refresh_history = st.session_state.refresh_history
+else:
+    refresh_history = []
+
+# Calculate statistics for refresh
+min_refresh_time = min(refresh_history) if refresh_history else 0
+max_refresh_time = max(refresh_history) if refresh_history else 0
+avg_refresh_time = statistics.mean(refresh_history) if refresh_history else 0
+
 panel = nipanel.get_panel_accessor()
 
 # Measure time to get each value
@@ -59,16 +69,6 @@ sine_values, sine_values_ms = measure_get_value_time(panel, "sine_values", [0.0]
 amplitude, amplitude_ms = measure_get_value_time(panel, "amplitude", 1.0)
 frequency, frequency_ms = measure_get_value_time(panel, "frequency", 1.0)
 unset_value, unset_value_ms = measure_get_value_time(panel, "unset_value", "default")
-
-if st.session_state.refresh_history:
-    history = st.session_state.refresh_history
-else:
-    history = []
-
-# Calculate statistics
-min_time = min(history) if history else 0
-max_time = max(history) if history else 0
-avg_time = statistics.mean(history) if history else 0
 
 # Prepare data for echarts
 data = [{"value": [x, y]} for x, y in zip(time_points, sine_values)]
@@ -108,9 +108,9 @@ with col1:
     st.metric("Frequency", f"{frequency:.2f} Hz")
 with col2:
     st.metric("Refresh Time", f"{time_since_last_refresh:.1f} ms")
-    st.metric("Min Refresh Time", f"{min_time:.1f} ms")
-    st.metric("Max Refresh Time", f"{max_time:.1f} ms")
-    st.metric("Avg Refresh Time", f"{avg_time:.1f} ms")
+    st.metric("Min Refresh Time", f"{min_refresh_time:.1f} ms")
+    st.metric("Max Refresh Time", f"{max_refresh_time:.1f} ms")
+    st.metric("Avg Refresh Time", f"{avg_refresh_time:.1f} ms")
 
 with col3:
     st.metric("get time_points", f"{time_points_ms:.1f} ms")
