@@ -138,7 +138,7 @@ with left_col:
                 st.number_input(
                     "Max Value",
                     value=0.001,
-                    step=0.0001,
+                    step=1.0,
                     key="max_value_strain",
                 )
                 panel.set_value("max_value_strain", "max_value_strain")
@@ -146,7 +146,7 @@ with left_col:
                 st.number_input(
                     "Gage Factor",
                     value=2.0,
-                    step=1,
+                    step=1.0,
                     key="gage_factor",
                 )
                 panel.set_value("gage_factor", "gage_factor")

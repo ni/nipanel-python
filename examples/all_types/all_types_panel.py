@@ -5,11 +5,11 @@ from define_types import all_types_with_values
 
 import nipanel
 
-panel = nipanel.get_panel_accessor()
 
 st.set_page_config(page_title="All Types Example", page_icon="📊", layout="wide")
 st.title("All Types Example")
 
+panel = nipanel.get_panel_accessor()
 for name in all_types_with_values.keys():
     col1, col2 = st.columns([0.4, 0.6])
 

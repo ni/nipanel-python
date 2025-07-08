@@ -10,6 +10,7 @@ import nipanel
 panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
+# How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
 with nidaqmx.Task() as task:
     task.ai_channels.add_ai_voltage_chan("Mod1/ai0")
     task.ai_channels.add_ai_thrmcpl_chan("Mod1/ai1")
@@ -18,10 +19,13 @@ with nidaqmx.Task() as task:
     )
     panel.set_value("sample_rate", task._timing.samp_clk_rate)
     task.start()
+    print(f"Panel URL: {panel.panel_url}")
     try:
-        print(f"\nPress Ctrl + C to stop")
+        print(f"Press Ctrl + C to stop")
         while True:
-            data = task.read(number_of_samples_per_channel=1000)
+            data = task.read(
+                number_of_samples_per_channel=1000  # pyright: ignore[reportArgumentType]
+            )
             panel.set_value("voltage_data", data[0])
             panel.set_value("thermocouple_data", data[1])
     except KeyboardInterrupt:

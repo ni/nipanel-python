@@ -26,30 +26,30 @@ with nidaqmx.Task() as task:
     task.timing.samp_clk_dig_fltr_enable = True
     chan_voltage.ai_filter_response
     filter = panel.get_value("filter", "No Filtering")
-    if filter == "No Filtering":
-        chan_voltage.ai_filter_freq = 0.0
-        chan_current.ai_filter_freq = 0.0
-        chan_strain_gage.ai_filter_freq = 0.0
+    # if filter == "No Filtering":
+    #     chan_voltage.ai_filter_freq = 0.0
+    #     chan_current.ai_filter_freq = 0.0
+    #     chan_strain_gage.ai_filter_freq = 0.0
 
-        chan_voltage.ai_filter_order = 0
-        chan_current.ai_filter_order = 0
-        chan_strain_gage.ai_filter_order = 0
+    #     chan_voltage.ai_filter_order = 0
+    #     chan_current.ai_filter_order = 0
+    #     chan_strain_gage.ai_filter_order = 0
 
-        chan_voltage.ai_filter_response = panel.get_value("filter_response", "Comb")
-        chan_current.ai_filter_response = panel.get_value("filter_response", "Comb")
-        chan_strain_gage.ai_filter_response = panel.get_value("filter_response", "Comb")
-    else:
-        chan_voltage.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
-        chan_current.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
-        chan_strain_gage.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
+    #     chan_voltage.ai_filter_response = panel.get_value("filter_response", "Comb")
+    #     chan_current.ai_filter_response = panel.get_value("filter_response", "Comb")
+    #     chan_strain_gage.ai_filter_response = panel.get_value("filter_response", "Comb")
+    # else:
+    #     chan_voltage.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
+    #     chan_current.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
+    #     chan_strain_gage.ai_filter_freq = panel.get_value("filter_freq", 1000.0)
 
-        chan_voltage.ai_filter_order = panel.get_value("filter_order", 1)
-        chan_current.ai_filter_order = panel.get_value("filter_order", 1)
-        chan_strain_gage.ai_filter_order = panel.get_value("filter_order", 1)
+    #     chan_voltage.ai_filter_order = panel.get_value("filter_order", 1)
+    #     chan_current.ai_filter_order = panel.get_value("filter_order", 1)
+    #     chan_strain_gage.ai_filter_order = panel.get_value("filter_order", 1)
 
-        chan_voltage.ai_filter_response = panel.get_value("filter_response", "Comb")
-        chan_current.ai_filter_response = panel.get_value("filter_response", "Comb")
-        chan_strain_gage.ai_filter_response = panel.get_value("filter_response", "Comb")
+    #     chan_voltage.ai_filter_response = panel.get_value("filter_response", "Comb")
+    #     chan_current.ai_filter_response = panel.get_value("filter_response", "Comb")
+    #     chan_strain_gage.ai_filter_response = panel.get_value("filter_response", "Comb")
     
   
 
@@ -76,11 +76,11 @@ with nidaqmx.Task() as task:
         print(f"Press Ctrl + C to stop")
         
         while True:
-            date = panel.get_value("date", None)
-            time_input = panel.get_value("time", None)
+            # date = panel.get_value("date", None)
+            # time_input = panel.get_value("time", None)
 
             hysteriresis = panel.get_value("hysteriesis", 0.0)
-            task.triggers.start_trigger.cfg_time_start_trig(when = date, timescale=Timescale.USE_HOST)
+            # task.triggers.start_trigger.cfg_time_start_trig(when = date, timescale=Timescale.USE_HOST)
             level = panel.get_value("level", 0.0)
             new_slope = Slopes(panel.get_value("slope",Slopes.FALLING.value))
             if slope != new_slope:

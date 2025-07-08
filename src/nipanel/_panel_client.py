@@ -59,18 +59,19 @@ class PanelClient:
         self._grpc_channel = grpc_channel
         self._stub: PythonPanelServiceStub | None = None
 
-    def start_panel(self, panel_id: str, panel_script_path: str) -> str:
+    def start_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
         """Start the panel.
 
         Args:
             panel_id: The ID of the panel to start.
             panel_script_path: The path of the panel script file.
+            python_path: The path to the Python executable.
 
         Returns:
             The URL of the panel.
         """
         start_panel_request = StartPanelRequest(
-            panel_id=panel_id, panel_script_path=panel_script_path
+            panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
         )
         response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
         return response.panel_url
