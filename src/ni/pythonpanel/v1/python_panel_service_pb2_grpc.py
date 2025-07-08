@@ -77,7 +77,6 @@ class PythonPanelServiceServicer(object):
         """Get a value for a control on the panel
         Status Codes for errors:
         - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - NOT_FOUND: The value with the specified identifier was not found
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
