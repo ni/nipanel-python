@@ -2,6 +2,7 @@
 
 import statistics
 import time
+from typing import Any, Tuple
 
 import streamlit as st
 from streamlit_echarts import st_echarts
@@ -9,7 +10,9 @@ from streamlit_echarts import st_echarts
 import nipanel
 
 
-def measure_get_value_time(panel, value_id, default_value=None):
+def measure_get_value_time(
+    panel: "nipanel.StreamlitPanelValueAccessor", value_id: str, default_value: Any = None
+) -> Tuple[Any, float]:
     """Measure the time it takes to get a value from the panel.
 
     Args:
