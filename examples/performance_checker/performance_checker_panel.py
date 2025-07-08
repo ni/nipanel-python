@@ -107,7 +107,7 @@ options = {
 st_echarts(options=options, height="400px", key="graph")
 
 # Create columns for metrics
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Amplitude", f"{amplitude:.2f}")
     st.metric("Frequency", f"{frequency:.2f} Hz")
