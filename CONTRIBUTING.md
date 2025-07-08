@@ -56,15 +56,14 @@ start docs\_build\index.html
 
 ## Running examples
 
-1. First, run the PythonPanelService (not part of this repo, provided seperately)
-2. Run the command `poetry run python examples/hello/hello.py`
-3. Open http://localhost:42001/panel-service/panels/hello_panel/ in your browser
-4. If there is an error about missing imports (especially nipanel), execute this
-   command (from the nipanel-python directory) to install the dependencies into the venv: 
-   `%localappdata%\Temp\python_panel_service_venv\Scripts\python.exe -m pip install .\[examples,dev]`,
-    then restart the PythonPanelService and re-run hello.py.
-
-You can see all running panels (and stop them) at: http://localhost:42001/panel-service/
+1. Run the **PythonPanelService** (not part of this repo, provided seperately)
+2. `poetry install --with examples` to get the dependencies needed for the examples
+3. Run the examples with these command(s):
+    - `poetry run python examples/hello/hello.py`
+    - `poetry run python examples/all_types/all_types.py`
+    - `poetry run python examples/simple_graph/simple_graph.py`
+    - `poetry run python examples/nidaqmx/nidaqmx_continuous_analog_input.py` (requires real or simulated devices)
+4. Open http://localhost:42001/panel-service/ in your browser, which will show all running panels
 
 # Debugging on the streamlit side
 

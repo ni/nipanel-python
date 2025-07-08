@@ -13,8 +13,14 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-streamlit-echarts = ">=0.4.0"
-nitypes = {version=">=0.1.0dev2", allow-prereleases=true}
+nitypes = {version=">=0.1.0dev3", allow-prereleases=true}
+numpy = [
+  { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
+  { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
+  { version = ">=2.1", python = "^3.13", markers = "implementation_name != 'pypy'" },
+  { version = ">=2.1", python = ">=3.10,<3.11", markers = "implementation_name == 'pypy'" },
+  { version = ">=2.3", python = "^3.11", markers = "implementation_name == 'pypy'" },
+]
 debugpy = ">=1.8.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -31,8 +37,8 @@ pyright = { version = ">=1.1.400", extras = ["nodejs"] }
 pytest = ">=7.2"
 pytest-cov = ">=4.0"
 pytest-mock = ">=3.0"
-# Use an unreleased version of hightime for testing.
-hightime = { git = "https://github.com/ni/hightime.git" }
+# Use a prerelease version of hightime for testing.
+hightime = { version = ">=0.2.2", allow-prereleases = true }
 
 [tool.poetry.group.codegen.dependencies]
 grpcio-tools = [
@@ -58,7 +64,7 @@ optional = true
 
 [tool.poetry.group.examples.dependencies]
 streamlit-echarts = ">=0.4.0"
-nidaqmx = ">=0.8.0"
+nidaqmx = { version = ">=0.8.0", allow-prereleases = true }
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]

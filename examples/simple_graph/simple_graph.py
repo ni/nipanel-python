@@ -32,7 +32,7 @@ try:
 
         # Slowly vary the frequency for a more dynamic visualization
         frequency = 1.0 + 0.5 * math.sin(time.time() / 5.0)
-        time.sleep(1)
+        time.sleep(0.1)
 
 except KeyboardInterrupt:
     print("Exiting...")

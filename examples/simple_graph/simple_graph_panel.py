@@ -5,11 +5,11 @@ from streamlit_echarts import st_echarts
 
 import nipanel
 
-panel = nipanel.get_panel_accessor()
 
 st.set_page_config(page_title="Simple Graph Example", page_icon="📈", layout="wide")
 st.title("Simple Graph Example")
 
+panel = nipanel.get_panel_accessor()
 time_points = panel.get_value("time_points", [0.0])
 sine_values = panel.get_value("sine_values", [0.0])
 amplitude = panel.get_value("amplitude", 1.0)
@@ -56,4 +56,4 @@ options = {
 }
 
 # Display the chart
-st_echarts(options=options, height="400px")
+st_echarts(options=options, height="400px", key="graph")

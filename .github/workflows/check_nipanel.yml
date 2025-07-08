@@ -12,10 +12,10 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up Python
-        uses: ni/python-actions/setup-python@a3bfe1baa6062fd6157683651d653d527967d4d4 # v0.3.1
+        uses: ni/python-actions/setup-python@5286c12d65d90b2ea738bd57d452dc4366497581 # v0.4.1
         id: setup-python
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@a3bfe1baa6062fd6157683651d653d527967d4d4 # v0.3.1
+        uses: ni/python-actions/setup-poetry@5286c12d65d90b2ea738bd57d452dc4366497581 # v0.4.1
       - name: Check for lock changes
         run: poetry check --lock
       - name: Cache virtualenv
