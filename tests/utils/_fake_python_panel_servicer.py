@@ -27,11 +27,13 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._panel_value_ids: dict[str, dict[str, Any]] = {}
         self._fail_next_start_panel = False
         self._notification_count: int = 0
+        self._python_path: str = ""
 
     def StartPanel(  # noqa: N802
         self, request: StartPanelRequest, context: Any
     ) -> StartPanelResponse:
         """Trivial implementation for testing."""
+        self._python_path = request.python_path
         if self._fail_next_start_panel:
             self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
@@ -80,6 +82,11 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     def notification_count(self) -> int:
         """Get the number of notifications sent from SetValue."""
         return self._notification_count
+
+    @property
+    def python_path(self) -> str:
+        """Get the Python path used to start the panel."""
+        return self._python_path
 
     def _init_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:
