@@ -10,7 +10,7 @@ from streamlit_echarts import st_echarts
 import nipanel
 
 
-def measure_get_value_time(
+def profile_get_value(
     panel: "nipanel.StreamlitPanelValueAccessor", value_id: str, default_value: Any = None
 ) -> Tuple[Any, float]:
     """Measure the time it takes to get a value from the panel.
@@ -35,7 +35,7 @@ st.title("Performance Checker Example")
 
 # Initialize refresh history list if it doesn't exist
 if "refresh_history" not in st.session_state:
-    st.session_state.refresh_history = []
+    st.session_state.refresh_history = []  # List of tuples (timestamp, refresh_time_ms)
 
 # Store current timestamp and calculate time since last refresh
 current_time = time.time()
@@ -46,13 +46,18 @@ else:
     time_since_last_refresh = (current_time - st.session_state.last_refresh_time) * 1000
     st.session_state.last_refresh_time = current_time
 
-    # Store the last 10 refresh times
-    st.session_state.refresh_history.append(time_since_last_refresh)
-    if len(st.session_state.refresh_history) > 10:
-        st.session_state.refresh_history.pop(0)
+    # Store refresh times with timestamps, keeping only the last 1 second of data
+    st.session_state.refresh_history.append((current_time, time_since_last_refresh))
 
+    # Remove entries older than 1 second
+    cutoff_time = current_time - 1.0  # 1 second ago
+    st.session_state.refresh_history = [
+        item for item in st.session_state.refresh_history if item[0] >= cutoff_time
+    ]
+
+# Extract just the refresh times for calculations
 if st.session_state.refresh_history:
-    refresh_history = st.session_state.refresh_history
+    refresh_history = [item[1] for item in st.session_state.refresh_history]
 else:
     refresh_history = []
 
@@ -64,11 +69,11 @@ avg_refresh_time = statistics.mean(refresh_history) if refresh_history else 0
 panel = nipanel.get_panel_accessor()
 
 # Measure time to get each value
-time_points, time_points_ms = measure_get_value_time(panel, "time_points", [0.0])
-sine_values, sine_values_ms = measure_get_value_time(panel, "sine_values", [0.0])
-amplitude, amplitude_ms = measure_get_value_time(panel, "amplitude", 1.0)
-frequency, frequency_ms = measure_get_value_time(panel, "frequency", 1.0)
-unset_value, unset_value_ms = measure_get_value_time(panel, "unset_value", "default")
+time_points, time_points_ms = profile_get_value(panel, "time_points", [0.0])
+sine_values, sine_values_ms = profile_get_value(panel, "sine_values", [0.0])
+amplitude, amplitude_ms = profile_get_value(panel, "amplitude", 1.0)
+frequency, frequency_ms = profile_get_value(panel, "frequency", 1.0)
+unset_value, unset_value_ms = profile_get_value(panel, "unset_value", "default")
 
 # Prepare data for echarts
 data = [{"value": [x, y]} for x, y in zip(time_points, sine_values)]
@@ -111,11 +116,11 @@ with col2:
     st.metric("Min Refresh Time", f"{min_refresh_time:.1f} ms")
     st.metric("Max Refresh Time", f"{max_refresh_time:.1f} ms")
     st.metric("Avg Refresh Time", f"{avg_refresh_time:.1f} ms")
+    st.metric("FPS", f"{len(refresh_history)}")
 
 with col3:
     st.metric("get time_points", f"{time_points_ms:.1f} ms")
     st.metric("get sine_values", f"{sine_values_ms:.1f} ms")
     st.metric("get amplitude", f"{amplitude_ms:.1f} ms")
     st.metric("get frequency", f"{frequency_ms:.1f} ms")
-with col4:
     st.metric("get unset_value", f"{unset_value_ms:.1f} ms")
