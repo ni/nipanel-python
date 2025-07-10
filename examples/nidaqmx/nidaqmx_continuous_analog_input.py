@@ -21,13 +21,12 @@ panel = nipanel.create_panel(panel_script_path)
 
 try:
     print(f"Panel URL: {panel.panel_url}")
-    print(f"Press Ctrl + C to quit")
+    print(f"Waiting for the 'Run' button to be pressed...")
+    print(f"(Press Ctrl + C to quit)")
     while True:
-        print(f"Waiting for the 'Run' button to be pressed...")
+        panel.set_value("run_button", False)
         while not panel.get_value("run_button", False):
             time.sleep(0.1)
-
-        panel.set_value("is_running", True)
 
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
@@ -64,6 +63,9 @@ try:
             try:
                 print(f"Starting data acquisition...")
                 task.start()
+                panel.set_value("is_running", True)
+
+                panel.set_value("stop_button", False)
                 while not panel.get_value("stop_button", False):
                     data = task.read(
                         number_of_samples_per_channel=1000  # pyright: ignore[reportArgumentType]
