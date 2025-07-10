@@ -2,6 +2,8 @@
 
 import statistics
 import time
+import timeit
+from functools import partial
 from typing import Any, Tuple
 
 import streamlit as st
@@ -11,7 +13,10 @@ import nipanel
 
 
 def profile_get_value(
-    panel: "nipanel.StreamlitPanelValueAccessor", value_id: str, default_value: Any = None
+    panel: "nipanel.StreamlitPanelValueAccessor",
+    value_id: str,
+    default_value: Any = None,
+    num_runs: int = 5,
 ) -> Tuple[Any, float]:
     """Measure the time it takes to get a value from the panel.
 
@@ -19,21 +24,20 @@ def profile_get_value(
         panel: The panel accessor object
         value_id: The ID of the value to get
         default_value: Default value if the value is not found
+        num_runs: Number of runs for timing
 
     Returns:
         A tuple of (value, time_ms) where time_ms is the time in milliseconds
     """
-    start_time = time.time()
     value = panel.get_value(value_id, default_value)
-    end_time = time.time()
-    time_ms = (end_time - start_time) * 1000
+    get_value_func = partial(panel.get_value, value_id, default_value)
+    time_ms = timeit.timeit(get_value_func, number=num_runs) * 1000 / num_runs
     return value, time_ms
 
 
 st.set_page_config(page_title="Performance Checker Example", page_icon="📈", layout="wide")
 st.title("Performance Checker Example")
 
-# Initialize refresh history list if it doesn't exist
 if "refresh_history" not in st.session_state:
     st.session_state.refresh_history = []  # List of tuples (timestamp, refresh_time_ms)
 
@@ -61,24 +65,21 @@ if st.session_state.refresh_history:
 else:
     refresh_history = []
 
-# Calculate statistics for refresh
 min_refresh_time = min(refresh_history) if refresh_history else 0
 max_refresh_time = max(refresh_history) if refresh_history else 0
 avg_refresh_time = statistics.mean(refresh_history) if refresh_history else 0
 
 panel = nipanel.get_panel_accessor()
 
-# Measure time to get each value
-time_points, time_points_ms = profile_get_value(panel, "time_points", [0.0])
-sine_values, sine_values_ms = profile_get_value(panel, "sine_values", [0.0])
-amplitude, amplitude_ms = profile_get_value(panel, "amplitude", 1.0)
-frequency, frequency_ms = profile_get_value(panel, "frequency", 1.0)
-unset_value, unset_value_ms = profile_get_value(panel, "unset_value", "default")
+num_timing_runs = 5
+time_points, time_points_ms = profile_get_value(panel, "time_points", [0.0], num_timing_runs)
+sine_values, sine_values_ms = profile_get_value(panel, "sine_values", [0.0], num_timing_runs)
+amplitude, amplitude_ms = profile_get_value(panel, "amplitude", 1.0, num_timing_runs)
+frequency, frequency_ms = profile_get_value(panel, "frequency", 1.0, num_timing_runs)
+unset_value, unset_value_ms = profile_get_value(panel, "unset_value", "default", num_timing_runs)
 
-# Prepare data for echarts
 data = [{"value": [x, y]} for x, y in zip(time_points, sine_values)]
 
-# Configure the chart options
 options = {
     "animation": False,  # Disable animation for smoother updates
     "title": {"text": "Sine Wave"},
@@ -103,10 +104,8 @@ options = {
     ],
 }
 
-# Display the chart
 st_echarts(options=options, height="400px", key="graph")
 
-# Create columns for metrics
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("Amplitude", f"{amplitude:.2f}")
