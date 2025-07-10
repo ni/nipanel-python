@@ -20,23 +20,23 @@ time_points = np.linspace(0, num_points, num_points)
 sine_values = amplitude * np.sin(frequency * time_points)
 
 
-def _set_time_points():
+def _set_time_points() -> None:
     panel.set_value("time_points", time_points.tolist())
 
 
-def _set_amplitude():
+def _set_amplitude() -> None:
     panel.set_value("amplitude", amplitude)
 
 
-def _get_time_points():
+def _get_time_points() -> None:
     panel.get_value("time_points", [0.0])
 
 
-def _get_amplitude():
+def _get_amplitude() -> None:
     panel.get_value("amplitude", 1.0)
 
 
-def _get_unset_value():
+def _get_unset_value() -> None:
     panel.get_value("unset_value", 1.0)
 
 
