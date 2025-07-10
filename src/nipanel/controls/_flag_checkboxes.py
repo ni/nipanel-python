@@ -1,23 +1,23 @@
 """A set of checkboxes for selecting Flag enum values."""
 
 from enum import Flag
-from typing import TypeVar, Callable
+from typing import TypeVar, Callable, Optional
 
 import streamlit as st
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
-T = TypeVar("T", bound=Flag)
+TFlagType = TypeVar("TFlagType", bound=Flag)
 
 
 def flag_checkboxes(
     panel: StreamlitPanelValueAccessor,
     label: str,
-    value: T,
+    value: TFlagType,
     key: str,
-    disabled: bool = False,
+    disabled_values: Optional[TFlagType] = None,
     label_formatter: Callable[[Flag], str] = lambda x: str(x.name),
-) -> T:
+) -> TFlagType:
     """Create a set of checkboxes for a Flag enum.
 
     This will display a checkbox for each individual flag value in the enum. When checkboxes
@@ -29,7 +29,8 @@ def flag_checkboxes(
         label: Label to display above the checkboxes
         value: The default Flag enum value (also determines the specific Flag enum type)
         key: Key to use for storing the Flag value in the panel
-        disabled: Whether the checkboxes should be disabled
+        disabled_values: A Flag enum value indicating which flags should be disabled.
+                         If None or flag_type(0), no checkboxes are disabled.
         label_formatter: Function that formats the flag to a string for display. Default
                          uses flag.name.
 
@@ -49,20 +50,23 @@ def flag_checkboxes(
 
     # Create a container for flag checkboxes
     flag_container = st.container(border=True)
-    selected_flags = flag_type(0)  # Start with no flags
 
-    # If default value is set, use it as the initial state
-    if value:
-        selected_flags = value
+    # Use the provided value as the initial state for selected flags
+    selected_flags = value
 
     # Create a checkbox for each flag
     for flag in flag_values:
         is_selected = bool(selected_flags & flag)
+
+        is_disabled = False
+        if disabled_values is not None:
+            is_disabled = bool(disabled_values & flag)
+
         if flag_container.checkbox(
             label=label_formatter(flag),
             value=is_selected,
             key=f"{key}_{flag.name}",
-            disabled=disabled,
+            disabled=is_disabled,
         ):
             selected_flags |= flag
         else:

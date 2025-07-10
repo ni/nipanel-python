@@ -7,17 +7,17 @@ import streamlit as st
 
 from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 
-T = TypeVar("T", bound=Enum)
+TEnumType = TypeVar("TEnumType", bound=Enum)
 
 
 def enum_selectbox(
     panel: StreamlitPanelValueAccessor,
     label: str,
-    value: T,
+    value: TEnumType,
     key: str,
     disabled: bool = False,
     format_func: Callable[[Any], str] = lambda x: x[0],
-) -> T:
+) -> TEnumType:
     """Create a selectbox for an Enum.
 
     The selectbox will display the names of all the enum values, and when a value is selected,

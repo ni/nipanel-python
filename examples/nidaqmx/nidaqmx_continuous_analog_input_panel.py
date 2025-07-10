@@ -38,19 +38,19 @@ panel = nipanel.get_panel_accessor()
 is_running = panel.get_value("is_running", False)
 
 if is_running:
-    st.button(r"⏹️ $\large{\textbf{Stop}}$", key="stop_button")
+    st.button(r"⏹️ Stop", key="stop_button")
 else:
-    st.button(r"▶️ $\large{\textbf{Run}}$", key="run_button")
+    st.button(r"▶️ Run", key="run_button")
 
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
 sample_rate = panel.get_value("sample_rate", 0.0)
 
 # Create two-column layout for the entire interface
-left_col, right_col = st.columns([1, 1])
+left_column, right_column = st.columns([1, 1])
 
 # Left column - Channel tabs and Timing Settings
-with left_col:
+with left_column:
     # Channel Settings tabs
     with st.container(border=True):
         st.header("Channel Settings")
@@ -58,8 +58,8 @@ with left_col:
 
         voltage_tab.header("Voltage")
         with voltage_tab:
-            channel_left, channel_right = st.columns(2)
-            with channel_left:
+            channel_left_column, channel_right_column = st.columns(2)
+            with channel_left_column:
                 st.selectbox(options=["Dev1/ai0"], label="Physical Channels", disabled=True)
                 st.number_input(
                     "Min Value",
@@ -75,7 +75,7 @@ with left_col:
                     disabled=panel.get_value("is_running", False),
                     key="voltage_max_value",
                 )
-            with channel_right:
+            with channel_right_column:
                 ni.enum_selectbox(
                     panel,
                     label="Terminal Configuration",
@@ -86,8 +86,8 @@ with left_col:
 
         thermocouple_tab.header("Thermocouple")
         with thermocouple_tab:
-            channel_left, channel_middle, channel_right = st.columns(3)
-            with channel_left:
+            channel_left_column, channel_middle_column, channel_right_column = st.columns(3)
+            with channel_left_column:
                 st.selectbox(options=["Dev1/ai1"], label="Physical Channel", disabled=True)
                 st.number_input(
                     "Min Value",
@@ -103,7 +103,7 @@ with left_col:
                     disabled=panel.get_value("is_running", False),
                     key="thermocouple_max_value",
                 )
-            with channel_middle:
+            with channel_middle_column:
                 ni.enum_selectbox(
                     panel,
                     label="Units",
@@ -118,7 +118,7 @@ with left_col:
                     disabled=panel.get_value("is_running", False),
                     key="thermocouple_type",
                 )
-            with channel_right:
+            with channel_right_column:
                 ni.enum_selectbox(
                     panel,
                     label="CJC Source",
@@ -137,8 +137,8 @@ with left_col:
     # Timing Settings section in left column
     with st.container(border=True):
         st.header("Timing Settings")
-        timing_left, timing_right = st.columns(2)
-        with timing_left:
+        timing_left_column, timing_right_column = st.columns(2)
+        with timing_left_column:
             st.selectbox(
                 options=["OnboardClock"],
                 label="Sample Clock Source",
@@ -152,7 +152,7 @@ with left_col:
                 disabled=panel.get_value("is_running", False),
                 key="sample_rate_input",
             )
-        with timing_right:
+        with timing_right_column:
             st.number_input(
                 "Samples per Loop",
                 value=3000,
@@ -168,7 +168,7 @@ with left_col:
             )
 
 # Right column - Graph and Logging Settings
-with right_col:
+with right_column:
     with st.container(border=True):
         # Graph section
         st.header("Voltage & Thermocouple")
@@ -217,8 +217,8 @@ with right_col:
     # Logging Settings section in right column
     with st.container(border=True):
         st.header("Logging Settings")
-        logging_left, logging_right = st.columns(2)
-        with logging_left:
+        logging_left_column, logging_right_column = st.columns(2)
+        with logging_left_column:
             ni.enum_selectbox(
                 panel,
                 label="Logging Mode",
@@ -226,9 +226,9 @@ with right_col:
                 disabled=panel.get_value("is_running", False),
                 key="logging_mode",
             )
-        with logging_right:
-            col1, col2 = st.columns([3, 1])
-            with col1:
+        with logging_right_column:
+            left_sub_column, right_sub_column = st.columns([3, 1])
+            with left_sub_column:
                 tdms_file_path = st.text_input(
                     label="TDMS File Path",
                     disabled=panel.get_value("is_running", False),

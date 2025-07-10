@@ -37,8 +37,4 @@ for name in all_types_with_values.keys():
             st.text_input(label=name, value=default_value, key=name)
 
     with col3:
-        value = panel.get_value(name)
-        value_with_default = panel.get_value(name, default_value=default_value)
-        st.write(value_with_default)
-        if str(value) != str(value_with_default):
-            st.write("(", value, ")")
+        st.write(panel.get_value(name, default_value=default_value))
