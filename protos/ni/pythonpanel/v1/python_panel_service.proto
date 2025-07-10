@@ -98,10 +98,7 @@ message GetValueRequest {
 
 message GetValueResponse {
   // The value
-  google.protobuf.Any value = 1;
-
-  // Was the value found?
-  bool found = 2;
+  optional google.protobuf.Any value = 1;
 }
 
 message SetValueRequest {

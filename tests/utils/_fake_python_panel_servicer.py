@@ -63,9 +63,9 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""
         if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):
-            return GetValueResponse(found=False)
+            return GetValueResponse()
         value = self._panel_value_ids[request.panel_id][request.value_id]
-        return GetValueResponse(found=True, value=value)
+        return GetValueResponse(value=value)
 
     def SetValue(self, request: SetValueRequest, context: Any) -> SetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""

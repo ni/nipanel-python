@@ -124,14 +124,15 @@ class PanelClient:
             value_id: The ID of the control.
 
         Returns:
-            The value, and a boolean indicating if the value was found.
+            A tuple containing a boolean indicating whether the value was successfully retrieved and
+            the value itself (or None if not present).
         """
         get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
-        if not response.found:
+        if response.HasField("value"):
+            return True, from_any(response.value)
+        else:
             return False, None
-        the_value = from_any(response.value)
-        return True, the_value
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:

@@ -162,9 +162,6 @@ class GetValueResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     VALUE_FIELD_NUMBER: builtins.int
-    FOUND_FIELD_NUMBER: builtins.int
-    found: builtins.bool
-    """Was the value found?"""
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
         """The value"""
@@ -173,10 +170,10 @@ class GetValueResponse(google.protobuf.message.Message):
         self,
         *,
         value: google.protobuf.any_pb2.Any | None = ...,
-        found: builtins.bool = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["found", b"found", "value", b"value"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
 
 global___GetValueResponse = GetValueResponse
 
