@@ -3,7 +3,7 @@ from __future__ import annotations
 import collections
 import enum
 from abc import ABC
-from typing import TypeVar, overload
+from typing import TypeVar, overload, Any
 
 import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
@@ -46,7 +46,9 @@ class PanelValueAccessor(ABC):
         )
         self._panel_id = panel_id
         self._notify_on_set_value = notify_on_set_value
-        self._last_values = collections.defaultdict(lambda: object())
+        self._last_values: collections.defaultdict[str, Any] = collections.defaultdict(
+            lambda: object()
+        )
 
     @property
     def panel_id(self) -> str:
