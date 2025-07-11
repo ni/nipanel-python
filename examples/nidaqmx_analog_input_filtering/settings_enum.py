@@ -25,3 +25,6 @@ class TerminalConfig(enum.StrEnum):
     NRSE = "NRSE"
     DIFF = "DIFF"
     PSEUDO_DIFF = "PSEUDO_DIFF"
+class ShuntLocation(enum.StrEnum):
+    DEFAULT = "DEFAULT"
+    EXTERNAL = "EXTERNAL"
