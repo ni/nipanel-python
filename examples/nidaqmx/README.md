@@ -16,5 +16,5 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Usage
 
-Run `poetry run examples/nidaqmx_continuous_analog_input/nidaqmx_continuous_analog_input.py`
+Run `poetry run examples/nidaqmx/nidaqmx_continuous_analog_input.py`
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import collections
+import enum
 from abc import ABC
 from typing import TypeVar, overload
 
@@ -15,7 +17,13 @@ _T = TypeVar("_T")
 class PanelValueAccessor(ABC):
     """This class allows you to access values for a panel's controls."""
 
-    __slots__ = ["_panel_client", "_panel_id", "_notify_on_set_value", "__weakref__"]
+    __slots__ = [
+        "_panel_client",
+        "_panel_id",
+        "_notify_on_set_value",
+        "_last_values",
+        "__weakref__",
+    ]
 
     def __init__(
         self,
@@ -38,6 +46,9 @@ class PanelValueAccessor(ABC):
         )
         self._panel_id = panel_id
         self._notify_on_set_value = notify_on_set_value
+        self._last_values: collections.defaultdict[str, object] = collections.defaultdict(
+            lambda: object()
+        )
 
     @property
     def panel_id(self) -> str:
@@ -60,17 +71,24 @@ class PanelValueAccessor(ABC):
         Returns:
             The value, or the default value if not set
         """
-        try:
-            value = self._panel_client.get_value(self._panel_id, value_id)
-            if default_value is not None and not isinstance(value, type(default_value)):
-                raise TypeError("Value type does not match default value type.")
-            return value
-
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.NOT_FOUND and default_value is not None:
+        found, value = self._panel_client.get_value(self._panel_id, value_id)
+        if not found:
+            if default_value is not None:
                 return default_value
-            else:
-                raise e
+            raise KeyError(f"Value with id '{value_id}' not found on panel '{self._panel_id}'.")
+
+        if default_value is not None and not isinstance(value, type(default_value)):
+            if isinstance(default_value, enum.Enum):
+                enum_type = type(default_value)
+                return enum_type(value)
+
+            # lists are allowed to not match, since sets and tuples are converted to lists
+            if not isinstance(value, list):
+                raise TypeError(
+                    f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
+                )
+
+        return value
 
     def set_value(self, value_id: str, value: object) -> None:
         """Set the value for a control on the panel.
@@ -79,6 +97,22 @@ class PanelValueAccessor(ABC):
             value_id: The id of the value
             value: The value
         """
+        if isinstance(value, enum.Enum):
+            value = value.value
+
         self._panel_client.set_value(
             self._panel_id, value_id, value, notify=self._notify_on_set_value
         )
+        self._last_values[value_id] = value
+
+    def set_value_if_changed(self, value_id: str, value: object) -> None:
+        """Set the value for a control on the panel only if it has changed since the last call.
+
+        This method helps reduce unnecessary updates when the value hasn't changed.
+
+        Args:
+            value_id: The id of the value
+            value: The value to set
+        """
+        if value != self._last_values[value_id]:
+            self.set_value(value_id, value)
