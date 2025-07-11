@@ -1,3 +1,6 @@
+import enum
+from datetime import datetime
+
 import grpc
 import pytest
 from typing_extensions import assert_type
@@ -242,6 +245,17 @@ def test___set_int_type___get_value_with_bool_default___raises_exception(
         panel.get_value(value_id, False)
 
 
+def test___set_string_enum_type___get_value_with_int_enum_default___raises_exception(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    panel.set_value(value_id, test_types.MyStrEnum.VALUE3)
+
+    with pytest.raises(ValueError):
+        panel.get_value(value_id, test_types.MyIntEnum.VALUE10)
+
+
 @pytest.mark.parametrize(
     "value_payload",
     [
@@ -250,11 +264,6 @@ def test___set_int_type___get_value_with_bool_default___raises_exception(
         3.14,
         True,
         b"robotext",
-        test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4,
-        test_types.MyIntEnum.VALUE20,
-        test_types.MyStrEnum.VALUE3,
-        test_types.MixinIntEnum.VALUE33,
-        test_types.MixinStrEnum.VALUE11,
     ],
 )
 def test___builtin_scalar_type___set_value___gets_same_value(
@@ -273,8 +282,45 @@ def test___builtin_scalar_type___set_value___gets_same_value(
 @pytest.mark.parametrize(
     "value_payload",
     [
-        test_types.MyEnum.VALUE300,
-        test_types.MyFlags.VALUE8 | test_types.MyFlags.VALUE16,
+        test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4,
+        test_types.MyIntableFlags.VALUE16 | test_types.MyIntableFlags.VALUE32,
+        test_types.MyIntEnum.VALUE20,
+        test_types.MyIntableEnum.VALUE200,
+        test_types.MyStrEnum.VALUE3,
+        test_types.MyStringableEnum.VALUE2,
+        test_types.MixinIntEnum.VALUE33,
+        test_types.MixinStrEnum.VALUE11,
+        test_types.MyMixedEnum.VALUE2,
+    ],
+)
+def test___enum_type___set_value___gets_same_value(
+    fake_panel_channel: grpc.Channel,
+    value_payload: enum.Enum,
+) -> None:
+    """Test that set_value() and get_value() work for enum types."""
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    value_id = "test_id"
+    panel.set_value(value_id, value_payload)
+
+    # without providing a default value, get_value will return the raw value, not the enum
+    assert panel.get_value(value_id) == value_payload.value
+
+
+@pytest.mark.parametrize(
+    "value_payload",
+    [
+        datetime.now(),
+        lambda x: x + 1,
+        [1, "string"],
+        ["string", []],
+        (42, "hello", 3.14, b"bytes"),
+        set([1, "mixed", True]),
+        (i for i in range(5)),
+        {
+            "key1": [1, 2, 3],
+            "key2": {"nested": True, "values": [4.5, 6.7]},
+        },
     ],
 )
 def test___unsupported_type___set_value___raises(
@@ -339,6 +385,117 @@ def test___sequence_of_builtin_type___set_value___gets_same_value(
 
     received_value = panel.get_value(value_id)
     assert list(received_value) == list(value_payload)  # type: ignore [call-overload]
+
+
+def test___set_int_enum_value___get_value___returns_int_enum(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    enum_value = test_types.MyIntEnum.VALUE20
+    panel.set_value(value_id, enum_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyIntEnum.VALUE10)
+
+    assert_type(retrieved_value, test_types.MyIntEnum)
+    assert retrieved_value is test_types.MyIntEnum.VALUE20
+    assert retrieved_value.value == enum_value.value
+    assert retrieved_value.name == enum_value.name
+
+
+def test___set_intable_enum_value___get_value___returns_intable_enum(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    enum_value = test_types.MyIntableEnum.VALUE200
+    panel.set_value(value_id, enum_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyIntableEnum.VALUE100)
+
+    assert_type(retrieved_value, test_types.MyIntableEnum)
+    assert retrieved_value is test_types.MyIntableEnum.VALUE200
+    assert retrieved_value.value == enum_value.value
+    assert retrieved_value.name == enum_value.name
+
+
+def test___set_string_enum_value___get_value___returns_string_enum(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    enum_value = test_types.MyStrEnum.VALUE3
+    panel.set_value(value_id, enum_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyStrEnum.VALUE1)
+
+    assert_type(retrieved_value, test_types.MyStrEnum)
+    assert retrieved_value is test_types.MyStrEnum.VALUE3
+    assert retrieved_value.value == enum_value.value
+    assert retrieved_value.name == enum_value.name
+
+
+def test___set_stringable_enum_value___get_value___returns_stringable_enum(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    enum_value = test_types.MyStringableEnum.VALUE3
+    panel.set_value(value_id, enum_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyStringableEnum.VALUE1)
+
+    assert_type(retrieved_value, test_types.MyStringableEnum)
+    assert retrieved_value is test_types.MyStringableEnum.VALUE3
+    assert retrieved_value.value == enum_value.value
+    assert retrieved_value.name == enum_value.name
+
+
+def test___set_mixed_enum_value___get_value___returns_mixed_enum(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    enum_value = test_types.MyMixedEnum.VALUE2
+    panel.set_value(value_id, enum_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyMixedEnum.VALUE1)
+
+    assert_type(retrieved_value, test_types.MyMixedEnum)
+    assert retrieved_value is test_types.MyMixedEnum.VALUE2
+    assert retrieved_value.value == enum_value.value
+    assert retrieved_value.name == enum_value.name
+
+
+def test___set_int_flags_value___get_value___returns_int_flags(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    flags_value = test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4
+    panel.set_value(value_id, flags_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyIntFlags.VALUE2)
+
+    assert_type(retrieved_value, test_types.MyIntFlags)
+    assert retrieved_value == (test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4)
+    assert retrieved_value.value == flags_value.value
+
+
+def test___set_intable_flags_value___get_value___returns_intable_flags(
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    value_id = "test_id"
+    flags_value = test_types.MyIntableFlags.VALUE16 | test_types.MyIntableFlags.VALUE32
+    panel.set_value(value_id, flags_value)
+
+    retrieved_value = panel.get_value(value_id, test_types.MyIntableFlags.VALUE8)
+
+    assert_type(retrieved_value, test_types.MyIntableFlags)
+    assert retrieved_value is test_types.MyIntableFlags.VALUE16 | test_types.MyIntableFlags.VALUE32
+    assert retrieved_value.value == flags_value.value
+    assert retrieved_value.name == flags_value.name
 
 
 def test___panel___panel_is_running_and_in_memory(
