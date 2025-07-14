@@ -71,8 +71,8 @@ class PanelValueAccessor(ABC):
         Returns:
             The value, or the default value if not set
         """
-        found, value = self._panel_client.try_get_value(self._panel_id, value_id)
-        if not found:
+        value = self._panel_client.try_get_value(self._panel_id, value_id)
+        if value is None:
             if default_value is not None:
                 return default_value
             raise KeyError(f"Value with id '{value_id}' not found on panel '{self._panel_id}'.")

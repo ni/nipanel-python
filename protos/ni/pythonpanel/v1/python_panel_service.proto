@@ -35,7 +35,7 @@ service PythonPanelService {
   // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
   // Status Codes for errors:
   rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
-  
+
   // Get a value for a control on the panel
   // Status Codes for errors:
   // - INVALID_ARGUMENT: 

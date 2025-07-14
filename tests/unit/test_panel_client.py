@@ -60,12 +60,12 @@ def test___get_unset_value___raises_exception(fake_panel_channel: grpc.Channel) 
     assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
 
 
-def test___try_get_unset_value___returns_not_found(fake_panel_channel: grpc.Channel) -> None:
+def test___try_get_unset_value___returns_none(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
     response = client.try_get_value("panel1", "unset_id")
 
-    assert response == (False, None)
+    assert response is None
 
 
 def test___set_value___enumerate_panels_shows_value(
@@ -83,7 +83,7 @@ def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
 
     client.set_value("panel1", "val1", "value1", notify=False)
 
-    assert client.try_get_value("panel1", "val1") == (True, "value1")
+    assert client.try_get_value("panel1", "val1") == "value1"
 
 
 def create_panel_client(fake_panel_channel: grpc.Channel) -> PanelClient:
