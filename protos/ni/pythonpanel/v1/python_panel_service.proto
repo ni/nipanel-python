@@ -35,13 +35,22 @@ service PythonPanelService {
   // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
   // Status Codes for errors:
   rpc EnumeratePanels(EnumeratePanelsRequest) returns (EnumeratePanelsResponse);
+  
+  // Get a value for a control on the panel
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: 
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - NOT_FOUND: 
+  //   - The value with the specified identifier was not found.
+  rpc GetValue(GetValueRequest) returns (GetValueResponse);
 
   // Try to get a value for a control on the panel
   // Status Codes for errors:
   // - INVALID_ARGUMENT: 
   //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  rpc TryGetValue(TryGetValueRequest) returns (TryGetValueResponse);
+  rpc TryGetValue(GetValueRequest) returns (TryGetValueResponse);
 
   // Set a value for a control on the panel
   // Status Codes for errors:
@@ -97,12 +106,17 @@ message EnumeratePanelsResponse {
   repeated PanelInformation panels = 1;
 }
 
-message TryGetValueRequest {
+message GetValueRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
   // Unique ID of value
   string value_id = 2;
+}
+
+message GetValueResponse {
+  // The value
+  google.protobuf.Any value = 1;
 }
 
 message TryGetValueResponse {

@@ -138,7 +138,7 @@ class EnumeratePanelsResponse(google.protobuf.message.Message):
 global___EnumeratePanelsResponse = EnumeratePanelsResponse
 
 @typing.final
-class TryGetValueRequest(google.protobuf.message.Message):
+class GetValueRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
@@ -155,7 +155,26 @@ class TryGetValueRequest(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "value_id", b"value_id"]) -> None: ...
 
-global___TryGetValueRequest = TryGetValueRequest
+global___GetValueRequest = GetValueRequest
+
+@typing.final
+class GetValueResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VALUE_FIELD_NUMBER: builtins.int
+    @property
+    def value(self) -> google.protobuf.any_pb2.Any:
+        """The value"""
+
+    def __init__(
+        self,
+        *,
+        value: google.protobuf.any_pb2.Any | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value"]) -> None: ...
+
+global___GetValueResponse = GetValueResponse
 
 @typing.final
 class TryGetValueResponse(google.protobuf.message.Message):

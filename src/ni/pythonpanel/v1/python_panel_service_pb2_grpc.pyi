@@ -53,8 +53,21 @@ class PythonPanelServiceStub:
     Status Codes for errors:
     """
 
+    GetValue: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse,
+    ]
+    """Get a value for a control on the panel
+    Status Codes for errors:
+    - INVALID_ARGUMENT: 
+      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - NOT_FOUND: 
+      - The value with the specified identifier was not found.
+    """
+
     TryGetValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
@@ -110,8 +123,21 @@ class PythonPanelServiceAsyncStub:
     Status Codes for errors:
     """
 
+    GetValue: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse,
+    ]
+    """Get a value for a control on the panel
+    Status Codes for errors:
+    - INVALID_ARGUMENT: 
+      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - NOT_FOUND: 
+      - The value with the specified identifier was not found.
+    """
+
     TryGetValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
@@ -174,9 +200,24 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
+    def GetValue(
+        self,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        context: _ServicerContext,
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse]]:
+        """Get a value for a control on the panel
+        Status Codes for errors:
+        - INVALID_ARGUMENT: 
+          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+          - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - NOT_FOUND: 
+          - The value with the specified identifier was not found.
+        """
+
+    @abc.abstractmethod
     def TryGetValue(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
         context: _ServicerContext,
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse]]:
         """Try to get a value for a control on the panel

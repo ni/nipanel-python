@@ -9,7 +9,8 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     EnumeratePanelsRequest,
     EnumeratePanelsResponse,
     PanelInformation,
-    TryGetValueRequest,
+    GetValueRequest,
+    GetValueResponse,
     TryGetValueResponse,
     SetValueRequest,
     SetValueResponse,
@@ -60,8 +61,15 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
             response.panels.append(panel)
         return response
 
+    def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
+        """Trivial implementation for testing."""
+        if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):
+            context.abort(grpc.StatusCode.NOT_FOUND, "Value ID not found in panel")
+        value = self._panel_value_ids[request.panel_id][request.value_id]
+        return GetValueResponse(value=value)
+
     def TryGetValue(  # noqa: N802
-        self, request: TryGetValueRequest, context: Any
+        self, request: GetValueRequest, context: Any
     ) -> TryGetValueResponse:
         """Trivial implementation for testing."""
         if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):
