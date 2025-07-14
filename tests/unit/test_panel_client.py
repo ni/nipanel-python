@@ -53,7 +53,7 @@ def test___start_panels___stop_panel_1_without_reset___enumerate_has_both_panels
 def test___get_unset_value___returns_not_found(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    response = client.get_value("panel1", "unset_id")
+    response = client.try_get_value("panel1", "unset_id")
 
     assert response == (False, None)
 
@@ -73,7 +73,7 @@ def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
 
     client.set_value("panel1", "val1", "value1", notify=False)
 
-    assert client.get_value("panel1", "val1") == (True, "value1")
+    assert client.try_get_value("panel1", "val1") == (True, "value1")
 
 
 def create_panel_client(fake_panel_channel: grpc.Channel) -> PanelClient:

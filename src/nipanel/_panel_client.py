@@ -11,7 +11,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
-    GetValueRequest,
+    TryGetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
@@ -116,8 +116,8 @@ class PanelClient:
         )
         self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
 
-    def get_value(self, panel_id: str, value_id: str) -> tuple[bool, object]:
-        """Get the value for the control with value_id.
+    def try_get_value(self, panel_id: str, value_id: str) -> tuple[bool, object]:
+        """Try to get the value for the control with value_id.
 
         Args:
             panel_id: The ID of the panel.
@@ -127,8 +127,8 @@ class PanelClient:
             A tuple containing a boolean indicating whether the value was successfully retrieved and
             the value itself (or None if not present).
         """
-        get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
-        response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
+        try_get_value_request = TryGetValueRequest(panel_id=panel_id, value_id=value_id)
+        response = self._invoke_with_retry(self._get_stub().TryGetValue, try_get_value_request)
         if response.HasField("value"):
             return True, from_any(response.value)
         else:

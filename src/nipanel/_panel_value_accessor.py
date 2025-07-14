@@ -71,7 +71,7 @@ class PanelValueAccessor(ABC):
         Returns:
             The value, or the default value if not set
         """
-        found, value = self._panel_client.get_value(self._panel_id, value_id)
+        found, value = self._panel_client.try_get_value(self._panel_id, value_id)
         if not found:
             if default_value is not None:
                 return default_value
