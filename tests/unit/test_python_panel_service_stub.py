@@ -62,3 +62,13 @@ def test___set_value___try_get_value___gets_response(
 
     assert response is not None  # Ensure response is returned
     assert response.value == test_value  # Ensure the value is correct
+
+
+def test___no_value___try_get_value___gets_no_value(
+    python_panel_service_stub: PythonPanelServiceStub,
+) -> None:
+    request = TryGetValueRequest(panel_id="test_panel", value_id="test_value")
+    response = python_panel_service_stub.TryGetValue(request)
+
+    assert response is not None  # Ensure response is returned
+    assert response.HasField("value") is False  # Ensure no value is returned
