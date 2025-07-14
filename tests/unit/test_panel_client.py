@@ -51,11 +51,13 @@ def test___start_panels___stop_panel_1_without_reset___enumerate_has_both_panels
     }
 
 
-def test___get_unset_value_raises_exception(fake_panel_channel: grpc.Channel) -> None:
+def test___get_unset_value___raises_exception(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    with pytest.raises(Exception):
+    with pytest.raises(grpc.RpcError) as exc_info:
         client.get_value("panel1", "unset_id")
+
+    assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
 
 
 def test___try_get_unset_value___returns_not_found(fake_panel_channel: grpc.Channel) -> None:
