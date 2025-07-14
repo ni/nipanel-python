@@ -129,3 +129,12 @@ def from_any(protobuf_any: any_pb2.Any) -> object:
 
     converter = _CONVERTER_FOR_GRPC_TYPE[underlying_typename]
     return converter.to_python(protobuf_any)
+
+
+def is_supported_type(value: object) -> bool:
+    """Check if a given Python value can be converted to protobuf Any."""
+    try:
+        _get_best_matching_type(value)
+        return True
+    except TypeError:
+        return False

@@ -26,6 +26,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._panel_is_running: dict[str, bool] = {}
         self._panel_value_ids: dict[str, dict[str, Any]] = {}
         self._fail_next_start_panel = False
+        self._set_count: int = 0
         self._notification_count: int = 0
         self._python_path: str = ""
 
@@ -62,7 +63,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     def GetValue(self, request: GetValueRequest, context: Any) -> GetValueResponse:  # noqa: N802
         """Trivial implementation for testing."""
         if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):
-            context.abort(grpc.StatusCode.NOT_FOUND, "Value ID not found in panel")
+            return GetValueResponse()
         value = self._panel_value_ids[request.panel_id][request.value_id]
         return GetValueResponse(value=value)
 
@@ -70,6 +71,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         """Trivial implementation for testing."""
         self._init_panel(request.panel_id)
         self._panel_value_ids[request.panel_id][request.value_id] = request.value
+        self._set_count += 1
         if request.notify:
             self._notification_count += 1
         return SetValueResponse()
@@ -77,6 +79,11 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
     def fail_next_start_panel(self) -> None:
         """Set whether the StartPanel method should fail the next time it is called."""
         self._fail_next_start_panel = True
+
+    @property
+    def set_count(self) -> int:
+        """Get the total number of times SetValue was called."""
+        return self._set_count
 
     @property
     def notification_count(self) -> int:

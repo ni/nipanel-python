@@ -21,6 +21,14 @@ class MyIntFlags(enum.IntFlag):
     VALUE4 = 4
 
 
+class MyIntableFlags(enum.Flag):
+    """Example of a simple flag with int values."""
+
+    VALUE8 = 8
+    VALUE16 = 16
+    VALUE32 = 32
+
+
 class MyIntEnum(enum.IntEnum):
     """Example of an IntEnum enum."""
 
@@ -53,17 +61,25 @@ class MixinStrEnum(str, enum.Enum):
     VALUE33 = "value33"
 
 
-class MyEnum(enum.Enum):
-    """Example of a simple enum."""
+class MyIntableEnum(enum.Enum):
+    """Example of a simple enum with int values."""
 
     VALUE100 = 100
     VALUE200 = 200
     VALUE300 = 300
 
 
-class MyFlags(enum.Flag):
-    """Example of a simple flag."""
+class MyStringableEnum(StrEnum):
+    """Example of a simple enum with str values."""
 
-    VALUE8 = 8
-    VALUE16 = 16
-    VALUE32 = 32
+    VALUE1 = "value10"
+    VALUE2 = "value20"
+    VALUE3 = "value30"
+
+
+class MyMixedEnum(enum.Enum):
+    """Example of an enum with mixed values."""
+
+    VALUE1 = "value1"
+    VALUE2 = 2
+    VALUE3 = 3.0
