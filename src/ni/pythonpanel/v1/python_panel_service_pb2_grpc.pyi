@@ -67,7 +67,7 @@ class PythonPanelServiceStub:
     """
 
     TryGetValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
@@ -137,7 +137,7 @@ class PythonPanelServiceAsyncStub:
     """
 
     TryGetValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
         ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
@@ -217,7 +217,7 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def TryGetValue(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
         context: _ServicerContext,
     ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse]]:
         """Try to get a value for a control on the panel

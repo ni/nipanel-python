@@ -12,6 +12,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
+    TryGetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
@@ -168,7 +169,7 @@ class PanelClient:
                 - INVALID_ARGUMENT: If the panel identifier or value identifier contains
                   invalid characters (only alphanumeric characters and underscores are allowed).
         """
-        try_get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
+        try_get_value_request = TryGetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().TryGetValue, try_get_value_request)
         if response.HasField("value"):
             return from_any(response.value)

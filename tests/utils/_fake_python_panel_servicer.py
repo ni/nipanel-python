@@ -11,6 +11,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     PanelInformation,
     GetValueRequest,
     GetValueResponse,
+    TryGetValueRequest,
     TryGetValueResponse,
     SetValueRequest,
     SetValueResponse,
@@ -69,7 +70,7 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         return GetValueResponse(value=value)
 
     def TryGetValue(  # noqa: N802
-        self, request: GetValueRequest, context: Any
+        self, request: TryGetValueRequest, context: Any
     ) -> TryGetValueResponse:
         """Trivial implementation for testing."""
         if request.value_id not in self._panel_value_ids.get(request.panel_id, {}):

@@ -6,6 +6,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
+    TryGetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
@@ -81,7 +82,7 @@ def test___set_value___try_get_value___gets_response(
     set_request = SetValueRequest(panel_id="test_panel", value_id="test_value", value=test_value)
     python_panel_service_stub.SetValue(set_request)
 
-    request = GetValueRequest(panel_id="test_panel", value_id="test_value")
+    request = TryGetValueRequest(panel_id="test_panel", value_id="test_value")
     response = python_panel_service_stub.TryGetValue(request)
 
     assert response is not None  # Ensure response is returned
@@ -91,7 +92,7 @@ def test___set_value___try_get_value___gets_response(
 def test___no_value___try_get_value___gets_no_value(
     python_panel_service_stub: PythonPanelServiceStub,
 ) -> None:
-    request = GetValueRequest(panel_id="test_panel", value_id="test_value")
+    request = TryGetValueRequest(panel_id="test_panel", value_id="test_value")
     response = python_panel_service_stub.TryGetValue(request)
 
     assert response is not None  # Ensure response is returned

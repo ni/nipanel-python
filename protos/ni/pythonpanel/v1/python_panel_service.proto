@@ -50,7 +50,7 @@ service PythonPanelService {
   // - INVALID_ARGUMENT: 
   //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  rpc TryGetValue(GetValueRequest) returns (TryGetValueResponse);
+  rpc TryGetValue(TryGetValueRequest) returns (TryGetValueResponse);
 
   // Set a value for a control on the panel
   // Status Codes for errors:
@@ -117,6 +117,14 @@ message GetValueRequest {
 message GetValueResponse {
   // The value
   google.protobuf.Any value = 1;
+}
+
+message TryGetValueRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Unique ID of value
+  string value_id = 2;
 }
 
 message TryGetValueResponse {

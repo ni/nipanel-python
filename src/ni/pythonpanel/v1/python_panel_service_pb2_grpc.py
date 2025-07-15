@@ -37,7 +37,7 @@ class PythonPanelServiceStub(object):
                 )
         self.TryGetValue = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
                 response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
                 )
         self.SetValue = channel.unary_unary(
@@ -143,7 +143,7 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
             ),
             'TryGetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.TryGetValue,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.FromString,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.FromString,
                     response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.SerializeToString,
             ),
             'SetValue': grpc.unary_unary_rpc_method_handler(
@@ -242,7 +242,7 @@ class PythonPanelService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -177,6 +177,26 @@ class GetValueResponse(google.protobuf.message.Message):
 global___GetValueResponse = GetValueResponse
 
 @typing.final
+class TryGetValueRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    VALUE_ID_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    value_id: builtins.str
+    """Unique ID of value"""
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        value_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "value_id", b"value_id"]) -> None: ...
+
+global___TryGetValueRequest = TryGetValueRequest
+
+@typing.final
 class TryGetValueResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
