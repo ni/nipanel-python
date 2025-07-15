@@ -6,7 +6,6 @@ from streamlit_echarts import st_echarts
 
 import nipanel
 
-
 st.set_page_config(page_title="Simple Graph Example", page_icon="📈", layout="wide")
 st.title("Simple Graph Example")
 

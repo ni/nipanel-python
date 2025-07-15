@@ -9,7 +9,6 @@ from amplitude_enum import AmplitudeEnum
 
 import nipanel
 
-
 panel_script_path = Path(__file__).with_name("simple_graph_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 
@@ -25,8 +24,6 @@ try:
     while True:
         amplitude_enum = AmplitudeEnum(panel.get_value("amplitude_enum", AmplitudeEnum.SMALL.value))
         base_frequency = panel.get_value("base_frequency", 1.0)
-       
-
 
         # Slowly vary the total frequency for a more dynamic visualization
         frequency = base_frequency + 0.5 * math.sin(time.time() / 5.0)
@@ -37,7 +34,6 @@ try:
 
         panel.set_value("time_points", time_points.tolist())
         panel.set_value("sine_values", sine_values.tolist())
-    
 
         # Slowly vary the frequency for a more dynamic visualization
         frequency = 1.0 + 0.5 * math.sin(time.time() / 5.0)
