@@ -1,4 +1,5 @@
 """A Streamlit visualization panel for the simple_graph.py example script."""
+
 import streamlit as st
 from streamlit_echarts import st_echarts
 
@@ -13,6 +14,7 @@ time_points = panel.get_value("time_points", [0.0])
 sine_values = panel.get_value("sine_values", [0.0])
 amplitude = panel.get_value("amplitude", 1.0)
 frequency = panel.get_value("frequency", 1.0)
+
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     st.metric("Amplitude", f"{amplitude:.2f}")
@@ -27,6 +29,7 @@ with col5:
 
 # Prepare data for echarts
 data = [{"value": [x, y]} for x, y in zip(time_points, sine_values)]
+
 # Configure the chart options
 options = {
     "animation": False,  # Disable animation for smoother updates
@@ -51,5 +54,6 @@ options = {
         }
     ],
 }
+
 # Display the chart
 st_echarts(options=options, height="400px", key="graph")

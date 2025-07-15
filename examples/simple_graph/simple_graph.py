@@ -1,4 +1,5 @@
 """Example of using nipanel to display a sine wave graph using st_echarts."""
+
 import math
 import time
 from pathlib import Path
@@ -14,6 +15,7 @@ panel = nipanel.create_panel(panel_script_path)
 amplitude = 1.0
 frequency = 1.0
 num_points = 100
+
 try:
     print(f"Panel URL: {panel.panel_url}")
     print("Press Ctrl+C to exit")
@@ -31,5 +33,7 @@ try:
         # Slowly vary the frequency for a more dynamic visualization
         frequency = 1.0 + 0.5 * math.sin(time.time() / 5.0)
         time.sleep(0.1)
+
 except KeyboardInterrupt:
     print("Exiting...")
+    
