@@ -69,6 +69,13 @@ class PanelClient:
 
         Returns:
             The URL of the panel.
+
+        Raises:
+            grpc.RpcError: With status code:
+                - INVALID_ARGUMENT: If the panel script filename doesn't end in .py, or
+                  if the panel identifier contains invalid characters (only alphanumeric
+                  characters and underscores are allowed).
+                - NOT_FOUND: If the panel script file or Python executable file was not found.
         """
         start_panel_request = StartPanelRequest(
             panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
@@ -82,6 +89,11 @@ class PanelClient:
         Args:
             panel_id: The ID of the panel to stop.
             reset: Whether to reset all storage associated with panel.
+
+        Raises:
+            grpc.RpcError: With status code:
+                - INVALID_ARGUMENT: If the panel identifier contains invalid characters
+                  (only alphanumeric characters and underscores are allowed).
         """
         stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
         self._invoke_with_retry(self._get_stub().StopPanel, stop_panel_request)
@@ -109,6 +121,11 @@ class PanelClient:
             value_id: The ID of the control.
             value: The value to set.
             notify: Whether to notify other clients of the new value.
+
+        Raises:
+            grpc.RpcError: With status code:
+                - INVALID_ARGUMENT: If the panel identifier or value identifier contains
+                  invalid characters (only alphanumeric characters and underscores are allowed).
         """
         new_any = to_any(value)
         set_value_request = SetValueRequest(
@@ -125,12 +142,18 @@ class PanelClient:
 
         Returns:
             The value.
+
+        Raises:
+            grpc.RpcError: With status code:
+                - INVALID_ARGUMENT: If the panel identifier or value identifier contains
+                  invalid characters (only alphanumeric characters and underscores are allowed).
+                - NOT_FOUND: If the value with the specified identifier was not found.
         """
-        try_get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
-        response = self._invoke_with_retry(self._get_stub().GetValue, try_get_value_request)
+        get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
+        response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
         return from_any(response.value)
 
-    def try_get_value(self, panel_id: str, value_id: str) -> object:
+    def try_get_value(self, panel_id: str, value_id: str) -> object | None:
         """Try to get the value for the control with value_id.
 
         Args:
@@ -139,6 +162,11 @@ class PanelClient:
 
         Returns:
             The value if found, otherwise None.
+
+        Raises:
+            grpc.RpcError: With status code:
+                - INVALID_ARGUMENT: If the panel identifier or value identifier contains
+                  invalid characters (only alphanumeric characters and underscores are allowed).
         """
         try_get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().TryGetValue, try_get_value_request)
