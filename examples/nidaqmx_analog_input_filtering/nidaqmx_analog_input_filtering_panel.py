@@ -44,7 +44,6 @@ panel.set_value("chan_type", chan_type)
 
 is_running = panel.get_value("is_running", True)
 with left_col:
-    st.write(panel.get_value("is_running", False))
     if is_running:
         st.button("Stop", key="stop_button")
     else:
@@ -89,10 +88,11 @@ with left_col:
         st.selectbox("Sample Clock Source", options=["Onboard Clock"], index=0, disabled=True)
         st.number_input(
             "Sample Rate",
-            value=1000,
-            min_value=1,
-            step=1,
+            value=1000.0,
+            min_value=1.0,
+            step=1.0,
             disabled=panel.get_value("is_running", False),
+            key = "rate"
         )
         st.number_input(
             "Number of Samples",
@@ -100,6 +100,7 @@ with left_col:
             min_value=1,
             step=1,
             disabled=panel.get_value("is_running", False),
+            key = "total_samples"
         )
         st.selectbox("Actual Sample Rate", options=[panel.get_value("sample_rate")], disabled=True)
 
@@ -194,6 +195,22 @@ with right_col:
 
 with right_col:
     with st.container(border=True):
+        st.title("Task Types")
+        id = stx.tab_bar(
+            data=[
+                stx.TabBarItemData(id=1, title="No Trigger", description=""),
+                stx.TabBarItemData(id=2, title="Digital Start", description=""),
+                stx.TabBarItemData(id=3, title="Digital Pause", description=""),
+                stx.TabBarItemData(id=4, title="Digital Reference", description=""),
+                stx.TabBarItemData(id=5, title="Analog Start", description=""),
+                stx.TabBarItemData(id=6, title="Analog Pause", description=""),
+                stx.TabBarItemData(id=7, title="Analog Reference", description=""),
+            ],
+            default=1,
+           
+        )
+        trigger_type = id
+        panel.set_value("trigger_type", trigger_type)
         st.title("Trigger Settings")
         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
             [
