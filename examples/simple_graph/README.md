@@ -1,6 +1,6 @@
 # Simple Graph Example
 
-This example demonstrates using nipanel with Streamlit to display a dynamic sine wave using the `streamlit-echarts` library.
+This example demonstrates using `nipanel` with Streamlit to display a dynamic sine wave using the `streamlit-echarts` library.
 
 ## Features
 
@@ -15,4 +15,7 @@ This example demonstrates using nipanel with Streamlit to display a dynamic sine
 
 ### Usage
 
-Run `poetry run python examples/simple_graph/simple_graph.py`
+```pwsh
+poetry install --with examples
+poetry run python examples/simple_graph/simple_graph.py
+```
