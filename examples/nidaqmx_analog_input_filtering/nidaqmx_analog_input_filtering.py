@@ -32,8 +32,8 @@ try:
             panel.set_value("is_running", False)
         panel.set_value("is_running", True)
         panel.set_value("stop_button", False)
-
-        # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
+    
+         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan_type = panel.get_value("chan_type", "1")
             if chan_type == "1":
@@ -84,11 +84,11 @@ try:
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
                 chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
                 chan.ai_filter_order = 1
-
+            
             task.timing.cfg_samp_clk_timing(
-                rate=1000.0,
+                rate=panel.get_value("rate", 1000.0),
                 sample_mode=AcquisitionType.CONTINUOUS,
-                samps_per_chan=1000,
+                samps_per_chan=panel.get_value("total_samples", 100),
             )
             task.in_stream.configure_logging(
                 file_path=panel.get_value("tdms_file_path", "data.tdms"),
@@ -96,39 +96,25 @@ try:
                 operation=LoggingOperation.OPEN_OR_CREATE,
             )
 
-            task.timing.samp_clk_dig_fltr_min_pulse_width = 20.0e-6
-            task.timing.samp_clk_dig_fltr_enable = True
-
+            trigger_type = panel.get_value("trigger_type")
             panel.set_value("sample_rate", task._timing.samp_clk_rate)
-
-            task.triggers.start_trigger.cfg_anlg_edge_start_trig(
-                trigger_source="APFI0",
-                trigger_slope=panel.get_value("slope", Slope.FALLING),
-                trigger_level=panel.get_value("level", 0.0),
-            )
-            task.triggers.start_trigger.cfg_dig_edge_start_trig(
-                trigger_source="/Dev2/PFI0", trigger_edge=panel.get_value("edge", Edge.FALLING)
-            )
-            task.triggers.start_trigger.anlg_edge_hyst = hysteriresis = panel.get_value(
-                "hysteriesis", 0.0
-            )
+            if trigger_type == "5":
+                task.triggers.start_trigger.cfg_anlg_edge_start_trig(
+                    trigger_source="APFI0",
+                    trigger_slope=panel.get_value("slope", Slope.FALLING),
+                    trigger_level=panel.get_value("level", 0.0),
+                )
+            if trigger_type == "2":
+                task.triggers.start_trigger.cfg_dig_edge_start_trig(
+                    trigger_source="/Dev2/PFI0", trigger_edge=panel.get_value("edge", Edge.FALLING)
+                )
+                task.triggers.start_trigger.anlg_edge_hyst =  hysteresis = panel.get_value(
+                    "hysteresis", 0.0
+                )
 
             try:
 
                 task.start()
-                level = panel.get_value("level", 0.0)
-                analog_pause = AnalogPause(panel.get_value("analog_pause", AnalogPause.ABOVE.value))
-
-                if analog_pause == "ABOVE":
-                    task.triggers.pause_trigger.anlg_lvl_when.ABOVE
-                else:
-                    task.triggers.pause_trigger.anlg_lvl_when.BELOW
-
-                pause_when = PauseWhen(panel.get_value("pause_when", PauseWhen.HIGH.value))
-                if pause_when == "High":
-                    task.triggers.pause_trigger.dig_lvl_when.HIGH
-                else:
-                    task.triggers.pause_trigger.dig_lvl_when.LOW
 
                 while not panel.get_value("stop_button", False):
                     data = task.read(number_of_samples_per_channel=100)
