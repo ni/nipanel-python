@@ -1,21 +1,20 @@
-"""Streamlit visualization script to display data acquired by nidaqmx_continuous_analog_input.py."""
+"""Streamlit visualization script to display data acquired by nidaqmx_analog_input_filtering.py."""
 
+import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import streamlit as st
-from streamlit_echarts import st_echarts
-import extra_streamlit_components as stx
-from settings_enum import PauseWhen, AnalogPause
 from nidaqmx.constants import (
-    TerminalConfiguration,
-    SampleTimingType,
-    FilterResponse,
     CurrentShuntResistorLocation,
-    Edge,
-    Slope,
-    LoggingMode,
     CurrentUnits,
+    Edge,
+    FilterResponse,
+    LoggingMode,
+    Slope,
     StrainGageBridgeType,
+    TerminalConfiguration,
 )
-import time
+from settings_enum import AnalogPause, PauseWhen
+from streamlit_echarts import st_echarts
+
 import nipanel
 from nipanel.controls import enum_selectbox
 
@@ -47,9 +46,9 @@ is_running = panel.get_value("is_running", True)
 with left_col:
     st.write(panel.get_value("is_running", False))
     if is_running:
-        st.button(r"⏹️ Stop", key="stop_button")
+        st.button("Stop", key="stop_button")
     else:
-        st.button(r"▶️ Run", key="run_button")
+        st.button("Run", key="run_button")
 
 
 st.markdown(
@@ -229,7 +228,7 @@ with right_col:
                 format_func=lambda x: x[0],
                 index=0,
             )
-            pause_when = PauseWhen[pause_when[0]]
+            pause_when = PauseWhen[pause_when[0]]  # type: ignore
             panel.set_value("pause_when", pause_when)
         with tab4:
             st.write(
@@ -260,7 +259,7 @@ with right_col:
                 format_func=lambda x: x[0],
                 index=0,
             )
-            analog_pause = AnalogPause[analog_pause[0]]
+            analog_pause = AnalogPause[analog_pause[0]]  # type: ignore
             panel.set_value("analog_pause", analog_pause)
 
         with tab7:
@@ -318,7 +317,7 @@ with right_col:
                         key="max_value_current",
                         disabled=panel.get_value("is_running", False),
                     )
-                    current = panel.set_value("max_value_current", max_value_current)
+                    current = panel.set_value("max_value_current", max_value_current)  # type:ignore
                     shunt_resistor_value = st.number_input(
                         "Shunt Resistor Value",
                         value=249.0,

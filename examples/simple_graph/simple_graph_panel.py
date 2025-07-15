@@ -1,7 +1,6 @@
 """A Streamlit visualization panel for the simple_graph.py example script."""
 
 import streamlit as st
-from amplitude_enum import AmplitudeEnum
 from streamlit_echarts import st_echarts
 
 import nipanel
@@ -25,8 +24,7 @@ with col3:
 
 with col5:
     st.metric("Max Value", f"{max(sine_values):.3f}")
-with col6:
-    st.metric("Data Points", len(sine_values))
+
 # Prepare data for echarts
 data = [{"value": [x, y]} for x, y in zip(time_points, sine_values)]
 
