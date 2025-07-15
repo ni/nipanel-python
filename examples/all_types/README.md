@@ -1,10 +1,10 @@
 ## All Types Example
 
-This is an example for `nipanel` that demonstrates all supported data types
+This is an example for `nipanel` that demonstrates all supported data types.
 
 ### Feature
 
-- Demonstrates support for all data types
+- Demonstrates all supported data types
 
 ### Required Software
 
@@ -12,4 +12,7 @@ This is an example for `nipanel` that demonstrates all supported data types
 
 ### Usage
 
-Run `poetry run python examples/all_types/all_types.py`
+```pwsh
+poetry install --with examples
+poetry run python examples/all_types/all_types.py
+```
