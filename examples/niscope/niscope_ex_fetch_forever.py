@@ -46,11 +46,7 @@ with niscope.Session(resource_name=resource_name, options=options) as session:
         try:
             print(f"Press Ctrl + C to stop")
             while True:
-<<<<<<< HEAD
                 offset = session._fetch_offset
-=======
-                offset = session.meas_array_offset
->>>>>>> main
                 gain = session.meas_array_gain
                 for i in range(len(waveforms)):
                     time.sleep(0.2)
