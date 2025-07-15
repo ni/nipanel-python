@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import nidaqmx
-import numpy as numpy
 from nidaqmx.constants import (
     AcquisitionType,
     CurrentShuntResistorLocation,
@@ -16,7 +15,6 @@ from nidaqmx.constants import (
     Slope,
     StrainGageBridgeType,
     TerminalConfiguration,
-    Timescale,
 )
 from settings_enum import AnalogPause, PauseWhen
 
@@ -35,6 +33,7 @@ try:
         panel.set_value("is_running", True)
         panel.set_value("stop_button", False)
 
+        # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan_type = panel.get_value("chan_type", "1")
             if chan_type == "1":
