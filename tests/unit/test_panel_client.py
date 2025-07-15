@@ -1,7 +1,7 @@
 import grpc
 import pytest
 
-from nipanel._panel_client import PanelClient
+from nipanel._panel_client import _PanelClient
 
 
 def test___enumerate_is_empty(fake_panel_channel: grpc.Channel) -> None:
@@ -86,8 +86,8 @@ def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
     assert client.try_get_value("panel1", "val1") == "value1"
 
 
-def create_panel_client(fake_panel_channel: grpc.Channel) -> PanelClient:
-    return PanelClient(
+def create_panel_client(fake_panel_channel: grpc.Channel) -> _PanelClient:
+    return _PanelClient(
         provided_interface="iface",
         service_class="svc",
         grpc_channel=fake_panel_channel,
