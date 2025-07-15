@@ -195,7 +195,7 @@ with right_col:
 with right_col:
     with st.container(border=True):
         st.title("Trigger Settings")
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
             [
                 "No Trigger",
                 "Digital Start",
@@ -204,7 +204,6 @@ with right_col:
                 "Analog Start",
                 "Analog Pause",
                 "Analog Reference",
-                "Time Start",
             ]
         )
         with tab1:
