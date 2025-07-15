@@ -144,6 +144,12 @@ def test___python_panel_collection___to_any___valid_paneltype_value(
     assert unpack_dest.values == expected_value
 
 
+def test___none_value___to_any___raises_type_error() -> None:
+    """Test that passing None to to_any() raises a TypeError."""
+    with pytest.raises(TypeError):
+        nipanel._convert.to_any(None)
+
+
 # ========================================================
 # Built-in Types: Protobuf to Python
 # ========================================================

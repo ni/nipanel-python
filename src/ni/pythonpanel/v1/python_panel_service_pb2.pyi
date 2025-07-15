@@ -171,11 +171,50 @@ class GetValueResponse(google.protobuf.message.Message):
         *,
         value: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
+    def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value"]) -> None: ...
+
+global___GetValueResponse = GetValueResponse
+
+@typing.final
+class TryGetValueRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PANEL_ID_FIELD_NUMBER: builtins.int
+    VALUE_ID_FIELD_NUMBER: builtins.int
+    panel_id: builtins.str
+    """Unique ID of the panel"""
+    value_id: builtins.str
+    """Unique ID of value"""
+    def __init__(
+        self,
+        *,
+        panel_id: builtins.str = ...,
+        value_id: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "value_id", b"value_id"]) -> None: ...
+
+global___TryGetValueRequest = TryGetValueRequest
+
+@typing.final
+class TryGetValueResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VALUE_FIELD_NUMBER: builtins.int
+    @property
+    def value(self) -> google.protobuf.any_pb2.Any:
+        """The value, if  it was found"""
+
+    def __init__(
+        self,
+        *,
+        value: google.protobuf.any_pb2.Any | None = ...,
+    ) -> None: ...
     def HasField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> builtins.bool: ...
     def ClearField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> None: ...
     def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
 
-global___GetValueResponse = GetValueResponse
+global___TryGetValueResponse = TryGetValueResponse
 
 @typing.final
 class SetValueRequest(google.protobuf.message.Message):

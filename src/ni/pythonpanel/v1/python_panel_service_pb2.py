@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"U\n\x11StartPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11panel_script_path\x18\x02 \x01(\t\x12\x13\n\x0bpython_path\x18\x03 \x01(\t\"\'\n\x12StartPanelResponse\x12\x11\n\tpanel_url\x18\x01 \x01(\t\"3\n\x10StopPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x13\n\x11StopPanelResponse\"\x18\n\x16\x45numeratePanelsRequest\"J\n\x10PanelInformation\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_url\x18\x02 \x01(\t\x12\x11\n\tvalue_ids\x18\x03 \x03(\t\"N\n\x17\x45numeratePanelsResponse\x12\x33\n\x06panels\x18\x01 \x03(\x0b\x32#.ni.pythonpanel.v1.PanelInformation\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"F\n\x10GetValueResponse\x12(\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.AnyH\x00\x88\x01\x01\x42\x08\n\x06_value\"j\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x0e\n\x06notify\x18\x04 \x01(\x08\"\x12\n\x10SetValueResponse2\xdb\x03\n\x12PythonPanelService\x12Y\n\nStartPanel\x12$.ni.pythonpanel.v1.StartPanelRequest\x1a%.ni.pythonpanel.v1.StartPanelResponse\x12V\n\tStopPanel\x12#.ni.pythonpanel.v1.StopPanelRequest\x1a$.ni.pythonpanel.v1.StopPanelResponse\x12h\n\x0f\x45numeratePanels\x12).ni.pythonpanel.v1.EnumeratePanelsRequest\x1a*.ni.pythonpanel.v1.EnumeratePanelsResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,ni/pythonpanel/v1/python_panel_service.proto\x12\x11ni.pythonpanel.v1\x1a\x19google/protobuf/any.proto\"U\n\x11StartPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x19\n\x11panel_script_path\x18\x02 \x01(\t\x12\x13\n\x0bpython_path\x18\x03 \x01(\t\"\'\n\x12StartPanelResponse\x12\x11\n\tpanel_url\x18\x01 \x01(\t\"3\n\x10StopPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x13\n\x11StopPanelResponse\"\x18\n\x16\x45numeratePanelsRequest\"J\n\x10PanelInformation\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_url\x18\x02 \x01(\t\x12\x11\n\tvalue_ids\x18\x03 \x03(\t\"N\n\x17\x45numeratePanelsResponse\x12\x33\n\x06panels\x18\x01 \x03(\x0b\x32#.ni.pythonpanel.v1.PanelInformation\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"8\n\x12TryGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"I\n\x13TryGetValueResponse\x12(\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.AnyH\x00\x88\x01\x01\x42\x08\n\x06_value\"j\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x0e\n\x06notify\x18\x04 \x01(\x08\"\x12\n\x10SetValueResponse2\xb9\x04\n\x12PythonPanelService\x12Y\n\nStartPanel\x12$.ni.pythonpanel.v1.StartPanelRequest\x1a%.ni.pythonpanel.v1.StartPanelResponse\x12V\n\tStopPanel\x12#.ni.pythonpanel.v1.StopPanelRequest\x1a$.ni.pythonpanel.v1.StopPanelResponse\x12h\n\x0f\x45numeratePanels\x12).ni.pythonpanel.v1.EnumeratePanelsRequest\x1a*.ni.pythonpanel.v1.EnumeratePanelsResponse\x12S\n\x08GetValue\x12\".ni.pythonpanel.v1.GetValueRequest\x1a#.ni.pythonpanel.v1.GetValueResponse\x12\\\n\x0bTryGetValue\x12%.ni.pythonpanel.v1.TryGetValueRequest\x1a&.ni.pythonpanel.v1.TryGetValueResponse\x12S\n\x08SetValue\x12\".ni.pythonpanel.v1.SetValueRequest\x1a#.ni.pythonpanel.v1.SetValueResponseB\x9a\x01\n\x15\x63om.ni.pythonpanel.v1B\x17PythonPanelServiceProtoP\x01Z\rpythonpanelv1\xf8\x01\x01\xa2\x02\x04NIPP\xaa\x02\"NationalInstruments.PythonPanel.V1\xca\x02\x11NI\\PythonPanel\\V1\xea\x02\x13NI::PythonPanel::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.pythonpanel.v1.python_panel_service_pb2', globals())
@@ -39,11 +39,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GETVALUEREQUEST._serialized_start=478
   _GETVALUEREQUEST._serialized_end=531
   _GETVALUERESPONSE._serialized_start=533
-  _GETVALUERESPONSE._serialized_end=603
-  _SETVALUEREQUEST._serialized_start=605
-  _SETVALUEREQUEST._serialized_end=711
-  _SETVALUERESPONSE._serialized_start=713
-  _SETVALUERESPONSE._serialized_end=731
-  _PYTHONPANELSERVICE._serialized_start=734
-  _PYTHONPANELSERVICE._serialized_end=1209
+  _GETVALUERESPONSE._serialized_end=588
+  _TRYGETVALUEREQUEST._serialized_start=590
+  _TRYGETVALUEREQUEST._serialized_end=646
+  _TRYGETVALUERESPONSE._serialized_start=648
+  _TRYGETVALUERESPONSE._serialized_end=721
+  _SETVALUEREQUEST._serialized_start=723
+  _SETVALUEREQUEST._serialized_end=829
+  _SETVALUERESPONSE._serialized_start=831
+  _SETVALUERESPONSE._serialized_end=849
+  _PYTHONPANELSERVICE._serialized_start=852
+  _PYTHONPANELSERVICE._serialized_end=1421
 # @@protoc_insertion_point(module_scope)
