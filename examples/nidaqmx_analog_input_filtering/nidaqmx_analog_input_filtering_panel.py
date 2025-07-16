@@ -92,7 +92,7 @@ with left_col:
             min_value=1.0,
             step=1.0,
             disabled=panel.get_value("is_running", False),
-            key = "rate"
+            key="rate",
         )
         st.number_input(
             "Number of Samples",
@@ -100,7 +100,7 @@ with left_col:
             min_value=1,
             step=1,
             disabled=panel.get_value("is_running", False),
-            key = "total_samples"
+            key="total_samples",
         )
         st.selectbox("Actual Sample Rate", options=[panel.get_value("sample_rate")], disabled=True)
 
@@ -207,7 +207,6 @@ with right_col:
                 stx.TabBarItemData(id=7, title="Analog Reference", description=""),
             ],
             default=1,
-           
         )
         trigger_type = id
         panel.set_value("trigger_type", trigger_type)
