@@ -13,7 +13,7 @@ import nipanel
 
 
 def profile_get_value(
-    panel: "nipanel.StreamlitPanelValueAccessor",
+    panel: "nipanel.PanelValueAccessor",
     value_id: str,
     default_value: Any = None,
     num_runs: int = 5,
