@@ -1,17 +1,14 @@
 """Initializes a refresh component for Streamlit."""
 
-from typing import Any
-
-import streamlit.components.v1 as components
-
-from nipanel._streamlit_constants import STREAMLIT_REFRESH_COMPONENT_URL
+from streamlit.components.v1 import declare_component
+from streamlit.components.v1.custom_component import CustomComponent
 
 
-def initialize_refresh_component(panel_id: str) -> Any:
+def initialize_refresh_component(proxy_url: str, panel_id: str) -> CustomComponent:
     """Initialize a refresh component to the Streamlit app."""
-    _refresh_component_func = components.declare_component(
+    _refresh_component_func = declare_component(
         "panelRefreshComponent",
-        url=f"{STREAMLIT_REFRESH_COMPONENT_URL}/{panel_id}",
+        url=f"http://{proxy_url}/panel-service/refresh/{panel_id}",
     )
 
     return _refresh_component_func
