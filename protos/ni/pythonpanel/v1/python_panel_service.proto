@@ -16,15 +16,14 @@ option ruby_package = "NI::PythonPanel::V1";
 
 // Service interface for interacting with python panels
 service PythonPanelService {
-  // Start a panel using a streamlit script (or connect to if it has already been started)
+  // Start a panel using the provided configuration (or connect to if it has already been started)
   // Status Codes for errors:
   // - INVALID_ARGUMENT: 
-  //   - The panel script filename doesn't end in .py.
   //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The panel configuration has an invalid argument.
   // - NOT_FOUND: 
-  //   - The panel script file was not found.
-  //   - The python executable file was not found.
-  rpc StartStreamlitPanel(StartStreamlitPanelRequest) returns (StartStreamlitPanelResponse);
+  //   - The panel configuration includes a file that was not found.
+  rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
 
   // Stop a panel
   // Status Codes for errors:
@@ -60,20 +59,28 @@ service PythonPanelService {
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
-message StartStreamlitPanelRequest {
+message StreamlitPanelConfiguration 
+{
+  // Absolute path of the streamlit script file on disk, or network path to the file. This must end in ".py".
+  string panel_script_path = 1;
+
+  // Path to the python interpreter to use for running the streamlit script.
+  string python_path = 2;
+}
+
+message StartPanelRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Absolute path of the streamlit script file on disk, or network path to the file
-  string panel_script_path = 2;
-
-  // Path to the python interpreter to use for running the streamlit script.
-  string python_path = 3;
+  // Configuration for the panel
+  oneof panel_configuration {
+    StreamlitPanelConfiguration streamlit_panel_configuration = 2;
+  }
 }
 
-message StartStreamlitPanelResponse {
-  // Location of the panel's webpage 
-  string panel_url = 1; 
+message StartPanelResponse {
+  // Location of the panel 
+  string panel_uri = 1; 
 }
 
 message StopPanelRequest {
@@ -94,8 +101,8 @@ message PanelInformation {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Location of the panel's webpage
-  string panel_url = 2;
+  // Location of the panel
+  string panel_uri = 2;
 
   // IDs of all of the values associated with the panel
   repeated string value_ids = 3;

@@ -21,18 +21,17 @@ class PythonPanelServiceStub:
     """Service interface for interacting with python panels"""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    StartStreamlitPanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse,
+    StartPanel: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
     ]
-    """Start a panel using a streamlit script (or connect to if it has already been started)
+    """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
-      - The panel script filename doesn't end in .py.
       - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel configuration has an invalid argument.
     - NOT_FOUND: 
-      - The panel script file was not found.
-      - The python executable file was not found.
+      - The panel configuration includes a file that was not found.
     """
 
     StopPanel: grpc.UnaryUnaryMultiCallable[
@@ -91,18 +90,17 @@ class PythonPanelServiceStub:
 class PythonPanelServiceAsyncStub:
     """Service interface for interacting with python panels"""
 
-    StartStreamlitPanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse,
+    StartPanel: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
     ]
-    """Start a panel using a streamlit script (or connect to if it has already been started)
+    """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
-      - The panel script filename doesn't end in .py.
       - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel configuration has an invalid argument.
     - NOT_FOUND: 
-      - The panel script file was not found.
-      - The python executable file was not found.
+      - The panel configuration includes a file that was not found.
     """
 
     StopPanel: grpc.aio.UnaryUnaryMultiCallable[
@@ -162,19 +160,18 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     """Service interface for interacting with python panels"""
 
     @abc.abstractmethod
-    def StartStreamlitPanel(
+    def StartPanel(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse]]:
-        """Start a panel using a streamlit script (or connect to if it has already been started)
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse]]:
+        """Start a panel using the provided configuration (or connect to if it has already been started)
         Status Codes for errors:
         - INVALID_ARGUMENT: 
-          - The panel script filename doesn't end in .py.
           - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+          - The panel configuration has an invalid argument.
         - NOT_FOUND: 
-          - The panel script file was not found.
-          - The python executable file was not found.
+          - The panel configuration includes a file that was not found.
         """
 
     @abc.abstractmethod

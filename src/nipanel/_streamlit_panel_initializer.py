@@ -56,7 +56,7 @@ def get_streamlit_panel_accessor() -> PanelValueAccessor:
     in the Streamlit session state to ensure that it is reused across reruns of the script.
 
     Returns:
-        A StreamlitPanelValueAccessor instance for the current panel.
+        A PanelValueAccessor instance for the current panel.
     """
     if st.get_option("server.baseUrlPath") == "":
         raise RuntimeError(

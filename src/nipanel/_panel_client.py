@@ -6,7 +6,8 @@ from typing import Callable, TypeVar
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    StartStreamlitPanelRequest,
+    StreamlitPanelConfiguration,
+    StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
@@ -48,13 +49,14 @@ class _PanelClient:
         self._stub: PythonPanelServiceStub | None = None
 
     def start_streamlit_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
-        start_panel_request = StartStreamlitPanelRequest(
-            panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
+        streamlit_panel_configuration = StreamlitPanelConfiguration(
+            panel_script_path=panel_script_path, python_path=python_path
         )
-        response = self._invoke_with_retry(
-            self._get_stub().StartStreamlitPanel, start_panel_request
+        start_panel_request = StartPanelRequest(
+            panel_id=panel_id, streamlit_panel_configuration=streamlit_panel_configuration
         )
-        return response.panel_url
+        response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
+        return response.panel_uri
 
     def stop_panel(self, panel_id: str, reset: bool) -> None:
         stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
@@ -66,7 +68,7 @@ class _PanelClient:
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
         return {
-            panel.panel_id: (panel.panel_url, list(panel.value_ids)) for panel in response.panels
+            panel.panel_id: (panel.panel_uri, list(panel.value_ids)) for panel in response.panels
         }
 
     def set_value(self, panel_id: str, value_id: str, value: object, notify: bool) -> None:
