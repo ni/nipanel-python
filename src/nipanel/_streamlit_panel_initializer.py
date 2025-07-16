@@ -4,14 +4,15 @@ from typing import cast
 import streamlit as st
 
 from nipanel._convert import is_supported_type
+from nipanel._panel_value_accessor import PanelValueAccessor
+from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 from nipanel._streamlit_panel import StreamlitPanel
-from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
 from nipanel.streamlit_refresh import initialize_refresh_component
 
 PANEL_ACCESSOR_KEY = "StreamlitPanelValueAccessor"
 
 
-def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
+def create_streamlit_panel(streamlit_script_path: Path) -> StreamlitPanel:
     """Create a Streamlit panel with the specified script path.
 
     This function initializes a Streamlit panel using the provided script path. It derives the panel
@@ -43,7 +44,7 @@ def create_panel(streamlit_script_path: Path) -> StreamlitPanel:
     return StreamlitPanel(panel_id, path_str)
 
 
-def get_panel_accessor() -> StreamlitPanelValueAccessor:
+def get_streamlit_panel_accessor() -> PanelValueAccessor:
     """Initialize and return the Streamlit panel value accessor.
 
     This function retrieves the Streamlit panel value accessor for the current Streamlit script.
@@ -61,25 +62,30 @@ def get_panel_accessor() -> StreamlitPanelValueAccessor:
     if PANEL_ACCESSOR_KEY not in st.session_state:
         st.session_state[PANEL_ACCESSOR_KEY] = _initialize_panel_from_base_path()
 
-    panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
+    panel = cast(PanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
     _sync_session_state(panel)
     refresh_component = initialize_refresh_component(panel.panel_id)
     refresh_component()
     return panel
 
 
-def _initialize_panel_from_base_path() -> StreamlitPanelValueAccessor:
-    """Validate and parse the Streamlit base URL path and return a StreamlitPanelValueAccessor."""
+def _initialize_panel_from_base_path() -> PanelValueAccessor:
+    """Validate and parse the Streamlit base URL path and return a PanelValueAccessor."""
     base_url_path = st.get_option("server.baseUrlPath")
     if not base_url_path.startswith("/"):
         raise ValueError("Invalid or missing Streamlit server.baseUrlPath option.")
     panel_id = base_url_path.split("/")[-1]
     if not panel_id:
         raise ValueError(f"Panel ID is empty in baseUrlPath: '{base_url_path}'")
-    return StreamlitPanelValueAccessor(panel_id)
+    return PanelValueAccessor(
+        panel_id=panel_id,
+        notify_on_set_value=False,
+        provided_interface=STREAMLIT_PYTHON_PANEL_SERVICE,
+        service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
+    )
 
 
-def _sync_session_state(panel: StreamlitPanelValueAccessor) -> None:
+def _sync_session_state(panel: PanelValueAccessor) -> None:
     """Automatically read keyed control values from the session state."""
     for key in st.session_state.keys():
         value = st.session_state[key]

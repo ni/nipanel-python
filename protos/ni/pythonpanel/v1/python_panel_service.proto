@@ -16,7 +16,7 @@ option ruby_package = "NI::PythonPanel::V1";
 
 // Service interface for interacting with python panels
 service PythonPanelService {
-  // Start a panel (or connect to if it has already been started)
+  // Start a panel using a streamlit script (or connect to if it has already been started)
   // Status Codes for errors:
   // - INVALID_ARGUMENT: 
   //   - The panel script filename doesn't end in .py.
@@ -24,7 +24,7 @@ service PythonPanelService {
   // - NOT_FOUND: 
   //   - The panel script file was not found.
   //   - The python executable file was not found.
-  rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
+  rpc StartStreamlitPanel(StartStreamlitPanelRequest) returns (StartStreamlitPanelResponse);
 
   // Stop a panel
   // Status Codes for errors:
@@ -60,18 +60,18 @@ service PythonPanelService {
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
-message StartPanelRequest {
+message StartStreamlitPanelRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Absolute path of the panel script's file on disk, or network path to the file
+  // Absolute path of the streamlit script file on disk, or network path to the file
   string panel_script_path = 2;
 
-  // Path to the python interpreter to use for the panel script.
+  // Path to the python interpreter to use for running the streamlit script.
   string python_path = 3;
 }
 
-message StartPanelResponse {
+message StartStreamlitPanelResponse {
   // Location of the panel's webpage 
   string panel_url = 1; 
 }

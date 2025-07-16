@@ -6,7 +6,7 @@ from typing import Callable, TypeVar
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    StartPanelRequest,
+    StartStreamlitPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
@@ -33,8 +33,8 @@ class _PanelClient:
     def __init__(
         self,
         *,
-        provided_interface: str,
-        service_class: str,
+        provided_interface: str | None = None,
+        service_class: str | None = None,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
@@ -47,11 +47,13 @@ class _PanelClient:
         self._grpc_channel = grpc_channel
         self._stub: PythonPanelServiceStub | None = None
 
-    def start_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
-        start_panel_request = StartPanelRequest(
+    def start_streamlit_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
+        start_panel_request = StartStreamlitPanelRequest(
             panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
         )
-        response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
+        response = self._invoke_with_retry(
+            self._get_stub().StartStreamlitPanel, start_panel_request
+        )
         return response.panel_url
 
     def stop_panel(self, panel_id: str, reset: bool) -> None:
@@ -91,7 +93,7 @@ class _PanelClient:
         if self._stub is None:
             if self._grpc_channel is not None:
                 self._stub = PythonPanelServiceStub(self._grpc_channel)
-            else:
+            elif self._provided_interface is not None and self._service_class is not None:
                 with self._initialization_lock:
                     if self._grpc_channel_pool is None:
                         _logger.debug("Creating unshared GrpcChannelPool.")
@@ -108,6 +110,10 @@ class _PanelClient:
                     )
                     channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
                     self._stub = PythonPanelServiceStub(channel)
+            else:
+                raise TypeError(
+                    "Either grpc_channel, or both provided_interface and service_class, must be provided."
+                )
         return self._stub
 
     def _invoke_with_retry(

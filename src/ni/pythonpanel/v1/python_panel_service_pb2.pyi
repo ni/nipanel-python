@@ -14,7 +14,7 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class StartPanelRequest(google.protobuf.message.Message):
+class StartStreamlitPanelRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
@@ -23,9 +23,9 @@ class StartPanelRequest(google.protobuf.message.Message):
     panel_id: builtins.str
     """Unique ID of the panel"""
     panel_script_path: builtins.str
-    """Absolute path of the panel script's file on disk, or network path to the file"""
+    """Absolute path of the streamlit script file on disk, or network path to the file"""
     python_path: builtins.str
-    """Path to the python interpreter to use for the panel script."""
+    """Path to the python interpreter to use for running the streamlit script."""
     def __init__(
         self,
         *,
@@ -35,10 +35,10 @@ class StartPanelRequest(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_script_path", b"panel_script_path", "python_path", b"python_path"]) -> None: ...
 
-global___StartPanelRequest = StartPanelRequest
+global___StartStreamlitPanelRequest = StartStreamlitPanelRequest
 
 @typing.final
-class StartPanelResponse(google.protobuf.message.Message):
+class StartStreamlitPanelResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_URL_FIELD_NUMBER: builtins.int
@@ -51,7 +51,7 @@ class StartPanelResponse(google.protobuf.message.Message):
     ) -> None: ...
     def ClearField(self, field_name: typing.Literal["panel_url", b"panel_url"]) -> None: ...
 
-global___StartPanelResponse = StartPanelResponse
+global___StartStreamlitPanelResponse = StartStreamlitPanelResponse
 
 @typing.final
 class StopPanelRequest(google.protobuf.message.Message):

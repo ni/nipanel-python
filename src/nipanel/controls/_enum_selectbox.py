@@ -5,13 +5,13 @@ from typing import Any, Callable, TypeVar
 
 import streamlit as st
 
-from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
+from nipanel._panel_value_accessor import PanelValueAccessor
 
 TEnumType = TypeVar("TEnumType", bound=Enum)
 
 
 def enum_selectbox(
-    panel: StreamlitPanelValueAccessor,
+    panel: PanelValueAccessor,
     label: str,
     value: TEnumType,
     key: str,

@@ -21,11 +21,11 @@ class PythonPanelServiceStub:
     """Service interface for interacting with python panels"""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    StartPanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
+    StartStreamlitPanel: grpc.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse,
     ]
-    """Start a panel (or connect to if it has already been started)
+    """Start a panel using a streamlit script (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
       - The panel script filename doesn't end in .py.
@@ -91,11 +91,11 @@ class PythonPanelServiceStub:
 class PythonPanelServiceAsyncStub:
     """Service interface for interacting with python panels"""
 
-    StartPanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
+    StartStreamlitPanel: grpc.aio.UnaryUnaryMultiCallable[
+        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
+        ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse,
     ]
-    """Start a panel (or connect to if it has already been started)
+    """Start a panel using a streamlit script (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
       - The panel script filename doesn't end in .py.
@@ -162,12 +162,12 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     """Service interface for interacting with python panels"""
 
     @abc.abstractmethod
-    def StartPanel(
+    def StartStreamlitPanel(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        request: ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse]]:
-        """Start a panel (or connect to if it has already been started)
+    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartStreamlitPanelResponse]]:
+        """Start a panel using a streamlit script (or connect to if it has already been started)
         Status Codes for errors:
         - INVALID_ARGUMENT: 
           - The panel script filename doesn't end in .py.

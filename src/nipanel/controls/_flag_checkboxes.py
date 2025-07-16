@@ -5,13 +5,13 @@ from typing import TypeVar, Callable, Optional
 
 import streamlit as st
 
-from nipanel._streamlit_panel_value_accessor import StreamlitPanelValueAccessor
+from nipanel._panel_value_accessor import PanelValueAccessor
 
 TFlagType = TypeVar("TFlagType", bound=Flag)
 
 
 def flag_checkboxes(
-    panel: StreamlitPanelValueAccessor,
+    panel: PanelValueAccessor,
     label: str,
     value: TFlagType,
     key: str,

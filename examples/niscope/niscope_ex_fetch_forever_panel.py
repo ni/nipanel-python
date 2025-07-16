@@ -8,7 +8,7 @@ import nipanel
 st.set_page_config(page_title="NI-SCOPE Example", page_icon="📈", layout="wide")
 st.title("NIScope EX Fetch Forever")
 
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 
 waveform = panel.get_value("Waveform", [0])
 

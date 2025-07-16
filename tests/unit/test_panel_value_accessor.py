@@ -1,6 +1,6 @@
 import grpc
 
-from nipanel import StreamlitPanelValueAccessor
+from nipanel import PanelValueAccessor
 from tests.types import MyIntEnum
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
@@ -8,7 +8,7 @@ from tests.utils._fake_python_panel_service import FakePythonPanelService
 def test___no_previous_value___set_value_if_changed___sets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
 
     accessor.set_value_if_changed("test_id", "test_value")
 
@@ -19,7 +19,7 @@ def test___set_value_if_changed___set_same_value___does_not_set_value_again(
     fake_panel_channel: grpc.Channel,
     fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", "test_value")
     initial_set_count = fake_python_panel_service.servicer.set_count
 
@@ -32,7 +32,7 @@ def test___set_value_if_changed___set_same_value___does_not_set_value_again(
 def test___set_value_if_changed___set_different_value___sets_new_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", "test_value")
 
     accessor.set_value_if_changed("test_id", "new_value")
@@ -43,7 +43,7 @@ def test___set_value_if_changed___set_different_value___sets_new_value(
 def test___set_value_if_changed___different_value_ids___tracks_separately(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("id1", "value1")
     accessor.set_value_if_changed("id2", "value2")
 
@@ -58,7 +58,7 @@ def test___set_value_if_changed_with_list_value___set_same_value___does_not_set_
     fake_panel_channel: grpc.Channel,
     fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", [1, 2, 3])
     initial_set_count = fake_python_panel_service.servicer.set_count
 
@@ -72,7 +72,7 @@ def test___set_value_if_changed_with_list_value___set_different_value___sets_new
     fake_panel_channel: grpc.Channel,
     fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", [1, 2, 3])
     initial_set_count = fake_python_panel_service.servicer.set_count
 
@@ -86,7 +86,7 @@ def test___set_value_if_changed_with_enum_value___set_same_value___does_not_set_
     fake_panel_channel: grpc.Channel,
     fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", MyIntEnum.VALUE20)
     initial_set_count = fake_python_panel_service.servicer.set_count
 
@@ -100,7 +100,7 @@ def test___set_value_if_changed_with_enum_value___set_different_value___sets_new
     fake_panel_channel: grpc.Channel,
     fake_python_panel_service: FakePythonPanelService,
 ) -> None:
-    accessor = StreamlitPanelValueAccessor("panel_id", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="panel_id", grpc_channel=fake_panel_channel)
     accessor.set_value_if_changed("test_id", MyIntEnum.VALUE20)
     initial_set_count = fake_python_panel_service.servicer.set_count
 

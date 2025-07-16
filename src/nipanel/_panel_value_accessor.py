@@ -29,8 +29,8 @@ class PanelValueAccessor(ABC):
         self,
         *,
         panel_id: str,
-        provided_interface: str,
-        service_class: str,
+        provided_interface: str | None = None,
+        service_class: str | None = None,
         notify_on_set_value: bool = True,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
@@ -70,6 +70,9 @@ class PanelValueAccessor(ABC):
 
         Returns:
             The value, or the default value if not set
+
+        Raises:
+            KeyError: If the value is not set and no default value is provided
         """
         value = self._panel_client.try_get_value(self._panel_id, value_id)
         if value is None:

@@ -2,8 +2,8 @@ from typing import Any
 
 import grpc
 from ni.pythonpanel.v1.python_panel_service_pb2 import (
-    StartPanelRequest,
-    StartPanelResponse,
+    StartStreamlitPanelRequest,
+    StartStreamlitPanelResponse,
     StopPanelRequest,
     StopPanelResponse,
     EnumeratePanelsRequest,
@@ -32,16 +32,16 @@ class FakePythonPanelServicer(PythonPanelServiceServicer):
         self._notification_count: int = 0
         self._python_path: str = ""
 
-    def StartPanel(  # noqa: N802
-        self, request: StartPanelRequest, context: Any
-    ) -> StartPanelResponse:
+    def StartStreamlitPanel(  # noqa: N802
+        self, request: StartStreamlitPanelRequest, context: Any
+    ) -> StartStreamlitPanelResponse:
         """Trivial implementation for testing."""
         self._python_path = request.python_path
         if self._fail_next_start_panel:
             self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
         self._start_panel(request.panel_id)
-        return StartPanelResponse(panel_url=self._get_panel_url(request.panel_id))
+        return StartStreamlitPanelResponse(panel_url=self._get_panel_url(request.panel_id))
 
     def StopPanel(self, request: StopPanelRequest, context: Any) -> StopPanelResponse:  # noqa: N802
         """Trivial implementation for testing."""

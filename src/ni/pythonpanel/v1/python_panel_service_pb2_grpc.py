@@ -15,10 +15,10 @@ class PythonPanelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.StartPanel = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/StartPanel',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.FromString,
+        self.StartStreamlitPanel = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/StartStreamlitPanel',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelResponse.FromString,
                 )
         self.StopPanel = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/StopPanel',
@@ -51,8 +51,8 @@ class PythonPanelServiceServicer(object):
     """Service interface for interacting with python panels
     """
 
-    def StartPanel(self, request, context):
-        """Start a panel (or connect to if it has already been started)
+    def StartStreamlitPanel(self, request, context):
+        """Start a panel using a streamlit script (or connect to if it has already been started)
         Status Codes for errors:
         - INVALID_ARGUMENT: 
         - The panel script filename doesn't end in .py.
@@ -121,10 +121,10 @@ class PythonPanelServiceServicer(object):
 
 def add_PythonPanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'StartPanel': grpc.unary_unary_rpc_method_handler(
-                    servicer.StartPanel,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.SerializeToString,
+            'StartStreamlitPanel': grpc.unary_unary_rpc_method_handler(
+                    servicer.StartStreamlitPanel,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelResponse.SerializeToString,
             ),
             'StopPanel': grpc.unary_unary_rpc_method_handler(
                     servicer.StopPanel,
@@ -163,7 +163,7 @@ class PythonPanelService(object):
     """
 
     @staticmethod
-    def StartPanel(request,
+    def StartStreamlitPanel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -173,9 +173,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/StartPanel',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/StartStreamlitPanel',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartStreamlitPanelResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

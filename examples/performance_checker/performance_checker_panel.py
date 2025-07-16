@@ -69,7 +69,7 @@ min_refresh_time = min(refresh_history) if refresh_history else 0
 max_refresh_time = max(refresh_history) if refresh_history else 0
 avg_refresh_time = statistics.mean(refresh_history) if refresh_history else 0
 
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 
 num_timing_runs = 5
 time_points, time_points_ms = profile_get_value(panel, "time_points", [0.0], num_timing_runs)
