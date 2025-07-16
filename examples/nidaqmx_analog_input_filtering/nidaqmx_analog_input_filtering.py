@@ -16,7 +16,6 @@ from nidaqmx.constants import (
     StrainGageBridgeType,
     TerminalConfiguration,
 )
-from settings_enum import AnalogPause, PauseWhen
 
 import nipanel
 
@@ -32,8 +31,8 @@ try:
             panel.set_value("is_running", False)
         panel.set_value("is_running", True)
         panel.set_value("stop_button", False)
-    
-         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
+
+        # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan_type = panel.get_value("chan_type", "1")
             if chan_type == "1":
@@ -84,7 +83,7 @@ try:
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
                 chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
                 chan.ai_filter_order = 1
-            
+
             task.timing.cfg_samp_clk_timing(
                 rate=panel.get_value("rate", 1000.0),
                 sample_mode=AcquisitionType.CONTINUOUS,
@@ -108,7 +107,7 @@ try:
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
                     trigger_source="/Dev2/PFI0", trigger_edge=panel.get_value("edge", Edge.FALLING)
                 )
-                task.triggers.start_trigger.anlg_edge_hyst =  hysteresis = panel.get_value(
+                task.triggers.start_trigger.anlg_edge_hyst = hysteresis = panel.get_value(
                     "hysteresis", 0.0
                 )
 
