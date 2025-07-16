@@ -135,7 +135,7 @@ message TryGetValueRequest {
 }
 
 message TryGetValueResponse {
-  // The value, if  it was found
+  // The value, if it was found
   optional google.protobuf.Any value = 1;
 }
 

@@ -221,7 +221,7 @@ class TryGetValueResponse(google.protobuf.message.Message):
     VALUE_FIELD_NUMBER: builtins.int
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
-        """The value, if  it was found"""
+        """The value, if it was found"""
 
     def __init__(
         self,
