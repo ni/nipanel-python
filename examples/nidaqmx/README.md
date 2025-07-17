@@ -1,4 +1,4 @@
-Prerequisites 
+Prerequisites
 ===============
 Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
 
@@ -16,5 +16,7 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Usage
 
-Run `poetry run examples/nidaqmx/nidaqmx_continuous_analog_input.py`
-
+```pwsh
+poetry install --with examples
+poetry run examples/nidaqmx/nidaqmx_continuous_analog_input.py
+```

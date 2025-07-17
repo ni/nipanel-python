@@ -9,7 +9,7 @@ import grpc
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
-from nipanel._panel_client import PanelClient
+from nipanel._panel_client import _PanelClient
 
 _T = TypeVar("_T")
 
@@ -37,7 +37,7 @@ class PanelValueAccessor(ABC):
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
         """Initialize the accessor."""
-        self._panel_client = PanelClient(
+        self._panel_client = _PanelClient(
             provided_interface=provided_interface,
             service_class=service_class,
             discovery_client=discovery_client,
@@ -76,8 +76,8 @@ class PanelValueAccessor(ABC):
         Returns:
             The value, or the default value if not set
         """
-        found, value = self._panel_client.get_value(self._panel_id, value_id)
-        if not found:
+        value = self._panel_client.try_get_value(self._panel_id, value_id)
+        if value is None:
             if default_value is not None:
                 return default_value
             raise KeyError(f"Value with id '{value_id}' not found on panel '{self._panel_id}'.")
