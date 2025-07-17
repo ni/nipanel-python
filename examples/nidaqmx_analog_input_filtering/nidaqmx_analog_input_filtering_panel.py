@@ -246,7 +246,7 @@ with left_col:
             value= panel.get_value("actual_sample_rate", 1000.0),
             key = "actual_sample_rate",
             step = 1.0,
-            disabled=True
+            disabled= True
         )
         
         st.title("Logging Settings")

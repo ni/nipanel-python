@@ -35,7 +35,7 @@ try:
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan_type = panel.get_value("chan_type", "1")
-            
+
             if chan_type == "2":
                 chan = task.ai_channels.add_ai_current_chan(
                     "Mod3/ai10",
@@ -81,19 +81,19 @@ try:
             )
             panel.set_value("actual_sample_rate", task._timing.samp_clk_rate)
             panel.set_value("sample_rate", panel.get_value("rate", 100.0))
-           
+
             task.in_stream.configure_logging(
                 file_path=panel.get_value("tdms_file_path", "data.tdms"),
                 logging_mode=panel.get_value("logging_mode", LoggingMode.OFF),
                 operation=LoggingOperation.OPEN_OR_CREATE,
             )
-            if panel.get_value("filter","Filter") == "Filter":
+            if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
                 chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
                 chan.ai_filter_order = panel.get_value("filter_order", 1)
                 # Not all hardware supports all filter types.
-                # Refer to your device documentation for more information. 
+                # Refer to your device documentation for more information.
                 panel.set_value("actual_filter_freq", chan.ai_filter_freq)
                 panel.set_value("actual_filter_response", chan.ai_filter_response)
                 panel.set_value("actual_filter_order", chan.ai_filter_order)
