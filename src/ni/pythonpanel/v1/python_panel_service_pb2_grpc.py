@@ -35,6 +35,11 @@ class PythonPanelServiceStub(object):
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
                 response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
                 )
+        self.TryGetValue = channel.unary_unary(
+                '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
+                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
+                )
         self.SetValue = channel.unary_unary(
                 '/ni.pythonpanel.v1.PythonPanelService/SetValue',
                 request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
@@ -49,8 +54,12 @@ class PythonPanelServiceServicer(object):
     def StartPanel(self, request, context):
         """Start a panel (or connect to if it has already been started)
         Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - NOT_FOUND: the file for the panel was not found
+        - INVALID_ARGUMENT: 
+        - The panel script filename doesn't end in .py.
+        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - NOT_FOUND: 
+        - The panel script file was not found.
+        - The python executable file was not found.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -59,7 +68,8 @@ class PythonPanelServiceServicer(object):
     def StopPanel(self, request, context):
         """Stop a panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -76,7 +86,22 @@ class PythonPanelServiceServicer(object):
     def GetValue(self, request, context):
         """Get a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT: 
+        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - NOT_FOUND: 
+        - The value with the specified identifier was not found.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TryGetValue(self, request, context):
+        """Try to get a value for a control on the panel
+        Status Codes for errors:
+        - INVALID_ARGUMENT: 
+        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -85,7 +110,9 @@ class PythonPanelServiceServicer(object):
     def SetValue(self, request, context):
         """Set a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT: 
+        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -113,6 +140,11 @@ def add_PythonPanelServiceServicer_to_server(servicer, server):
                     servicer.GetValue,
                     request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.FromString,
                     response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.SerializeToString,
+            ),
+            'TryGetValue': grpc.unary_unary_rpc_method_handler(
+                    servicer.TryGetValue,
+                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.FromString,
+                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.SerializeToString,
             ),
             'SetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.SetValue,
@@ -195,6 +227,23 @@ class PythonPanelService(object):
         return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/GetValue',
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
             ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def TryGetValue(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
+            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

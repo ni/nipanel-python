@@ -35,20 +35,8 @@ try:
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan_type = panel.get_value("chan_type", "1")
-            if chan_type == "1":
-                chan = task.ai_channels.add_ai_voltage_chan(
-                    "Mod3/ai10",
-                    terminal_config=panel.get_value(
-                        "terminal_configuration", TerminalConfiguration.DEFAULT
-                    ),
-                    max_val=panel.get_value("max_value_voltage", 5.0),
-                    min_val=panel.get_value("min_value_voltage", -5.0),
-                )
-                chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
-                chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
-                chan.ai_filter_order = 1
-
-            elif chan_type == "2":
+            
+            if chan_type == "2":
                 chan = task.ai_channels.add_ai_current_chan(
                     "Mod3/ai10",
                     max_val=panel.get_value("max_value_current", 0.01),
@@ -59,9 +47,6 @@ try:
                     ),
                     units=panel.get_value("units", CurrentUnits.AMPS),
                 )
-                chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
-                chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
-                chan.ai_filter_order = 1
 
             elif chan_type == "3":
                 chan = task.ai_channels.add_ai_strain_gage_chan(
@@ -79,24 +64,45 @@ try:
                         "strain_configuration", StrainGageBridgeType.FULL_BRIDGE_I
                     ),
                 )
-
-                chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
-                chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
-                chan.ai_filter_order = 1
+            else:
+                chan = task.ai_channels.add_ai_voltage_chan(
+                    "Mod3/ai10",
+                    terminal_config=panel.get_value(
+                        "terminal_configuration", TerminalConfiguration.DEFAULT
+                    ),
+                    max_val=panel.get_value("max_value_voltage", 5.0),
+                    min_val=panel.get_value("min_value_voltage", -5.0),
+                )
 
             task.timing.cfg_samp_clk_timing(
                 rate=panel.get_value("rate", 1000.0),
                 sample_mode=AcquisitionType.CONTINUOUS,
                 samps_per_chan=panel.get_value("total_samples", 100),
             )
+            panel.set_value("actual_sample_rate", task._timing.samp_clk_rate)
+            panel.set_value("sample_rate", panel.get_value("rate", 100.0))
+           
             task.in_stream.configure_logging(
                 file_path=panel.get_value("tdms_file_path", "data.tdms"),
                 logging_mode=panel.get_value("logging_mode", LoggingMode.OFF),
                 operation=LoggingOperation.OPEN_OR_CREATE,
             )
+            if panel.get_value("filter","Filter") == "Filter":
+                chan.ai_filter_enable = True
+                chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
+                chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
+                chan.ai_filter_order = panel.get_value("filter_order", 1)
+                # Not all hardware supports all filter types.
+                # Refer to your device documentation for more information. 
+                panel.set_value("actual_filter_freq", chan.ai_filter_freq)
+                panel.set_value("actual_filter_response", chan.ai_filter_response)
+                panel.set_value("actual_filter_order", chan.ai_filter_order)
+            else:
+                panel.set_value("actual_filter_freq", 0.0)
+                panel.set_value("actual_filter_response", FilterResponse.COMB)
+                panel.set_value("actual_filter_order", 0)
 
             trigger_type = panel.get_value("trigger_type")
-            panel.set_value("sample_rate", task._timing.samp_clk_rate)
             if trigger_type == "5":
                 task.triggers.start_trigger.cfg_anlg_edge_start_trig(
                     trigger_source="APFI0",
@@ -112,15 +118,10 @@ try:
                 )
 
             try:
-
                 task.start()
-
                 while not panel.get_value("stop_button", False):
                     data = task.read(number_of_samples_per_channel=100)
-                    panel.set_value("voltage_data", data)
-                    panel.set_value("current_data", data)
-                    panel.set_value("strain_data", data)
-
+                    panel.set_value("acquired_data", data)
             except KeyboardInterrupt:
                 pass
             finally:

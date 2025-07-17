@@ -1,6 +1,7 @@
 import grpc
+import pytest
 
-from nipanel._panel_client import PanelClient
+from nipanel._panel_client import _PanelClient
 
 
 def test___enumerate_is_empty(fake_panel_channel: grpc.Channel) -> None:
@@ -50,12 +51,21 @@ def test___start_panels___stop_panel_1_without_reset___enumerate_has_both_panels
     }
 
 
-def test___get_unset_value___returns_not_found(fake_panel_channel: grpc.Channel) -> None:
+def test___get_unset_value___raises_exception(fake_panel_channel: grpc.Channel) -> None:
     client = create_panel_client(fake_panel_channel)
 
-    response = client.get_value("panel1", "unset_id")
+    with pytest.raises(grpc.RpcError) as exc_info:
+        client.get_value("panel1", "unset_id")
 
-    assert response == (False, None)
+    assert exc_info.value.code() == grpc.StatusCode.NOT_FOUND
+
+
+def test___try_get_unset_value___returns_none(fake_panel_channel: grpc.Channel) -> None:
+    client = create_panel_client(fake_panel_channel)
+
+    response = client.try_get_value("panel1", "unset_id")
+
+    assert response is None
 
 
 def test___set_value___enumerate_panels_shows_value(
@@ -73,11 +83,11 @@ def test___set_value___gets_value(fake_panel_channel: grpc.Channel) -> None:
 
     client.set_value("panel1", "val1", "value1", notify=False)
 
-    assert client.get_value("panel1", "val1") == (True, "value1")
+    assert client.try_get_value("panel1", "val1") == "value1"
 
 
-def create_panel_client(fake_panel_channel: grpc.Channel) -> PanelClient:
-    return PanelClient(
+def create_panel_client(fake_panel_channel: grpc.Channel) -> _PanelClient:
+    return _PanelClient(
         provided_interface="iface",
         service_class="svc",
         grpc_channel=fake_panel_channel,

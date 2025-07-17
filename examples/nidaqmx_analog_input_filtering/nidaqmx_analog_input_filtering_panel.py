@@ -35,6 +35,145 @@ with right_col:
             ],
             default=1,
         )
+        tabs = st.tabs(["Voltage", "Current", "Strain Gage"])
+        with st.container(border=True):
+            with tabs[0]:
+                st.title("Voltage Data")
+                channel_left, channel_right = st.columns(2)
+                with channel_left:
+                    max_value_voltage = st.number_input(
+                        "Max Value", value=5.0, step=0.1, disabled=panel.get_value("is_running", False)
+                    )
+                    panel.set_value("max_value_voltage", max_value_voltage)
+
+                    min_value_voltage = st.number_input(
+                        "Min Value", value=-5.0, step=0.1, disabled=panel.get_value("is_running", False)
+                    )
+                    panel.set_value("min_value_voltage", min_value_voltage)
+
+            with tabs[1]:
+                st.title("Current Data")
+                channel_left, channel_right = st.columns(2)
+                with channel_left:
+                    enum_selectbox(
+                        panel,
+                        label="Shunt Resistor Location",
+                        value=CurrentShuntResistorLocation.EXTERNAL,
+                        disabled=panel.get_value("is_running", False),
+                        key="shunt_location",
+                    )
+                    enum_selectbox(
+                        panel,
+                        label="Units",
+                        value=CurrentUnits.AMPS,
+                        disabled=panel.get_value("is_running", False),
+                        key="units",
+                    )
+                    with st.expander("More current info", expanded=False):
+                        min_value_current = st.number_input(
+                            "Min Value",
+                            value=-0.01,
+                            step=0.001,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("min_value_current", min_value_current)
+                        max_value_current = st.number_input(
+                            "Max Value",
+                            value=0.01,
+                            step=1.0,
+                            key="max_value_current",
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        current = panel.set_value("max_value_current", max_value_current)  # type:ignore
+                        shunt_resistor_value = st.number_input(
+                            "Shunt Resistor Value",
+                            value=249.0,
+                            step=1.0,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("shunt_resistor_value", shunt_resistor_value)
+            with tabs[2]:
+                st.title("Strain Gage Data")
+                channel_left, channel_right = st.columns(2)
+                with channel_left:
+                    min_value_strain = st.number_input(
+                        "Min Value",
+                        value=-0.01,
+                        step=0.01,
+                    )
+                    panel.set_value("min_value_strain", min_value_strain)
+                    max_value_strain = st.number_input(
+                        "Max Value", value=0.01, step=0.01, max_value=2.0
+                    )
+                    panel.set_value("max_value_strain", max_value_strain)
+                    enum_selectbox(
+                        panel,
+                        label="Strain Units",
+                        value=CurrentUnits.AMPS,
+                        disabled=panel.get_value("is_running", False),
+                        key="strain_units",
+                    )
+                    with st.expander("Strain Gage Information", expanded=False):
+                        st.title("Strain Gage Information")
+                        gage_factor = st.number_input(
+                            "Gage Factor",
+                            value=2.0,
+                            step=1.0,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("gage_factor", gage_factor)
+                        nominal_gage = st.number_input(
+                            "nominal gage resistance",
+                            value=350.0,
+                            step=1.0,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("gage_resistance", nominal_gage)
+                        poisson_ratio = st.number_input(
+                            "poisson ratio",
+                            value=0.3,
+                            step=1.0,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("poisson_ratio", poisson_ratio)
+                    with st.expander("Bridge Information", expanded=False):
+                        st.title("Bridge Information")
+                        enum_selectbox(
+                            panel,
+                            label="Strain Configuration",
+                            value=StrainGageBridgeType.FULL_BRIDGE_I,
+                            disabled=panel.get_value("is_running", False),
+                            key="strain_configuration",
+                        )
+                        wire_resistance = st.number_input(
+                            "lead wire resistance",
+                            value=0.0,
+                            step=1.0,
+                        )
+                        panel.set_value("wire_resistance", wire_resistance)
+                        initial_voltage = st.number_input(
+                            "initial bridge voltage",
+                            value=0.0,
+                            step=1.0,
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("initial_voltage", initial_voltage)
+
+                        st.selectbox(
+                            label="voltage excitation source",
+                            key="voltage_excit",
+                            options=["External"],
+                            disabled=True,
+                        )
+                        panel.set_value("voltage_excitation_source", "voltage_excit")
+                        voltage_excit = st.number_input(
+                            "voltage excitation value",
+                            value=2.5,
+                            step=1.0,
+                            key="voltage_excitation_value",
+                            disabled=panel.get_value("is_running", False),
+                        )
+                        panel.set_value("voltage_excitation_value", voltage_excit)
 
 panel.set_value("chan_type", "1")
 
@@ -102,8 +241,14 @@ with left_col:
             disabled=panel.get_value("is_running", False),
             key="total_samples",
         )
-        st.selectbox("Actual Sample Rate", options=[panel.get_value("sample_rate")], disabled=True)
-
+        st.number_input(
+            "Actual Sample Rate",
+            value= panel.get_value("actual_sample_rate", 1000.0),
+            key = "actual_sample_rate",
+            step = 1.0,
+            disabled=True
+        )
+        
         st.title("Logging Settings")
         enum_selectbox(
             panel,
@@ -140,62 +285,17 @@ with left_col:
             "Filter Order",
             min_value=0,
             max_value=1,
-            value=0,
+            value=1,
             disabled=panel.get_value("is_running", False),
         )
-        if filter == "No Filtering":
-            filter_freq = 0.0
-            filter_order = 0
-        panel.set_value("filter_freq", filter_freq)
+        st.selectbox("Actual Filter Frequency", options=[panel.get_value("actual_filter_freq")], disabled=True)
+        st.selectbox("Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True)
 
-        panel.set_value("filter_order", filter_order)
-
-        st.selectbox("Actual Filter Frequency", options=[filter_freq], disabled=True)
-        st.selectbox("Actual Filter Order", options=[filter_order], disabled=True)
-
-with right_col:
-    voltage_data = panel.get_value("voltage_data", [1.0])
-    current_data = panel.get_value("current_data", [1.0])
-    strain_data = panel.get_value("strain_data", [1.0])
-
-sample_rate = panel.get_value("sample_rate", 0.0)
-with right_col:
-    with st.container(border=True):
-        graph = {
-            "animation": False,
-            "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)"]},
-            "xAxis": {
-                "type": "category",
-                "data": [x / sample_rate for x in range(len(voltage_data))],
-                "name": "Time",
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "yAxis": {
-                "type": "value",
-                "name": "Volts",
-                "nameRotate": 90,
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "series": [
-                {
-                    "name": "voltage_amplitude",
-                    "type": "line",
-                    "data": voltage_data,
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
-                },
-            ],
-        }
-        st_echarts(options=graph, height="400px", key="graph", width="100%")
 
 
 with right_col:
     with st.container(border=True):
-        st.title("Task Types")
+        st.title("Trigger Settings")
         id = stx.tab_bar(
             data=[
                 stx.TabBarItemData(id=1, title="No Trigger", description=""),
@@ -210,7 +310,6 @@ with right_col:
         )
         trigger_type = id
         panel.set_value("trigger_type", trigger_type)
-        st.title("Trigger Settings")
         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
             [
                 "No Trigger",
@@ -282,143 +381,38 @@ with right_col:
                 "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
             )
 
+    
 with right_col:
-    tabs = st.tabs(["Voltage", "Current", "Strain Gage"])
     with st.container(border=True):
-        with tabs[0]:
-            st.title("Voltage Data")
-            channel_left, channel_right = st.columns(2)
-            with channel_left:
-                max_value_voltage = st.number_input(
-                    "Max Value", value=5.0, step=0.1, disabled=panel.get_value("is_running", False)
-                )
-                panel.set_value("max_value_voltage", max_value_voltage)
-
-                min_value_voltage = st.number_input(
-                    "Min Value", value=-5.0, step=0.1, disabled=panel.get_value("is_running", False)
-                )
-                panel.set_value("min_value_voltage", min_value_voltage)
-
-        with tabs[1]:
-            st.title("Current Data")
-            channel_left, channel_right = st.columns(2)
-            with channel_left:
-                enum_selectbox(
-                    panel,
-                    label="Shunt Resistor Location",
-                    value=CurrentShuntResistorLocation.EXTERNAL,
-                    disabled=panel.get_value("is_running", False),
-                    key="shunt_location",
-                )
-                enum_selectbox(
-                    panel,
-                    label="Units",
-                    value=CurrentUnits.AMPS,
-                    disabled=panel.get_value("is_running", False),
-                    key="units",
-                )
-                with st.expander("More current info", expanded=False):
-                    min_value_current = st.number_input(
-                        "Min Value",
-                        value=-0.01,
-                        step=0.001,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("min_value_current", min_value_current)
-                    max_value_current = st.number_input(
-                        "Max Value",
-                        value=0.01,
-                        step=1.0,
-                        key="max_value_current",
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    current = panel.set_value("max_value_current", max_value_current)  # type:ignore
-                    shunt_resistor_value = st.number_input(
-                        "Shunt Resistor Value",
-                        value=249.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("shunt_resistor_value", shunt_resistor_value)
-        with tabs[2]:
-            st.title("Strain Gage Data")
-            channel_left, channel_right = st.columns(2)
-            with channel_left:
-                min_value_strain = st.number_input(
-                    "Min Value",
-                    value=-0.01,
-                    step=0.01,
-                )
-                panel.set_value("min_value_strain", min_value_strain)
-                max_value_strain = st.number_input(
-                    "Max Value", value=0.01, step=0.01, max_value=2.0
-                )
-                panel.set_value("max_value_strain", max_value_strain)
-                enum_selectbox(
-                    panel,
-                    label="Strain Units",
-                    value=CurrentUnits.AMPS,
-                    disabled=panel.get_value("is_running", False),
-                    key="strain_units",
-                )
-                with st.expander("Strain Gage Information", expanded=False):
-                    st.title("Strain Gage Information")
-                    gage_factor = st.number_input(
-                        "Gage Factor",
-                        value=2.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("gage_factor", gage_factor)
-                    nominal_gage = st.number_input(
-                        "nominal gage resistance",
-                        value=350.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("gage_resistance", nominal_gage)
-                    poisson_ratio = st.number_input(
-                        "poisson ratio",
-                        value=0.3,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("poisson_ratio", poisson_ratio)
-                with st.expander("Bridge Information", expanded=False):
-                    st.title("Bridge Information")
-                    enum_selectbox(
-                        panel,
-                        label="Strain Configuration",
-                        value=StrainGageBridgeType.FULL_BRIDGE_I,
-                        disabled=panel.get_value("is_running", False),
-                        key="strain_configuration",
-                    )
-                    wire_resistance = st.number_input(
-                        "lead wire resistance",
-                        value=0.0,
-                        step=1.0,
-                    )
-                    panel.set_value("wire_resistance", wire_resistance)
-                    initial_voltage = st.number_input(
-                        "initial bridge voltage",
-                        value=0.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("initial_voltage", initial_voltage)
-
-                    st.selectbox(
-                        label="voltage excitation source",
-                        key="voltage_excit",
-                        options=["External"],
-                        disabled=True,
-                    )
-                    panel.set_value("voltage_excitation_source", "voltage_excit")
-                    voltage_excit = st.number_input(
-                        "voltage excitation value",
-                        value=2.5,
-                        step=1.0,
-                        key="voltage_excitation_value",
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    panel.set_value("voltage_excitation_value", voltage_excit)
+        acquired_data = panel.get_value("acquired_data", [0.0])
+        sample_rate = panel.get_value("sample_rate", 0.0)
+        acquired_data_graph = {
+            "animation": False,
+            "tooltip": {"trigger": "axis"},
+            "legend": {"data": ["Voltage (V)"]},
+            "xAxis": {
+                "type": "category",
+                "data": [x / sample_rate for x in range(len(acquired_data))],
+                "name": "Time",
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Volts",
+                "nameRotate": 90,
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "series": [
+                {
+                    "name": "voltage_amplitude",
+                    "type": "line",
+                    "data": acquired_data,
+                    "emphasis": {"focus": "series"},
+                    "smooth": True,
+                    "seriesLayoutBy": "row",
+                },
+            ],
+        }
+        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
