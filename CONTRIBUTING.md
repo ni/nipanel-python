@@ -21,8 +21,8 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 # Getting Started
 
-This is the command to generate the files in /src/ni/pythonpanel/v1/:
-`poetry run python -m grpc_tools.protoc --proto_path=protos --python_out=src/ --grpc_python_out=src/ --mypy_out=src/ --mypy_grpc_out=src/ ni/pythonpanel/v1/python_panel_service.proto`
+This is the command to generate the files in /src/ni/panels/v1/:
+`poetry run python -m grpc_tools.protoc --proto_path=protos --python_out=src/ --grpc_python_out=src/ --mypy_out=src/ --mypy_grpc_out=src/ ni/panels/v1/panel_service.proto ni/panels/v1/panel_types.proto`
 
 # Testing
 

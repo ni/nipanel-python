@@ -29,7 +29,6 @@ class PanelValueAccessor(ABC):
         self,
         *,
         panel_id: str,
-        provided_interface: str | None = None,
         service_class: str | None = None,
         notify_on_set_value: bool = True,
         discovery_client: DiscoveryClient | None = None,
@@ -38,7 +37,6 @@ class PanelValueAccessor(ABC):
     ) -> None:
         """Initialize the accessor."""
         self._panel_client = _PanelClient(
-            provided_interface=provided_interface,
             service_class=service_class,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,

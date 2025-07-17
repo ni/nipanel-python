@@ -41,7 +41,6 @@ class StreamlitPanel(PanelValueAccessor):
         """
         super().__init__(
             panel_id=panel_id,
-            provided_interface=STREAMLIT_PYTHON_PANEL_SERVICE,
             service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,

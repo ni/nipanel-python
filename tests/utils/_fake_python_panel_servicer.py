@@ -1,7 +1,7 @@
 from typing import Any
 
 import grpc
-from ni.pythonpanel.v1.python_panel_service_pb2 import (
+from ni.panels.v1.panel_service_pb2 import (
     StartPanelRequest,
     StartPanelResponse,
     StopPanelRequest,
@@ -16,11 +16,11 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     SetValueRequest,
     SetValueResponse,
 )
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceServicer
+from ni.panels.v1.panel_service_pb2_grpc import PanelServiceServicer
 
 
-class FakePythonPanelServicer(PythonPanelServiceServicer):
-    """Fake implementation of the PythonPanelServicer for testing."""
+class FakePythonPanelServicer(PanelServiceServicer):
+    """Fake implementation of the PanelServiceServicer for testing."""
 
     def __init__(self) -> None:
         """Initialize the fake PythonPanelServicer."""

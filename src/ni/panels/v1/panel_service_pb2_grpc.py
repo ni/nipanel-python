@@ -2,11 +2,11 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ni.pythonpanel.v1 import python_panel_service_pb2 as ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2
+from ni.panels.v1 import panel_service_pb2 as ni_dot_panels_dot_v1_dot_panel__service__pb2
 
 
-class PythonPanelServiceStub(object):
-    """Service interface for interacting with python panels
+class PanelServiceStub(object):
+    """Service interface for interacting with NI panels
     """
 
     def __init__(self, channel):
@@ -16,39 +16,39 @@ class PythonPanelServiceStub(object):
             channel: A grpc.Channel.
         """
         self.StartPanel = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/StartPanel',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.FromString,
+                '/ni.panels.v1.PanelService/StartPanel',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelResponse.FromString,
                 )
         self.StopPanel = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/StopPanel',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelResponse.FromString,
+                '/ni.panels.v1.PanelService/StopPanel',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelResponse.FromString,
                 )
         self.EnumeratePanels = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/EnumeratePanels',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.FromString,
+                '/ni.panels.v1.PanelService/EnumeratePanels',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsResponse.FromString,
                 )
         self.GetValue = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/GetValue',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
+                '/ni.panels.v1.PanelService/GetValue',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueResponse.FromString,
                 )
         self.TryGetValue = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
+                '/ni.panels.v1.PanelService/TryGetValue',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueResponse.FromString,
                 )
         self.SetValue = channel.unary_unary(
-                '/ni.pythonpanel.v1.PythonPanelService/SetValue',
-                request_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
-                response_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
+                '/ni.panels.v1.PanelService/SetValue',
+                request_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueRequest.SerializeToString,
+                response_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueResponse.FromString,
                 )
 
 
-class PythonPanelServiceServicer(object):
-    """Service interface for interacting with python panels
+class PanelServiceServicer(object):
+    """Service interface for interacting with NI panels
     """
 
     def StartPanel(self, request, context):
@@ -118,47 +118,47 @@ class PythonPanelServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_PythonPanelServiceServicer_to_server(servicer, server):
+def add_PanelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'StartPanel': grpc.unary_unary_rpc_method_handler(
                     servicer.StartPanel,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelResponse.SerializeToString,
             ),
             'StopPanel': grpc.unary_unary_rpc_method_handler(
                     servicer.StopPanel,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelResponse.SerializeToString,
             ),
             'EnumeratePanels': grpc.unary_unary_rpc_method_handler(
                     servicer.EnumeratePanels,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsResponse.SerializeToString,
             ),
             'GetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.GetValue,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueResponse.SerializeToString,
             ),
             'TryGetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.TryGetValue,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueResponse.SerializeToString,
             ),
             'SetValue': grpc.unary_unary_rpc_method_handler(
                     servicer.SetValue,
-                    request_deserializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.FromString,
-                    response_serializer=ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.SerializeToString,
+                    request_deserializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueRequest.FromString,
+                    response_serializer=ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'ni.pythonpanel.v1.PythonPanelService', rpc_method_handlers)
+            'ni.panels.v1.PanelService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class PythonPanelService(object):
-    """Service interface for interacting with python panels
+class PanelService(object):
+    """Service interface for interacting with NI panels
     """
 
     @staticmethod
@@ -172,9 +172,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/StartPanel',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StartPanelResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/StartPanel',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.StartPanelResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -189,9 +189,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/StopPanel',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.StopPanelResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/StopPanel',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.StopPanelResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -206,9 +206,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/EnumeratePanels',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.EnumeratePanelsResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/EnumeratePanels',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.EnumeratePanelsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -223,9 +223,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/GetValue',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.GetValueResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/GetValue',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.GetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -240,9 +240,9 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/TryGetValue',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.TryGetValueResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/TryGetValue',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.TryGetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -257,8 +257,8 @@ class PythonPanelService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ni.pythonpanel.v1.PythonPanelService/SetValue',
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueRequest.SerializeToString,
-            ni_dot_pythonpanel_dot_v1_dot_python__panel__service__pb2.SetValueResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/ni.panels.v1.PanelService/SetValue',
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueRequest.SerializeToString,
+            ni_dot_panels_dot_v1_dot_panel__service__pb2.SetValueResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

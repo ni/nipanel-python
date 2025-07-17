@@ -84,7 +84,6 @@ def _initialize_panel_from_base_path() -> PanelValueAccessor:
     return PanelValueAccessor(
         panel_id=panel_id,
         notify_on_set_value=False,
-        provided_interface=STREAMLIT_PYTHON_PANEL_SERVICE,
         service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
     )
 

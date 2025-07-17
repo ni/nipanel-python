@@ -71,10 +71,10 @@ requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
-extend_exclude = ".tox,docs,src/ni/pythonpanel/v1,src/ni/protobuf/types/"
+extend_exclude = ".tox,docs,src/ni/panels/v1,src/ni/protobuf/types/"
 
 [tool.black]
-extend-exclude = '\.tox/|docs/|src/ni/pythonpanel/v1/|src/ni/protobuf/types/'
+extend-exclude = '\.tox/|docs/|src/ni/panels/v1/|src/ni/protobuf/types/'
 line-length = 100
 
 [tool.mypy]
@@ -104,4 +104,4 @@ testpaths = ["src/nipanel", "tests"]
 
 [tool.pyright]
 include = ["examples/", "src/", "tests/"]
-exclude = ["src/ni/protobuf/types/", "src/ni/pythonpanel/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py","examples/niscope/niscope_ex_fetch_forever.py"]
+exclude = ["src/ni/protobuf/types/", "src/ni/panels/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py","examples/niscope/niscope_ex_fetch_forever.py"]
