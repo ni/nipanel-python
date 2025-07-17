@@ -63,8 +63,7 @@ def get_panel_accessor() -> StreamlitPanelValueAccessor:
 
     panel = cast(StreamlitPanelValueAccessor, st.session_state[PANEL_ACCESSOR_KEY])
     _sync_session_state(panel)
-    proxy_url = panel.proxy_location.insecure_address
-    refresh_component = initialize_refresh_component(proxy_url, panel.panel_id)
+    refresh_component = initialize_refresh_component(panel.panel_id)
     refresh_component()
     return panel
 

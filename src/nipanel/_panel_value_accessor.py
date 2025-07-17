@@ -6,7 +6,7 @@ from abc import ABC
 from typing import TypeVar, overload
 
 import grpc
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_client import _PanelClient
@@ -54,11 +54,6 @@ class PanelValueAccessor(ABC):
     def panel_id(self) -> str:
         """Read-only accessor for the panel ID."""
         return self._panel_id
-
-    @property
-    def proxy_location(self) -> ServiceLocation:
-        """Read-only accessor for the panel's proxy location."""
-        return self._panel_client.proxy_location
 
     @overload
     def get_value(self, value_id: str) -> object: ...

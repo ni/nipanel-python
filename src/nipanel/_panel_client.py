@@ -14,7 +14,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient, ServiceLocation
+from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
 
@@ -45,13 +45,7 @@ class _PanelClient:
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
         self._grpc_channel = grpc_channel
-        self._proxy_location: ServiceLocation | None = None
         self._stub: PythonPanelServiceStub | None = None
-
-    @property
-    def proxy_location(self) -> ServiceLocation:
-        """Return the ServiceLocation for the panel's proxy."""
-        return self._get_proxy_location()
 
     def start_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
         start_panel_request = StartPanelRequest(
@@ -93,60 +87,28 @@ class _PanelClient:
         else:
             return None
 
-    def _get_proxy_location(self) -> ServiceLocation:
-        if self._proxy_location is None:
-            self._proxy_location = self._resolve_discovery_service()
-        return self._proxy_location
-
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:
             if self._grpc_channel is not None:
                 self._stub = PythonPanelServiceStub(self._grpc_channel)
             else:
-                channel = self._get_panel_service_channel()
-                self._stub = PythonPanelServiceStub(channel)
+                with self._initialization_lock:
+                    if self._grpc_channel_pool is None:
+                        _logger.debug("Creating unshared GrpcChannelPool.")
+                        self._grpc_channel_pool = GrpcChannelPool()
+                    if self._discovery_client is None:
+                        _logger.debug("Creating unshared DiscoveryClient.")
+                        self._discovery_client = DiscoveryClient(
+                            grpc_channel_pool=self._grpc_channel_pool
+                        )
+
+                    service_location = self._discovery_client.resolve_service(
+                        provided_interface=self._provided_interface,
+                        service_class=self._service_class,
+                    )
+                    channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
+                    self._stub = PythonPanelServiceStub(channel)
         return self._stub
-
-    def _get_grpc_channel_pool(self) -> GrpcChannelPool:
-        if self._grpc_channel_pool is None:
-            _logger.debug("Creating unshared GrpcChannelPool.")
-            self._grpc_channel_pool = GrpcChannelPool()
-        return self._grpc_channel_pool
-
-    def _get_discovery_client(self, channel_pool: GrpcChannelPool) -> DiscoveryClient:
-        if self._discovery_client is None:
-            _logger.debug("Creating unshared DiscoveryClient.")
-            self._discovery_client = DiscoveryClient(grpc_channel_pool=channel_pool)
-        return self._discovery_client
-
-    def _resolve_service(
-        self, discovery_client: DiscoveryClient, provided_interface: str, service_class: str = ""
-    ) -> ServiceLocation:
-        _logger.debug("Resolving '%s'.", provided_interface)
-        service_location = discovery_client.resolve_service(
-            provided_interface=provided_interface,
-            service_class=service_class,
-        )
-        return service_location
-
-    def _get_panel_service_channel(self) -> grpc.Channel:
-        with self._initialization_lock:
-            grpc_channel_pool = self._get_grpc_channel_pool()
-            discovery_client = self._get_discovery_client(grpc_channel_pool)
-            panel_location = self._resolve_service(
-                discovery_client, self._provided_interface, self._service_class
-            )
-            channel = grpc_channel_pool.get_channel(panel_location.insecure_address)
-            return channel
-
-    def _resolve_discovery_service(self) -> ServiceLocation:
-        with self._initialization_lock:
-            grpc_channel_pool = self._get_grpc_channel_pool()
-            discovery_client = self._get_discovery_client(grpc_channel_pool)
-            discovery_location = self._resolve_service(
-                discovery_client, provided_interface="ni.http1.proxy"
-            )
-            return discovery_location
 
     def _invoke_with_retry(
         self, method: Callable[_P, _T], *args: _P.args, **kwargs: _P.kwargs
