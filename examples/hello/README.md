@@ -1,6 +1,6 @@
 ## Hello
 
-This is a simple nipanel example that displays a Streamlit app.
+This is a simple `nipanel` example that displays a Streamlit app.
 
 ### Feature
 
@@ -12,4 +12,7 @@ This is a simple nipanel example that displays a Streamlit app.
 
 ### Usage
 
-Run `poetry run python examples/hello/hello.py`
+```pwsh
+poetry install --with examples
+poetry run python examples/hello/hello.py
+```

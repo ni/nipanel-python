@@ -1376,6 +1376,38 @@ tzlocal = ">=5.0,<6.0"
 grpc = ["grpcio (>=1.49.0,<2.0)", "protobuf (>=4.21)"]
 
 [[package]]
+name = "niscope"
+version = "1.4.9"
+description = "NI-SCOPE Python API"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "niscope-1.4.9-py3-none-any.whl", hash = "sha256:0b03f1e665ef22ba614defc476149500bc6ddf20e64534476d7496b4f58b30c0"},
+    {file = "niscope-1.4.9.tar.gz", hash = "sha256:e85493c9d3f707fac1b280352ea2c1cacd71fd733d6faf9a22a05853492fe87a"},
+]
+
+[package.dependencies]
+hightime = ">=0.2.0"
+nitclk = "*"
+
+[package.extras]
+grpc = ["grpcio (>=1.59.0,<2.0)", "protobuf (>=4.21.6)"]
+
+[[package]]
+name = "nitclk"
+version = "1.4.9"
+description = "NI-TClk Python API"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "nitclk-1.4.9-py3-none-any.whl", hash = "sha256:fa62a03fd8a820246f0adebb59f95249ad086dd407dab9102204338343833b45"},
+    {file = "nitclk-1.4.9.tar.gz", hash = "sha256:86835d4c8f08411433bd7c6dce26a346eef5120e476510bebdbaeb2700582cf5"},
+]
+
+[package.dependencies]
+hightime = ">=0.2.0"
+
+[[package]]
 name = "nitypes"
 version = "0.1.0.dev4"
 description = "Data types for NI Python APIs"
@@ -3231,4 +3263,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "4d8fe33d72a4d5a4eab2fed3db3068518a165cac5172632a00ec9f577e404145"
+content-hash = "45dc36d0ef51734fbde48be7f49ed705209f3b0d46c827cd0de4115fbf15ce62"

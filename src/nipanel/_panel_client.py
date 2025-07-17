@@ -1,5 +1,3 @@
-"""Client for accessing the NI Python Panel Service."""
-
 from __future__ import annotations
 
 import logging
@@ -12,6 +10,7 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
+    TryGetValueRequest,
     SetValueRequest,
 )
 from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
@@ -30,9 +29,7 @@ _T = TypeVar("_T")
 _logger = logging.getLogger(__name__)
 
 
-class PanelClient:
-    """Client for accessing the NI Python Panel Service."""
-
+class _PanelClient:
     def __init__(
         self,
         *,
@@ -42,15 +39,6 @@ class PanelClient:
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
-        """Initialize the panel client.
-
-        Args:
-            provided_interface: The interface provided by the service.
-            service_class: The class of the service.
-            discovery_client: An optional discovery client.
-            grpc_channel: An optional panel gRPC channel.
-            grpc_channel_pool: An optional gRPC channel pool.
-        """
         self._initialization_lock = threading.Lock()
         self._provided_interface = provided_interface
         self._service_class = service_class
@@ -60,16 +48,6 @@ class PanelClient:
         self._stub: PythonPanelServiceStub | None = None
 
     def start_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
-        """Start the panel.
-
-        Args:
-            panel_id: The ID of the panel to start.
-            panel_script_path: The path of the panel script file.
-            python_path: The path to the Python executable.
-
-        Returns:
-            The URL of the panel.
-        """
         start_panel_request = StartPanelRequest(
             panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
         )
@@ -77,22 +55,10 @@ class PanelClient:
         return response.panel_url
 
     def stop_panel(self, panel_id: str, reset: bool) -> None:
-        """Stop the panel.
-
-        Args:
-            panel_id: The ID of the panel to stop.
-            reset: Whether to reset all storage associated with panel.
-        """
         stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
         self._invoke_with_retry(self._get_stub().StopPanel, stop_panel_request)
 
     def enumerate_panels(self) -> dict[str, tuple[str, list[str]]]:
-        """Enumerate all available panels.
-
-        Returns:
-            A dictionary mapping panel IDs to a tuple containing the url of the panel (if it is
-            running) and a list of value IDs associated with the panel.
-        """
         enumerate_panels_request = EnumeratePanelsRequest()
         response = self._invoke_with_retry(
             self._get_stub().EnumeratePanels, enumerate_panels_request
@@ -102,37 +68,24 @@ class PanelClient:
         }
 
     def set_value(self, panel_id: str, value_id: str, value: object, notify: bool) -> None:
-        """Set the value for the control with value_id.
-
-        Args:
-            panel_id: The ID of the panel.
-            value_id: The ID of the control.
-            value: The value to set.
-            notify: Whether to notify other clients of the new value.
-        """
         new_any = to_any(value)
         set_value_request = SetValueRequest(
             panel_id=panel_id, value_id=value_id, value=new_any, notify=notify
         )
         self._invoke_with_retry(self._get_stub().SetValue, set_value_request)
 
-    def get_value(self, panel_id: str, value_id: str) -> tuple[bool, object]:
-        """Get the value for the control with value_id.
-
-        Args:
-            panel_id: The ID of the panel.
-            value_id: The ID of the control.
-
-        Returns:
-            A tuple containing a boolean indicating whether the value was successfully retrieved and
-            the value itself (or None if not present).
-        """
+    def get_value(self, panel_id: str, value_id: str) -> object:
         get_value_request = GetValueRequest(panel_id=panel_id, value_id=value_id)
         response = self._invoke_with_retry(self._get_stub().GetValue, get_value_request)
+        return from_any(response.value)
+
+    def try_get_value(self, panel_id: str, value_id: str) -> object | None:
+        try_get_value_request = TryGetValueRequest(panel_id=panel_id, value_id=value_id)
+        response = self._invoke_with_retry(self._get_stub().TryGetValue, try_get_value_request)
         if response.HasField("value"):
-            return True, from_any(response.value)
+            return from_any(response.value)
         else:
-            return False, None
+            return None
 
     def _get_stub(self) -> PythonPanelServiceStub:
         if self._stub is None:

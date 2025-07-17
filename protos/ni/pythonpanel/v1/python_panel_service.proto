@@ -18,13 +18,18 @@ option ruby_package = "NI::PythonPanel::V1";
 service PythonPanelService {
   // Start a panel (or connect to if it has already been started)
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  // - NOT_FOUND: the file for the panel was not found
+  // - INVALID_ARGUMENT: 
+  //   - The panel script filename doesn't end in .py.
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - NOT_FOUND: 
+  //   - The panel script file was not found.
+  //   - The python executable file was not found.
   rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
 
   // Stop a panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT:
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc StopPanel(StopPanelRequest) returns (StopPanelResponse);
 
   // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
@@ -33,12 +38,25 @@ service PythonPanelService {
 
   // Get a value for a control on the panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT: 
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - NOT_FOUND: 
+  //   - The value with the specified identifier was not found.
   rpc GetValue(GetValueRequest) returns (GetValueResponse);
+
+  // Try to get a value for a control on the panel
+  // Status Codes for errors:
+  // - INVALID_ARGUMENT: 
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  rpc TryGetValue(TryGetValueRequest) returns (TryGetValueResponse);
 
   // Set a value for a control on the panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: The specified identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT: 
+  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
@@ -98,6 +116,19 @@ message GetValueRequest {
 
 message GetValueResponse {
   // The value
+  google.protobuf.Any value = 1;
+}
+
+message TryGetValueRequest {
+  // Unique ID of the panel
+  string panel_id = 1;
+
+  // Unique ID of value
+  string value_id = 2;
+}
+
+message TryGetValueResponse {
+  // The value, if  it was found
   optional google.protobuf.Any value = 1;
 }
 
