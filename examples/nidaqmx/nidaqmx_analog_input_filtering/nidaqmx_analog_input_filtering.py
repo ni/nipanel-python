@@ -43,7 +43,7 @@ try:
     while True:
         while not panel.get_value("run_button", False):
             panel.set_value("is_running", False)
-            # time.sleep(0.1)
+            time.sleep(0.1)
         panel.set_value("is_running", True)
         panel.set_value("stop_button", False)
 
