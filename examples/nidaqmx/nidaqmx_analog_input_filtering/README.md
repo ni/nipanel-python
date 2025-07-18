@@ -16,7 +16,8 @@ Script demonstrates analog input data getting continuously acquired, and being f
 
 ### Usage
 
+```pwsh
 poetry install --with examples
-poetry run examples/nidaqmx_analog_input_filtering/nidaqmx_analog_input_filtering.py
-Run `poetry run examples/nidaqmx_analog_input_filtering/nidaqmx_analog_input_filtering.py`
+poetry run python examples/all_types/all_types.py
+```
 

@@ -59,7 +59,7 @@ try:
                 logging_mode=panel.get_value("logging_mode", LoggingMode.OFF),
                 operation=LoggingOperation.OPEN_OR_CREATE,
             )
-            panel.set_value("sample_rate", task._timing.samp_clk_rate)
+            panel.set_value("sample_rate", task.timing.samp_clk_rate)
             try:
                 print(f"Starting data acquisition...")
                 task.start()

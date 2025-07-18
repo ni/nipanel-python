@@ -1,8 +1,10 @@
 """Data acquisition script that continuously acquires analog input data."""
 
+import time
 from pathlib import Path
 
 import nidaqmx
+import nidaqmx.system
 from nidaqmx.constants import (
     AcquisitionType,
     CurrentShuntResistorLocation,
@@ -10,8 +12,6 @@ from nidaqmx.constants import (
     Edge,
     ExcitationSource,
     FilterResponse,
-    LoggingMode,
-    LoggingOperation,
     Slope,
     StrainGageBridgeType,
     TerminalConfiguration,
@@ -22,6 +22,20 @@ import nipanel
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_input_filtering_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 panel.set_value("is_running", False)
+
+system = nidaqmx.system.System.local()
+
+channel_name = []
+for dev in system.devices:
+    for chan in dev.ai_physical_chans:
+        channel_name.append(chan.name)
+panel.set_value("channel_name", channel_name)
+trigger_sources = []
+for dev in system.devices:
+    if hasattr(dev, "terminals"):
+        for term in dev.terminals:
+            trigger_sources.append(term)
+panel.set_value("trigger_sources", trigger_sources)
 try:
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
@@ -29,16 +43,18 @@ try:
     while True:
         while not panel.get_value("run_button", False):
             panel.set_value("is_running", False)
+            # time.sleep(0.1)
         panel.set_value("is_running", True)
         panel.set_value("stop_button", False)
 
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
+
             chan_type = panel.get_value("chan_type", "1")
 
             if chan_type == "2":
                 chan = task.ai_channels.add_ai_current_chan(
-                    "Mod3/ai10",
+                    panel.get_value("physical_channel", ""),
                     max_val=panel.get_value("max_value_current", 0.01),
                     min_val=panel.get_value("min_value_current", -0.01),
                     ext_shunt_resistor_val=panel.get_value("shunt_resistor_value", 249.0),
@@ -50,7 +66,7 @@ try:
 
             elif chan_type == "3":
                 chan = task.ai_channels.add_ai_strain_gage_chan(
-                    "Mod3/ai10",
+                    panel.get_value("physical_channel", ""),
                     nominal_gage_resistance=panel.get_value("gage_resistance", 350.0),
                     voltage_excit_source=ExcitationSource.EXTERNAL,  # Only mode that works
                     max_val=panel.get_value("max_value_strain", 0.001),
@@ -66,7 +82,7 @@ try:
                 )
             else:
                 chan = task.ai_channels.add_ai_voltage_chan(
-                    "Mod3/ai10",
+                    panel.get_value("physical_channel", ""),
                     terminal_config=panel.get_value(
                         "terminal_configuration", TerminalConfiguration.DEFAULT
                     ),
@@ -79,14 +95,9 @@ try:
                 sample_mode=AcquisitionType.CONTINUOUS,
                 samps_per_chan=panel.get_value("total_samples", 100),
             )
-            panel.set_value("actual_sample_rate", task._timing.samp_clk_rate)
+            panel.set_value("actual_sample_rate", task.timing.samp_clk_rate)
             panel.set_value("sample_rate", panel.get_value("rate", 100.0))
 
-            task.in_stream.configure_logging(
-                file_path=panel.get_value("tdms_file_path", "data.tdms"),
-                logging_mode=panel.get_value("logging_mode", LoggingMode.OFF),
-                operation=LoggingOperation.OPEN_OR_CREATE,
-            )
             if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
@@ -109,6 +120,7 @@ try:
                     trigger_slope=panel.get_value("slope", Slope.FALLING),
                     trigger_level=panel.get_value("level", 0.0),
                 )
+
             if trigger_type == "2":
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
                     trigger_source="/Dev2/PFI0", trigger_edge=panel.get_value("edge", Edge.FALLING)
