@@ -5,8 +5,8 @@ import threading
 from typing import Callable, TypeVar
 
 import grpc
+from google.protobuf.any_pb2 import Any
 from ni.panels.v1.panel_service_pb2 import (
-    StreamlitPanelConfiguration,
     StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
@@ -15,6 +15,7 @@ from ni.panels.v1.panel_service_pb2 import (
     SetValueRequest,
 )
 from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
+from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
@@ -52,8 +53,10 @@ class _PanelClient:
         streamlit_panel_configuration = StreamlitPanelConfiguration(
             panel_script_path=panel_script_path, python_path=python_path
         )
+        panel_configuration_any = Any()
+        panel_configuration_any.Pack(streamlit_panel_configuration)
         start_panel_request = StartPanelRequest(
-            panel_id=panel_id, streamlit_panel_configuration=streamlit_panel_configuration
+            panel_id=panel_id, panel_configuration=panel_configuration_any
         )
         response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
         return response.panel_uri

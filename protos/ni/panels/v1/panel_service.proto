@@ -59,23 +59,12 @@ service PanelService {
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
-message StreamlitPanelConfiguration 
-{
-  // Absolute path of the streamlit script file on disk, or network path to the file. This must end in ".py".
-  string panel_script_path = 1;
-
-  // Path to the python interpreter to use for running the streamlit script.
-  string python_path = 2;
-}
-
 message StartPanelRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Configuration for the panel
-  oneof panel_configuration {
-    StreamlitPanelConfiguration streamlit_panel_configuration = 2;
-  }
+  // Configuration for the panel, packed as Any
+  google.protobuf.Any panel_configuration = 2;
 }
 
 message StartPanelResponse {

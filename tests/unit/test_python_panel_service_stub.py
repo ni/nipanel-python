@@ -2,7 +2,6 @@ import pytest
 from google.protobuf.any_pb2 import Any
 from google.protobuf.wrappers_pb2 import StringValue
 from ni.panels.v1.panel_service_pb2 import (
-    StreamlitPanelConfiguration,
     StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
@@ -11,11 +10,14 @@ from ni.panels.v1.panel_service_pb2 import (
     SetValueRequest,
 )
 from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
+from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
 
 
 def test___start_panel___gets_response(python_panel_service_stub: PanelServiceStub) -> None:
     configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
-    request = StartPanelRequest(panel_id="test_panel", streamlit_panel_configuration=configuration)
+    configuration_any = Any()
+    configuration_any.Pack(configuration)
+    request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)
     response = python_panel_service_stub.StartPanel(request)
 
     assert response.panel_uri == "http://localhost:50051/test_panel"
@@ -25,9 +27,9 @@ def test___start_panel___stop_panel___gets_response(
     python_panel_service_stub: PanelServiceStub,
 ) -> None:
     configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
-    start_request = StartPanelRequest(
-        panel_id="test_panel", streamlit_panel_configuration=configuration
-    )
+    configuration_any = Any()
+    configuration_any.Pack(configuration)
+    start_request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)
     python_panel_service_stub.StartPanel(start_request)
 
     stop_request = StopPanelRequest(panel_id="test_panel", reset=False)

@@ -17,6 +17,7 @@ from ni.panels.v1.panel_service_pb2 import (
     SetValueResponse,
 )
 from ni.panels.v1.panel_service_pb2_grpc import PanelServiceServicer
+from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
 
 
 class FakePythonPanelServicer(PanelServiceServicer):
@@ -36,7 +37,9 @@ class FakePythonPanelServicer(PanelServiceServicer):
         self, request: StartPanelRequest, context: Any
     ) -> StartPanelResponse:
         """Trivial implementation for testing."""
-        self._python_path = request.streamlit_panel_configuration.python_path
+        streamlit_panel_configuration = StreamlitPanelConfiguration()
+        request.panel_configuration.Unpack(streamlit_panel_configuration)
+        self._python_path = streamlit_panel_configuration.python_path
         if self._fail_next_start_panel:
             self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")

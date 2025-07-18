@@ -14,44 +14,25 @@ import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
 @typing.final
-class StreamlitPanelConfiguration(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
-
-    PANEL_SCRIPT_PATH_FIELD_NUMBER: builtins.int
-    PYTHON_PATH_FIELD_NUMBER: builtins.int
-    panel_script_path: builtins.str
-    """Absolute path of the streamlit script file on disk, or network path to the file. This must end in ".py"."""
-    python_path: builtins.str
-    """Path to the python interpreter to use for running the streamlit script."""
-    def __init__(
-        self,
-        *,
-        panel_script_path: builtins.str = ...,
-        python_path: builtins.str = ...,
-    ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_script_path", b"panel_script_path", "python_path", b"python_path"]) -> None: ...
-
-global___StreamlitPanelConfiguration = StreamlitPanelConfiguration
-
-@typing.final
 class StartPanelRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
-    STREAMLIT_PANEL_CONFIGURATION_FIELD_NUMBER: builtins.int
+    PANEL_CONFIGURATION_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
     @property
-    def streamlit_panel_configuration(self) -> global___StreamlitPanelConfiguration: ...
+    def panel_configuration(self) -> google.protobuf.any_pb2.Any:
+        """Configuration for the panel, packed as Any"""
+
     def __init__(
         self,
         *,
         panel_id: builtins.str = ...,
-        streamlit_panel_configuration: global___StreamlitPanelConfiguration | None = ...,
+        panel_configuration: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration", "streamlit_panel_configuration", b"streamlit_panel_configuration"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration", "panel_id", b"panel_id", "streamlit_panel_configuration", b"streamlit_panel_configuration"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["panel_configuration", b"panel_configuration"]) -> typing.Literal["streamlit_panel_configuration"] | None: ...
+    def HasField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration", "panel_id", b"panel_id"]) -> None: ...
 
 global___StartPanelRequest = StartPanelRequest
 
