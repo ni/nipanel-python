@@ -1,5 +1,7 @@
 """Initializes a refresh component for Streamlit."""
 
+from __future__ import annotations
+
 from typing import ClassVar
 
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
