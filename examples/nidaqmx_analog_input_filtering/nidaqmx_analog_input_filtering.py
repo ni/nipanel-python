@@ -120,7 +120,9 @@ try:
             try:
                 task.start()
                 while not panel.get_value("stop_button", False):
-                    data = task.read(number_of_samples_per_channel=100)  # pyright: ignore[reportArgumentType]
+                    data = task.read(
+                        number_of_samples_per_channel=100 # pyright: ignore[reportArgumentType]
+                    )  
                     panel.set_value("acquired_data", data)
             except KeyboardInterrupt:
                 pass
