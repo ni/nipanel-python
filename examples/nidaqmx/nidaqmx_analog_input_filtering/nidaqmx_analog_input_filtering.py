@@ -16,10 +16,9 @@ from nidaqmx.constants import (
     StrainGageBridgeType,
     TerminalConfiguration,
 )
-import time
 
-import nidaqmx.system
 import nipanel
+
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_input_filtering_panel.py")
 panel = nipanel.create_panel(panel_script_path)
 panel.set_value("is_running", False)
@@ -90,7 +89,6 @@ try:
                     max_val=panel.get_value("max_value_voltage", 5.0),
                     min_val=panel.get_value("min_value_voltage", -5.0),
                 )
-                
 
             task.timing.cfg_samp_clk_timing(
                 rate=panel.get_value("rate", 1000.0),
@@ -99,7 +97,7 @@ try:
             )
             panel.set_value("actual_sample_rate", task.timing.samp_clk_rate)
             panel.set_value("sample_rate", panel.get_value("rate", 100.0))
-            
+
             if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
@@ -114,7 +112,7 @@ try:
                 panel.set_value("actual_filter_freq", 0.0)
                 panel.set_value("actual_filter_response", FilterResponse.COMB)
                 panel.set_value("actual_filter_order", 0)
-            
+
             trigger_type = panel.get_value("trigger_type")
             if trigger_type == "5":
                 task.triggers.start_trigger.cfg_anlg_edge_start_trig(
@@ -122,7 +120,6 @@ try:
                     trigger_slope=panel.get_value("slope", Slope.FALLING),
                     trigger_level=panel.get_value("level", 0.0),
                 )
-                 
 
             if trigger_type == "2":
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
