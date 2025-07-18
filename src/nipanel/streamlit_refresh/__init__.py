@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import threading
+
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from streamlit.components.v1 import declare_component
@@ -24,13 +26,15 @@ def initialize_refresh_component(panel_id: str) -> CustomComponent:
 
 
 def _get_or_resolve_proxy() -> str:
-    global _panel_service_proxy_location
-    if _panel_service_proxy_location is None:
-        discovery_client = DiscoveryClient(grpc_channel_pool=GrpcChannelPool())
-        service_location = discovery_client.resolve_service(
-            provided_interface="ni.http1.proxy",
-            service_class="",
-        )
-        _panel_service_proxy_location = service_location.insecure_address
+    with threading.RLock():
+        global _panel_service_proxy_location
+        if _panel_service_proxy_location is None:
+            with GrpcChannelPool() as grpc_channel_pool:
+                discovery_client = DiscoveryClient(grpc_channel_pool=grpc_channel_pool)
+                service_location = discovery_client.resolve_service(
+                    provided_interface="ni.http1.proxy",
+                    service_class="",
+                )
+                _panel_service_proxy_location = service_location.insecure_address
 
-    return _panel_service_proxy_location
+        return _panel_service_proxy_location
