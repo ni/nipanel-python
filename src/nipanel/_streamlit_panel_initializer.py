@@ -5,7 +5,6 @@ import streamlit as st
 
 from nipanel._convert import is_supported_type
 from nipanel._panel_value_accessor import PanelValueAccessor
-from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 from nipanel._streamlit_panel import StreamlitPanel
 from nipanel.streamlit_refresh import initialize_refresh_component
 
@@ -84,7 +83,6 @@ def _initialize_panel_from_base_path() -> PanelValueAccessor:
     return PanelValueAccessor(
         panel_id=panel_id,
         notify_on_set_value=False,
-        service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
     )
 
 

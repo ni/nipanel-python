@@ -30,20 +30,18 @@ _T = TypeVar("_T")
 
 _logger = logging.getLogger(__name__)
 
-PANEL_INTERFACE = "ni.panels.v1.PanelService"
+PANEL_SERVICE = "ni.panels.v1.PanelService"
 
 
 class _PanelClient:
     def __init__(
         self,
         *,
-        service_class: str | None = None,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
         self._initialization_lock = threading.Lock()
-        self._service_class = service_class
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
         self._grpc_channel = grpc_channel
@@ -98,7 +96,7 @@ class _PanelClient:
         if self._stub is None:
             if self._grpc_channel is not None:
                 self._stub = PanelServiceStub(self._grpc_channel)
-            elif self._service_class is not None:
+            else:
                 with self._initialization_lock:
                     if self._grpc_channel_pool is None:
                         _logger.debug("Creating unshared GrpcChannelPool.")
@@ -110,13 +108,10 @@ class _PanelClient:
                         )
 
                     service_location = self._discovery_client.resolve_service(
-                        provided_interface=PANEL_INTERFACE,
-                        service_class=self._service_class,
+                        provided_interface=PANEL_SERVICE
                     )
                     channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
                     self._stub = PanelServiceStub(channel)
-            else:
-                raise TypeError("Either grpc_channel or service_class must be provided.")
         return self._stub
 
     def _invoke_with_retry(

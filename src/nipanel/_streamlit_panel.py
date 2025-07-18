@@ -9,7 +9,6 @@ from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 
 from nipanel._panel_value_accessor import PanelValueAccessor
-from nipanel._streamlit_constants import STREAMLIT_PYTHON_PANEL_SERVICE
 
 
 @final
@@ -41,7 +40,6 @@ class StreamlitPanel(PanelValueAccessor):
         """
         super().__init__(
             panel_id=panel_id,
-            service_class=STREAMLIT_PYTHON_PANEL_SERVICE,
             discovery_client=discovery_client,
             grpc_channel_pool=grpc_channel_pool,
             grpc_channel=grpc_channel,
