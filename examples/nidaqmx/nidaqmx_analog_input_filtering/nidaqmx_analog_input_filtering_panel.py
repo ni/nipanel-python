@@ -27,12 +27,13 @@ left_col, right_col = st.columns(2)
 st.markdown(
     """
     <style>
-    div.stNumberInput {
+     div.stNumberInput {
         max-width: 190px !important;
     }
     div.stTextInput {
         max-width: 190px !important;
     }
+   
     div[data-baseweb="select"] {
         width: 190px !important; /* Adjust the width as needed */
     }
