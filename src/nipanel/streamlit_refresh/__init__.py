@@ -10,6 +10,7 @@ from streamlit.components.v1 import declare_component
 from streamlit.components.v1.custom_component import CustomComponent
 
 
+_grpc_client_lock = threading.RLock()
 _panel_service_proxy_location: str | None = None
 
 
@@ -26,7 +27,8 @@ def initialize_refresh_component(panel_id: str) -> CustomComponent:
 
 
 def _get_or_resolve_proxy() -> str:
-    with threading.RLock():
+    global _grpc_client_lock
+    with _grpc_client_lock:
         global _panel_service_proxy_location
         if _panel_service_proxy_location is None:
             with GrpcChannelPool() as grpc_channel_pool:
