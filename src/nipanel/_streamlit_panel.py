@@ -52,12 +52,12 @@ class StreamlitPanel(PanelValueAccessor):
 
     @property
     def panel_script_path(self) -> str:
-        """Read-only accessor for the panel file path."""
+        """Read-only accessor for the streamlit script file path."""
         return self._panel_script_path
 
     @property
     def panel_url(self) -> str:
-        """Read-only accessor for the panel URL."""
+        """Read-only accessor for the panel's streamlit webpage URL."""
         return self._panel_url
 
     def _get_python_path(self) -> str:
