@@ -42,12 +42,18 @@ with right_col:
                 channel_left, channel_right = st.columns(2)
                 with channel_left:
                     max_value_voltage = st.number_input(
-                        "Max Value", value=5.0, step=0.1, disabled=panel.get_value("is_running", False)
+                        "Max Value",
+                        value=5.0,
+                        step=0.1,
+                        disabled=panel.get_value("is_running", False),
                     )
                     panel.set_value("max_value_voltage", max_value_voltage)
 
                     min_value_voltage = st.number_input(
-                        "Min Value", value=-5.0, step=0.1, disabled=panel.get_value("is_running", False)
+                        "Min Value",
+                        value=-5.0,
+                        step=0.1,
+                        disabled=panel.get_value("is_running", False),
                     )
                     panel.set_value("min_value_voltage", min_value_voltage)
 
@@ -84,7 +90,9 @@ with right_col:
                             key="max_value_current",
                             disabled=panel.get_value("is_running", False),
                         )
-                        current = panel.set_value("max_value_current", max_value_current)  # type:ignore
+                        current = panel.set_value(
+                            "max_value_current", max_value_current
+                        )  # type:ignore
                         shunt_resistor_value = st.number_input(
                             "Shunt Resistor Value",
                             value=249.0,
@@ -243,12 +251,12 @@ with left_col:
         )
         st.number_input(
             "Actual Sample Rate",
-            value= panel.get_value("actual_sample_rate", 1000.0),
-            key = "actual_sample_rate",
-            step = 1.0,
-            disabled= True
+            value=panel.get_value("actual_sample_rate", 1000.0),
+            key="actual_sample_rate",
+            step=1.0,
+            disabled=True,
         )
-        
+
         st.title("Logging Settings")
         enum_selectbox(
             panel,
@@ -288,9 +296,14 @@ with left_col:
             value=1,
             disabled=panel.get_value("is_running", False),
         )
-        st.selectbox("Actual Filter Frequency", options=[panel.get_value("actual_filter_freq")], disabled=True)
-        st.selectbox("Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True)
-
+        st.selectbox(
+            "Actual Filter Frequency",
+            options=[panel.get_value("actual_filter_freq")],
+            disabled=True,
+        )
+        st.selectbox(
+            "Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True
+        )
 
 
 with right_col:
@@ -381,7 +394,7 @@ with right_col:
                 "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
             )
 
-    
+
 with right_col:
     with st.container(border=True):
         acquired_data = panel.get_value("acquired_data", [0.0])
