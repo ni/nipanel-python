@@ -1,6 +1,6 @@
 # Performance checker Example
 
-This example measures the performance of a stremlit panel with a graph.
+This example measures the performance of a streamlit panel with a graph.
 
 ## Features
 
@@ -15,4 +15,7 @@ This example measures the performance of a stremlit panel with a graph.
 
 ### Usage
 
-Run `poetry run python examples/performance_checker/performance_checker.py`
+```pwsh
+poetry install --with examples
+poetry run python examples/performance_checker/performance_checker.py
+```
