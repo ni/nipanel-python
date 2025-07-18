@@ -40,7 +40,7 @@ def create_streamlit_panel(streamlit_script_path: Path, panel_id: str = "") -> S
             "The provided script path must be a valid Streamlit script ending with '.py'."
         )
 
-    if panel_id == "":
+    if not panel_id:
         panel_id = streamlit_script_path.stem
 
     path_str = str(streamlit_script_path)
