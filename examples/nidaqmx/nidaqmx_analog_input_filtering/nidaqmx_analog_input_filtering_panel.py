@@ -12,7 +12,6 @@ from nidaqmx.constants import (
     StrainGageBridgeType,
     TerminalConfiguration,
 )
-from settings_enum import AnalogPause, PauseWhen
 from streamlit_echarts import st_echarts
 
 import nipanel
@@ -24,8 +23,122 @@ panel = nipanel.get_panel_accessor()
 
 left_col, right_col = st.columns(2)
 
-with right_col:
+
+st.markdown(
+    """
+    <style>
+    div[data-baseweb="select"] {
+        width: 190px !important; /* Adjust the width as needed */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+streamlit_style = """
+    <style>
+    iframe[title="streamlit_echarts.st_echarts"]{ height: 400px; width:100%;} 
+   </style>
+    """
+st.markdown(streamlit_style, unsafe_allow_html=True)
+
+
+
+with left_col:
     with st.container(border=True):
+        is_running = panel.get_value("is_running", True)
+        if is_running:
+            st.button("Stop", key="stop_button")
+        else:
+            st.button("Run", key="run_button")
+
+        st.title("Channel Settings")
+        physical_channel = st.selectbox(options=panel.get_value("channel_name", ["Mod2/ai0"]), index=0, label="Physical Channels", disabled=panel.get_value("is_running", False))
+        panel.set_value("physical_channel", physical_channel)
+        enum_selectbox(
+            panel,
+            label="Terminal Configuration",
+            value=TerminalConfiguration.DEFAULT,
+            disabled=panel.get_value("is_running", False),
+            key="terminal_configuration",
+        )
+
+        st.title("Timing Settings")
+
+        st.selectbox("Sample Clock Source", options=panel.get_value("trigger_sources", [""]), index=0, disabled=panel.get_value("is_running", False))
+        st.number_input(
+            "Sample Rate",
+            value=1000.0,
+            min_value=1.0,
+            step=1.0,
+            disabled=panel.get_value("is_running", False),
+            key="rate",
+        )
+        st.number_input(
+            "Number of Samples",
+            value=100,
+            min_value=1,
+            step=1,
+            disabled=panel.get_value("is_running", False),
+            key="total_samples",
+        )
+        st.number_input(
+            "Actual Sample Rate",
+            value=panel.get_value("actual_sample_rate", 1000.0),
+            key="actual_sample_rate",
+            step=1.0,
+            disabled=True,
+        )
+
+        st.title("Logging Settings")
+        enum_selectbox(
+            panel,
+            label="Logging Mode",
+            value=LoggingMode.OFF,
+            disabled=panel.get_value("is_running", False),
+            key="logging_mode",
+        )
+        tdms_file_path = st.text_input(
+            label="TDMS File Path",
+            disabled=panel.get_value("is_running", False),
+            value="data.tdms",
+            key="tdms_file_path",
+        )
+        st.title("Filtering Settings")
+
+        filter = st.selectbox("Filter", options=["No Filtering", "Filter"])
+        panel.set_value("filter", filter)
+        enum_selectbox(
+            panel,
+            label="Filter Response",
+            value=FilterResponse.COMB,
+            disabled=panel.get_value("is_running", False),
+            key="filter_response",
+        )
+
+        filter_freq = st.number_input(
+            "Filtering Frequency",
+            value=1000.0,
+            step=1.0,
+            disabled=panel.get_value("is_running", False),
+        )
+        filter_order = st.number_input(
+            "Filter Order",
+            min_value=0,
+            max_value=1,
+            value=1,
+            disabled=panel.get_value("is_running", False),
+        )
+        st.selectbox(
+            "Actual Filter Frequency",
+            options=[panel.get_value("actual_filter_freq")],
+            disabled=True,
+        )
+        st.selectbox(
+            "Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True
+        )
+
+with right_col:
         st.title("Task Types")
         chosen_id = stx.tab_bar(
             data=[
@@ -35,9 +148,12 @@ with right_col:
             ],
             default=1,
         )
-        tabs = st.tabs(["Voltage", "Current", "Strain Gage"])
-        with st.container(border=True):
-            with tabs[0]:
+        
+        chan_type = chosen_id
+        panel.set_value("chan_type", chan_type)
+
+        if chosen_id == "1":
+            with st.container(border=True):
                 st.title("Voltage Data")
                 channel_left, channel_right = st.columns(2)
                 with channel_left:
@@ -57,7 +173,8 @@ with right_col:
                     )
                     panel.set_value("min_value_voltage", min_value_voltage)
 
-            with tabs[1]:
+        if chosen_id == "2":
+            with st.container(border=True):
                 st.title("Current Data")
                 channel_left, channel_right = st.columns(2)
                 with channel_left:
@@ -100,7 +217,8 @@ with right_col:
                             disabled=panel.get_value("is_running", False),
                         )
                         panel.set_value("shunt_resistor_value", shunt_resistor_value)
-            with tabs[2]:
+        if chosen_id == "3":
+            with st.container(border=True):
                 st.title("Strain Gage Data")
                 channel_left, channel_right = st.columns(2)
                 with channel_left:
@@ -183,131 +301,10 @@ with right_col:
                         )
                         panel.set_value("voltage_excitation_value", voltage_excit)
 
-panel.set_value("chan_type", "1")
 
-pages = st.container()
-chan_type = chosen_id
-panel.set_value("chan_type", chan_type)
-
-is_running = panel.get_value("is_running", True)
-with left_col:
-    if is_running:
-        st.button("Stop", key="stop_button")
-    else:
-        st.button("Run", key="run_button")
+              
 
 
-st.markdown(
-    """
-    <style>
-    div[data-baseweb="select"] {
-        width: 190px !important; /* Adjust the width as needed */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-streamlit_style = """
-    <style>
-    iframe[title="streamlit_echarts.st_echarts"]{ height: 400px; width:100%;} 
-   </style>
-    """
-st.markdown(streamlit_style, unsafe_allow_html=True)
-
-
-with left_col:
-    with st.container(border=True):
-
-        st.title("Channel Settings")
-        st.selectbox(options=["Mod3/ai10"], index=0, label="Physical Channels", disabled=True)
-
-        enum_selectbox(
-            panel,
-            label="Terminal Configuration",
-            value=TerminalConfiguration.DEFAULT,
-            disabled=panel.get_value("is_running", False),
-            key="terminal_configuration",
-        )
-
-        st.title("Timing Settings")
-
-        st.selectbox("Sample Clock Source", options=["Onboard Clock"], index=0, disabled=True)
-        st.number_input(
-            "Sample Rate",
-            value=1000.0,
-            min_value=1.0,
-            step=1.0,
-            disabled=panel.get_value("is_running", False),
-            key="rate",
-        )
-        st.number_input(
-            "Number of Samples",
-            value=100,
-            min_value=1,
-            step=1,
-            disabled=panel.get_value("is_running", False),
-            key="total_samples",
-        )
-        st.number_input(
-            "Actual Sample Rate",
-            value=panel.get_value("actual_sample_rate", 1000.0),
-            key="actual_sample_rate",
-            step=1.0,
-            disabled=True,
-        )
-
-        st.title("Logging Settings")
-        enum_selectbox(
-            panel,
-            label="Logging Mode",
-            value=LoggingMode.OFF,
-            disabled=panel.get_value("is_running", False),
-            key="logging_mode",
-        )
-        tdms_file_path = st.text_input(
-            label="TDMS File Path",
-            disabled=panel.get_value("is_running", False),
-            value="data.tdms",
-            key="tdms_file_path",
-        )
-        st.title("Filtering Settings")
-
-        filter = st.selectbox("Filter", options=["No Filtering", "Filter"])
-        panel.set_value("filter", filter)
-        enum_selectbox(
-            panel,
-            label="Filter Response",
-            value=FilterResponse.COMB,
-            disabled=panel.get_value("is_running", False),
-            key="filter_response",
-        )
-
-        filter_freq = st.number_input(
-            "Filtering Frequency",
-            value=1000.0,
-            step=1.0,
-            disabled=panel.get_value("is_running", False),
-        )
-        filter_order = st.number_input(
-            "Filter Order",
-            min_value=0,
-            max_value=1,
-            value=1,
-            disabled=panel.get_value("is_running", False),
-        )
-        st.selectbox(
-            "Actual Filter Frequency",
-            options=[panel.get_value("actual_filter_freq")],
-            disabled=True,
-        )
-        st.selectbox(
-            "Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True
-        )
-
-
-with right_col:
-    with st.container(border=True):
         st.title("Trigger Settings")
         id = stx.tab_bar(
             data=[
@@ -323,109 +320,91 @@ with right_col:
         )
         trigger_type = id
         panel.set_value("trigger_type", trigger_type)
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-            [
-                "No Trigger",
-                "Digital Start",
-                "Digital Pause",
-                "Digital Reference",
-                "Analog Start",
-                "Analog Pause",
-                "Analog Reference",
-            ]
-        )
-        with tab1:
-            st.write(
-                "To enable triggers, select a tab above, and configure the settings. \n Not all hardware supports all trigger types. Refer to your device documentation for more information."
-            )
-        with tab2:
-            st.selectbox("Source->", " /Dev1/PFI0")
-            enum_selectbox(
-                panel,
-                label="Edge",
-                value=Edge.FALLING,
-                disabled=panel.get_value("is_running", False),
-                key="edge",
-            )
-        with tab3:
-            st.selectbox("Source-", "/Dev1/PFI0")
-            pause_when = st.selectbox(
-                "Pause When",
-                options=[(e.name, e.value) for e in PauseWhen],
-                format_func=lambda x: x[0],
-                index=0,
-            )
-            pause_when = PauseWhen[pause_when[0]]  # type: ignore
-            panel.set_value("pause_when", pause_when)
-        with tab4:
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-            )
-        with tab5:
-            st.selectbox("Source:", "APFI0")
-            enum_selectbox(
-                panel,
-                label="Slope",
-                value=Slope.FALLING,
-                disabled=panel.get_value("is_running", False),
-                key="slope",
-            )
+    
+        if trigger_type == "1":
+            with st.container(border=True):
+                st.write(
+                    "To enable triggers, select a tab above, and configure the settings. \n Not all hardware supports all trigger types. Refer to your device documentation for more information."
+                )
+        if trigger_type == "2":
+            with st.container(border=True):
+                st.selectbox("Source->", " /Dev1/PFI0")
+                enum_selectbox(
+                    panel,
+                    label="Edge",
+                    value=Edge.FALLING,
+                    disabled=panel.get_value("is_running", False),
+                    key="edge",
+                )
+        if trigger_type == "3":
+            with st.container(border=True):
+                st.selectbox("Source-", "/Dev1/PFI0")
+                st.selectbox("PauseWhen", options=["High", "Low"])
+        if trigger_type == "4":
+            with st.container(border=True):
+                st.write(
+                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+                )
+        if trigger_type == "5":
+            with st.container(border=True):
+                st.selectbox("Source:", "APFI0")
+                enum_selectbox(
+                    panel,
+                    label="Slope",
+                    value=Slope.FALLING,
+                    disabled=panel.get_value("is_running", False),
+                    key="slope",
+                )
 
-            level = st.number_input("Level")
-            panel.set_value("level", level)
-            hysteriesis = st.number_input(
-                "Hysteriesis", disabled=panel.get_value("is_running", False)
-            )
-            panel.set_value("hysteriesis", hysteriesis)
+                level = st.number_input("Level")
+                panel.set_value("level", level)
+                hysteriesis = st.number_input(
+                    "Hysteriesis", disabled=panel.get_value("is_running", False)
+                )
+                panel.set_value("hysteriesis", hysteriesis)
 
-        with tab6:
-            st.selectbox("source:", "APFI0")
-            analog_pause = st.selectbox(
-                "analog_pause",
-                options=[(e.name, e.value) for e in AnalogPause],
-                format_func=lambda x: x[0],
-                index=0,
-            )
-            analog_pause = AnalogPause[analog_pause[0]]  # type: ignore
-            panel.set_value("analog_pause", analog_pause)
-
-        with tab7:
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
-            )
+        if trigger_type == "6":
+            with st.container(border=True):
+                st.selectbox("source:", "APFI0")
+                st.selectbox("Pause When", options=["Above Level", "Below level"])
+                st.number_input("level", value=0.0)
+        if trigger_type == "7":
+            with st.container(border=True):
+                st.write(
+                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
+                )
 
 
-with right_col:
-    with st.container(border=True):
-        acquired_data = panel.get_value("acquired_data", [0.0])
-        sample_rate = panel.get_value("sample_rate", 0.0)
-        acquired_data_graph = {
-            "animation": False,
-            "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)"]},
-            "xAxis": {
-                "type": "category",
-                "data": [x / sample_rate for x in range(len(acquired_data))],
-                "name": "Time",
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "yAxis": {
-                "type": "value",
-                "name": "Volts",
-                "nameRotate": 90,
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "series": [
-                {
-                    "name": "voltage_amplitude",
-                    "type": "line",
-                    "data": acquired_data,
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
+        with st.container(border=True):
+            acquired_data = panel.get_value("acquired_data", [0.0])
+            sample_rate = panel.get_value("sample_rate", 0.0)
+            acquired_data_graph = {
+                "animation": False,
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": ["Voltage (V)"]},
+                "xAxis": {
+                    "type": "category",
+                    "data": [x / sample_rate for x in range(len(acquired_data))],
+                    "name": "Time",
+                    "nameLocation": "center",
+                    "nameGap": 40,
                 },
-            ],
-        }
-        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+                "yAxis": {
+                    "type": "value",
+                    "name": "Volts",
+                    "nameRotate": 90,
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "series": [
+                    {
+                        "name": "voltage_amplitude",
+                        "type": "line",
+                        "data": acquired_data,
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                ],
+            }
+            st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
