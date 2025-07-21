@@ -338,7 +338,7 @@ with right_col:
             )
     if trigger_type == "2":
         with st.container(border=True):
-            st.selectbox("Source->", " /Dev1/PFI0")
+            st.selectbox("Source->", options=panel.get_value("trigger_sources", [""]))
             enum_selectbox(
                 panel,
                 label="Edge",
@@ -348,7 +348,7 @@ with right_col:
             )
     if trigger_type == "3":
         with st.container(border=True):
-            st.selectbox("Source-", "/Dev1/PFI0")
+            st.selectbox("Source-", options=panel.get_value("trigger_sources", [""]))
             st.selectbox("PauseWhen", options=["High", "Low"])
     if trigger_type == "4":
         with st.container(border=True):
@@ -357,7 +357,7 @@ with right_col:
             )
     if trigger_type == "5":
         with st.container(border=True):
-            st.selectbox("Source:", "APFI0")
+            st.text_input("Source:", "APFI0")
             enum_selectbox(
                 panel,
                 label="Slope",
@@ -375,7 +375,7 @@ with right_col:
 
     if trigger_type == "6":
         with st.container(border=True):
-            st.selectbox("source:", "APFI0")
+            st.text_input("source:", "APFI0")
             st.selectbox("Pause When", options=["Above Level", "Below level"])
             st.number_input("level", value=0.0)
     if trigger_type == "7":
