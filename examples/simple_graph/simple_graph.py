@@ -10,7 +10,7 @@ import nipanel
 
 
 panel_script_path = Path(__file__).with_name("simple_graph_panel.py")
-panel = nipanel.create_panel(panel_script_path)
+panel = nipanel.create_streamlit_panel(panel_script_path)
 
 amplitude = 1.0
 frequency = 1.0

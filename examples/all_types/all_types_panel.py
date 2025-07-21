@@ -12,7 +12,7 @@ from nipanel.controls import enum_selectbox, flag_checkboxes
 st.set_page_config(page_title="All Types Example", page_icon="📊", layout="wide")
 st.title("All Types Example")
 
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 for name in all_types_with_values.keys():
     st.markdown("---")
 
