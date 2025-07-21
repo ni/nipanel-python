@@ -338,7 +338,8 @@ with right_col:
             )
     if trigger_type == "2":
         with st.container(border=True):
-            st.selectbox("Source->", options=panel.get_value("trigger_sources", [""]))
+            source = st.selectbox("Source->", options=panel.get_value("trigger_sources", [""]))
+            panel.set_value("digital_source", source)
             enum_selectbox(
                 panel,
                 label="Edge",
@@ -357,7 +358,8 @@ with right_col:
             )
     if trigger_type == "5":
         with st.container(border=True):
-            st.text_input("Source:", "APFI0")
+            analog_source = st.text_input("Source:", "APFI0")
+            panel.set_value("analog_source", analog_source)
             enum_selectbox(
                 panel,
                 label="Slope",
