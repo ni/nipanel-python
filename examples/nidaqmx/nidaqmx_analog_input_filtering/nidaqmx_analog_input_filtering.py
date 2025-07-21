@@ -25,18 +25,18 @@ panel.set_value("is_running", False)
 
 system = nidaqmx.system.System.local()
 
-channel_name = []
+available_channel_name = []
 for dev in system.devices:
     for chan in dev.ai_physical_chans:
-        channel_name.append(chan.name)
-panel.set_value("channel_name", channel_name)
+        available_channel_name.append(chan.name)
+panel.set_value("available_channel_name", available_channel_name)
 
-trigger_sources = []
+available_trigger_sources = []
 for dev in system.devices:
     if hasattr(dev, "terminals"):
         for term in dev.terminals:
-            trigger_sources.append(term)
-panel.set_value("trigger_sources", trigger_sources)
+            available_trigger_sources.append(term)
+panel.set_value("available_trigger_sources", available_trigger_sources)
 try:
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
@@ -96,8 +96,7 @@ try:
                 sample_mode=AcquisitionType.CONTINUOUS,
                 samps_per_chan=panel.get_value("total_samples", 100),
             )
-            panel.set_value("actual_sample_rate", task.timing.samp_clk_rate)
-            panel.set_value("sample_rate", panel.get_value("rate", 100.0))
+            panel.set_value("sample_rate", task.timing.samp_clk_rate)
 
             if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True

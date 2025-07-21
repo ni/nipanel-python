@@ -38,16 +38,12 @@ st.markdown(
         width: 190px !important; /* Adjust the width as needed */
     }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-streamlit_style = """
     <style>
     iframe[title="streamlit_echarts.st_echarts"]{ height: 400px; width:100%;} 
    </style>
-    """
-st.markdown(streamlit_style, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
 
 with left_col:
@@ -60,7 +56,7 @@ with left_col:
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
-            options=panel.get_value("channel_name", ["Mod2/ai0"]),
+            options=panel.get_value("available_channel_name", ["Mod2/ai0"]),
             index=0,
             label="Physical Channels",
             disabled=panel.get_value("is_running", False),
@@ -78,7 +74,7 @@ with left_col:
 
         st.selectbox(
             "Sample Clock Source",
-            options=panel.get_value("trigger_sources", [""]),
+            options=panel.get_value("available_trigger_sources", [""]),
             index=0,
             disabled=panel.get_value("is_running", False),
         )
@@ -100,7 +96,7 @@ with left_col:
         )
         st.number_input(
             "Actual Sample Rate",
-            value=panel.get_value("actual_sample_rate", 1000.0),
+            value=panel.get_value("sample_rate", 1000.0),
             key="actual_sample_rate",
             step=1.0,
             disabled=True,
@@ -178,16 +174,16 @@ with right_col:
                     value=5.0,
                     step=0.1,
                     disabled=panel.get_value("is_running", False),
+                    key="max_value_voltage",
                 )
-                panel.set_value("max_value_voltage", max_value_voltage)
 
                 min_value_voltage = st.number_input(
                     "Min Value",
                     value=-5.0,
                     step=0.1,
                     disabled=panel.get_value("is_running", False),
+                    key="min_value_voltage",
                 )
-                panel.set_value("min_value_voltage", min_value_voltage)
 
     if chosen_id == "2":
         with st.container(border=True):
@@ -215,7 +211,6 @@ with right_col:
                         step=0.001,
                         disabled=panel.get_value("is_running", False),
                     )
-                    panel.set_value("min_value_current", min_value_current)
                     max_value_current = st.number_input(
                         "Max Value",
                         value=0.01,
@@ -223,14 +218,12 @@ with right_col:
                         key="max_value_current",
                         disabled=panel.get_value("is_running", False),
                     )
-                    current = panel.set_value("max_value_current", max_value_current)  # type:ignore
                     shunt_resistor_value = st.number_input(
                         "Shunt Resistor Value",
                         value=249.0,
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
                     )
-                    panel.set_value("shunt_resistor_value", shunt_resistor_value)
     if chosen_id == "3":
         with st.container(border=True):
             st.title("Strain Gage Data")
@@ -240,12 +233,15 @@ with right_col:
                     "Min Value",
                     value=-0.01,
                     step=0.01,
+                    key="min_value_strain",
                 )
-                panel.set_value("min_value_strain", min_value_strain)
                 max_value_strain = st.number_input(
-                    "Max Value", value=0.01, step=0.01, max_value=2.0
+                    "Max Value",
+                    value=0.01,
+                    step=0.01,
+                    max_value=2.0,
+                    key="max_value_strain",
                 )
-                panel.set_value("max_value_strain", max_value_strain)
                 enum_selectbox(
                     panel,
                     label="Strain Units",
@@ -260,22 +256,22 @@ with right_col:
                         value=2.0,
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
+                        key="gage_factor",
                     )
-                    panel.set_value("gage_factor", gage_factor)
                     nominal_gage = st.number_input(
                         "nominal gage resistance",
                         value=350.0,
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
+                        key="gage_resistance",
                     )
-                    panel.set_value("gage_resistance", nominal_gage)
                     poisson_ratio = st.number_input(
                         "poisson ratio",
                         value=0.3,
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
+                        key="poisson_ratio",
                     )
-                    panel.set_value("poisson_ratio", poisson_ratio)
                 with st.expander("Bridge Information", expanded=False):
                     st.title("Bridge Information")
                     enum_selectbox(
@@ -289,15 +285,15 @@ with right_col:
                         "lead wire resistance",
                         value=0.0,
                         step=1.0,
+                        key="wire_resistance",
                     )
-                    panel.set_value("wire_resistance", wire_resistance)
                     initial_voltage = st.number_input(
                         "initial bridge voltage",
                         value=0.0,
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
+                        key="initial_voltage",
                     )
-                    panel.set_value("initial_voltage", initial_voltage)
 
                     st.selectbox(
                         label="voltage excitation source",
@@ -313,7 +309,6 @@ with right_col:
                         key="voltage_excitation_value",
                         disabled=panel.get_value("is_running", False),
                     )
-                    panel.set_value("voltage_excitation_value", voltage_excit)
 
     st.title("Trigger Settings")
     id = stx.tab_bar(
@@ -349,8 +344,9 @@ with right_col:
             )
     if trigger_type == "3":
         with st.container(border=True):
-            st.selectbox("Source-", options=panel.get_value("trigger_sources", [""]))
-            st.selectbox("PauseWhen", options=["High", "Low"])
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            )
     if trigger_type == "4":
         with st.container(border=True):
             st.write(
@@ -368,18 +364,18 @@ with right_col:
                 key="slope",
             )
 
-            level = st.number_input("Level")
-            panel.set_value("level", level)
+            level = st.number_input("Level", key="level")
             hysteriesis = st.number_input(
-                "Hysteriesis", disabled=panel.get_value("is_running", False)
+                "Hysteriesis",
+                disabled=panel.get_value("is_running", False),
+                key="hysteriesis",
             )
-            panel.set_value("hysteriesis", hysteriesis)
 
     if trigger_type == "6":
         with st.container(border=True):
-            st.text_input("source:", "APFI0")
-            st.selectbox("Pause When", options=["Above Level", "Below level"])
-            st.number_input("level", value=0.0)
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            )
     if trigger_type == "7":
         with st.container(border=True):
             st.write(
