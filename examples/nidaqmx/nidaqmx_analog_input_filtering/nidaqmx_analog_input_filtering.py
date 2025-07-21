@@ -98,7 +98,7 @@ try:
             )
             panel.set_value("actual_sample_rate", task.timing.samp_clk_rate)
             panel.set_value("sample_rate", panel.get_value("rate", 100.0))
-            
+
             if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
@@ -121,10 +121,11 @@ try:
                     trigger_slope=panel.get_value("slope", Slope.FALLING),
                     trigger_level=panel.get_value("level", 0.0),
                 )
-        
+
             if trigger_type == "2":
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
-                    trigger_source=panel.get_value("digital_source", ""), trigger_edge=panel.get_value("edge", Edge.FALLING)
+                    trigger_source=panel.get_value("digital_source", ""),
+                    trigger_edge=panel.get_value("edge", Edge.FALLING),
                 )
                 task.triggers.start_trigger.anlg_edge_hyst = hysteresis = panel.get_value(
                     "hysteresis", 0.0
