@@ -152,7 +152,7 @@ with left_col:
 
 with right_col:
     st.title("Task Types")
-    chosen_id = stx.tab_bar(
+    chan_type = stx.tab_bar(
         data=[
             stx.TabBarItemData(id=1, title="Voltage", description=""),
             stx.TabBarItemData(id=2, title="Current", description=""),
@@ -161,10 +161,9 @@ with right_col:
         default=1,
     )
 
-    chan_type = chosen_id
     panel.set_value("chan_type", chan_type)
 
-    if chosen_id == "1":
+    if chan_type == "1":
         with st.container(border=True):
             st.title("Voltage Data")
             channel_left, channel_right = st.columns(2)
@@ -185,7 +184,7 @@ with right_col:
                     key="min_value_voltage",
                 )
 
-    if chosen_id == "2":
+    if chan_type == "2":
         with st.container(border=True):
             st.title("Current Data")
             channel_left, channel_right = st.columns(2)
@@ -224,7 +223,7 @@ with right_col:
                         step=1.0,
                         disabled=panel.get_value("is_running", False),
                     )
-    if chosen_id == "3":
+    if chan_type == "3":
         with st.container(border=True):
             st.title("Strain Gage Data")
             channel_left, channel_right = st.columns(2)
@@ -311,7 +310,7 @@ with right_col:
                     )
 
     st.title("Trigger Settings")
-    id = stx.tab_bar(
+    trigger_type = stx.tab_bar(
         data=[
             stx.TabBarItemData(id=1, title="No Trigger", description=""),
             stx.TabBarItemData(id=2, title="Digital Start", description=""),
@@ -323,7 +322,6 @@ with right_col:
         ],
         default=1,
     )
-    trigger_type = id
     panel.set_value("trigger_type", trigger_type)
 
     if trigger_type == "1":
@@ -333,7 +331,9 @@ with right_col:
             )
     if trigger_type == "2":
         with st.container(border=True):
-            source = st.selectbox("Source->", options=panel.get_value("trigger_sources", [""]))
+            source = st.selectbox(
+                "Source->", options=panel.get_value("available_trigger_sources", [""])
+            )
             panel.set_value("digital_source", source)
             enum_selectbox(
                 panel,
@@ -354,8 +354,7 @@ with right_col:
             )
     if trigger_type == "5":
         with st.container(border=True):
-            analog_source = st.text_input("Source:", "APFI0")
-            panel.set_value("analog_source", analog_source)
+            analog_source = st.text_input("Source:", "APFI0", key="analog_source")
             enum_selectbox(
                 panel,
                 label="Slope",
