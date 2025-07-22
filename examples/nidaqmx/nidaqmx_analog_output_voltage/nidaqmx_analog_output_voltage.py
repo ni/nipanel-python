@@ -48,7 +48,7 @@ try:
                 min_val=panel.get_value("min_value_voltage", -5.0),
             )
             sample_rate = panel.get_value("rate", 1000.0)
-            num_samples = panel.get_value("rate", 1000.0)
+            num_samples = panel.get_value("total_samples", 1000)
             frequency = panel.get_value("frequency", 10.0)  
             amplitude = panel.get_value("amplitude", 1.0) 
         

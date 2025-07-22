@@ -215,7 +215,6 @@ with right_col:
             ax.plot(time, acquired_data, label="Line Plot")
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitude (V)")
-            ax.legend()
             st.pyplot(fig)
 
                 
