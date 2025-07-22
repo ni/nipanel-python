@@ -1,29 +1,28 @@
 syntax = "proto3";
 
-package ni.pythonpanel.v1;
+package ni.panels.v1;
 
 import "google/protobuf/any.proto";
 
 option cc_enable_arenas = true;
-option csharp_namespace = "NationalInstruments.PythonPanel.V1";
-option go_package = "pythonpanelv1";
+option csharp_namespace = "NationalInstruments.Panels.V1";
+option go_package = "panelsv1";
 option java_multiple_files = true;
-option java_outer_classname = "PythonPanelServiceProto";
-option java_package = "com.ni.pythonpanel.v1";
-option objc_class_prefix = "NIPP";
-option php_namespace = "NI\\PythonPanel\\V1";
-option ruby_package = "NI::PythonPanel::V1";
+option java_outer_classname = "PanelsProto";
+option java_package = "com.ni.panels.v1";
+option objc_class_prefix = "NIPS";
+option php_namespace = "NI\\Panels\\V1";
+option ruby_package = "NI::Panels::V1";
 
-// Service interface for interacting with python panels
-service PythonPanelService {
-  // Start a panel (or connect to if it has already been started)
+// Service interface for interacting with NI panels
+service PanelService {
+  // Start a panel using the provided configuration (or connect to if it has already been started)
   // Status Codes for errors:
   // - INVALID_ARGUMENT: 
-  //   - The panel script filename doesn't end in .py.
   //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The panel configuration has an invalid argument.
   // - NOT_FOUND: 
-  //   - The panel script file was not found.
-  //   - The python executable file was not found.
+  //   - The panel configuration includes a file that was not found.
   rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
 
   // Stop a panel
@@ -64,16 +63,13 @@ message StartPanelRequest {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Absolute path of the panel script's file on disk, or network path to the file
-  string panel_script_path = 2;
-
-  // Path to the python interpreter to use for the panel script.
-  string python_path = 3;
+  // Configuration for the panel, packed as Any
+  google.protobuf.Any panel_configuration = 2;
 }
 
 message StartPanelResponse {
-  // Location of the panel's webpage 
-  string panel_url = 1; 
+  // Location of the panel 
+  string panel_uri = 1; 
 }
 
 message StopPanelRequest {
@@ -94,8 +90,8 @@ message PanelInformation {
   // Unique ID of the panel
   string panel_id = 1;
 
-  // Location of the panel's webpage
-  string panel_url = 2;
+  // Location of the panel
+  string panel_uri = 2;
 
   // IDs of all of the values associated with the panel
   repeated string value_ids = 3;
@@ -128,7 +124,7 @@ message TryGetValueRequest {
 }
 
 message TryGetValueResponse {
-  // The value, if  it was found
+  // The value, if it was found
   optional google.protobuf.Any value = 1;
 }
 

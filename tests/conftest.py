@@ -7,7 +7,7 @@ from typing import cast
 import grpc
 import pytest
 from grpc.framework.foundation import logging_pool
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
 
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
@@ -38,6 +38,6 @@ def fake_panel_channel(
 @pytest.fixture
 def python_panel_service_stub(
     fake_panel_channel: grpc.Channel,
-) -> Generator[PythonPanelServiceStub]:
-    """Fixture to get a PythonPanelServiceStub, attached to a FakePythonPanelService."""
-    yield PythonPanelServiceStub(fake_panel_channel)
+) -> Generator[PanelServiceStub]:
+    """Fixture to get a PanelServiceStub, attached to a FakePythonPanelService."""
+    yield PanelServiceStub(fake_panel_channel)

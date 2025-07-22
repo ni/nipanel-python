@@ -7,7 +7,7 @@ import abc
 import collections.abc
 import grpc
 import grpc.aio
-import ni.pythonpanel.v1.python_panel_service_pb2
+import ni.panels.v1.panel_service_pb2
 import typing
 
 _T = typing.TypeVar("_T")
@@ -17,27 +17,26 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
-class PythonPanelServiceStub:
-    """Service interface for interacting with python panels"""
+class PanelServiceStub:
+    """Service interface for interacting with NI panels"""
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
     StartPanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
+        ni.panels.v1.panel_service_pb2.StartPanelRequest,
+        ni.panels.v1.panel_service_pb2.StartPanelResponse,
     ]
-    """Start a panel (or connect to if it has already been started)
+    """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
-      - The panel script filename doesn't end in .py.
       - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel configuration has an invalid argument.
     - NOT_FOUND: 
-      - The panel script file was not found.
-      - The python executable file was not found.
+      - The panel configuration includes a file that was not found.
     """
 
     StopPanel: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse,
+        ni.panels.v1.panel_service_pb2.StopPanelRequest,
+        ni.panels.v1.panel_service_pb2.StopPanelResponse,
     ]
     """Stop a panel
     Status Codes for errors:
@@ -46,16 +45,16 @@ class PythonPanelServiceStub:
     """
 
     EnumeratePanels: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse,
+        ni.panels.v1.panel_service_pb2.EnumeratePanelsRequest,
+        ni.panels.v1.panel_service_pb2.EnumeratePanelsResponse,
     ]
     """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
     """
 
     GetValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse,
+        ni.panels.v1.panel_service_pb2.GetValueRequest,
+        ni.panels.v1.panel_service_pb2.GetValueResponse,
     ]
     """Get a value for a control on the panel
     Status Codes for errors:
@@ -67,8 +66,8 @@ class PythonPanelServiceStub:
     """
 
     TryGetValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
+        ni.panels.v1.panel_service_pb2.TryGetValueRequest,
+        ni.panels.v1.panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
     Status Codes for errors:
@@ -78,8 +77,8 @@ class PythonPanelServiceStub:
     """
 
     SetValue: grpc.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse,
+        ni.panels.v1.panel_service_pb2.SetValueRequest,
+        ni.panels.v1.panel_service_pb2.SetValueResponse,
     ]
     """Set a value for a control on the panel
     Status Codes for errors:
@@ -88,26 +87,25 @@ class PythonPanelServiceStub:
       - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-class PythonPanelServiceAsyncStub:
-    """Service interface for interacting with python panels"""
+class PanelServiceAsyncStub:
+    """Service interface for interacting with NI panels"""
 
     StartPanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse,
+        ni.panels.v1.panel_service_pb2.StartPanelRequest,
+        ni.panels.v1.panel_service_pb2.StartPanelResponse,
     ]
-    """Start a panel (or connect to if it has already been started)
+    """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
     - INVALID_ARGUMENT: 
-      - The panel script filename doesn't end in .py.
       - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel configuration has an invalid argument.
     - NOT_FOUND: 
-      - The panel script file was not found.
-      - The python executable file was not found.
+      - The panel configuration includes a file that was not found.
     """
 
     StopPanel: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse,
+        ni.panels.v1.panel_service_pb2.StopPanelRequest,
+        ni.panels.v1.panel_service_pb2.StopPanelResponse,
     ]
     """Stop a panel
     Status Codes for errors:
@@ -116,16 +114,16 @@ class PythonPanelServiceAsyncStub:
     """
 
     EnumeratePanels: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse,
+        ni.panels.v1.panel_service_pb2.EnumeratePanelsRequest,
+        ni.panels.v1.panel_service_pb2.EnumeratePanelsResponse,
     ]
     """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
     Status Codes for errors:
     """
 
     GetValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse,
+        ni.panels.v1.panel_service_pb2.GetValueRequest,
+        ni.panels.v1.panel_service_pb2.GetValueResponse,
     ]
     """Get a value for a control on the panel
     Status Codes for errors:
@@ -137,8 +135,8 @@ class PythonPanelServiceAsyncStub:
     """
 
     TryGetValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse,
+        ni.panels.v1.panel_service_pb2.TryGetValueRequest,
+        ni.panels.v1.panel_service_pb2.TryGetValueResponse,
     ]
     """Try to get a value for a control on the panel
     Status Codes for errors:
@@ -148,8 +146,8 @@ class PythonPanelServiceAsyncStub:
     """
 
     SetValue: grpc.aio.UnaryUnaryMultiCallable[
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValueRequest,
-        ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse,
+        ni.panels.v1.panel_service_pb2.SetValueRequest,
+        ni.panels.v1.panel_service_pb2.SetValueResponse,
     ]
     """Set a value for a control on the panel
     Status Codes for errors:
@@ -158,31 +156,30 @@ class PythonPanelServiceAsyncStub:
       - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
     """
 
-class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
-    """Service interface for interacting with python panels"""
+class PanelServiceServicer(metaclass=abc.ABCMeta):
+    """Service interface for interacting with NI panels"""
 
     @abc.abstractmethod
     def StartPanel(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.StartPanelRequest,
+        request: ni.panels.v1.panel_service_pb2.StartPanelRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StartPanelResponse]]:
-        """Start a panel (or connect to if it has already been started)
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.StartPanelResponse]]:
+        """Start a panel using the provided configuration (or connect to if it has already been started)
         Status Codes for errors:
         - INVALID_ARGUMENT: 
-          - The panel script filename doesn't end in .py.
           - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+          - The panel configuration has an invalid argument.
         - NOT_FOUND: 
-          - The panel script file was not found.
-          - The python executable file was not found.
+          - The panel configuration includes a file that was not found.
         """
 
     @abc.abstractmethod
     def StopPanel(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.StopPanelRequest,
+        request: ni.panels.v1.panel_service_pb2.StopPanelRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.StopPanelResponse]]:
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.StopPanelResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.StopPanelResponse]]:
         """Stop a panel
         Status Codes for errors:
         - INVALID_ARGUMENT:
@@ -192,9 +189,9 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def EnumeratePanels(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsRequest,
+        request: ni.panels.v1.panel_service_pb2.EnumeratePanelsRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.EnumeratePanelsResponse]]:
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.EnumeratePanelsResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.EnumeratePanelsResponse]]:
         """Enumerate the panels available in the system, including information about the state of the panels and what values they have.
         Status Codes for errors:
         """
@@ -202,9 +199,9 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def GetValue(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.GetValueRequest,
+        request: ni.panels.v1.panel_service_pb2.GetValueRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.GetValueResponse]]:
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.GetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.GetValueResponse]]:
         """Get a value for a control on the panel
         Status Codes for errors:
         - INVALID_ARGUMENT: 
@@ -217,9 +214,9 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def TryGetValue(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueRequest,
+        request: ni.panels.v1.panel_service_pb2.TryGetValueRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.TryGetValueResponse]]:
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.TryGetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.TryGetValueResponse]]:
         """Try to get a value for a control on the panel
         Status Codes for errors:
         - INVALID_ARGUMENT: 
@@ -230,9 +227,9 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def SetValue(
         self,
-        request: ni.pythonpanel.v1.python_panel_service_pb2.SetValueRequest,
+        request: ni.panels.v1.panel_service_pb2.SetValueRequest,
         context: _ServicerContext,
-    ) -> typing.Union[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.pythonpanel.v1.python_panel_service_pb2.SetValueResponse]]:
+    ) -> typing.Union[ni.panels.v1.panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.SetValueResponse]]:
         """Set a value for a control on the panel
         Status Codes for errors:
         - INVALID_ARGUMENT: 
@@ -240,4 +237,4 @@ class PythonPanelServiceServicer(metaclass=abc.ABCMeta):
           - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
         """
 
-def add_PythonPanelServiceServicer_to_server(servicer: PythonPanelServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_PanelServiceServicer_to_server(servicer: PanelServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...

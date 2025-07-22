@@ -7,7 +7,7 @@ from define_types import all_types_with_values
 import nipanel
 
 panel_script_path = Path(__file__).with_name("all_types_panel.py")
-panel = nipanel.create_panel(panel_script_path)
+panel = nipanel.create_streamlit_panel(panel_script_path)
 
 print("Setting values")
 for name, value in all_types_with_values.items():

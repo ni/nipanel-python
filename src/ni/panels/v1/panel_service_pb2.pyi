@@ -18,22 +18,21 @@ class StartPanelRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
-    PANEL_SCRIPT_PATH_FIELD_NUMBER: builtins.int
-    PYTHON_PATH_FIELD_NUMBER: builtins.int
+    PANEL_CONFIGURATION_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
-    panel_script_path: builtins.str
-    """Absolute path of the panel script's file on disk, or network path to the file"""
-    python_path: builtins.str
-    """Path to the python interpreter to use for the panel script."""
+    @property
+    def panel_configuration(self) -> google.protobuf.any_pb2.Any:
+        """Configuration for the panel, packed as Any"""
+
     def __init__(
         self,
         *,
         panel_id: builtins.str = ...,
-        panel_script_path: builtins.str = ...,
-        python_path: builtins.str = ...,
+        panel_configuration: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_script_path", b"panel_script_path", "python_path", b"python_path"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["panel_configuration", b"panel_configuration", "panel_id", b"panel_id"]) -> None: ...
 
 global___StartPanelRequest = StartPanelRequest
 
@@ -41,15 +40,15 @@ global___StartPanelRequest = StartPanelRequest
 class StartPanelResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    PANEL_URL_FIELD_NUMBER: builtins.int
-    panel_url: builtins.str
-    """Location of the panel's webpage"""
+    PANEL_URI_FIELD_NUMBER: builtins.int
+    panel_uri: builtins.str
+    """Location of the panel"""
     def __init__(
         self,
         *,
-        panel_url: builtins.str = ...,
+        panel_uri: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_url", b"panel_url"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_uri", b"panel_uri"]) -> None: ...
 
 global___StartPanelResponse = StartPanelResponse
 
@@ -98,12 +97,12 @@ class PanelInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
-    PANEL_URL_FIELD_NUMBER: builtins.int
+    PANEL_URI_FIELD_NUMBER: builtins.int
     VALUE_IDS_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
-    panel_url: builtins.str
-    """Location of the panel's webpage"""
+    panel_uri: builtins.str
+    """Location of the panel"""
     @property
     def value_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """IDs of all of the values associated with the panel"""
@@ -112,10 +111,10 @@ class PanelInformation(google.protobuf.message.Message):
         self,
         *,
         panel_id: builtins.str = ...,
-        panel_url: builtins.str = ...,
+        panel_uri: builtins.str = ...,
         value_ids: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_url", b"panel_url", "value_ids", b"value_ids"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_uri", b"panel_uri", "value_ids", b"value_ids"]) -> None: ...
 
 global___PanelInformation = PanelInformation
 
@@ -203,7 +202,7 @@ class TryGetValueResponse(google.protobuf.message.Message):
     VALUE_FIELD_NUMBER: builtins.int
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
-        """The value, if  it was found"""
+        """The value, if it was found"""
 
     def __init__(
         self,

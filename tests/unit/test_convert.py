@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from google.protobuf import any_pb2, wrappers_pb2
 from google.protobuf.message import Message
+from ni.panels.v1 import panel_types_pb2
 from ni.protobuf.types.scalar_pb2 import ScalarData
-from ni.pythonpanel.v1 import python_panel_types_pb2
 from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
     Double2DArray,
 )
@@ -29,11 +29,11 @@ _AnyWrappersPb2: TypeAlias = Union[
 ]
 
 _AnyPanelPbTypes: TypeAlias = Union[
-    python_panel_types_pb2.BoolCollection,
-    python_panel_types_pb2.ByteStringCollection,
-    python_panel_types_pb2.FloatCollection,
-    python_panel_types_pb2.IntCollection,
-    python_panel_types_pb2.StringCollection,
+    panel_types_pb2.BoolCollection,
+    panel_types_pb2.ByteStringCollection,
+    panel_types_pb2.FloatCollection,
+    panel_types_pb2.IntCollection,
+    panel_types_pb2.StringCollection,
 ]
 
 
@@ -126,11 +126,11 @@ def test___python_builtin_scalar___to_any___valid_wrapperpb2_value(
 @pytest.mark.parametrize(
     "proto_type, default_value, expected_value",
     [
-        (python_panel_types_pb2.BoolCollection, [False, False, False], [True, True, True]),
-        (python_panel_types_pb2.ByteStringCollection, [b"", b"", b""], [b"a", b"b", b"c"]),
-        (python_panel_types_pb2.FloatCollection, [0.0, 0.0, 0.0], [1.0, 2.0, 3.0]),
-        (python_panel_types_pb2.IntCollection, [0, 0, 0], [1, 2, 3]),
-        (python_panel_types_pb2.StringCollection, ["", "", ""], ["a", "b", "c"]),
+        (panel_types_pb2.BoolCollection, [False, False, False], [True, True, True]),
+        (panel_types_pb2.ByteStringCollection, [b"", b"", b""], [b"a", b"b", b"c"]),
+        (panel_types_pb2.FloatCollection, [0.0, 0.0, 0.0], [1.0, 2.0, 3.0]),
+        (panel_types_pb2.IntCollection, [0, 0, 0], [1, 2, 3]),
+        (panel_types_pb2.StringCollection, ["", "", ""], ["a", "b", "c"]),
     ],
 )
 def test___python_panel_collection___to_any___valid_paneltype_value(
@@ -178,11 +178,11 @@ def test___wrapperpb2_value___from_any___valid_python_value(
 @pytest.mark.parametrize(
     "proto_type, expected_value",
     [
-        (python_panel_types_pb2.BoolCollection, [True, True, True]),
-        (python_panel_types_pb2.ByteStringCollection, [b"a", b"b", b"c"]),
-        (python_panel_types_pb2.FloatCollection, [1.0, 2.0, 3.0]),
-        (python_panel_types_pb2.IntCollection, [1, 2, 3]),
-        (python_panel_types_pb2.StringCollection, ["a", "b", "c"]),
+        (panel_types_pb2.BoolCollection, [True, True, True]),
+        (panel_types_pb2.ByteStringCollection, [b"a", b"b", b"c"]),
+        (panel_types_pb2.FloatCollection, [1.0, 2.0, 3.0]),
+        (panel_types_pb2.IntCollection, [1, 2, 3]),
+        (panel_types_pb2.StringCollection, ["a", "b", "c"]),
     ],
 )
 def test___paneltype_value___from_any___valid_python_value(

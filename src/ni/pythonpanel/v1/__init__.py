@@ -1,1 +1,0 @@
-"""gRPC client for PythonPanel."""

@@ -5,7 +5,8 @@ import threading
 from typing import Callable, TypeVar
 
 import grpc
-from ni.pythonpanel.v1.python_panel_service_pb2 import (
+from google.protobuf.any_pb2 import Any
+from ni.panels.v1.panel_service_pb2 import (
     StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
@@ -13,7 +14,8 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     TryGetValueRequest,
     SetValueRequest,
 )
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
+from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
@@ -28,31 +30,34 @@ _T = TypeVar("_T")
 
 _logger = logging.getLogger(__name__)
 
+PANEL_SERVICE = "ni.panels.v1.PanelService"
+
 
 class _PanelClient:
     def __init__(
         self,
         *,
-        provided_interface: str,
-        service_class: str,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
         grpc_channel: grpc.Channel | None = None,
     ) -> None:
         self._initialization_lock = threading.Lock()
-        self._provided_interface = provided_interface
-        self._service_class = service_class
         self._discovery_client = discovery_client
         self._grpc_channel_pool = grpc_channel_pool
         self._grpc_channel = grpc_channel
-        self._stub: PythonPanelServiceStub | None = None
+        self._stub: PanelServiceStub | None = None
 
-    def start_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
+    def start_streamlit_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
+        streamlit_panel_configuration = StreamlitPanelConfiguration(
+            panel_script_path=panel_script_path, python_path=python_path
+        )
+        panel_configuration_any = Any()
+        panel_configuration_any.Pack(streamlit_panel_configuration)
         start_panel_request = StartPanelRequest(
-            panel_id=panel_id, panel_script_path=panel_script_path, python_path=python_path
+            panel_id=panel_id, panel_configuration=panel_configuration_any
         )
         response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
-        return response.panel_url
+        return response.panel_uri
 
     def stop_panel(self, panel_id: str, reset: bool) -> None:
         stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
@@ -64,7 +69,7 @@ class _PanelClient:
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
         return {
-            panel.panel_id: (panel.panel_url, list(panel.value_ids)) for panel in response.panels
+            panel.panel_id: (panel.panel_uri, list(panel.value_ids)) for panel in response.panels
         }
 
     def set_value(self, panel_id: str, value_id: str, value: object, notify: bool) -> None:
@@ -87,10 +92,10 @@ class _PanelClient:
         else:
             return None
 
-    def _get_stub(self) -> PythonPanelServiceStub:
+    def _get_stub(self) -> PanelServiceStub:
         if self._stub is None:
             if self._grpc_channel is not None:
-                self._stub = PythonPanelServiceStub(self._grpc_channel)
+                self._stub = PanelServiceStub(self._grpc_channel)
             else:
                 with self._initialization_lock:
                     if self._grpc_channel_pool is None:
@@ -103,11 +108,10 @@ class _PanelClient:
                         )
 
                     service_location = self._discovery_client.resolve_service(
-                        provided_interface=self._provided_interface,
-                        service_class=self._service_class,
+                        provided_interface=PANEL_SERVICE
                     )
                     channel = self._grpc_channel_pool.get_channel(service_location.insecure_address)
-                    self._stub = PythonPanelServiceStub(channel)
+                    self._stub = PanelServiceStub(channel)
         return self._stub
 
     def _invoke_with_retry(
