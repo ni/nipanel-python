@@ -6,7 +6,7 @@ import pytest
 from typing_extensions import assert_type
 
 import tests.types as test_types
-from nipanel import StreamlitPanel, StreamlitPanelValueAccessor
+from nipanel import StreamlitPanel, PanelValueAccessor
 from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 
@@ -45,7 +45,7 @@ def test___panel___panel_set_value___accessor_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -58,7 +58,7 @@ def test___panel___accessor_set_value___panel_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
-    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(panel_id="my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -85,7 +85,9 @@ def test___accessor___set_value___does_not_notify(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     service = fake_python_panel_service
-    accessor = StreamlitPanelValueAccessor("my_panel", grpc_channel=fake_panel_channel)
+    accessor = PanelValueAccessor(
+        panel_id="my_panel", grpc_channel=fake_panel_channel, notify_on_set_value=False
+    )
     assert service.servicer.notification_count == 0
 
     accessor.set_value("value_id", "string_value")

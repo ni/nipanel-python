@@ -1,7 +1,7 @@
 import pytest
 from google.protobuf.any_pb2 import Any
 from google.protobuf.wrappers_pb2 import StringValue
-from ni.pythonpanel.v1.python_panel_service_pb2 import (
+from ni.panels.v1.panel_service_pb2 import (
     StartPanelRequest,
     StopPanelRequest,
     EnumeratePanelsRequest,
@@ -9,30 +9,37 @@ from ni.pythonpanel.v1.python_panel_service_pb2 import (
     TryGetValueRequest,
     SetValueRequest,
 )
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import PythonPanelServiceStub
+from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
+from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
 
 
-def test___start_panel___gets_response(python_panel_service_stub: PythonPanelServiceStub) -> None:
-    request = StartPanelRequest(panel_id="test_panel", panel_script_path="path/to/panel")
+def test___start_panel___gets_response(python_panel_service_stub: PanelServiceStub) -> None:
+    configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
+    configuration_any = Any()
+    configuration_any.Pack(configuration)
+    request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)
     response = python_panel_service_stub.StartPanel(request)
 
-    assert response.panel_url == "http://localhost:50051/test_panel"
+    assert response.panel_uri == "http://localhost:50051/test_panel"
 
 
 def test___start_panel___stop_panel___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
-    open_request = StartPanelRequest(panel_id="test_panel", panel_script_path="path/to/panel")
-    python_panel_service_stub.StartPanel(open_request)
+    configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
+    configuration_any = Any()
+    configuration_any.Pack(configuration)
+    start_request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)
+    python_panel_service_stub.StartPanel(start_request)
 
-    request = StopPanelRequest(panel_id="test_panel", reset=False)
-    response = python_panel_service_stub.StopPanel(request)
+    stop_request = StopPanelRequest(panel_id="test_panel", reset=False)
+    response = python_panel_service_stub.StopPanel(stop_request)
 
     assert response is not None  # Ensure response is returned
 
 
 def test___enumerate_panels___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     request = EnumeratePanelsRequest()
     response = python_panel_service_stub.EnumeratePanels(request)
@@ -41,7 +48,7 @@ def test___enumerate_panels___gets_response(
 
 
 def test___set_value___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     test_value = Any()
     test_value.Pack(StringValue(value="test_value"))
@@ -52,7 +59,7 @@ def test___set_value___gets_response(
 
 
 def test___set_value___get_value___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     test_value = Any()
     test_value.Pack(StringValue(value="test_value"))
@@ -67,7 +74,7 @@ def test___set_value___get_value___gets_response(
 
 
 def test___no_value___get_value___raises_exception(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     request = GetValueRequest(panel_id="test_panel", value_id="test_value")
     with pytest.raises(Exception):
@@ -75,7 +82,7 @@ def test___no_value___get_value___raises_exception(
 
 
 def test___set_value___try_get_value___gets_response(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     test_value = Any()
     test_value.Pack(StringValue(value="test_value"))
@@ -90,7 +97,7 @@ def test___set_value___try_get_value___gets_response(
 
 
 def test___no_value___try_get_value___gets_no_value(
-    python_panel_service_stub: PythonPanelServiceStub,
+    python_panel_service_stub: PanelServiceStub,
 ) -> None:
     request = TryGetValueRequest(panel_id="test_panel", value_id="test_value")
     response = python_panel_service_stub.TryGetValue(request)

@@ -34,7 +34,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 is_running = panel.get_value("is_running", False)
 
 if is_running:

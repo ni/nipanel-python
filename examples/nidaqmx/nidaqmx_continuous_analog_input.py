@@ -17,7 +17,7 @@ from nidaqmx.constants import (
 import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
-panel = nipanel.create_panel(panel_script_path)
+panel = nipanel.create_streamlit_panel(panel_script_path)
 
 try:
     print(f"Panel URL: {panel.panel_url}")
