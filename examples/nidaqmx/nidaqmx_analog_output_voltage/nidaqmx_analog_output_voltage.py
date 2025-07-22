@@ -1,14 +1,14 @@
-"""Data acquisition script that continuously acquires analog input data."""
+"""Data acquisition script that continuously acquires analog output data."""
 
 import time
 from pathlib import Path
-from scipy.signal import sawtooth  # type: ignore[import-untyped]
 
 import nidaqmx
 import nidaqmx.stream_writers
 import nidaqmx.system
 import numpy as np
 from nidaqmx.constants import AcquisitionType, Edge, Slope
+from scipy.signal import sawtooth  # type: ignore[import-untyped]
 
 import nipanel
 
@@ -47,13 +47,14 @@ try:
                 max_val=panel.get_value("max_value_voltage", 5.0),
                 min_val=panel.get_value("min_value_voltage", -5.0),
             )
+            
             sample_rate = panel.get_value("rate", 1000.0)
             num_samples = panel.get_value("total_samples", 1000)
-            frequency = panel.get_value("frequency", 10.0)  
-            amplitude = panel.get_value("amplitude", 1.0) 
-        
+            frequency = panel.get_value("frequency", 10.0)
+            amplitude = panel.get_value("amplitude", 1.0)
+
             task.timing.cfg_samp_clk_timing(
-                rate=panel.get_value("rate", 1000.0),
+                rate=sample_rate,
                 sample_mode=AcquisitionType.CONTINUOUS,
             )
             # Not all hardware supports all trigger types.
@@ -73,11 +74,12 @@ try:
                 task.triggers.start_trigger.anlg_edge_hyst = hysteresis = panel.get_value(
                     "hysteresis", 0.0
                 )
+
             panel.set_value("sample_rate", task.timing.samp_clk_rate)
             t = np.arange(num_samples) / sample_rate
+
             wave_type = panel.get_value("wave_type", "Sine Wave")
-            
-            
+
             if wave_type == "Sine Wave":
                 waveform = amplitude * np.sin(2 * np.pi * frequency * t)
             elif wave_type == "Square Wave":
@@ -86,9 +88,9 @@ try:
                 waveform = amplitude * (2 * np.abs(2 * (t * frequency % 1) - 1) - 1)
             else:
                 waveform = sawtooth(2 * np.pi * frequency * t)
-            
+
             writer = nidaqmx.stream_writers.AnalogSingleChannelWriter(
-                task.out_stream, auto_start=False # pyright: ignore[reportArgumentType]
+                task.out_stream, auto_start=False  # pyright: ignore[reportArgumentType]
             )
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
@@ -96,7 +98,7 @@ try:
                 task.start()
                 while not panel.get_value("stop_button", False):
                     time.sleep(0.1)
-                    
+
             except KeyboardInterrupt:
                 break
             finally:

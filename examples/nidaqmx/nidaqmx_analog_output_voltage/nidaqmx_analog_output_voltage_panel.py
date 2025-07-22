@@ -1,17 +1,15 @@
-"""Streamlit visualization script to display data acquired by nidaqmx_analog_input_filtering.py."""
+"""Streamlit visualization script to display data acquired by nidaqmx_analog_output_voltage.py."""
 
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
+import matplotlib.pyplot as plt
 import streamlit as st
 from nidaqmx.constants import (
     Edge,
     Slope,
 )
 
-import matplotlib.pyplot as plt
-
 import nipanel
 from nipanel.controls import enum_selectbox
-
 
 st.set_page_config(page_title="Analog Output Continuous Voltage", page_icon="📈", layout="wide")
 st.title("Analog Output - Voltage")
@@ -33,17 +31,12 @@ st.markdown(
         width: 190px !important; /* Adjust the width as needed */
     }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-streamlit_style = """
     <style>
     iframe[title="streamlit_echarts.st_echarts"]{ height: 400px; width:100%;} 
    </style>
-    """
-st.markdown(streamlit_style, unsafe_allow_html=True)
-
+    """,
+    unsafe_allow_html=True,
+)
 
 with left_col:
     with st.container(border=True):
@@ -60,14 +53,13 @@ with left_col:
             disabled=panel.get_value("is_running", False),
         )
         panel.set_value("physical_channel", physical_channel)
-        
 
         max_value_voltage = st.number_input(
             "Max Value",
             value=5.0,
             step=0.1,
             disabled=panel.get_value("is_running", False),
-            key = "max_value_voltage",
+            key="max_value_voltage",
         )
 
         min_value_voltage = st.number_input(
@@ -75,9 +67,8 @@ with left_col:
             value=-5.0,
             step=0.1,
             disabled=panel.get_value("is_running", False),
-            key = "min_value_voltage",
+            key="min_value_voltage",
         )
-
         st.title("Timing and Buffer Settings")
 
         st.selectbox(
@@ -125,15 +116,14 @@ with left_col:
             disabled=panel.get_value("is_running", False),
         )
         st.selectbox(
-            label = "Wave Type",
-            options = ["Sine Wave", "Triangle Wave", "Square Wave", "Sawtooth Wave"],
-            key = "wave_type",
+            label="Wave Type",
+            options=["Sine Wave", "Triangle Wave", "Square Wave", "Sawtooth Wave"],
+            key="wave_type",
         )
 
 
 with right_col:
     with st.container(border=True):
-
         st.title("Trigger Settings")
         trigger_type = stx.tab_bar(
             data=[
@@ -156,7 +146,9 @@ with right_col:
                 )
         if trigger_type == "2":
             with st.container(border=True):
-                source = st.selectbox("Source->", options=panel.get_value("available_trigger_sources", [""]))
+                source = st.selectbox(
+                    "Source:", options=panel.get_value("available_trigger_sources", [""])
+                )
                 panel.set_value("digital_source", source)
                 enum_selectbox(
                     panel,
@@ -190,8 +182,9 @@ with right_col:
                 level = st.number_input("Level")
                 panel.set_value("level", level)
                 hysteriesis = st.number_input(
-                    "Hysteriesis", disabled=panel.get_value("is_running", False),
-                    key = "hysteriesis",
+                    "Hysteriesis",
+                    disabled=panel.get_value("is_running", False),
+                    key="hysteriesis",
                 )
 
         if trigger_type == "6":
@@ -206,15 +199,11 @@ with right_col:
                 )
 
         with st.container(border=True):
-      
             acquired_data = panel.get_value("data", [0.0])
             sample_rate = panel.get_value("actual_sample_rate", 1000.0)
             time = [x / sample_rate for x in range(len(acquired_data))]
-           
             fig, ax = plt.subplots()
             ax.plot(time, acquired_data, label="Line Plot")
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitude (V)")
             st.pyplot(fig)
-
-                
