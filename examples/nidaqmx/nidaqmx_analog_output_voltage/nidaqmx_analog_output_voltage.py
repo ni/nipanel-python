@@ -93,7 +93,6 @@ try:
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
             try:
-                task.out_stream.output_buf_size = 1000
                 task.start()
                 while not panel.get_value("stop_button", False):
                     time.sleep(0.1)
