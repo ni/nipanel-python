@@ -29,7 +29,6 @@ for dev in system.devices:
         for term in dev.terminals:
             available_trigger_sources.append(term)
 panel.set_value("available_trigger_sources", available_trigger_sources)
-
 try:
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
@@ -85,6 +84,7 @@ try:
             panel.set_value("data", waveform.tolist())
             
             try:
+                panel.set_value("daq_errors","")
                 task.start()
                 panel.set_value("is_running", True)
                 panel.set_value("stop_button", False)
@@ -96,9 +96,11 @@ try:
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-except DaqError as e:
-    error_message = str(e)
-    panel.set_value("error_message", error_message)
+
     
+except DaqError as e:
+    daq_errors = str(e)
+    panel.set_value("daq_errors",daq_errors)
+
 except KeyboardInterrupt:
     pass
