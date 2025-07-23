@@ -197,7 +197,7 @@ with right_col:
 
         with st.container(border=True):
             acquired_data = panel.get_value("data", [0.0])
-            sample_rate = panel.get_value("sample_rate", 0.0)
+            sample_rate = panel.get_value("sample_rate", 1000.0)
             acquired_data_graph = {
                 "animation": False,
                 "tooltip": {"trigger": "axis"},

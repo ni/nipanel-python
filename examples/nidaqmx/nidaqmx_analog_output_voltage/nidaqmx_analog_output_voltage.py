@@ -28,6 +28,7 @@ for dev in system.devices:
         for term in dev.terminals:
             available_trigger_sources.append(term)
 panel.set_value("available_trigger_sources", available_trigger_sources)
+
 try:
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
