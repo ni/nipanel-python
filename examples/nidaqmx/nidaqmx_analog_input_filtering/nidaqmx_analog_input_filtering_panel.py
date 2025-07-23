@@ -19,7 +19,7 @@ from nipanel.controls import enum_selectbox
 
 st.set_page_config(page_title="Analog Input Filtering", page_icon="📈", layout="wide")
 st.title("Analog Input - Filtering")
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 
 left_col, right_col = st.columns(2)
 

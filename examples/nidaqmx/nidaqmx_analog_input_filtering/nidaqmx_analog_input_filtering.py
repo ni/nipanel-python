@@ -20,7 +20,7 @@ from nidaqmx.constants import (
 import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_input_filtering_panel.py")
-panel = nipanel.create_panel(panel_script_path)
+panel = nipanel.create_streamlit_panel(panel_script_path)
 panel.set_value("is_running", False)
 
 system = nidaqmx.system.System.local()
@@ -42,12 +42,9 @@ try:
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
     while True:
+        panel.set_value("run_button", False)
         while not panel.get_value("run_button", False):
-            panel.set_value("is_running", False)
             time.sleep(0.1)
-        panel.set_value("is_running", True)
-        panel.set_value("stop_button", False)
-
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
 
@@ -132,6 +129,9 @@ try:
 
             try:
                 task.start()
+                panel.set_value("is_running", True)
+
+                panel.set_value("stop_button", False)
                 while not panel.get_value("stop_button", False):
                     data = task.read(
                         number_of_samples_per_channel=100  # pyright: ignore[reportArgumentType]
@@ -142,7 +142,6 @@ try:
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-                panel.set_value("run_button", False)
 
 
 except KeyboardInterrupt:
