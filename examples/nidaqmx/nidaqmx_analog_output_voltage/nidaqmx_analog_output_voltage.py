@@ -7,8 +7,9 @@ import nidaqmx
 import nidaqmx.stream_writers
 import nidaqmx.system
 import numpy as np
-from nidaqmx.constants import AcquisitionType, Edge, Slope
+from nidaqmx.constants import AcquisitionType, Edge
 
+from nidaqmx.errors import DaqError
 import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_output_voltage_panel.py")
@@ -57,20 +58,13 @@ try:
             # Not all hardware supports all trigger types.
             # Refer to your device documentation for more information.
             trigger_type = panel.get_value("trigger_type")
-            if trigger_type == "5":
-                task.triggers.start_trigger.cfg_anlg_edge_start_trig(
-                    trigger_source=panel.get_value("analog_source", ""),
-                    trigger_slope=panel.get_value("slope", Slope.FALLING),
-                    trigger_level=panel.get_value("level", 0.0),
-                )
+
             if trigger_type == "2":
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
                     trigger_source=panel.get_value("digital_source", ""),
                     trigger_edge=panel.get_value("edge", Edge.FALLING),
                 )
-                task.triggers.start_trigger.anlg_edge_hyst = hysteresis = panel.get_value(
-                    "hysteresis", 0.0
-                )
+                
 
             panel.set_value("sample_rate", task.timing.samp_clk_rate)
             t = np.arange(num_samples) / sample_rate
@@ -89,19 +83,22 @@ try:
             )
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
+            
             try:
                 task.start()
                 panel.set_value("is_running", True)
                 panel.set_value("stop_button", False)
                 while not panel.get_value("stop_button", False):
                     time.sleep(0.1)
-
+            
             except KeyboardInterrupt:
                 break
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-
-
+except DaqError as e:
+    error_message = str(e)
+    panel.set_value("error_message", error_message)
+    
 except KeyboardInterrupt:
     pass

@@ -2,7 +2,7 @@
 
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import streamlit as st
-from nidaqmx.constants import Edge, Slope
+from nidaqmx.constants import Edge
 from streamlit_echarts import st_echarts
 
 import nipanel
@@ -54,7 +54,7 @@ with left_col:
         max_value_voltage = st.number_input(
             "Max Value",
             value=5.0,
-            step=0.1,
+            step=1.0,
             disabled=panel.get_value("is_running", False),
             key="max_value_voltage",
         )
@@ -62,7 +62,7 @@ with left_col:
         min_value_voltage = st.number_input(
             "Min Value",
             value=-5.0,
-            step=0.1,
+            step=1.0,
             disabled=panel.get_value("is_running", False),
             key="min_value_voltage",
         )
@@ -116,6 +116,7 @@ with left_col:
             label="Wave Type",
             options=["Sine Wave", "Triangle Wave", "Square Wave"],
             key="wave_type",
+            disabled=panel.get_value("is_running", False),
         )
 
 
@@ -166,24 +167,9 @@ with right_col:
                 )
         if trigger_type == "5":
             with st.container(border=True):
-                analog_source = st.text_input("Source:", "APFI0")
-                panel.set_value("analog_source", analog_source)
-                enum_selectbox(
-                    panel,
-                    label="Slope",
-                    value=Slope.FALLING,
-                    disabled=panel.get_value("is_running", False),
-                    key="slope",
+                st.write(
+                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
                 )
-
-                level = st.number_input("Level")
-                panel.set_value("level", level)
-                hysteriesis = st.number_input(
-                    "Hysteriesis",
-                    disabled=panel.get_value("is_running", False),
-                    key="hysteriesis",
-                )
-
         if trigger_type == "6":
             with st.container(border=True):
                 st.write(
@@ -228,3 +214,5 @@ with right_col:
                 ],
             }
             st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+        with st.container(border=True):
+            st.warning(panel.get_value("error_message", " "),  icon="⚠️")
