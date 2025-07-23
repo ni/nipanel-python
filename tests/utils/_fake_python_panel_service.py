@@ -1,8 +1,8 @@
 from concurrent import futures
 
 import grpc
-from ni.pythonpanel.v1.python_panel_service_pb2_grpc import (
-    add_PythonPanelServiceServicer_to_server,
+from ni.panels.v1.panel_service_pb2_grpc import (
+    add_PanelServiceServicer_to_server,
 )
 
 from tests.utils._fake_python_panel_servicer import FakePythonPanelServicer
@@ -20,7 +20,7 @@ class FakePythonPanelService:
     def start(self, thread_pool: futures.ThreadPoolExecutor) -> None:
         """Start the gRPC server and return the port it is bound to."""
         self._server = grpc.server(thread_pool)
-        add_PythonPanelServiceServicer_to_server(self._servicer, self._server)
+        add_PanelServiceServicer_to_server(self._servicer, self._server)
         self._port = self._server.add_insecure_port("[::1]:0")
         self._server.start()
 
