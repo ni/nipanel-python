@@ -16,6 +16,7 @@ from nidaqmx.constants import (
     StrainGageBridgeType,
     TerminalConfiguration,
 )
+from nidaqmx.errors import DaqError
 
 import nipanel
 
@@ -25,11 +26,11 @@ panel.set_value("is_running", False)
 
 system = nidaqmx.system.System.local()
 
-available_channel_name = []
+available_channel_names = []
 for dev in system.devices:
     for chan in dev.ai_physical_chans:
-        available_channel_name.append(chan.name)
-panel.set_value("available_channel_name", available_channel_name)
+        available_channel_names.append(chan.name)
+panel.set_value("available_channel_names", available_channel_names)
 
 available_trigger_sources = []
 for dev in system.devices:
@@ -94,14 +95,13 @@ try:
                 samps_per_chan=panel.get_value("total_samples", 100),
             )
             panel.set_value("sample_rate", task.timing.samp_clk_rate)
-
+            # Not all hardware supports all filter types.
+            # Refer to your device documentation for more information.
             if panel.get_value("filter", "Filter") == "Filter":
                 chan.ai_filter_enable = True
                 chan.ai_filter_freq = panel.get_value("filter_freq", 0.0)
                 chan.ai_filter_response = panel.get_value("filter_response", FilterResponse.COMB)
                 chan.ai_filter_order = panel.get_value("filter_order", 1)
-                # Not all hardware supports all filter types.
-                # Refer to your device documentation for more information.
                 panel.set_value("actual_filter_freq", chan.ai_filter_freq)
                 panel.set_value("actual_filter_response", chan.ai_filter_response)
                 panel.set_value("actual_filter_order", chan.ai_filter_order)
@@ -109,7 +109,8 @@ try:
                 panel.set_value("actual_filter_freq", 0.0)
                 panel.set_value("actual_filter_response", FilterResponse.COMB)
                 panel.set_value("actual_filter_order", 0)
-
+            # Not all hardware supports all filter types.
+            # Refer to your device documentation for more information.
             trigger_type = panel.get_value("trigger_type")
             if trigger_type == "5":
                 task.triggers.start_trigger.cfg_anlg_edge_start_trig(
@@ -128,6 +129,7 @@ try:
                 )
 
             try:
+                panel.set_value("daq_errors", "")
                 task.start()
                 panel.set_value("is_running", True)
 
@@ -143,6 +145,9 @@ try:
                 task.stop()
                 panel.set_value("is_running", False)
 
+except DaqError as e:
+    daq_errors = str(e)
+    panel.set_value("daq_errors", daq_errors)
 
 except KeyboardInterrupt:
     pass

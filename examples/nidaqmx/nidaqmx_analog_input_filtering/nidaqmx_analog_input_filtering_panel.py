@@ -56,7 +56,7 @@ with left_col:
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
-            options=panel.get_value("available_channel_name", ["Mod2/ai0"]),
+            options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
             index=0,
             label="Physical Channels",
             disabled=panel.get_value("is_running", False),
@@ -118,7 +118,11 @@ with left_col:
         )
         st.title("Filtering Settings")
 
-        filter = st.selectbox("Filter", options=["No Filtering", "Filter"])
+        filter = st.selectbox(
+            "Filter",
+            options=["No Filtering", "Filter"],
+            disabled=panel.get_value("is_running", False),
+        )
         panel.set_value("filter", filter)
         enum_selectbox(
             panel,
@@ -147,7 +151,9 @@ with left_col:
             disabled=True,
         )
         st.selectbox(
-            "Actual Filter Order", options=[panel.get_value("actual_filter_order", 0)], disabled=True
+            "Actual Filter Order",
+            options=[panel.get_value("actual_filter_order", 0)],
+            disabled=True,
         )
 
 with right_col:
@@ -414,3 +420,8 @@ with right_col:
             ],
         }
         st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+    with st.container(border=True):
+        if panel.get_value("daq_errors", "") == "":
+            st.write("No DAQ Errors Found")
+        else:
+            st.error(panel.get_value("daq_errors", ""))
