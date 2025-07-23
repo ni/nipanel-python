@@ -7,7 +7,7 @@ This is an nipanel example that displays an interactive Streamlit app and update
 
 ### Feature
 
-Script demonstrates analog output voltage data getting continuously acquired.
+Script demonstrates analog output voltage data getting continuously acquired, and put into different types of waveform graphs.
 - Supports various data types
 
 ### Required Software

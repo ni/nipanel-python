@@ -33,12 +33,9 @@ try:
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
     while True:
+        panel.set_value("is_running", False)
         while not panel.get_value("run_button", False):
-            panel.set_value("is_running", False)
             time.sleep(0.1)
-        panel.set_value("is_running", True)
-        panel.set_value("stop_button", False)
-
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             chan = task.ao_channels.add_ao_voltage_chan(
@@ -93,6 +90,8 @@ try:
             panel.set_value("data", waveform.tolist())
             try:
                 task.start()
+                panel.set_value("is_running", True)
+                panel.set_value("stop_button", False)
                 while not panel.get_value("stop_button", False):
                     time.sleep(0.1)
 
@@ -101,7 +100,6 @@ try:
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-                panel.set_value("run_button", False)
 
 
 except KeyboardInterrupt:
