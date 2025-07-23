@@ -1,19 +1,16 @@
 """Streamlit visualization script to display data acquired by nidaqmx_analog_output_voltage.py."""
 
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
-import matplotlib.pyplot as plt
 import streamlit as st
-from nidaqmx.constants import (
-    Edge,
-    Slope,
-)
+from nidaqmx.constants import Edge, Slope
+from streamlit_echarts import st_echarts
 
 import nipanel
 from nipanel.controls import enum_selectbox
 
 st.set_page_config(page_title="Analog Output Continuous Voltage", page_icon="📈", layout="wide")
 st.title("Analog Output - Voltage")
-panel = nipanel.get_panel_accessor()
+panel = nipanel.get_streamlit_panel_accessor()
 
 left_col, right_col = st.columns(2)
 
@@ -117,7 +114,7 @@ with left_col:
         )
         st.selectbox(
             label="Wave Type",
-            options=["Sine Wave", "Triangle Wave", "Square Wave", "Sawtooth Wave"],
+            options=["Sine Wave", "Triangle Wave", "Square Wave"],
             key="wave_type",
         )
 
@@ -200,10 +197,34 @@ with right_col:
 
         with st.container(border=True):
             acquired_data = panel.get_value("data", [0.0])
-            sample_rate = panel.get_value("actual_sample_rate", 1000.0)
-            time = [x / sample_rate for x in range(len(acquired_data))]
-            fig, ax = plt.subplots()
-            ax.plot(time, acquired_data, label="Line Plot")
-            ax.set_xlabel("Time (s)")
-            ax.set_ylabel("Amplitude (V)")
-            st.pyplot(fig)
+            sample_rate = panel.get_value("sample_rate", 0.0)
+            acquired_data_graph = {
+                "animation": False,
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": ["Voltage (V)"]},
+                "xAxis": {
+                    "type": "category",
+                    "data": [x / sample_rate for x in range(len(acquired_data))],
+                    "name": "Time",
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "yAxis": {
+                    "type": "value",
+                    "name": "Volts",
+                    "nameRotate": 90,
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "series": [
+                    {
+                        "name": "voltage_amplitude",
+                        "type": "line",
+                        "data": acquired_data,
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                ],
+            }
+            st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")

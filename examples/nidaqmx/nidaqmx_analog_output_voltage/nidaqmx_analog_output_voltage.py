@@ -8,12 +8,11 @@ import nidaqmx.stream_writers
 import nidaqmx.system
 import numpy as np
 from nidaqmx.constants import AcquisitionType, Edge, Slope
-from scipy.signal import sawtooth  # type: ignore[import-untyped]
 
 import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_output_voltage_panel.py")
-panel = nipanel.create_panel(panel_script_path)
+panel = nipanel.create_streamlit_panel(panel_script_path)
 
 system = nidaqmx.system.System.local()
 
@@ -47,7 +46,7 @@ try:
                 max_val=panel.get_value("max_value_voltage", 5.0),
                 min_val=panel.get_value("min_value_voltage", -5.0),
             )
-            
+
             sample_rate = panel.get_value("rate", 1000.0)
             num_samples = panel.get_value("total_samples", 1000)
             frequency = panel.get_value("frequency", 10.0)
@@ -84,10 +83,8 @@ try:
                 waveform = amplitude * np.sin(2 * np.pi * frequency * t)
             elif wave_type == "Square Wave":
                 waveform = amplitude * np.sign(np.sin(2 * np.pi * frequency * t))
-            elif wave_type == "Triangle Wave":
-                waveform = amplitude * (2 * np.abs(2 * (t * frequency % 1) - 1) - 1)
             else:
-                waveform = sawtooth(2 * np.pi * frequency * t)
+                waveform = amplitude * (2 * np.abs(2 * (t * frequency % 1) - 1) - 1)
 
             writer = nidaqmx.stream_writers.AnalogSingleChannelWriter(
                 task.out_stream, auto_start=False  # pyright: ignore[reportArgumentType]
