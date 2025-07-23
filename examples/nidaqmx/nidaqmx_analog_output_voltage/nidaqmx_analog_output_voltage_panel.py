@@ -217,4 +217,7 @@ with right_col:
             st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
         
         with st.container(border=True):
-            st.write(panel.get_value("daq_errors", ""))
+            if panel.get_value("daq_errors", "") == "":
+                st.write("No DAQ Errors Found")
+            else:
+                st.error(panel.get_value("daq_errors", ""))
