@@ -143,11 +143,11 @@ with left_col:
         )
         st.selectbox(
             "Actual Filter Frequency",
-            options=[panel.get_value("actual_filter_freq")],
+            options=[panel.get_value("actual_filter_freq", 0.0)],
             disabled=True,
         )
         st.selectbox(
-            "Actual Filter Order", options=[panel.get_value("actual_filter_order")], disabled=True
+            "Actual Filter Order", options=[panel.get_value("actual_filter_order", 0)], disabled=True
         )
 
 with right_col:
@@ -383,7 +383,7 @@ with right_col:
 
     with st.container(border=True):
         acquired_data = panel.get_value("acquired_data", [0.0])
-        sample_rate = panel.get_value("sample_rate", 0.0)
+        sample_rate = panel.get_value("sample_rate", 100.0)
         acquired_data_graph = {
             "animation": False,
             "tooltip": {"trigger": "axis"},
