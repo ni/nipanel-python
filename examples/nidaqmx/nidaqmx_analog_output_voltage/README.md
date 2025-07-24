@@ -18,5 +18,5 @@ Script demonstrates analog output voltage data getting continuously acquired, an
 
 ```pwsh
 poetry install --with examples
-poetry run python examples/nidaqmx/nidaqmx_analog_output_voltage/nidaqmx_analog_output_voltage.py
+poetry run python examples\nidaqmx\nidaqmx_analog_output_voltage\nidaqmx_analog_output_voltage.py
 ```

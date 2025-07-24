@@ -63,11 +63,9 @@ try:
                     trigger_source=panel.get_value("digital_source", ""),
                     trigger_edge=panel.get_value("edge", Edge.FALLING),
                 )
-                
 
             panel.set_value("sample_rate", task.timing.samp_clk_rate)
             t = np.arange(num_samples) / sample_rate
-
             wave_type = panel.get_value("wave_type", "Sine Wave")
 
             if wave_type == "Sine Wave":
@@ -82,7 +80,6 @@ try:
             )
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
-            
             try:
                 panel.set_value("daq_errors","")
                 task.start()
@@ -96,7 +93,6 @@ try:
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-
     
 except DaqError as e:
     daq_errors = str(e)

@@ -8,8 +8,8 @@ from streamlit_echarts import st_echarts
 import nipanel
 from nipanel.controls import enum_selectbox
 
-st.set_page_config(page_title="Analog Output Continuous Voltage", page_icon="📈", layout="wide")
-st.title("Analog Output - Voltage")
+st.set_page_config(page_title="Voltage - Continuous Output", page_icon="📈", layout="wide")
+st.title("Voltage - Continuous Output")
 panel = nipanel.get_streamlit_panel_accessor()
 
 left_col, right_col = st.columns(2)
@@ -198,7 +198,7 @@ with right_col:
                 },
                 "yAxis": {
                     "type": "value",
-                    "name": "Volts",
+                    "name": "Amplitude",
                     "nameRotate": 90,
                     "nameLocation": "center",
                     "nameGap": 40,
