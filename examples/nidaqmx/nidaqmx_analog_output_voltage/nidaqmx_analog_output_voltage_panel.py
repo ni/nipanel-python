@@ -43,11 +43,11 @@ with left_col:
         else:
             st.button("Run", key="run_button")
 
-        if panel.get_value("daq_errors", "") == "":
+        if panel.get_value("daq_error", "") == "":
             pass
         else:
-            st.error(panel.get_value("daq_errors", ""))
-            
+            st.error(panel.get_value("daq_error", ""))
+
         st.title("Channel Settings")
         physical_channel = st.selectbox(
             options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
@@ -74,12 +74,13 @@ with left_col:
         )
         st.title("Timing and Buffer Settings")
 
-        st.selectbox(
+        source = st.selectbox(
             "Sample Clock Source",
             options=panel.get_value("available_trigger_sources", [""]),
             index=0,
             disabled=panel.get_value("is_running", False),
         )
+        panel.set_value("source", source)
         st.number_input(
             "Sample Rate",
             value=1000.0,
@@ -195,8 +196,4 @@ with right_col:
             }
             st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
 
-        with st.container(border=True):
-            if panel.get_value("daq_errors", "") == "":
-                st.write("No DAQ Errors Found")
-            else:
-                st.error(panel.get_value("daq_errors", ""))
+       

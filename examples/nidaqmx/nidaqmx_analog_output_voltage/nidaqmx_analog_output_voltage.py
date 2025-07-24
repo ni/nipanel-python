@@ -51,6 +51,7 @@ try:
             amplitude = panel.get_value("amplitude", 1.0)
 
             task.timing.cfg_samp_clk_timing(
+                source= panel.get_value("source", "/Dev4/PFI0"),
                 rate=sample_rate,
                 sample_mode=AcquisitionType.CONTINUOUS,
             )
@@ -81,7 +82,7 @@ try:
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
             try:
-                panel.set_value("daq_errors", "")
+                panel.set_value("daq_error", "")
                 task.start()
                 panel.set_value("is_running", True)
                 panel.set_value("stop_button", False)
@@ -95,9 +96,9 @@ try:
                 panel.set_value("is_running", False)
 
 except DaqError as e:
-    daq_errors = str(e)
-    print(daq_errors)
-    panel.set_value("daq_errors", daq_errors)
+    daq_error = str(e)
+    print(daq_error)
+    panel.set_value("daq_error", daq_error)
 
 except KeyboardInterrupt:
     pass
