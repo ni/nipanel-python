@@ -195,5 +195,3 @@ with right_col:
                 ],
             }
             st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
-
-       
