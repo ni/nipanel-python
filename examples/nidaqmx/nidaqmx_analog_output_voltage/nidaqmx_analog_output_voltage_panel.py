@@ -137,11 +137,6 @@ with right_col:
         )
         panel.set_value("trigger_type", trigger_type)
 
-        if trigger_type == "1":
-            with st.container(border=True):
-                st.write(
-                    "To enable triggers, select a tab above, and configure the settings. \n Not all hardware supports all trigger types. Refer to your device documentation for more information."
-                )
         if trigger_type == "2":
             with st.container(border=True):
                 source = st.selectbox(
@@ -155,27 +150,7 @@ with right_col:
                     disabled=panel.get_value("is_running", False),
                     key="edge",
                 )
-        if trigger_type == "3":
-            with st.container(border=True):
-                st.write(
-                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-                )
-        if trigger_type == "4":
-            with st.container(border=True):
-                st.write(
-                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-                )
-        if trigger_type == "5":
-            with st.container(border=True):
-                st.write(
-                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-                )
-        if trigger_type == "6":
-            with st.container(border=True):
-                st.write(
-                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-                )
-        if trigger_type == "7":
+        else:
             with st.container(border=True):
                 st.write(
                     "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
