@@ -39,6 +39,7 @@ for dev in system.devices:
             available_trigger_sources.append(term)
 panel.set_value("available_trigger_sources", available_trigger_sources)
 try:
+    panel.set_value("daq_error", "")
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
@@ -129,7 +130,6 @@ try:
                 )
 
             try:
-                panel.set_value("daq_error", "")
                 task.start()
                 panel.set_value("is_running", True)
 

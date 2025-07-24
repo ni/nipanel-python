@@ -7,7 +7,6 @@ from nidaqmx.constants import (
     CurrentUnits,
     Edge,
     FilterResponse,
-    LoggingMode,
     Slope,
     StrainGageBridgeType,
     TerminalConfiguration,
@@ -46,17 +45,31 @@ st.markdown(
 )
 
 
+def hide_buttons():
+    st.markdown(
+        """
+        <style>
+        button[data-testid="stBaseButton-secondary"] {
+            display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 with left_col:
     with st.container(border=True):
         is_running = panel.get_value("is_running", True)
         if is_running:
             st.button("Stop", key="stop_button")
         else:
-            st.button("Run", key="run_button")
+            run_button = st.button("Run", key="run_button")
         if panel.get_value("daq_error", "") == "":
             pass
         else:
-            st.error(panel.get_value("daq_error", ""))
+            hide_buttons()
+            st.error(panel.get_value("daq_error", "") + " Please re-run script")
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
