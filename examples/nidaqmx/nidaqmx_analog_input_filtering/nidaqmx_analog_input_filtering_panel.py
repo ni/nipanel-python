@@ -45,7 +45,8 @@ st.markdown(
 )
 
 
-def hide_buttons():
+def hide_run_button():
+    """hide_run_button is used to disable run button when DAQ error pops up."""
     st.markdown(
         """
         <style>
@@ -68,7 +69,7 @@ with left_col:
         if panel.get_value("daq_error", "") == "":
             pass
         else:
-            hide_buttons()
+            hide_run_button()
             st.error(panel.get_value("daq_error", "") + " Please re-run script")
 
         st.title("Channel Settings")
