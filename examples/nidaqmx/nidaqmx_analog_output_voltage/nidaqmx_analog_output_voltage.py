@@ -51,7 +51,7 @@ try:
             amplitude = panel.get_value("amplitude", 1.0)
 
             task.timing.cfg_samp_clk_timing(
-                source= panel.get_value("source", "/Dev4/PFI0"),
+                source=panel.get_value("source", "/Dev4/PFI0"),
                 rate=sample_rate,
                 sample_mode=AcquisitionType.CONTINUOUS,
             )
