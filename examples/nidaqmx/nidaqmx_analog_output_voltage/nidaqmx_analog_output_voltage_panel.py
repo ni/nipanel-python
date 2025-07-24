@@ -42,6 +42,12 @@ with left_col:
             st.button("Stop", key="stop_button")
         else:
             st.button("Run", key="run_button")
+
+        if panel.get_value("daq_errors", "") == "":
+            pass
+        else:
+            st.error(panel.get_value("daq_errors", ""))
+            
         st.title("Channel Settings")
         physical_channel = st.selectbox(
             options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
@@ -118,7 +124,6 @@ with left_col:
             key="wave_type",
             disabled=panel.get_value("is_running", False),
         )
-
 
 with right_col:
     with st.container(border=True):
