@@ -45,7 +45,7 @@ st.markdown(
 )
 
 
-def hide_run_button():
+def hide_run_button()-> None:
     """hide_run_button is used to disable run button when DAQ error pops up."""
     st.markdown(
         """
