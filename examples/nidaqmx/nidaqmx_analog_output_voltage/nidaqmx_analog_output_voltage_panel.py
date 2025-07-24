@@ -180,7 +180,6 @@ with right_col:
                 st.write(
                     "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
                 )
-        
 
         with st.container(border=True):
             acquired_data = panel.get_value("data", [0.0])
@@ -215,7 +214,7 @@ with right_col:
                 ],
             }
             st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
-        
+
         with st.container(border=True):
             if panel.get_value("daq_errors", "") == "":
                 st.write("No DAQ Errors Found")

@@ -8,8 +8,8 @@ import nidaqmx.stream_writers
 import nidaqmx.system
 import numpy as np
 from nidaqmx.constants import AcquisitionType, Edge
-
 from nidaqmx.errors import DaqError
+
 import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_output_voltage_panel.py")
@@ -81,22 +81,22 @@ try:
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
             try:
-                panel.set_value("daq_errors","")
+                panel.set_value("daq_errors", "")
                 task.start()
                 panel.set_value("is_running", True)
                 panel.set_value("stop_button", False)
                 while not panel.get_value("stop_button", False):
                     time.sleep(0.1)
-            
+
             except KeyboardInterrupt:
                 break
             finally:
                 task.stop()
                 panel.set_value("is_running", False)
-    
+
 except DaqError as e:
     daq_errors = str(e)
-    panel.set_value("daq_errors",daq_errors)
+    panel.set_value("daq_errors", daq_errors)
 
 except KeyboardInterrupt:
     pass
