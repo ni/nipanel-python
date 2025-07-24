@@ -76,12 +76,13 @@ with left_col:
 
         st.title("Timing Settings")
 
-        st.selectbox(
+        source = st.selectbox(
             "Sample Clock Source",
             options=panel.get_value("available_trigger_sources", [""]),
             index=0,
             disabled=panel.get_value("is_running", False),
         )
+        panel.set_value("source", source)
         st.number_input(
             "Sample Rate",
             value=1000.0,
