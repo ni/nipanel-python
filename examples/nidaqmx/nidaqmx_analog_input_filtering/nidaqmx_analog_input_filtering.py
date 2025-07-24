@@ -89,7 +89,7 @@ try:
                     min_val=panel.get_value("min_value_voltage", -5.0),
                 )
             task.timing.cfg_samp_clk_timing(
-                source=panel.get_value("source", "/Dev3/PFI0"),  # fix source
+                source=panel.get_value("source", "/Dev3/PFI0"), 
                 rate=panel.get_value("rate", 1000.0),
                 sample_mode=AcquisitionType.CONTINUOUS,
                 samps_per_chan=panel.get_value("total_samples", 100),
