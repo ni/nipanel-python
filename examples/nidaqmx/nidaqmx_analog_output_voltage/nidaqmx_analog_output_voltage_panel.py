@@ -35,6 +35,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+def hide_run_button()-> None:
+    """hide_run_button is used to disable run button when DAQ error pops up."""
+    st.markdown(
+        """
+        <style>
+        button[data-testid="stBaseButton-secondary"] {
+            display: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 with left_col:
     with st.container(border=True):
         is_running = panel.get_value("is_running", True)
@@ -46,7 +61,8 @@ with left_col:
         if panel.get_value("daq_error", "") == "":
             pass
         else:
-            st.error(panel.get_value("daq_error", ""))
+            hide_run_button()
+            st.error(panel.get_value("daq_error", "") + " Please re-run script")
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
