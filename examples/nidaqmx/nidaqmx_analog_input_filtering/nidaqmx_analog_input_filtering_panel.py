@@ -53,10 +53,10 @@ with left_col:
             st.button("Stop", key="stop_button")
         else:
             st.button("Run", key="run_button")
-        if panel.get_value("daq_errors", "") == "":
+        if panel.get_value("daq_error", "") == "":
             pass
         else:
-            st.error(panel.get_value("daq_errors", ""))
+            st.error(panel.get_value("daq_error", ""))
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(

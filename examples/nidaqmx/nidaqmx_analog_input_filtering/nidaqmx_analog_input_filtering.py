@@ -146,9 +146,9 @@ try:
                 panel.set_value("is_running", False)
 
 except DaqError as e:
-    daq_errors = str(e)
-    print(daq_errors)
-    panel.set_value("daq_errors", daq_errors)
+    daq_error = str(e)
+    print(daq_error)
+    panel.set_value("daq_error", daq_error)
 
 except KeyboardInterrupt:
     pass
