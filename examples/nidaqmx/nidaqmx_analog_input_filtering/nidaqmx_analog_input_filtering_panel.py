@@ -106,21 +106,6 @@ with left_col:
             step=1.0,
             disabled=True,
         )
-
-        st.title("Logging Settings")
-        enum_selectbox(
-            panel,
-            label="Logging Mode",
-            value=LoggingMode.OFF,
-            disabled=panel.get_value("is_running", False),
-            key="logging_mode",
-        )
-        tdms_file_path = st.text_input(
-            label="TDMS File Path",
-            disabled=panel.get_value("is_running", False),
-            value="data.tdms",
-            key="tdms_file_path",
-        )
         st.title("Filtering Settings")
 
         filter = st.selectbox(
