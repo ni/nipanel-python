@@ -129,7 +129,7 @@ try:
                 )
 
             try:
-                panel.set_value("daq_errors", "")
+                panel.set_value("daq_error", "")
                 task.start()
                 panel.set_value("is_running", True)
 
