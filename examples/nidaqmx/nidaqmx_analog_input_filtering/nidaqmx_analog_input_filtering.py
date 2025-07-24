@@ -147,6 +147,7 @@ try:
 
 except DaqError as e:
     daq_errors = str(e)
+    print(daq_errors)
     panel.set_value("daq_errors", daq_errors)
 
 except KeyboardInterrupt:

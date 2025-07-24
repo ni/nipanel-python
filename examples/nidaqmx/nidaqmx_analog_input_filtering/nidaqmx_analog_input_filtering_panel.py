@@ -53,6 +53,10 @@ with left_col:
             st.button("Stop", key="stop_button")
         else:
             st.button("Run", key="run_button")
+        if panel.get_value("daq_errors", "") == "":
+            pass
+        else:
+            st.error(panel.get_value("daq_errors", ""))
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
@@ -420,8 +424,3 @@ with right_col:
             ],
         }
         st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
-    with st.container(border=True):
-        if panel.get_value("daq_errors", "") == "":
-            st.write("No DAQ Errors Found")
-        else:
-            st.error(panel.get_value("daq_errors", ""))
