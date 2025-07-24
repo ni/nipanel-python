@@ -32,7 +32,7 @@ for dev in system.devices:
         available_channel_names.append(chan.name)
 panel.set_value("available_channel_names", available_channel_names)
 
-available_trigger_sources = []
+available_trigger_sources = [""]
 for dev in system.devices:
     if hasattr(dev, "terminals"):
         for term in dev.terminals:
@@ -90,7 +90,7 @@ try:
                     min_val=panel.get_value("min_value_voltage", -5.0),
                 )
             task.timing.cfg_samp_clk_timing(
-                source=panel.get_value("source", "/Dev3/PFI0"),
+                source=panel.get_value("source", ""),  # "" - means Onboard Clock (default value)
                 rate=panel.get_value("rate", 1000.0),
                 sample_mode=AcquisitionType.CONTINUOUS,
                 samps_per_chan=panel.get_value("total_samples", 100),
