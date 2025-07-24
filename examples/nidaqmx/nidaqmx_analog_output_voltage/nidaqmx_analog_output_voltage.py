@@ -23,13 +23,14 @@ for dev in system.devices:
         available_channel_names.append(chan.name)
 panel.set_value("available_channel_names", available_channel_names)
 
-available_trigger_sources = []
+available_trigger_sources = [""]
 for dev in system.devices:
     if hasattr(dev, "terminals"):
         for term in dev.terminals:
             available_trigger_sources.append(term)
 panel.set_value("available_trigger_sources", available_trigger_sources)
 try:
+    panel.set_value("daq_error", "")
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
@@ -51,7 +52,7 @@ try:
             amplitude = panel.get_value("amplitude", 1.0)
 
             task.timing.cfg_samp_clk_timing(
-                source=panel.get_value("source", "/Dev4/PFI0"),
+                source=panel.get_value("source", ""),  # "" - OnboardClock
                 rate=sample_rate,
                 sample_mode=AcquisitionType.CONTINUOUS,
             )
@@ -82,7 +83,6 @@ try:
             writer.write_many_sample(waveform)
             panel.set_value("data", waveform.tolist())
             try:
-                panel.set_value("daq_error", "")
                 task.start()
                 panel.set_value("is_running", True)
                 panel.set_value("stop_button", False)
