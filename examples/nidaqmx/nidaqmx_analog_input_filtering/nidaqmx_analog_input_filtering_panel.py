@@ -45,120 +45,104 @@ st.markdown(
 )
 
 
-def hide_run_button() -> None:
-    """hide_run_button is used to disable run button when DAQ error pops up."""
-    st.markdown(
-        """
-        <style>
-        button[data-testid="stBaseButton-secondary"] {
-            display: none;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
 with left_col:
     with st.container(border=True):
-        is_running = panel.get_value("is_running", True)
-        if is_running:
-            st.button("Stop", key="stop_button")
-        else:
-            run_button = st.button("Run", key="run_button")
-        if panel.get_value("daq_error", "") == "":
-            pass
-        else:
-            hide_run_button()
-            st.error(panel.get_value("daq_error", "") + " Please re-run script")
+        with st.container(border=True):
+            if panel.get_value("is_running", True):
+                st.button("Stop", key="stop_button")
+            elif not panel.get_value("is_running", True) and panel.get_value("daq_error", "") == "":
+                run_button = st.button("Run", key="run_button")
+            else:
+                st.error(
+                    f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_input_filtering.py \n\n {panel.get_value('daq_error', '')}"
+                )
+            st.title("Channel Settings")
+            physical_channel = st.selectbox(
+                options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
+                index=0,
+                label="Physical Channels",
+                disabled=panel.get_value("is_running", False),
+            )
+            panel.set_value("physical_channel", physical_channel)
+            enum_selectbox(
+                panel,
+                label="Terminal Configuration",
+                value=TerminalConfiguration.DEFAULT,
+                disabled=panel.get_value("is_running", False),
+                key="terminal_configuration",
+            )
 
-        st.title("Channel Settings")
-        physical_channel = st.selectbox(
-            options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
-            index=0,
-            label="Physical Channels",
-            disabled=panel.get_value("is_running", False),
-        )
-        panel.set_value("physical_channel", physical_channel)
-        enum_selectbox(
-            panel,
-            label="Terminal Configuration",
-            value=TerminalConfiguration.DEFAULT,
-            disabled=panel.get_value("is_running", False),
-            key="terminal_configuration",
-        )
+            st.title("Timing Settings")
 
-        st.title("Timing Settings")
+            source = st.selectbox(
+                "Sample Clock Source",
+                options=panel.get_value("available_trigger_sources", [""]),
+                index=0,
+                disabled=panel.get_value("is_running", False),
+            )
+            panel.set_value("source", source)
+            st.number_input(
+                "Sample Rate",
+                value=1000.0,
+                min_value=1.0,
+                step=1.0,
+                disabled=panel.get_value("is_running", False),
+                key="rate",
+            )
+            st.number_input(
+                "Number of Samples",
+                value=100,
+                min_value=1,
+                step=1,
+                disabled=panel.get_value("is_running", False),
+                key="total_samples",
+            )
+            st.number_input(
+                "Actual Sample Rate",
+                value=panel.get_value("sample_rate", 1000.0),
+                key="actual_sample_rate",
+                step=1.0,
+                disabled=True,
+            )
+            st.title("Filtering Settings")
 
-        source = st.selectbox(
-            "Sample Clock Source",
-            options=panel.get_value("available_trigger_sources", [""]),
-            index=0,
-            disabled=panel.get_value("is_running", False),
-        )
-        panel.set_value("source", source)
-        st.number_input(
-            "Sample Rate",
-            value=1000.0,
-            min_value=1.0,
-            step=1.0,
-            disabled=panel.get_value("is_running", False),
-            key="rate",
-        )
-        st.number_input(
-            "Number of Samples",
-            value=100,
-            min_value=1,
-            step=1,
-            disabled=panel.get_value("is_running", False),
-            key="total_samples",
-        )
-        st.number_input(
-            "Actual Sample Rate",
-            value=panel.get_value("sample_rate", 1000.0),
-            key="actual_sample_rate",
-            step=1.0,
-            disabled=True,
-        )
-        st.title("Filtering Settings")
+            filter = st.selectbox(
+                "Filter",
+                options=["No Filtering", "Filter"],
+                disabled=panel.get_value("is_running", False),
+            )
+            panel.set_value("filter", filter)
+            enum_selectbox(
+                panel,
+                label="Filter Response",
+                value=FilterResponse.COMB,
+                disabled=panel.get_value("is_running", False),
+                key="filter_response",
+            )
 
-        filter = st.selectbox(
-            "Filter",
-            options=["No Filtering", "Filter"],
-            disabled=panel.get_value("is_running", False),
-        )
-        panel.set_value("filter", filter)
-        enum_selectbox(
-            panel,
-            label="Filter Response",
-            value=FilterResponse.COMB,
-            disabled=panel.get_value("is_running", False),
-            key="filter_response",
-        )
-
-        filter_freq = st.number_input(
-            "Filtering Frequency",
-            value=1000.0,
-            step=1.0,
-            disabled=panel.get_value("is_running", False),
-        )
-        filter_order = st.number_input(
-            "Filter Order",
-            min_value=0,
-            max_value=1,
-            value=1,
-            disabled=panel.get_value("is_running", False),
-        )
-        st.selectbox(
-            "Actual Filter Frequency",
-            options=[panel.get_value("actual_filter_freq", 0.0)],
-            disabled=True,
-        )
-        st.selectbox(
-            "Actual Filter Order",
-            options=[panel.get_value("actual_filter_order", 0)],
-            disabled=True,
-        )
+            filter_freq = st.number_input(
+                "Filtering Frequency",
+                value=1000.0,
+                step=1.0,
+                disabled=panel.get_value("is_running", False),
+            )
+            filter_order = st.number_input(
+                "Filter Order",
+                min_value=0,
+                max_value=1,
+                value=1,
+                disabled=panel.get_value("is_running", False),
+            )
+            st.selectbox(
+                "Actual Filter Frequency",
+                options=[panel.get_value("actual_filter_freq", 0.0)],
+                disabled=True,
+            )
+            st.selectbox(
+                "Actual Filter Order",
+                options=[panel.get_value("actual_filter_order", 0)],
+                disabled=True,
+            )
 
 with right_col:
     st.title("Task Types")
