@@ -145,7 +145,115 @@ with left_col:
             )
 
 with right_col:
+
+    with st.container(border=True):
+        st.title("Acquired Data")
+        acquired_data = panel.get_value("acquired_data", [0.0])
+        sample_rate = panel.get_value("sample_rate", 100.0)
+        acquired_data_graph = {
+            "animation": False,
+            "tooltip": {"trigger": "axis"},
+            "legend": {"data": ["Voltage (V)"]},
+            "xAxis": {
+                "type": "category",
+                "data": [x / sample_rate for x in range(len(acquired_data))],
+                "name": "Time",
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Volts",
+                "nameRotate": 90,
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "series": [
+                {
+                    "name": "voltage_amplitude",
+                    "type": "line",
+                    "data": acquired_data,
+                    "emphasis": {"focus": "series"},
+                    "smooth": True,
+                    "seriesLayoutBy": "row",
+                },
+            ],
+        }
+        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+
+    st.title("Trigger Settings")
+    trigger_type = stx.tab_bar(
+        data=[
+            stx.TabBarItemData(id=1, title="No Trigger", description=""),
+            stx.TabBarItemData(id=2, title="Digital Start", description=""),
+            stx.TabBarItemData(id=3, title="Digital Pause", description=""),
+            stx.TabBarItemData(id=4, title="Digital Reference", description=""),
+            stx.TabBarItemData(id=5, title="Analog Start", description=""),
+            stx.TabBarItemData(id=6, title="Analog Pause", description=""),
+            stx.TabBarItemData(id=7, title="Analog Reference", description=""),
+        ],
+        default=1,
+    )
+    panel.set_value("trigger_type", trigger_type)
+
+    if trigger_type == "1":
+        with st.container(border=True):
+            st.write(
+                "To enable triggers, select a tab above, and configure the settings. \n Not all hardware supports all trigger types. Refer to your device documentation for more information."
+            )
+    if trigger_type == "2":
+        with st.container(border=True):
+            source = st.selectbox(
+                "Source", options=panel.get_value("available_trigger_sources", [""])
+            )
+            panel.set_value("digital_source", source)
+            enum_selectbox(
+                panel,
+                label="Edge",
+                value=Edge.FALLING,
+                disabled=panel.get_value("is_running", False),
+                key="edge",
+            )
+    if trigger_type == "3":
+        with st.container(border=True):
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            )
+    if trigger_type == "4":
+        with st.container(border=True):
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            )
+    if trigger_type == "5":
+        with st.container(border=True):
+            analog_source = st.text_input("Source", "APFI0", key="analog_source")
+            enum_selectbox(
+                panel,
+                label="Slope",
+                value=Slope.FALLING,
+                disabled=panel.get_value("is_running", False),
+                key="slope",
+            )
+
+            level = st.number_input("Level", key="level")
+            hysteriesis = st.number_input(
+                "Hysteriesis",
+                disabled=panel.get_value("is_running", False),
+                key="hysteriesis",
+            )
+
+    if trigger_type == "6":
+        with st.container(border=True):
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            )
+    if trigger_type == "7":
+        with st.container(border=True):
+            st.write(
+                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
+            )
     st.title("Task Types")
+
     chan_type = stx.tab_bar(
         data=[
             stx.TabBarItemData(id=1, title="Voltage", description=""),
@@ -156,7 +264,6 @@ with right_col:
     )
 
     panel.set_value("chan_type", chan_type)
-
     if chan_type == "1":
         with st.container(border=True):
             st.title("Voltage Data")
@@ -197,26 +304,25 @@ with right_col:
                     disabled=panel.get_value("is_running", False),
                     key="units",
                 )
-                with st.expander("More current info", expanded=False):
-                    min_value_current = st.number_input(
-                        "Min Value",
-                        value=-0.01,
-                        step=0.001,
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    max_value_current = st.number_input(
-                        "Max Value",
-                        value=0.01,
-                        step=1.0,
-                        key="max_value_current",
-                        disabled=panel.get_value("is_running", False),
-                    )
-                    shunt_resistor_value = st.number_input(
-                        "Shunt Resistor Value",
-                        value=249.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                    )
+                min_value_current = st.number_input(
+                    "Min Value",
+                    value=-0.01,
+                    step=0.001,
+                    disabled=panel.get_value("is_running", False),
+                )
+                max_value_current = st.number_input(
+                    "Max Value",
+                    value=0.01,
+                    step=1.0,
+                    key="max_value_current",
+                    disabled=panel.get_value("is_running", False),
+                )
+                shunt_resistor_value = st.number_input(
+                    "Shunt Resistor Value",
+                    value=249.0,
+                    step=1.0,
+                    disabled=panel.get_value("is_running", False),
+                )
     if chan_type == "3":
         with st.container(border=True):
             st.title("Strain Gage Data")
@@ -242,169 +348,61 @@ with right_col:
                     disabled=panel.get_value("is_running", False),
                     key="strain_units",
                 )
-                with st.expander("Strain Gage Information", expanded=False):
-                    st.title("Strain Gage Information")
-                    gage_factor = st.number_input(
-                        "Gage Factor",
-                        value=2.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                        key="gage_factor",
-                    )
-                    nominal_gage = st.number_input(
-                        "nominal gage resistance",
-                        value=350.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                        key="gage_resistance",
-                    )
-                    poisson_ratio = st.number_input(
-                        "poisson ratio",
-                        value=0.3,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                        key="poisson_ratio",
-                    )
-                with st.expander("Bridge Information", expanded=False):
-                    st.title("Bridge Information")
-                    enum_selectbox(
-                        panel,
-                        label="Strain Configuration",
-                        value=StrainGageBridgeType.FULL_BRIDGE_I,
-                        disabled=panel.get_value("is_running", False),
-                        key="strain_configuration",
-                    )
-                    wire_resistance = st.number_input(
-                        "lead wire resistance",
-                        value=0.0,
-                        step=1.0,
-                        key="wire_resistance",
-                    )
-                    initial_voltage = st.number_input(
-                        "initial bridge voltage",
-                        value=0.0,
-                        step=1.0,
-                        disabled=panel.get_value("is_running", False),
-                        key="initial_voltage",
-                    )
-
-                    st.selectbox(
-                        label="voltage excitation source",
-                        key="voltage_excit",
-                        options=["External"],
-                        disabled=True,
-                    )
-                    panel.set_value("voltage_excitation_source", "voltage_excit")
-                    voltage_excit = st.number_input(
-                        "voltage excitation value",
-                        value=2.5,
-                        step=1.0,
-                        key="voltage_excitation_value",
-                        disabled=panel.get_value("is_running", False),
-                    )
-
-    st.title("Trigger Settings")
-    trigger_type = stx.tab_bar(
-        data=[
-            stx.TabBarItemData(id=1, title="No Trigger", description=""),
-            stx.TabBarItemData(id=2, title="Digital Start", description=""),
-            stx.TabBarItemData(id=3, title="Digital Pause", description=""),
-            stx.TabBarItemData(id=4, title="Digital Reference", description=""),
-            stx.TabBarItemData(id=5, title="Analog Start", description=""),
-            stx.TabBarItemData(id=6, title="Analog Pause", description=""),
-            stx.TabBarItemData(id=7, title="Analog Reference", description=""),
-        ],
-        default=1,
-    )
-    panel.set_value("trigger_type", trigger_type)
-
-    if trigger_type == "1":
-        with st.container(border=True):
-            st.write(
-                "To enable triggers, select a tab above, and configure the settings. \n Not all hardware supports all trigger types. Refer to your device documentation for more information."
-            )
-    if trigger_type == "2":
-        with st.container(border=True):
-            source = st.selectbox(
-                "Source->", options=panel.get_value("available_trigger_sources", [""])
-            )
-            panel.set_value("digital_source", source)
+                st.title("Strain Gage Information")
+                gage_factor = st.number_input(
+                    "Gage Factor",
+                    value=2.0,
+                    step=1.0,
+                    disabled=panel.get_value("is_running", False),
+                    key="gage_factor",
+                )
+                nominal_gage = st.number_input(
+                    "Nominal Gage Resistance",
+                    value=350.0,
+                    step=1.0,
+                    disabled=panel.get_value("is_running", False),
+                    key="gage_resistance",
+                )
+                poisson_ratio = st.number_input(
+                    "Poisson Ratio",
+                    value=0.3,
+                    step=1.0,
+                    disabled=panel.get_value("is_running", False),
+                    key="poisson_ratio",
+                )
+            st.title("Bridge Information")
             enum_selectbox(
                 panel,
-                label="Edge",
-                value=Edge.FALLING,
+                label="Strain Configuration",
+                value=StrainGageBridgeType.FULL_BRIDGE_I,
                 disabled=panel.get_value("is_running", False),
-                key="edge",
+                key="strain_configuration",
             )
-    if trigger_type == "3":
-        with st.container(border=True):
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
+            wire_resistance = st.number_input(
+                "Lead Wire Resistance",
+                value=0.0,
+                step=1.0,
+                key="wire_resistance",
             )
-    if trigger_type == "4":
-        with st.container(border=True):
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-            )
-    if trigger_type == "5":
-        with st.container(border=True):
-            analog_source = st.text_input("Source:", "APFI0", key="analog_source")
-            enum_selectbox(
-                panel,
-                label="Slope",
-                value=Slope.FALLING,
+            initial_voltage = st.number_input(
+                "Initial Bridge Voltage",
+                value=0.0,
+                step=1.0,
                 disabled=panel.get_value("is_running", False),
-                key="slope",
+                key="initial_voltage",
             )
 
-            level = st.number_input("Level", key="level")
-            hysteriesis = st.number_input(
-                "Hysteriesis",
+            st.selectbox(
+                label="Voltage Excitation Source",
+                key="voltage_excit",
+                options=["External"],
+                disabled=True,
+            )
+            panel.set_value("voltage_excitation_source", "voltage_excit")
+            voltage_excit = st.number_input(
+                "Voltage Excitation Value",
+                value=2.5,
+                step=1.0,
+                key="voltage_excitation_value",
                 disabled=panel.get_value("is_running", False),
-                key="hysteriesis",
             )
-
-    if trigger_type == "6":
-        with st.container(border=True):
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported"
-            )
-    if trigger_type == "7":
-        with st.container(border=True):
-            st.write(
-                "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
-            )
-
-    with st.container(border=True):
-        acquired_data = panel.get_value("acquired_data", [0.0])
-        sample_rate = panel.get_value("sample_rate", 100.0)
-        acquired_data_graph = {
-            "animation": False,
-            "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)"]},
-            "xAxis": {
-                "type": "category",
-                "data": [x / sample_rate for x in range(len(acquired_data))],
-                "name": "Time",
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "yAxis": {
-                "type": "value",
-                "name": "Volts",
-                "nameRotate": 90,
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "series": [
-                {
-                    "name": "voltage_amplitude",
-                    "type": "line",
-                    "data": acquired_data,
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
-                },
-            ],
-        }
-        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
