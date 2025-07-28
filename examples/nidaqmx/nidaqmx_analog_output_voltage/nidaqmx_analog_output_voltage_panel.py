@@ -54,15 +54,13 @@ with left_col:
     with st.container(border=True):
         is_running = panel.get_value("is_running", True)
         if is_running:
-            st.button("Stop", key="stop_button")
+            st.button(r"⏹️ Stop", key="stop_button")
+        elif not is_running and panel.get_value("daq_error", "") == "":
+            run_button = st.button(r"▶️ Run", key="run_button")
         else:
-            st.button("Run", key="run_button")
-
-        if panel.get_value("daq_error", "") == "":
-            pass
-        else:
-            hide_run_button()
-            st.error(panel.get_value("daq_error", "") + " Please re-run script")
+            st.error(
+                f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
+            )
 
         st.title("Channel Settings")
         physical_channel = st.selectbox(
