@@ -36,14 +36,13 @@ st.markdown(
 )
 
 
-
 with left_col:
     with st.container(border=True):
         is_running = panel.get_value("is_running", True)
         if is_running:
-            st.button(r"⏹️ Stop", key="stop_button")
+            st.button("Stop", key="stop_button")
         elif not is_running and panel.get_value("daq_error", "") == "":
-            run_button = st.button(r"▶️ Run", key="run_button")
+            run_button = st.button("Run", key="run_button")
         else:
             st.error(
                 f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
@@ -129,39 +128,39 @@ with left_col:
 
 with right_col:
     with st.container(border=True):
-            st.title("Output")
-            acquired_data = panel.get_value("data", [0.0])
-            sample_rate = panel.get_value("sample_rate", 1000.0)
-            acquired_data_graph = {
-                "animation": False,
-                "tooltip": {"trigger": "axis"},
-                "legend": {"data": ["Voltage (V)"]},
-                "xAxis": {
-                    "type": "category",
-                    "data": [x / sample_rate for x in range(len(acquired_data))],
-                    "name": "Time",
-                    "nameLocation": "center",
-                    "nameGap": 40,
+        st.title("Output")
+        acquired_data = panel.get_value("data", [0.0])
+        sample_rate = panel.get_value("sample_rate", 1000.0)
+        acquired_data_graph = {
+            "animation": False,
+            "tooltip": {"trigger": "axis"},
+            "legend": {"data": ["Voltage (V)"]},
+            "xAxis": {
+                "type": "category",
+                "data": [x / sample_rate for x in range(len(acquired_data))],
+                "name": "Time",
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Amplitude",
+                "nameRotate": 90,
+                "nameLocation": "center",
+                "nameGap": 40,
+            },
+            "series": [
+                {
+                    "name": "voltage_amplitude",
+                    "type": "line",
+                    "data": acquired_data,
+                    "emphasis": {"focus": "series"},
+                    "smooth": True,
+                    "seriesLayoutBy": "row",
                 },
-                "yAxis": {
-                    "type": "value",
-                    "name": "Amplitude",
-                    "nameRotate": 90,
-                    "nameLocation": "center",
-                    "nameGap": 40,
-                },
-                "series": [
-                    {
-                        "name": "voltage_amplitude",
-                        "type": "line",
-                        "data": acquired_data,
-                        "emphasis": {"focus": "series"},
-                        "smooth": True,
-                        "seriesLayoutBy": "row",
-                    },
-                ],
-            }
-            st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+            ],
+        }
+        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
 
     with st.container(border=True):
         st.title("Trigger Settings")
@@ -197,5 +196,3 @@ with right_col:
                 st.write(
                     "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
                 )
-
-        
