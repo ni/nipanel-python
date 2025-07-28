@@ -6,13 +6,14 @@ from pathlib import Path
 import nidaqmx
 from nidaqmx.constants import (
     AcquisitionType,
-    TerminalConfiguration,
     CJCSource,
-    TemperatureUnits,
-    ThermocoupleType,
     LoggingMode,
     LoggingOperation,
+    TemperatureUnits,
+    TerminalConfiguration,
+    ThermocoupleType,
 )
+from nidaqmx.errors import DaqError
 
 import nipanel
 
@@ -20,6 +21,8 @@ panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_pa
 panel = nipanel.create_streamlit_panel(panel_script_path)
 
 try:
+    panel.set_value("daq_error", "")
+
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
@@ -31,7 +34,7 @@ try:
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             task.ai_channels.add_ai_voltage_chan(
-                physical_channel="Dev1/ai0",
+                physical_channel="Dev4/ai0",
                 min_val=panel.get_value("voltage_min_value", -5.0),
                 max_val=panel.get_value("voltage_max_value", 5.0),
                 terminal_config=panel.get_value(
@@ -39,7 +42,7 @@ try:
                 ),
             )
             task.ai_channels.add_ai_thrmcpl_chan(
-                "Dev1/ai1",
+                "Dev4/ai1",
                 min_val=panel.get_value("thermocouple_min_value", 0.0),
                 max_val=panel.get_value("thermocouple_max_value", 100.0),
                 units=panel.get_value("thermocouple_units", TemperatureUnits.DEG_C),
@@ -79,5 +82,9 @@ try:
                 task.stop()
                 panel.set_value("is_running", False)
 
+except DaqError as e:
+    daq_error = str(e)
+    print(daq_error)
+    panel.set_value("daq_error", daq_error)
 except KeyboardInterrupt:
     pass
