@@ -3,7 +3,7 @@ Prerequisites
 Requires a Physical or Simulated Device. Refer to the [Getting Started Section](https://github.com/ni/nidaqmx-python/blob/master/README.rst) to learn how to create a simulated device. 
 ## Sample
 
-This is an nipanel example that displays an interactive Streamlit app and updates and fetches data from device.
+This is a nipanel example that displays an interactive Streamlit app and updates continuous analog output examples.
 
 ### Feature
 
