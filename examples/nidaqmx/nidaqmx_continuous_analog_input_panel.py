@@ -235,4 +235,3 @@ with right_column:
                     value="data.tdms",
                     key="tdms_file_path",
                 )
-                
