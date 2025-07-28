@@ -64,7 +64,6 @@ optional = true
 
 [tool.poetry.group.examples.dependencies]
 streamlit-echarts = ">=0.4.0"
-extra-streamlit-components = "^0.1.80"
 nidaqmx = { version = ">=0.8.0", allow-prereleases = true }
 niscope = "^1.4.9"
 
