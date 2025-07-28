@@ -34,7 +34,7 @@ try:
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
             task.ai_channels.add_ai_voltage_chan(
-                physical_channel="Dev4/ai0",
+                physical_channel="Dev1/ai0",
                 min_val=panel.get_value("voltage_min_value", -5.0),
                 max_val=panel.get_value("voltage_max_value", 5.0),
                 terminal_config=panel.get_value(
@@ -42,7 +42,7 @@ try:
                 ),
             )
             task.ai_channels.add_ai_thrmcpl_chan(
-                "Dev4/ai1",
+                "Dev1/ai1",
                 min_val=panel.get_value("thermocouple_min_value", 0.0),
                 max_val=panel.get_value("thermocouple_max_value", 100.0),
                 units=panel.get_value("thermocouple_units", TemperatureUnits.DEG_C),
