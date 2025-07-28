@@ -36,19 +36,6 @@ st.markdown(
 )
 
 
-def hide_run_button() -> None:
-    """hide_run_button is used to disable run button when DAQ error pops up."""
-    st.markdown(
-        """
-        <style>
-        button[data-testid="stBaseButton-secondary"] {
-            display: none;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
 
 with left_col:
     with st.container(border=True):
@@ -142,6 +129,41 @@ with left_col:
 
 with right_col:
     with st.container(border=True):
+            st.title("Output")
+            acquired_data = panel.get_value("data", [0.0])
+            sample_rate = panel.get_value("sample_rate", 1000.0)
+            acquired_data_graph = {
+                "animation": False,
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": ["Voltage (V)"]},
+                "xAxis": {
+                    "type": "category",
+                    "data": [x / sample_rate for x in range(len(acquired_data))],
+                    "name": "Time",
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "yAxis": {
+                    "type": "value",
+                    "name": "Amplitude",
+                    "nameRotate": 90,
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "series": [
+                    {
+                        "name": "voltage_amplitude",
+                        "type": "line",
+                        "data": acquired_data,
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                ],
+            }
+            st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+
+    with st.container(border=True):
         st.title("Trigger Settings")
         trigger_type = stx.tab_bar(
             data=[
@@ -176,36 +198,4 @@ with right_col:
                     "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
                 )
 
-        with st.container(border=True):
-            acquired_data = panel.get_value("data", [0.0])
-            sample_rate = panel.get_value("sample_rate", 1000.0)
-            acquired_data_graph = {
-                "animation": False,
-                "tooltip": {"trigger": "axis"},
-                "legend": {"data": ["Voltage (V)"]},
-                "xAxis": {
-                    "type": "category",
-                    "data": [x / sample_rate for x in range(len(acquired_data))],
-                    "name": "Time",
-                    "nameLocation": "center",
-                    "nameGap": 40,
-                },
-                "yAxis": {
-                    "type": "value",
-                    "name": "Amplitude",
-                    "nameRotate": 90,
-                    "nameLocation": "center",
-                    "nameGap": 40,
-                },
-                "series": [
-                    {
-                        "name": "voltage_amplitude",
-                        "type": "line",
-                        "data": acquired_data,
-                        "emphasis": {"focus": "series"},
-                        "smooth": True,
-                        "seriesLayoutBy": "row",
-                    },
-                ],
-            }
-            st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+        
