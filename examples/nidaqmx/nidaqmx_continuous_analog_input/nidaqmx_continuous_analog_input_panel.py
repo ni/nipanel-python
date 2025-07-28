@@ -38,9 +38,9 @@ panel = nipanel.get_streamlit_panel_accessor()
 is_running = panel.get_value("is_running", False)
 
 if is_running:
-    st.button("Stop", key="stop_button")
+    st.button(r"⏹️ Stop", key="stop_button")
 elif not is_running and panel.get_value("daq_error", "") == "":
-    run_button = st.button("Run", key="run_button")
+    run_button = st.button(r"▶️ Run", key="run_button")
 else:
     st.error(
         f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
