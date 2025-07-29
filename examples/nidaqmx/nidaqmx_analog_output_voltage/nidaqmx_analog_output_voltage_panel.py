@@ -45,7 +45,7 @@ with left_col:
             run_button = st.button("Run", key="run_button")
         else:
             st.error(
-                f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
+                f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_output_voltage.py \n\n {panel.get_value('daq_error', '')}"
             )
 
         st.title("Channel Settings")
@@ -119,12 +119,13 @@ with left_col:
             step=1.0,
             disabled=panel.get_value("is_running", False),
         )
-        st.selectbox(
+        wave_type = st.selectbox(
             label="Wave Type",
             options=["Sine Wave", "Triangle Wave", "Square Wave"],
             key="wave_type",
             disabled=panel.get_value("is_running", False),
         )
+        panel.set_value("wave_type", wave_type)
 
 with right_col:
     with st.container(border=True):
@@ -176,9 +177,10 @@ with right_col:
             ],
             default=1,
         )
+        trigger_type = int(trigger_type)  # pyright: ignore[reportArgumentType]
         panel.set_value("trigger_type", trigger_type)
 
-        if trigger_type == "2":
+        if trigger_type == 2:
             with st.container(border=True):
                 source = st.selectbox(
                     "Source:", options=panel.get_value("available_trigger_sources", [""])

@@ -1,4 +1,4 @@
-"""Data acquisition script that continuously acquires analog output data."""
+"""Data acquisition script that continuously generates analog output data."""
 
 import time
 from pathlib import Path
@@ -60,7 +60,7 @@ try:
             # Refer to your device documentation for more information.
             trigger_type = panel.get_value("trigger_type")
 
-            if trigger_type == "2":
+            if trigger_type == 2:
                 task.triggers.start_trigger.cfg_dig_edge_start_trig(
                     trigger_source=panel.get_value("digital_source", ""),
                     trigger_edge=panel.get_value("edge", Edge.FALLING),
