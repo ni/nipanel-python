@@ -18,5 +18,5 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ```pwsh
 poetry install --with examples
-poetry run examples\nidaqmx\nidaqmx_continuous_analog_input\nidaqmx_continuous_analog_input.py
+poetry run examples/nidaqmx/nidaqmx_continuous_analog_input.py
 ```
