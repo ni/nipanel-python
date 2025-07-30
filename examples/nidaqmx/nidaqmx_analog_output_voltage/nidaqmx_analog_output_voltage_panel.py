@@ -193,8 +193,13 @@ with right_col:
                     disabled=panel.get_value("is_running", False),
                     key="edge",
                 )
-        else:
+        elif trigger_type == 1:
             with st.container(border=True):
                 st.write(
-                    "This trigger type is not supported in continuous sample timing. Refer to your device documentation for more information on which triggers are supported."
+                    "To enable triggers, select a tab above, and configure the settings. Not all hardware supports all trigger types. Refer to your device documentation for more information."
                 )
+
+        else:
+            st.write(
+                "This trigger type is not supported in output tasks. Refer to your device documentation for more information on which triggers are supported."
+            )
