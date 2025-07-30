@@ -39,8 +39,12 @@ is_running = panel.get_value("is_running", False)
 
 if is_running:
     st.button(r"⏹️ Stop", key="stop_button")
-else:
+elif not is_running and panel.get_value("daq_error", "") == "":
     st.button(r"▶️ Run", key="run_button")
+else:
+    st.error(
+        f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
+    )
 
 thermocouple_data = panel.get_value("thermocouple_data", [0.0])
 voltage_data = panel.get_value("voltage_data", [0.0])
