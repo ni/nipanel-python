@@ -37,8 +37,10 @@ for name in all_types_with_values.keys():
         elif isinstance(default_value, str):
             st.text_input(label=name, value=default_value, key=name)
         elif isinstance(default_value, dt.datetime):
-            st.time_input(label=name, value=default_value, key=f"{name}_time")
-            st.date_input(label=name, value=default_value, key=f"{name}_date")
+            date = st.date_input(label="date", value=default_value)
+            time = st.time_input(label="time", value=default_value)
+            datetime = dt.datetime.combine(date, time)
+            panel.set_value(name, datetime)
         elif isinstance(default_value, dt.date):
             st.date_input(label=name, value=default_value, key=name)
         elif isinstance(default_value, dt.time):
