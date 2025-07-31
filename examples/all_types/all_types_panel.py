@@ -41,10 +41,6 @@ for name in all_types_with_values.keys():
             time = st.time_input(label="time", value=default_value)
             datetime = dt.datetime.combine(date, time)
             panel.set_value(name, datetime)
-        elif isinstance(default_value, dt.date):
-            st.date_input(label=name, value=default_value, key=name)
-        elif isinstance(default_value, dt.time):
-            st.time_input(label=name, value=default_value, key=name)
 
     with col3:
         st.write(panel.get_value(name, default_value=default_value))

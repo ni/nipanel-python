@@ -1,3 +1,4 @@
+import datetime as dt
 import enum
 
 import grpc
@@ -265,6 +266,7 @@ def test___set_string_enum_type___get_value_with_int_enum_default___raises_excep
         3.14,
         True,
         b"robotext",
+        dt.datetime.now(),
     ],
 )
 def test___builtin_scalar_type___set_value___gets_same_value(
