@@ -65,6 +65,8 @@ try:
                     trigger_source=panel.get_value("digital_source", ""),
                     trigger_edge=panel.get_value("edge", Edge.FALLING),
                 )
+            else:
+                pass
 
             panel.set_value("sample_rate", task.timing.samp_clk_rate)
             t = np.arange(num_samples) / sample_rate

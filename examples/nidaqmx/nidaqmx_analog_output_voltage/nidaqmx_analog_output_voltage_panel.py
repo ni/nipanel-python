@@ -38,7 +38,7 @@ st.markdown(
 
 with left_col:
     with st.container(border=True):
-        is_running = panel.get_value("is_running", True)
+        is_running = panel.get_value("is_running", False)
         if is_running:
             st.button("Stop", key="stop_button")
         elif not is_running and panel.get_value("daq_error", "") == "":
