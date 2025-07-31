@@ -12,7 +12,7 @@ from nipanel.converters import Converter
 from nipanel.converters.builtin import (
     BoolConverter,
     BytesConverter,
-    DateTimeConverter,
+    DTDateTimeConverter,
     FloatConverter,
     IntConverter,
     StrConverter,
@@ -38,7 +38,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     FloatConverter(),
     IntConverter(),
     StrConverter(),
-    DateTimeConverter(),
+    DTDateTimeConverter(),
     # Containers next
     BoolCollectionConverter(),
     BytesCollectionConverter(),

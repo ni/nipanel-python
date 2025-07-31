@@ -120,7 +120,7 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
         return protobuf_message.value
 
 
-class DateTimeConverter(Converter[dt.datetime, timestamp_pb2.Timestamp]):
+class DTDateTimeConverter(Converter[dt.datetime, timestamp_pb2.Timestamp]):
     """A converter for datetime.datetime types."""
 
     @property
