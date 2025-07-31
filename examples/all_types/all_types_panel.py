@@ -1,5 +1,6 @@
 """A Streamlit visualization panel for the all_types.py example script."""
 
+import datetime as dt
 from enum import Enum, Flag
 
 import streamlit as st
@@ -120,6 +121,11 @@ for name in all_types_with_values.keys():
             st.number_input(label=name, value=default_value, key=name, format="%.2f")
         elif isinstance(default_value, str):
             st.text_input(label=name, value=default_value, key=name)
+        elif isinstance(default_value, dt.datetime):
+            date = st.date_input(label="date", value=default_value)
+            time = st.time_input(label="time", value=default_value)
+            datetime = dt.datetime.combine(date, time)
+            panel.set_value(name, datetime)
 
     with col3:
         st.write(panel.get_value(name, default_value=default_value))
