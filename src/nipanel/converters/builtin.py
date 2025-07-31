@@ -1,9 +1,10 @@
 """Classes to convert between builtin Python scalars and containers."""
 
+import datetime as dt
 from collections.abc import Collection
 from typing import Type
 
-from google.protobuf import wrappers_pb2
+from google.protobuf import timestamp_pb2, wrappers_pb2
 from ni.panels.v1 import panel_types_pb2
 
 from nipanel.converters import Converter
@@ -117,6 +118,30 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
     def to_python_value(self, protobuf_message: wrappers_pb2.StringValue) -> str:
         """Convert the protobuf message to a Python string."""
         return protobuf_message.value
+
+
+class DateTimeConverter(Converter[dt.datetime, timestamp_pb2.Timestamp]):
+    """A converter for datetime.datetime types."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return dt.datetime.__name__
+
+    @property
+    def protobuf_message(self) -> Type[timestamp_pb2.Timestamp]:
+        """The type-specific protobuf message for the Python type."""
+        return timestamp_pb2.Timestamp
+
+    def to_protobuf_message(self, python_value: dt.datetime) -> timestamp_pb2.Timestamp:
+        """Convert the Python dt.datetime to a protobuf timestamp_pb2.Timestamp."""
+        ts = self.protobuf_message()
+        ts.FromDatetime(python_value)
+        return ts
+
+    def to_python_value(self, protobuf_message: timestamp_pb2.Timestamp) -> dt.datetime:
+        """Convert the protobuf timestamp_pb2.Timestamp to a Python dt.datetime."""
+        return protobuf_message.ToDatetime()
 
 
 class BoolCollectionConverter(Converter[Collection[bool], panel_types_pb2.BoolCollection]):
