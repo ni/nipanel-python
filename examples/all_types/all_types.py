@@ -9,6 +9,12 @@ import nipanel
 panel_script_path = Path(__file__).with_name("all_types_panel.py")
 panel = nipanel.create_streamlit_panel(panel_script_path)
 
+panel.set_value("example_selectbox", "Option 1")
+panel.set_value("example_slider", 50)
+panel.set_value("example_color_picker", "#000000")
+panel.set_value("example_multiselect", ["Option 1"])
+panel.set_value("example_radio", "Option 1")
+
 print("Setting values")
 for name, value in all_types_with_values.items():
     print(f"{name:>15}   {value}")
@@ -19,5 +25,6 @@ print("Getting values")
 for name in all_types_with_values.keys():
     the_value = panel.get_value(name)
     print(f"{name:>20}   {the_value}")
+
 
 print(f"Panel URL: {panel.panel_url}")
