@@ -95,7 +95,6 @@ try:
 
                                 samples_array = np.array(binary_data)
 
-                                # Apply scaling
                                 voltage_values = samples_array * gain + offset
                                 panel.set_value("scaled_voltage_data", voltage_values.tolist())
 
