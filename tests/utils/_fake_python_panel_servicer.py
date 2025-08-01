@@ -32,6 +32,7 @@ class FakePythonPanelServicer(PanelServiceServicer):
         self._set_count: int = 0
         self._notification_count: int = 0
         self._python_interpreter_url: str = ""
+        self._python_script_url: str = ""
 
     def StartPanel(  # noqa: N802
         self, request: StartPanelRequest, context: Any
@@ -40,6 +41,7 @@ class FakePythonPanelServicer(PanelServiceServicer):
         streamlit_panel_configuration = StreamlitPanelConfiguration()
         request.panel_configuration.Unpack(streamlit_panel_configuration)
         self._python_interpreter_url = streamlit_panel_configuration.python_interpreter_url
+        self._python_script_url = streamlit_panel_configuration.panel_script_url
         if self._fail_next_start_panel:
             self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
@@ -106,8 +108,13 @@ class FakePythonPanelServicer(PanelServiceServicer):
 
     @property
     def python_interpreter_url(self) -> str:
-        """Get the Python path used to start the panel."""
+        """Get the Python interpreter url."""
         return self._python_interpreter_url
+
+    @property
+    def python_script_url(self) -> str:
+        """Get the Python script url."""
+        return self._python_script_url
 
     def _init_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:

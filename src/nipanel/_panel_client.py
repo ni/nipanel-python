@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import threading
 from typing import Callable, TypeVar
 
@@ -51,8 +52,8 @@ class _PanelClient:
         self, panel_id: str, panel_script_path: str, python_interpreter_path: str
     ) -> str:
 
-        panel_script_url = self._to_file_url(panel_script_path)
-        python_interpreter_url = self._to_file_url(python_interpreter_path)
+        panel_script_url = pathlib.Path(panel_script_path).absolute().as_uri()
+        python_interpreter_url = pathlib.Path(python_interpreter_path).absolute().as_uri()
         streamlit_panel_configuration = StreamlitPanelConfiguration(
             panel_script_url=panel_script_url, python_interpreter_url=python_interpreter_url
         )
@@ -131,6 +132,3 @@ class _PanelClient:
                 self._stub = None
                 return method(*args, **kwargs)
             raise
-
-    def _to_file_url(self, path: str) -> str:
-        return path if path.startswith("file://") else f"file://{path}"

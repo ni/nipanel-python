@@ -509,13 +509,23 @@ def test___panel___panel_is_running_and_in_memory(
     assert is_panel_running(panel)
 
 
-def test___panel___python_path_is_in_venv(
+def test___panel___python_interpreter_url_is_in_venv(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,
 ) -> None:
     StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
+    assert fake_python_panel_service.servicer.python_interpreter_url.startswith("file://")
     assert ".venv" in fake_python_panel_service.servicer.python_interpreter_url
+
+
+def test___panel___python_script_url_starts_with_file(
+    fake_python_panel_service: FakePythonPanelService,
+    fake_panel_channel: grpc.Channel,
+) -> None:
+    StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+
+    assert fake_python_panel_service.servicer.python_script_url.startswith("file://")
 
 
 def is_panel_in_memory(panel: StreamlitPanel) -> bool:
