@@ -8,7 +8,7 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Feature
 
-Script demonstrates NIScope waveform data getting continuously acquired and being converted to binary.
+Script demonstrates NIScope waveform data getting continuously acquired and being converted to binary data.
 - Supports various data types
 
 ### Required Software
