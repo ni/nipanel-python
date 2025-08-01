@@ -31,7 +31,7 @@ class FakePythonPanelServicer(PanelServiceServicer):
         self._fail_next_start_panel = False
         self._set_count: int = 0
         self._notification_count: int = 0
-        self._python_path: str = ""
+        self._python_interpreter_url: str = ""
 
     def StartPanel(  # noqa: N802
         self, request: StartPanelRequest, context: Any
@@ -39,12 +39,12 @@ class FakePythonPanelServicer(PanelServiceServicer):
         """Trivial implementation for testing."""
         streamlit_panel_configuration = StreamlitPanelConfiguration()
         request.panel_configuration.Unpack(streamlit_panel_configuration)
-        self._python_path = streamlit_panel_configuration.python_path
+        self._python_interpreter_url = streamlit_panel_configuration.python_interpreter_url
         if self._fail_next_start_panel:
             self._fail_next_start_panel = False
             context.abort(grpc.StatusCode.UNAVAILABLE, "Simulated failure")
         self._start_panel(request.panel_id)
-        return StartPanelResponse(panel_uri=self._get_panel_uri(request.panel_id))
+        return StartPanelResponse(panel_url=self._get_panel_uri(request.panel_id))
 
     def StopPanel(self, request: StopPanelRequest, context: Any) -> StopPanelResponse:  # noqa: N802
         """Trivial implementation for testing."""
@@ -59,7 +59,7 @@ class FakePythonPanelServicer(PanelServiceServicer):
         for panel_id in self._panel_ids:
             panel = PanelInformation(
                 panel_id=panel_id,
-                panel_uri=self._get_panel_uri(panel_id),
+                panel_url=self._get_panel_uri(panel_id),
                 value_ids=self._panel_value_ids[panel_id],
             )
             response.panels.append(panel)
@@ -105,9 +105,9 @@ class FakePythonPanelServicer(PanelServiceServicer):
         return self._notification_count
 
     @property
-    def python_path(self) -> str:
+    def python_interpreter_url(self) -> str:
         """Get the Python path used to start the panel."""
-        return self._python_path
+        return self._python_interpreter_url
 
     def _init_panel(self, panel_id: str) -> None:
         if panel_id not in self._panel_ids:

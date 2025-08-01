@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n ni/panels/v1/panel_service.proto\x12\x0cni.panels.v1\x1a\x19google/protobuf/any.proto\"X\n\x11StartPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x31\n\x13panel_configuration\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any\"\'\n\x12StartPanelResponse\x12\x11\n\tpanel_uri\x18\x01 \x01(\t\"3\n\x10StopPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x13\n\x11StopPanelResponse\"\x18\n\x16\x45numeratePanelsRequest\"J\n\x10PanelInformation\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_uri\x18\x02 \x01(\t\x12\x11\n\tvalue_ids\x18\x03 \x03(\t\"I\n\x17\x45numeratePanelsResponse\x12.\n\x06panels\x18\x01 \x03(\x0b\x32\x1e.ni.panels.v1.PanelInformation\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"8\n\x12TryGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"I\n\x13TryGetValueResponse\x12(\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.AnyH\x00\x88\x01\x01\x42\x08\n\x06_value\"j\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x0e\n\x06notify\x18\x04 \x01(\x08\"\x12\n\x10SetValueResponse2\xf7\x03\n\x0cPanelService\x12O\n\nStartPanel\x12\x1f.ni.panels.v1.StartPanelRequest\x1a .ni.panels.v1.StartPanelResponse\x12L\n\tStopPanel\x12\x1e.ni.panels.v1.StopPanelRequest\x1a\x1f.ni.panels.v1.StopPanelResponse\x12^\n\x0f\x45numeratePanels\x12$.ni.panels.v1.EnumeratePanelsRequest\x1a%.ni.panels.v1.EnumeratePanelsResponse\x12I\n\x08GetValue\x12\x1d.ni.panels.v1.GetValueRequest\x1a\x1e.ni.panels.v1.GetValueResponse\x12R\n\x0bTryGetValue\x12 .ni.panels.v1.TryGetValueRequest\x1a!.ni.panels.v1.TryGetValueResponse\x12I\n\x08SetValue\x12\x1d.ni.panels.v1.SetValueRequest\x1a\x1e.ni.panels.v1.SetValueResponseBu\n\x10\x63om.ni.panels.v1B\x0bPanelsProtoP\x01Z\x08panelsv1\xf8\x01\x01\xa2\x02\x04NIPS\xaa\x02\x1dNationalInstruments.Panels.V1\xca\x02\x0cNI\\Panels\\V1\xea\x02\x0eNI::Panels::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n ni/panels/v1/panel_service.proto\x12\x0cni.panels.v1\x1a\x19google/protobuf/any.proto\"X\n\x11StartPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x31\n\x13panel_configuration\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any\"\'\n\x12StartPanelResponse\x12\x11\n\tpanel_url\x18\x01 \x01(\t\"3\n\x10StopPanelRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\r\n\x05reset\x18\x02 \x01(\x08\"\x13\n\x11StopPanelResponse\"\x18\n\x16\x45numeratePanelsRequest\"J\n\x10PanelInformation\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x11\n\tpanel_url\x18\x02 \x01(\t\x12\x11\n\tvalue_ids\x18\x03 \x03(\t\"I\n\x17\x45numeratePanelsResponse\x12.\n\x06panels\x18\x01 \x03(\x0b\x32\x1e.ni.panels.v1.PanelInformation\"5\n\x0fGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\"7\n\x10GetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"8\n\x12TryGetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\":\n\x13TryGetValueResponse\x12#\n\x05value\x18\x01 \x01(\x0b\x32\x14.google.protobuf.Any\"j\n\x0fSetValueRequest\x12\x10\n\x08panel_id\x18\x01 \x01(\t\x12\x10\n\x08value_id\x18\x02 \x01(\t\x12#\n\x05value\x18\x03 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x0e\n\x06notify\x18\x04 \x01(\x08\"\x12\n\x10SetValueResponse2\xf7\x03\n\x0cPanelService\x12O\n\nStartPanel\x12\x1f.ni.panels.v1.StartPanelRequest\x1a .ni.panels.v1.StartPanelResponse\x12L\n\tStopPanel\x12\x1e.ni.panels.v1.StopPanelRequest\x1a\x1f.ni.panels.v1.StopPanelResponse\x12^\n\x0f\x45numeratePanels\x12$.ni.panels.v1.EnumeratePanelsRequest\x1a%.ni.panels.v1.EnumeratePanelsResponse\x12I\n\x08GetValue\x12\x1d.ni.panels.v1.GetValueRequest\x1a\x1e.ni.panels.v1.GetValueResponse\x12R\n\x0bTryGetValue\x12 .ni.panels.v1.TryGetValueRequest\x1a!.ni.panels.v1.TryGetValueResponse\x12I\n\x08SetValue\x12\x1d.ni.panels.v1.SetValueRequest\x1a\x1e.ni.panels.v1.SetValueResponseBu\n\x10\x63om.ni.panels.v1B\x0bPanelsProtoP\x01Z\x08panelsv1\xf8\x01\x01\xa2\x02\x04NIPS\xaa\x02\x1dNationalInstruments.Panels.V1\xca\x02\x0cNI\\Panels\\V1\xea\x02\x0eNI::Panels::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.panels.v1.panel_service_pb2', globals())
@@ -43,11 +43,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _TRYGETVALUEREQUEST._serialized_start=571
   _TRYGETVALUEREQUEST._serialized_end=627
   _TRYGETVALUERESPONSE._serialized_start=629
-  _TRYGETVALUERESPONSE._serialized_end=702
-  _SETVALUEREQUEST._serialized_start=704
-  _SETVALUEREQUEST._serialized_end=810
-  _SETVALUERESPONSE._serialized_start=812
-  _SETVALUERESPONSE._serialized_end=830
-  _PANELSERVICE._serialized_start=833
-  _PANELSERVICE._serialized_end=1336
+  _TRYGETVALUERESPONSE._serialized_end=687
+  _SETVALUEREQUEST._serialized_start=689
+  _SETVALUEREQUEST._serialized_end=795
+  _SETVALUERESPONSE._serialized_start=797
+  _SETVALUERESPONSE._serialized_end=815
+  _PANELSERVICE._serialized_start=818
+  _PANELSERVICE._serialized_end=1321
 # @@protoc_insertion_point(module_scope)

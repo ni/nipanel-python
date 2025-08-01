@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0ni/panels/v1/streamlit_panel_configuration.proto\x12\x0cni.panels.v1\"M\n\x1bStreamlitPanelConfiguration\x12\x19\n\x11panel_script_path\x18\x01 \x01(\t\x12\x13\n\x0bpython_path\x18\x02 \x01(\tB\x8a\x01\n\x10\x63om.ni.panels.v1B StreamlitPanelConfigurationProtoP\x01Z\x08panelsv1\xf8\x01\x01\xa2\x02\x04NIPS\xaa\x02\x1dNationalInstruments.Panels.V1\xca\x02\x0cNI\\Panels\\V1\xea\x02\x0eNI::Panels::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0ni/panels/v1/streamlit_panel_configuration.proto\x12\x0cni.panels.v1\"W\n\x1bStreamlitPanelConfiguration\x12\x18\n\x10panel_script_url\x18\x01 \x01(\t\x12\x1e\n\x16python_interpreter_url\x18\x02 \x01(\tB\x8a\x01\n\x10\x63om.ni.panels.v1B StreamlitPanelConfigurationProtoP\x01Z\x08panelsv1\xf8\x01\x01\xa2\x02\x04NIPS\xaa\x02\x1dNationalInstruments.Panels.V1\xca\x02\x0cNI\\Panels\\V1\xea\x02\x0eNI::Panels::V1b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ni.panels.v1.streamlit_panel_configuration_pb2', globals())
@@ -22,5 +22,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\020com.ni.panels.v1B StreamlitPanelConfigurationProtoP\001Z\010panelsv1\370\001\001\242\002\004NIPS\252\002\035NationalInstruments.Panels.V1\312\002\014NI\\Panels\\V1\352\002\016NI::Panels::V1'
   _STREAMLITPANELCONFIGURATION._serialized_start=66
-  _STREAMLITPANELCONFIGURATION._serialized_end=143
+  _STREAMLITPANELCONFIGURATION._serialized_end=153
 # @@protoc_insertion_point(module_scope)

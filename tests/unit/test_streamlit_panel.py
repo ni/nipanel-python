@@ -515,7 +515,7 @@ def test___panel___python_path_is_in_venv(
 ) -> None:
     StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
 
-    assert ".venv" in fake_python_panel_service.servicer.python_path
+    assert ".venv" in fake_python_panel_service.servicer.python_interpreter_url
 
 
 def is_panel_in_memory(panel: StreamlitPanel) -> bool:

@@ -16,18 +16,18 @@ class StreamlitPanelConfiguration(google.protobuf.message.Message):
 
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    PANEL_SCRIPT_PATH_FIELD_NUMBER: builtins.int
-    PYTHON_PATH_FIELD_NUMBER: builtins.int
-    panel_script_path: builtins.str
-    """Absolute path of the streamlit script file on disk, or network path to the file. This must end in ".py"."""
-    python_path: builtins.str
-    """Path to the python interpreter to use for running the streamlit script."""
+    PANEL_SCRIPT_URL_FIELD_NUMBER: builtins.int
+    PYTHON_INTERPRETER_URL_FIELD_NUMBER: builtins.int
+    panel_script_url: builtins.str
+    """Location of the streamlit script file on disk, or network path to the file. This must end in ".py"."""
+    python_interpreter_url: builtins.str
+    """Location of the python interpreter to use for running the streamlit script."""
     def __init__(
         self,
         *,
-        panel_script_path: builtins.str = ...,
-        python_path: builtins.str = ...,
+        panel_script_url: builtins.str = ...,
+        python_interpreter_url: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_script_path", b"panel_script_path", "python_path", b"python_path"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_script_url", b"panel_script_url", "python_interpreter_url", b"python_interpreter_url"]) -> None: ...
 
 global___StreamlitPanelConfiguration = StreamlitPanelConfiguration
