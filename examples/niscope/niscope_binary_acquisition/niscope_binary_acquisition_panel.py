@@ -38,15 +38,15 @@ st.markdown(
 with left_col:
     with st.container(border=True):
         if panel.get_value("is_running", False):
-            st.button("Stop", key="stop_button")
+            st.button(r"⏹️ Stop", key="stop_button")
         elif not panel.get_value("is_running", False) and panel.get_value("daq_error", "") == "":
-            run_button = st.button("Run", key="run_button")
+            run_button = st.button(r"▶️ Run", key="run_button")
         else:
             st.error(
                 f"There was an error running the script. Fix the issue and re-run niscope_binary_acquisition.py \n\n {panel.get_value('daq_error', '')}"
             )
 
-        resource_name = st.text_input(label="Resource Name", value="Dev1")
+        st.text_input(label="Resource Name", value="Dev1", key="resource_name", disabled=panel.get_value("is_running", False))
         st.number_input(
             "Channel",
             value=0,
@@ -89,8 +89,8 @@ with left_col:
             "Binary Data Size",
             options=[8, 16, 32],
             disabled=panel.get_value("is_running", False),
+            key = "data_size"
         )
-        panel.set_value("data_size", data_size)
         st.number_input(
             "Actual Binary Data Size",
             value=panel.get_value("actual_binary_data_size", 16),
