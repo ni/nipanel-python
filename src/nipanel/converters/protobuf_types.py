@@ -25,10 +25,10 @@ from nitypes.time import convert_datetime
 from nitypes.waveform import (
     AnalogWaveform,
     ExtendedPropertyDictionary,
-    ExtendedPropertyValue,
     NoneScaleMode,
     Timing,
 )
+from nitypes.waveform.typing import ExtendedPropertyValue
 from typing_extensions import TypeAlias
 
 from nipanel.converters import Converter
