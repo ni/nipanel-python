@@ -1,5 +1,6 @@
 """Define types."""
 
+import datetime as dt
 import enum
 
 import numpy as np
@@ -70,6 +71,7 @@ all_types_with_values = {
     "float": 13.12,
     "int": 42,
     "str": "sample string",
+    "dt_datetime": dt.datetime.now(),
     # supported enum and flag types
     "intflags": MyIntFlags.VALUE1 | MyIntFlags.VALUE4,
     "intenum": MyIntEnum.VALUE20,

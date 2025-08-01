@@ -57,13 +57,13 @@ with left_col:
                     f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_input_filtering.py \n\n {panel.get_value('daq_error', '')}"
                 )
             st.title("Channel Settings")
-            physical_channel = st.selectbox(
+            st.selectbox(
                 options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
                 index=0,
                 label="Physical Channels",
                 disabled=panel.get_value("is_running", False),
+                key="physical_channel",
             )
-            panel.set_value("physical_channel", physical_channel)
             enum_selectbox(
                 panel,
                 label="Terminal Configuration",
@@ -74,13 +74,13 @@ with left_col:
 
             st.title("Timing Settings")
 
-            source = st.selectbox(
+            st.selectbox(
                 "Sample Clock Source",
                 options=panel.get_value("available_trigger_sources", [""]),
                 index=0,
                 disabled=panel.get_value("is_running", False),
+                key="source",
             )
-            panel.set_value("source", source)
             st.number_input(
                 "Sample Rate",
                 value=1000.0,
@@ -106,12 +106,12 @@ with left_col:
             )
             st.title("Filtering Settings")
 
-            filter = st.selectbox(
+            st.selectbox(
                 "Filter",
                 options=["No Filtering", "Filter"],
                 disabled=panel.get_value("is_running", False),
+                key="filter",
             )
-            panel.set_value("filter", filter)
             enum_selectbox(
                 panel,
                 label="Filter Response",
@@ -203,10 +203,11 @@ with right_col:
             )
     if trigger_type == "2":
         with st.container(border=True):
-            source = st.selectbox(
-                "Source", options=panel.get_value("available_trigger_sources", [""])
+            st.selectbox(
+                "Source",
+                options=panel.get_value("available_trigger_sources", [""]),
+                key="digital_source",
             )
-            panel.set_value("digital_source", source)
             enum_selectbox(
                 panel,
                 label="Edge",

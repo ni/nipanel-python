@@ -1,5 +1,5 @@
+import datetime as dt
 import enum
-from datetime import datetime
 
 import grpc
 import pytest
@@ -266,6 +266,7 @@ def test___set_string_enum_type___get_value_with_int_enum_default___raises_excep
         3.14,
         True,
         b"robotext",
+        dt.datetime.now(),
     ],
 )
 def test___builtin_scalar_type___set_value___gets_same_value(
@@ -312,7 +313,6 @@ def test___enum_type___set_value___gets_same_value(
 @pytest.mark.parametrize(
     "value_payload",
     [
-        datetime.now(),
         lambda x: x + 1,
         [1, "string"],
         ["string", []],
