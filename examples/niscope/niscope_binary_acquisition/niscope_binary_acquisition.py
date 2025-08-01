@@ -18,6 +18,7 @@ panel = nipanel.create_streamlit_panel(panel_script_path)
 
 """Example fetch data from device (Dev1)."""
 panel.set_value("is_running", False)
+panel.set_value("run_button", False)
 
 try:
     panel.set_value("daq_error", "")
