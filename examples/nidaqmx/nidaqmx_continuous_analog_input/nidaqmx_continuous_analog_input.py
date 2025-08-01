@@ -6,14 +6,13 @@ from pathlib import Path
 import nidaqmx
 from nidaqmx.constants import (
     AcquisitionType,
+    TerminalConfiguration,
     CJCSource,
+    TemperatureUnits,
+    ThermocoupleType,
     LoggingMode,
     LoggingOperation,
-    TemperatureUnits,
-    TerminalConfiguration,
-    ThermocoupleType,
 )
-from nidaqmx.errors import DaqError
 
 import nipanel
 
@@ -21,8 +20,6 @@ panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_pa
 panel = nipanel.create_streamlit_panel(panel_script_path)
 
 try:
-    panel.set_value("daq_error", "")
-
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
@@ -82,9 +79,5 @@ try:
                 task.stop()
                 panel.set_value("is_running", False)
 
-except DaqError as e:
-    daq_error = str(e)
-    print(daq_error)
-    panel.set_value("daq_error", daq_error)
 except KeyboardInterrupt:
     pass
