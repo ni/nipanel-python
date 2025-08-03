@@ -54,7 +54,7 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (tests.types.MixinIntEnum.VALUE11, "int"),
         (tests.types.MyStrEnum.VALUE1, "str"),
         (tests.types.MixinStrEnum.VALUE11, "str"),
-        (dt.datetime.now(), "datetime"),
+        (dt.datetime.now(), "datetime.datetime"),
         ([False, False], "Collection.bool"),
         ([b"mystr", b"mystr"], "Collection.bytes"),
         ([456.2, 1.0], "Collection.float"),

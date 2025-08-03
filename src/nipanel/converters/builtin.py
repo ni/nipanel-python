@@ -126,7 +126,7 @@ class DTDateTimeConverter(Converter[dt.datetime, timestamp_pb2.Timestamp]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return dt.datetime.__name__
+        return f"{dt.datetime.__module__}.{dt.datetime.__name__}"
 
     @property
     def protobuf_message(self) -> Type[timestamp_pb2.Timestamp]:

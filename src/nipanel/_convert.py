@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Collection
-from typing import Any
+from typing import Any, Iterable
 
 from google.protobuf import any_pb2
 
@@ -102,7 +102,7 @@ def _get_best_matching_type(python_value: object) -> str:
         container_types.append(Collection.__name__)
 
     best_matching_type = None
-    candidates = [parent.__name__ for parent in underlying_parents]
+    candidates = _get_candidate_strings(underlying_parents)
     for candidate in candidates:
         containers_str = ".".join(container_types)
         python_typename = f"{containers_str}.{candidate}" if containers_str else candidate
@@ -140,3 +140,21 @@ def is_supported_type(value: object) -> bool:
         return True
     except TypeError:
         return False
+
+
+def _get_candidate_strings(candidates: Iterable[type]) -> list[str]:
+    names_to_disambiguate = [
+        "datetime",
+        "DateTime",
+        "timedelta",
+        "TimeDelta",
+    ]
+
+    candidate_names = []
+    for candidate in candidates:
+        if candidate.__name__ in names_to_disambiguate:
+            candidate_names.append(f"{candidate.__module__}.{candidate.__name__}")
+        else:
+            candidate_names.append(candidate.__name__)
+
+    return candidate_names
