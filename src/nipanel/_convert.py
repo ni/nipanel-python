@@ -13,6 +13,7 @@ from nipanel.converters.builtin import (
     BoolConverter,
     BytesConverter,
     DTDateTimeConverter,
+    DTTimeDeltaConverter,
     FloatConverter,
     IntConverter,
     StrConverter,
@@ -39,6 +40,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     IntConverter(),
     StrConverter(),
     DTDateTimeConverter(),
+    DTTimeDeltaConverter(),
     # Containers next
     BoolCollectionConverter(),
     BytesCollectionConverter(),

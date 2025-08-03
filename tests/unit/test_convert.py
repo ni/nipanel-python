@@ -3,7 +3,7 @@ from typing import Any, Collection, Union
 
 import numpy as np
 import pytest
-from google.protobuf import any_pb2, timestamp_pb2, wrappers_pb2
+from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
 from ni.panels.v1 import panel_types_pb2
 from ni.protobuf.types.scalar_pb2 import ScalarData
@@ -135,6 +135,16 @@ def test___python_datetime_datetime___to_any___valid_timestamppb2_value() -> Non
     assert unpack_dest.ToDatetime() == expected_value
 
 
+def test___python_datetime_timedelta___to_any___valid_durationpb2_value() -> None:
+    expected_value = dt.timedelta(days=1, seconds=1, microseconds=1)
+    result = nipanel._convert.to_any(expected_value)
+    unpack_dest = duration_pb2.Duration()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, duration_pb2.Duration)
+    assert unpack_dest.ToTimedelta() == expected_value
+
+
 @pytest.mark.parametrize(
     "proto_type, default_value, expected_value",
     [
@@ -196,6 +206,18 @@ def test___timestamppb2_timestamp___from_any___valid_python_value() -> None:
     result = nipanel._convert.from_any(packed_any)
 
     assert isinstance(result, dt.datetime)
+    assert result == expected_value
+
+
+def test___durationpb2_timestamp___from_any___valid_python_value() -> None:
+    expected_value = dt.timedelta(weeks=1, hours=1, minutes=1)
+    pb_value = duration_pb2.Duration()
+    pb_value.FromTimedelta(expected_value)
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    assert isinstance(result, dt.timedelta)
     assert result == expected_value
 
 
