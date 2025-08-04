@@ -47,18 +47,15 @@ try:
 
             with session.initiate():
                 data_size = panel.get_value("data_size", 8)
+                wfm: np.ndarray[Any, Any]
+
                 if data_size == 8:
-                    wfm: np.ndarray[Any, np.dtype[np.int8]] = np.ndarray(  # type: ignore
-                        1000 * 1000, dtype=np.int8
-                    )
+                    wfm = np.ndarray(1000 * 1000, dtype=np.int8)
+
                 elif data_size == 16:
-                    wfm: np.ndarray[Any, np.dtype[np.int16]] = np.ndarray(  # type: ignore
-                        1000 * 1000, dtype=np.int16
-                    )
+                    wfm = np.ndarray(1000 * 1000, dtype=np.int16)
                 else:
-                    wfm: np.ndarray[Any, np.dtype[np.int32]] = np.ndarray(
-                        1000 * 1000, dtype=np.int32
-                    )
+                    wfm = np.ndarray(1000 * 1000, dtype=np.int32)
 
                 waveforms = session.channels[panel.get_value("channel", 0)].fetch_into(
                     relative_to=niscope.FetchRelativeTo.READ_POINTER,
