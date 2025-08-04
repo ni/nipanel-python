@@ -38,11 +38,11 @@ with left_col:
     with st.container(border=True):
         if panel.get_value("is_running", False):
             st.button(r"⏹️ Stop", key="stop_button")
-        elif not panel.get_value("is_running", False) and panel.get_value("daq_error", "") == "":
+        elif not panel.get_value("is_running", False) and panel.get_value("scope_error", "") == "":
             run_button = st.button(r"▶️ Run", key="run_button")
         else:
             st.error(
-                f"There was an error running the script. Fix the issue and re-run niscope_binary_acquisition.py \n\n {panel.get_value('daq_error', '')}"
+                f"There was an error running the script. Fix the issue and re-run niscope_binary_acquisition.py \n\n {panel.get_value('scope_error', '')}"
             )
 
         st.text_input(

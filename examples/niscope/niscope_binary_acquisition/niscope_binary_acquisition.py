@@ -21,7 +21,7 @@ panel.set_value("is_running", False)
 panel.set_value("run_button", False)
 
 try:
-    panel.set_value("daq_error", "")
+    panel.set_value("scope_error", "")
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
@@ -102,9 +102,9 @@ try:
                     panel.set_value("is_running", False)
 
 except Error as e:
-    daq_error = str(e)
-    print(daq_error)
-    panel.set_value("daq_error", daq_error)
+    scope_error = str(e)
+    print(scope_error)
+    panel.set_value("scope_error", scope_error)
 
 except KeyboardInterrupt:
     pass
