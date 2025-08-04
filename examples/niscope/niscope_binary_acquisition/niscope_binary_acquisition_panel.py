@@ -1,6 +1,5 @@
 """Streamlit visualization script to display data acquired by nidaqmx_analog_input_filtering.py."""
 
-import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import streamlit as st
 from streamlit_echarts import st_echarts
 
@@ -46,7 +45,12 @@ with left_col:
                 f"There was an error running the script. Fix the issue and re-run niscope_binary_acquisition.py \n\n {panel.get_value('daq_error', '')}"
             )
 
-        st.text_input(label="Resource Name", value="Dev1", key="resource_name", disabled=panel.get_value("is_running", False))
+        st.text_input(
+            label="Resource Name",
+            value="Dev1",
+            key="resource_name",
+            disabled=panel.get_value("is_running", False),
+        )
         st.number_input(
             "Channel",
             value=0,
@@ -89,7 +93,7 @@ with left_col:
             "Binary Data Size",
             options=[8, 16, 32],
             disabled=panel.get_value("is_running", False),
-            key = "data_size"
+            key="data_size",
         )
         st.number_input(
             "Actual Binary Data Size",
