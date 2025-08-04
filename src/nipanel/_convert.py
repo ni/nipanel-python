@@ -145,18 +145,8 @@ def is_supported_type(value: object) -> bool:
 
 
 def _get_candidate_strings(candidates: Iterable[type]) -> list[str]:
-    names_to_disambiguate = [
-        "datetime",
-        "DateTime",
-        "timedelta",
-        "TimeDelta",
-    ]
-
     candidate_names = []
     for candidate in candidates:
-        if candidate.__name__ in names_to_disambiguate:
-            candidate_names.append(f"{candidate.__module__}.{candidate.__name__}")
-        else:
-            candidate_names.append(candidate.__name__)
+        candidate_names.append(f"{candidate.__module__}.{candidate.__name__}")
 
     return candidate_names

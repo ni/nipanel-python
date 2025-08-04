@@ -48,7 +48,7 @@ class Double2DArrayConverter(Converter[Collection[Collection[float]], Double2DAr
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{Collection.__name__}.{float.__name__}"
+        return f"{Collection.__name__}.{Collection.__name__}.{float.__module__}.{float.__name__}"
 
     @property
     def protobuf_message(self) -> Type[Double2DArray]:
@@ -97,7 +97,7 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return AnalogWaveform.__name__
+        return f"{AnalogWaveform.__module__}.{AnalogWaveform.__name__}"
 
     @property
     def protobuf_message(self) -> Type[DoubleAnalogWaveform]:
@@ -194,7 +194,7 @@ class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return bt.DateTime.__name__
+        return f"{bt.DateTime.__module__}.{bt.DateTime.__name__}"
 
     @property
     def protobuf_message(self) -> Type[PrecisionTimestamp]:
@@ -220,7 +220,7 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return Scalar.__name__
+        return f"{Scalar.__module__}.{Scalar.__name__}"
 
     @property
     def protobuf_message(self) -> Type[scalar_pb2.ScalarData]:

@@ -16,7 +16,7 @@ class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return bool.__name__
+        return f"{bool.__module__}.{bool.__name__}"
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BoolValue]:
@@ -38,7 +38,7 @@ class BytesConverter(Converter[bytes, wrappers_pb2.BytesValue]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return bytes.__name__
+        return f"{bytes.__module__}.{bytes.__name__}"
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.BytesValue]:
@@ -60,7 +60,7 @@ class FloatConverter(Converter[float, wrappers_pb2.DoubleValue]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return float.__name__
+        return f"{float.__module__}.{float.__name__}"
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.DoubleValue]:
@@ -82,7 +82,7 @@ class IntConverter(Converter[int, wrappers_pb2.Int64Value]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return int.__name__
+        return f"{int.__module__}.{int.__name__}"
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.Int64Value]:
@@ -104,7 +104,7 @@ class StrConverter(Converter[str, wrappers_pb2.StringValue]):
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return str.__name__
+        return f"{str.__module__}.{str.__name__}"
 
     @property
     def protobuf_message(self) -> Type[wrappers_pb2.StringValue]:
@@ -174,7 +174,7 @@ class BoolCollectionConverter(Converter[Collection[bool], panel_types_pb2.BoolCo
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{bool.__name__}"
+        return f"{Collection.__name__}.{bool.__module__}.{bool.__name__}"
 
     @property
     def protobuf_message(self) -> Type[panel_types_pb2.BoolCollection]:
@@ -196,7 +196,7 @@ class BytesCollectionConverter(Converter[Collection[bytes], panel_types_pb2.Byte
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{bytes.__name__}"
+        return f"{Collection.__name__}.{bytes.__module__}.{bytes.__name__}"
 
     @property
     def protobuf_message(self) -> Type[panel_types_pb2.ByteStringCollection]:
@@ -222,7 +222,7 @@ class FloatCollectionConverter(Converter[Collection[float], panel_types_pb2.Floa
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{float.__name__}"
+        return f"{Collection.__name__}.{float.__module__}.{float.__name__}"
 
     @property
     def protobuf_message(self) -> Type[panel_types_pb2.FloatCollection]:
@@ -248,7 +248,7 @@ class IntCollectionConverter(Converter[Collection[int], panel_types_pb2.IntColle
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{int.__name__}"
+        return f"{Collection.__name__}.{int.__module__}.{int.__name__}"
 
     @property
     def protobuf_message(self) -> Type[panel_types_pb2.IntCollection]:
@@ -270,7 +270,7 @@ class StrCollectionConverter(Converter[Collection[str], panel_types_pb2.StringCo
     @property
     def python_typename(self) -> str:
         """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{str.__name__}"
+        return f"{Collection.__name__}.{str.__module__}.{str.__name__}"
 
     @property
     def protobuf_message(self) -> Type[panel_types_pb2.StringCollection]:
