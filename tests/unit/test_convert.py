@@ -55,6 +55,7 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (tests.types.MyStrEnum.VALUE1, "str"),
         (tests.types.MixinStrEnum.VALUE11, "str"),
         (dt.datetime.now(), "datetime"),
+        (dt.timedelta(days=1), "timedelta"),
         ([False, False], "Collection.bool"),
         ([b"mystr", b"mystr"], "Collection.bytes"),
         ([456.2, 1.0], "Collection.float"),
@@ -136,7 +137,7 @@ def test___python_datetime_datetime___to_any___valid_timestamppb2_value() -> Non
 
 
 def test___python_datetime_timedelta___to_any___valid_durationpb2_value() -> None:
-    expected_value = dt.timedelta(days=1, seconds=1, microseconds=1)
+    expected_value = dt.timedelta(days=1, seconds=2, microseconds=3)
     result = nipanel._convert.to_any(expected_value)
     unpack_dest = duration_pb2.Duration()
     _assert_any_and_unpack(result, unpack_dest)
@@ -210,7 +211,7 @@ def test___timestamppb2_timestamp___from_any___valid_python_value() -> None:
 
 
 def test___durationpb2_timestamp___from_any___valid_python_value() -> None:
-    expected_value = dt.timedelta(weeks=1, hours=1, minutes=1)
+    expected_value = dt.timedelta(weeks=1, hours=2, minutes=3)
     pb_value = duration_pb2.Duration()
     pb_value.FromTimedelta(expected_value)
     packed_any = _pack_into_any(pb_value)
