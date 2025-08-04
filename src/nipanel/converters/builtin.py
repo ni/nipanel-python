@@ -4,7 +4,7 @@ import datetime as dt
 from collections.abc import Collection
 from typing import Type
 
-from google.protobuf import timestamp_pb2, wrappers_pb2
+from google.protobuf import duration_pb2, timestamp_pb2, wrappers_pb2
 from ni.panels.v1 import panel_types_pb2
 
 from nipanel.converters import Converter
@@ -142,6 +142,30 @@ class DTDateTimeConverter(Converter[dt.datetime, timestamp_pb2.Timestamp]):
     def to_python_value(self, protobuf_message: timestamp_pb2.Timestamp) -> dt.datetime:
         """Convert the protobuf timestamp_pb2.Timestamp to a Python dt.datetime."""
         return protobuf_message.ToDatetime()
+
+
+class DTTimeDeltaConverter(Converter[dt.timedelta, duration_pb2.Duration]):
+    """A converter for datetime.timedelta types."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type that this converter handles."""
+        return f"{dt.timedelta.__module__}.{dt.timedelta.__name__}"
+
+    @property
+    def protobuf_message(self) -> Type[duration_pb2.Duration]:
+        """The type-specific protobuf message for the Python type."""
+        return duration_pb2.Duration
+
+    def to_protobuf_message(self, python_value: dt.timedelta) -> duration_pb2.Duration:
+        """Convert the Python dt.timedelta to a protobuf duration_pb2.Duration."""
+        dur = self.protobuf_message()
+        dur.FromTimedelta(python_value)
+        return dur
+
+    def to_python_value(self, protobuf_message: duration_pb2.Duration) -> dt.timedelta:
+        """Convert the protobuf timestamp_pb2.Timestamp to a Python dt.timedelta."""
+        return protobuf_message.ToTimedelta()
 
 
 class BoolCollectionConverter(Converter[Collection[bool], panel_types_pb2.BoolCollection]):

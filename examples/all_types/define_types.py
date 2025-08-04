@@ -72,6 +72,7 @@ all_types_with_values = {
     "int": 42,
     "str": "sample string",
     "dt_datetime": dt.datetime.now(),
+    "dt_timedelta": dt.timedelta(weeks=2, days=5, minutes=12, milliseconds=75),
     # supported enum and flag types
     "intflags": MyIntFlags.VALUE1 | MyIntFlags.VALUE4,
     "intenum": MyIntEnum.VALUE20,
