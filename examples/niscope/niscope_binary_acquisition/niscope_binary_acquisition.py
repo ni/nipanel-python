@@ -57,7 +57,7 @@ try:
                 else:
                     wfm = np.ndarray(1000 * 1000, dtype=np.int32)
 
-                waveforms = session.channels[panel.get_value("channel", 0)].fetch_into(
+                waveforms = session.channels[panel.get_value("channel_number", 0)].fetch_into(
                     relative_to=niscope.FetchRelativeTo.READ_POINTER,
                     offset=0,
                     timeout=hightime.timedelta(seconds=5.0),

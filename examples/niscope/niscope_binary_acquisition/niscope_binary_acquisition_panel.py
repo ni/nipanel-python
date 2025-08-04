@@ -1,12 +1,12 @@
-"""Streamlit visualization script to display data acquired by nidaqmx_analog_input_filtering.py."""
+"""Streamlit dashboard for visualizing NI-SCOPE waveform data in real time."""
 
 import streamlit as st
 from streamlit_echarts import st_echarts
 
 import nipanel
 
-st.set_page_config(page_title="NiSCOPE Binary", page_icon="📈", layout="wide")
-st.title("NiScope Binary Acquisition")
+st.set_page_config(page_title="NI-SCOPE Binary Acquisition", page_icon="📈", layout="wide")
+st.title("NI-SCOPE Binary Acquisition")
 panel = nipanel.get_streamlit_panel_accessor()
 
 left_col, right_col = st.columns(2)
@@ -48,15 +48,15 @@ with left_col:
         st.text_input(
             label="Resource Name",
             value="Dev1",
-            key="resource_name",
             disabled=panel.get_value("is_running", False),
+            key="resource_name",
         )
         st.number_input(
             "Channel",
             value=0,
             step=1,
             disabled=panel.get_value("is_running", False),
-            key="channel",
+            key="channel_number",
         )
 
         st.title("Vertical")
