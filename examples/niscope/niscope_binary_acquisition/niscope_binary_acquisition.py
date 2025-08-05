@@ -69,11 +69,6 @@ try:
 
                     panel.set_value("stop_button", False)
                     while not panel.get_value("stop_button", False):
-                        wfm_info = session.channels[0].fetch_array_measurement(
-                            array_meas_function=ArrayMeasurement.ADD_CHANNELS,
-                            num_records=1000,
-                            meas_num_samples=1000,
-                        )
                         gain = 0
                         offset = 0
                         for waveform in waveforms:
