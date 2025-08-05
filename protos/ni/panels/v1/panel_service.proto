@@ -18,17 +18,17 @@ option ruby_package = "NI::Panels::V1";
 service PanelService {
   // Start a panel using the provided configuration (or connect to if it has already been started)
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: 
-  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT:
+  //   - The panel identifier contains invalid characters.
   //   - The panel configuration has an invalid argument.
-  // - NOT_FOUND: 
+  // - NOT_FOUND:
   //   - The panel configuration includes a file that was not found.
   rpc StartPanel(StartPanelRequest) returns (StartPanelResponse);
 
   // Stop a panel
   // Status Codes for errors:
   // - INVALID_ARGUMENT:
-  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  //   - The panel identifier contains invalid characters.
   rpc StopPanel(StopPanelRequest) returns (StopPanelResponse);
 
   // Enumerate the panels available in the system, including information about the state of the panels and what values they have.
@@ -37,43 +37,43 @@ service PanelService {
 
   // Get a value for a control on the panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: 
-  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  // - NOT_FOUND: 
+  // - INVALID_ARGUMENT:
+  //   - The panel identifier contains invalid characters.
+  //   - The value identifier contains invalid characters.
+  // - NOT_FOUND:
   //   - The value with the specified identifier was not found.
   rpc GetValue(GetValueRequest) returns (GetValueResponse);
 
   // Try to get a value for a control on the panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: 
-  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT:
+  //   - The panel identifier contains invalid characters.
+  //   - The value identifier contains invalid characters.
   rpc TryGetValue(TryGetValueRequest) returns (TryGetValueResponse);
 
   // Set a value for a control on the panel
   // Status Codes for errors:
-  // - INVALID_ARGUMENT: 
-  //   - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-  //   - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+  // - INVALID_ARGUMENT:
+  //   - The panel identifier contains invalid characters.
+  //   - The value identifier contains invalid characters.
   rpc SetValue(SetValueRequest) returns (SetValueResponse);
 }
 
 message StartPanelRequest {
-  // Unique ID of the panel
+  // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
-  // Configuration for the panel, packed as Any
+  // Configuration for the panel, packed as a google.protobuf.Any
   google.protobuf.Any panel_configuration = 2;
 }
 
 message StartPanelResponse {
-  // Location of the panel 
-  string panel_uri = 1; 
+  // Location of the panel
+  string panel_url = 1;
 }
 
 message StopPanelRequest {
-  // Unique ID of the panel
+  // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
   // Reset all storage associated with panel
@@ -91,7 +91,7 @@ message PanelInformation {
   string panel_id = 1;
 
   // Location of the panel
-  string panel_uri = 2;
+  string panel_url = 2;
 
   // IDs of all of the values associated with the panel
   repeated string value_ids = 3;
@@ -103,39 +103,42 @@ message EnumeratePanelsResponse {
 }
 
 message GetValueRequest {
-  // Unique ID of the panel
+  // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
-  // Unique ID of value
+  // Unique ID of value. Only alphanumeric characters and underscores are allowed.
   string value_id = 2;
 }
 
 message GetValueResponse {
-  // The value
+  // The value, packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
   google.protobuf.Any value = 1;
 }
 
 message TryGetValueRequest {
-  // Unique ID of the panel
+  // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
-  // Unique ID of value
+  // Unique ID of value. Only alphanumeric characters and underscores are allowed.
   string value_id = 2;
 }
 
 message TryGetValueResponse {
-  // The value, if it was found
-  optional google.protobuf.Any value = 1;
+  // The value (if it was found), packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
+  google.protobuf.Any value = 1;
 }
 
 message SetValueRequest {
-  // Unique ID of the panel
+  // Unique ID of the panel. Only alphanumeric characters and underscores are allowed.
   string panel_id = 1;
 
-  // Unique ID of the value
+  // Unique ID of the value. Only alphanumeric characters and underscores are allowed.
   string value_id = 2;
 
-  // The value
+  // The value, packed as a google.protobuf.Any.
+  // Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
   google.protobuf.Any value = 3;
 
   // Notify other clients of this new value

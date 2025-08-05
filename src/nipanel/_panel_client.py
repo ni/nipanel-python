@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import threading
 from typing import Callable, TypeVar
 
@@ -47,9 +48,14 @@ class _PanelClient:
         self._grpc_channel = grpc_channel
         self._stub: PanelServiceStub | None = None
 
-    def start_streamlit_panel(self, panel_id: str, panel_script_path: str, python_path: str) -> str:
+    def start_streamlit_panel(
+        self, panel_id: str, panel_script_path: str, python_interpreter_path: str
+    ) -> str:
+
+        panel_script_url = pathlib.Path(panel_script_path).absolute().as_uri()
+        python_interpreter_url = pathlib.Path(python_interpreter_path).absolute().as_uri()
         streamlit_panel_configuration = StreamlitPanelConfiguration(
-            panel_script_path=panel_script_path, python_path=python_path
+            panel_script_url=panel_script_url, python_interpreter_url=python_interpreter_url
         )
         panel_configuration_any = Any()
         panel_configuration_any.Pack(streamlit_panel_configuration)
@@ -57,7 +63,7 @@ class _PanelClient:
             panel_id=panel_id, panel_configuration=panel_configuration_any
         )
         response = self._invoke_with_retry(self._get_stub().StartPanel, start_panel_request)
-        return response.panel_uri
+        return response.panel_url
 
     def stop_panel(self, panel_id: str, reset: bool) -> None:
         stop_panel_request = StopPanelRequest(panel_id=panel_id, reset=reset)
@@ -69,7 +75,7 @@ class _PanelClient:
             self._get_stub().EnumeratePanels, enumerate_panels_request
         )
         return {
-            panel.panel_id: (panel.panel_uri, list(panel.value_ids)) for panel in response.panels
+            panel.panel_id: (panel.panel_url, list(panel.value_ids)) for panel in response.panels
         }
 
     def set_value(self, panel_id: str, value_id: str, value: object, notify: bool) -> None:

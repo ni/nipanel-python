@@ -14,19 +14,19 @@ from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfigu
 
 
 def test___start_panel___gets_response(python_panel_service_stub: PanelServiceStub) -> None:
-    configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
+    configuration = StreamlitPanelConfiguration(panel_script_url="file:///path/to/panel.py")
     configuration_any = Any()
     configuration_any.Pack(configuration)
     request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)
     response = python_panel_service_stub.StartPanel(request)
 
-    assert response.panel_uri == "http://localhost:50051/test_panel"
+    assert response.panel_url == "http://localhost:50051/test_panel"
 
 
 def test___start_panel___stop_panel___gets_response(
     python_panel_service_stub: PanelServiceStub,
 ) -> None:
-    configuration = StreamlitPanelConfiguration(panel_script_path="path/to/panel.py")
+    configuration = StreamlitPanelConfiguration(panel_script_url="file:///path/to/panel.py")
     configuration_any = Any()
     configuration_any.Pack(configuration)
     start_request = StartPanelRequest(panel_id="test_panel", panel_configuration=configuration_any)

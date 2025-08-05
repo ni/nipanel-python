@@ -20,10 +20,10 @@ class StartPanelRequest(google.protobuf.message.Message):
     PANEL_ID_FIELD_NUMBER: builtins.int
     PANEL_CONFIGURATION_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
-    """Unique ID of the panel"""
+    """Unique ID of the panel. Only alphanumeric characters and underscores are allowed."""
     @property
     def panel_configuration(self) -> google.protobuf.any_pb2.Any:
-        """Configuration for the panel, packed as Any"""
+        """Configuration for the panel, packed as a google.protobuf.Any"""
 
     def __init__(
         self,
@@ -40,15 +40,15 @@ global___StartPanelRequest = StartPanelRequest
 class StartPanelResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    PANEL_URI_FIELD_NUMBER: builtins.int
-    panel_uri: builtins.str
+    PANEL_URL_FIELD_NUMBER: builtins.int
+    panel_url: builtins.str
     """Location of the panel"""
     def __init__(
         self,
         *,
-        panel_uri: builtins.str = ...,
+        panel_url: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_uri", b"panel_uri"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_url", b"panel_url"]) -> None: ...
 
 global___StartPanelResponse = StartPanelResponse
 
@@ -59,7 +59,7 @@ class StopPanelRequest(google.protobuf.message.Message):
     PANEL_ID_FIELD_NUMBER: builtins.int
     RESET_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
-    """Unique ID of the panel"""
+    """Unique ID of the panel. Only alphanumeric characters and underscores are allowed."""
     reset: builtins.bool
     """Reset all storage associated with panel"""
     def __init__(
@@ -97,11 +97,11 @@ class PanelInformation(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PANEL_ID_FIELD_NUMBER: builtins.int
-    PANEL_URI_FIELD_NUMBER: builtins.int
+    PANEL_URL_FIELD_NUMBER: builtins.int
     VALUE_IDS_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
     """Unique ID of the panel"""
-    panel_uri: builtins.str
+    panel_url: builtins.str
     """Location of the panel"""
     @property
     def value_ids(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
@@ -111,10 +111,10 @@ class PanelInformation(google.protobuf.message.Message):
         self,
         *,
         panel_id: builtins.str = ...,
-        panel_uri: builtins.str = ...,
+        panel_url: builtins.str = ...,
         value_ids: collections.abc.Iterable[builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_uri", b"panel_uri", "value_ids", b"value_ids"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["panel_id", b"panel_id", "panel_url", b"panel_url", "value_ids", b"value_ids"]) -> None: ...
 
 global___PanelInformation = PanelInformation
 
@@ -143,9 +143,9 @@ class GetValueRequest(google.protobuf.message.Message):
     PANEL_ID_FIELD_NUMBER: builtins.int
     VALUE_ID_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
-    """Unique ID of the panel"""
+    """Unique ID of the panel. Only alphanumeric characters and underscores are allowed."""
     value_id: builtins.str
-    """Unique ID of value"""
+    """Unique ID of value. Only alphanumeric characters and underscores are allowed."""
     def __init__(
         self,
         *,
@@ -163,7 +163,9 @@ class GetValueResponse(google.protobuf.message.Message):
     VALUE_FIELD_NUMBER: builtins.int
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
-        """The value"""
+        """The value, packed as a google.protobuf.Any.
+        Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
+        """
 
     def __init__(
         self,
@@ -182,9 +184,9 @@ class TryGetValueRequest(google.protobuf.message.Message):
     PANEL_ID_FIELD_NUMBER: builtins.int
     VALUE_ID_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
-    """Unique ID of the panel"""
+    """Unique ID of the panel. Only alphanumeric characters and underscores are allowed."""
     value_id: builtins.str
-    """Unique ID of value"""
+    """Unique ID of value. Only alphanumeric characters and underscores are allowed."""
     def __init__(
         self,
         *,
@@ -202,16 +204,17 @@ class TryGetValueResponse(google.protobuf.message.Message):
     VALUE_FIELD_NUMBER: builtins.int
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
-        """The value, if it was found"""
+        """The value (if it was found), packed as a google.protobuf.Any.
+        Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
+        """
 
     def __init__(
         self,
         *,
         value: google.protobuf.any_pb2.Any | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_value", b"_value", "value", b"value"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
+    def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value"]) -> None: ...
 
 global___TryGetValueResponse = TryGetValueResponse
 
@@ -224,14 +227,16 @@ class SetValueRequest(google.protobuf.message.Message):
     VALUE_FIELD_NUMBER: builtins.int
     NOTIFY_FIELD_NUMBER: builtins.int
     panel_id: builtins.str
-    """Unique ID of the panel"""
+    """Unique ID of the panel. Only alphanumeric characters and underscores are allowed."""
     value_id: builtins.str
-    """Unique ID of the value"""
+    """Unique ID of the value. Only alphanumeric characters and underscores are allowed."""
     notify: builtins.bool
     """Notify other clients of this new value"""
     @property
     def value(self) -> google.protobuf.any_pb2.Any:
-        """The value"""
+        """The value, packed as a google.protobuf.Any.
+        Only types from google/protobuf/wrappers.proto and the ni.protobuf.types package are allowed.
+        """
 
     def __init__(
         self,

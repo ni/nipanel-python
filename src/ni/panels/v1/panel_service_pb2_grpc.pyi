@@ -27,10 +27,10 @@ class PanelServiceStub:
     ]
     """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
       - The panel configuration has an invalid argument.
-    - NOT_FOUND: 
+    - NOT_FOUND:
       - The panel configuration includes a file that was not found.
     """
 
@@ -41,7 +41,7 @@ class PanelServiceStub:
     """Stop a panel
     Status Codes for errors:
     - INVALID_ARGUMENT:
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel identifier contains invalid characters.
     """
 
     EnumeratePanels: grpc.UnaryUnaryMultiCallable[
@@ -58,10 +58,10 @@ class PanelServiceStub:
     ]
     """Get a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    - NOT_FOUND: 
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
+    - NOT_FOUND:
       - The value with the specified identifier was not found.
     """
 
@@ -71,9 +71,9 @@ class PanelServiceStub:
     ]
     """Try to get a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
     """
 
     SetValue: grpc.UnaryUnaryMultiCallable[
@@ -82,9 +82,9 @@ class PanelServiceStub:
     ]
     """Set a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
     """
 
 class PanelServiceAsyncStub:
@@ -96,10 +96,10 @@ class PanelServiceAsyncStub:
     ]
     """Start a panel using the provided configuration (or connect to if it has already been started)
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
       - The panel configuration has an invalid argument.
-    - NOT_FOUND: 
+    - NOT_FOUND:
       - The panel configuration includes a file that was not found.
     """
 
@@ -110,7 +110,7 @@ class PanelServiceAsyncStub:
     """Stop a panel
     Status Codes for errors:
     - INVALID_ARGUMENT:
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+      - The panel identifier contains invalid characters.
     """
 
     EnumeratePanels: grpc.aio.UnaryUnaryMultiCallable[
@@ -127,10 +127,10 @@ class PanelServiceAsyncStub:
     ]
     """Get a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-    - NOT_FOUND: 
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
+    - NOT_FOUND:
       - The value with the specified identifier was not found.
     """
 
@@ -140,9 +140,9 @@ class PanelServiceAsyncStub:
     ]
     """Try to get a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
     """
 
     SetValue: grpc.aio.UnaryUnaryMultiCallable[
@@ -151,9 +151,9 @@ class PanelServiceAsyncStub:
     ]
     """Set a value for a control on the panel
     Status Codes for errors:
-    - INVALID_ARGUMENT: 
-      - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-      - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+    - INVALID_ARGUMENT:
+      - The panel identifier contains invalid characters.
+      - The value identifier contains invalid characters.
     """
 
 class PanelServiceServicer(metaclass=abc.ABCMeta):
@@ -167,10 +167,10 @@ class PanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.panels.v1.panel_service_pb2.StartPanelResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.StartPanelResponse]]:
         """Start a panel using the provided configuration (or connect to if it has already been started)
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+          - The panel identifier contains invalid characters.
           - The panel configuration has an invalid argument.
-        - NOT_FOUND: 
+        - NOT_FOUND:
           - The panel configuration includes a file that was not found.
         """
 
@@ -183,7 +183,7 @@ class PanelServiceServicer(metaclass=abc.ABCMeta):
         """Stop a panel
         Status Codes for errors:
         - INVALID_ARGUMENT:
-          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+          - The panel identifier contains invalid characters.
         """
 
     @abc.abstractmethod
@@ -204,10 +204,10 @@ class PanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.panels.v1.panel_service_pb2.GetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.GetValueResponse]]:
         """Get a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-          - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - NOT_FOUND: 
+        - INVALID_ARGUMENT:
+          - The panel identifier contains invalid characters.
+          - The value identifier contains invalid characters.
+        - NOT_FOUND:
           - The value with the specified identifier was not found.
         """
 
@@ -219,9 +219,9 @@ class PanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.panels.v1.panel_service_pb2.TryGetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.TryGetValueResponse]]:
         """Try to get a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-          - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+          - The panel identifier contains invalid characters.
+          - The value identifier contains invalid characters.
         """
 
     @abc.abstractmethod
@@ -232,9 +232,9 @@ class PanelServiceServicer(metaclass=abc.ABCMeta):
     ) -> typing.Union[ni.panels.v1.panel_service_pb2.SetValueResponse, collections.abc.Awaitable[ni.panels.v1.panel_service_pb2.SetValueResponse]]:
         """Set a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-          - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-          - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+          - The panel identifier contains invalid characters.
+          - The value identifier contains invalid characters.
         """
 
 def add_PanelServiceServicer_to_server(servicer: PanelServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...

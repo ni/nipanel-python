@@ -54,10 +54,10 @@ class PanelServiceServicer(object):
     def StartPanel(self, request, context):
         """Start a panel using the provided configuration (or connect to if it has already been started)
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+        - The panel identifier contains invalid characters.
         - The panel configuration has an invalid argument.
-        - NOT_FOUND: 
+        - NOT_FOUND:
         - The panel configuration includes a file that was not found.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -68,7 +68,7 @@ class PanelServiceServicer(object):
         """Stop a panel
         Status Codes for errors:
         - INVALID_ARGUMENT:
-        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - The panel identifier contains invalid characters.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -85,10 +85,10 @@ class PanelServiceServicer(object):
     def GetValue(self, request, context):
         """Get a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - NOT_FOUND: 
+        - INVALID_ARGUMENT:
+        - The panel identifier contains invalid characters.
+        - The value identifier contains invalid characters.
+        - NOT_FOUND:
         - The value with the specified identifier was not found.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -98,9 +98,9 @@ class PanelServiceServicer(object):
     def TryGetValue(self, request, context):
         """Try to get a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+        - The panel identifier contains invalid characters.
+        - The value identifier contains invalid characters.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -109,9 +109,9 @@ class PanelServiceServicer(object):
     def SetValue(self, request, context):
         """Set a value for a control on the panel
         Status Codes for errors:
-        - INVALID_ARGUMENT: 
-        - The panel identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
-        - The value identifier contains invalid characters. Only alphanumeric characters and underscores are allowed.
+        - INVALID_ARGUMENT:
+        - The panel identifier contains invalid characters.
+        - The value identifier contains invalid characters.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
