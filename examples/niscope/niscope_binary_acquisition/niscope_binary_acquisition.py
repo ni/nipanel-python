@@ -7,7 +7,6 @@ from typing import Any
 import hightime
 import niscope
 import numpy as np
-from niscope.enums import ArrayMeasurement
 from niscope.errors import Error
 
 import nipanel
