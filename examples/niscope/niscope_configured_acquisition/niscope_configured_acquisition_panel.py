@@ -41,7 +41,7 @@ with left_col:
         if panel.get_value("is_running", False):
             st.button(r"⏹️ Stop", key="stop_button")
         elif not panel.get_value("is_running", False) and panel.get_value("scope_error", "") == "":
-            run_button = st.button(r"Run", key="run_button")
+            run_button = st.button(r"▶️ Run", key="run_button")
         else:
             st.error(
                 f"There was an error running the script. Fix the issue and re-run niscope_binary_acquisition.py \n\n {panel.get_value('scope_error', '')}"
@@ -122,7 +122,7 @@ with left_col:
             key="enforce_realtime",
         )
 
-        st.number_input(
+        sample_rate = st.number_input(
             "Min Sample Rate",
             value=10000000.0,
             step=1.0,
@@ -136,7 +136,7 @@ with left_col:
             disabled=True,
             key="actual_sample_rate",
         )
-        st.number_input(
+        record_length = st.number_input(
             "Min Record Length",
             value=1000,
             step=1,
@@ -163,7 +163,7 @@ with right_col:
             "legend": {"data": ["Amplitude (V)"]},
             "xAxis": {
                 "type": "category",
-                "data": [x / 1000.0 for x in range(len(waveform_data))],
+                "data": [x / record_length for x in range(len(waveform_data))], #change this 
                 "name": "Time (s)",
                 "nameLocation": "center",
                 "nameGap": 40,
