@@ -155,15 +155,14 @@ with left_col:
 with right_col:
     with st.container(border=True):
         st.title("Waveform Graph")
-        waveform_data = panel.get_value("waveform_data", [0])
-
-        waveform_data = {
+        waveform_data = panel.get_value("waveform_data", [0.0])
+        waveform_graph = {
             "animation": False,
             "tooltip": {"trigger": "axis"},
             "legend": {"data": ["Amplitude (V)"]},
             "xAxis": {
                 "type": "category",
-                "data": [x / record_length for x in range(len(waveform_data))],  # change this
+                "data": [x / record_length for x in range(len(waveform_data))],
                 "name": "Time (s)",
                 "nameLocation": "center",
                 "nameGap": 40,
@@ -186,7 +185,7 @@ with right_col:
                 },
             ],
         }
-        st_echarts(options=waveform_data, height="400px", width="75%", key="binary_graph")
+        st_echarts(options=waveform_graph, height="400px", width="75%", key="waveform_graph")
         st.title("Trigger")
         trigger_type = stx.tab_bar(
             data=[
