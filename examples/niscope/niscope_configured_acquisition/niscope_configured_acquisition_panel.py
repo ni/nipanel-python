@@ -131,7 +131,7 @@ with left_col:
         )
         st.number_input(
             "Actual Sample Rate",
-            value=panel.get_value("sample_rate", 1.0e7),
+            value=panel.get_value("actual_sample_rate", 1.0e7),
             step=1.0,
             disabled=True,
             key="actual_sample_rate",
@@ -145,8 +145,8 @@ with left_col:
         )
         st.number_input(
             "Actual Record Length",
-            value=panel.get_value("record_length", 1000.0),
-            step=1.0,
+            value=panel.get_value("actual_record_length", 1000),
+            step=1,
             disabled=True,
             key="actual_record_length",
         )
@@ -163,7 +163,7 @@ with right_col:
             "legend": {"data": ["Amplitude (V)"]},
             "xAxis": {
                 "type": "category",
-                "data": [x / record_length for x in range(len(waveform_data))], #change this 
+                "data": [x / record_length for x in range(len(waveform_data))],  # change this
                 "name": "Time (s)",
                 "nameLocation": "center",
                 "nameGap": 40,
