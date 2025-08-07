@@ -101,13 +101,12 @@ def _get_best_matching_type(python_value: object) -> str:
             value_is_collection = any(
                 _CONVERTIBLE_COLLECTION_TYPES.intersection(underlying_parents)
             )
-        container_types.append(Collection.__name__)
+        container_types.append(Collection)
 
     best_matching_type = None
     candidates = _get_candidate_strings(underlying_parents)
     for candidate in candidates:
-        containers_str = ".".join(container_types)
-        python_typename = f"{containers_str}.{candidate}" if containers_str else candidate
+        python_typename = _create_python_typename(candidate, container_types)
         if python_typename not in _SUPPORTED_PYTHON_TYPES:
             continue
         best_matching_type = python_typename
@@ -150,3 +149,10 @@ def _get_candidate_strings(candidates: Iterable[type]) -> list[str]:
         candidate_names.append(f"{candidate.__module__}.{candidate.__name__}")
 
     return candidate_names
+
+
+def _create_python_typename(candidate_name: str, container_types: Iterable[type]) -> str:
+    name = candidate_name
+    for container_type in container_types:
+        name = f"{container_type.__module__}.{container_type.__name__}[{name}]"
+    return name

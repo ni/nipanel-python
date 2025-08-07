@@ -31,7 +31,7 @@ from nitypes.waveform import (
 from nitypes.waveform.typing import ExtendedPropertyValue
 from typing_extensions import TypeAlias
 
-from nipanel.converters import Converter
+from nipanel.converters import Converter, CollectionConverter2D
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
 _SCALAR_TYPE_TO_PB_ATTR_MAP = {
@@ -42,13 +42,13 @@ _SCALAR_TYPE_TO_PB_ATTR_MAP = {
 }
 
 
-class Double2DArrayConverter(Converter[Collection[Collection[float]], Double2DArray]):
+class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
     """A converter between Collection[Collection[float]] and Double2DArray."""
 
     @property
-    def python_typename(self) -> str:
-        """The Python type that this converter handles."""
-        return f"{Collection.__name__}.{Collection.__name__}.{float.__module__}.{float.__name__}"
+    def item_type(self) -> type:
+        """The Python item type that this converter handles."""
+        return float
 
     @property
     def protobuf_message(self) -> Type[Double2DArray]:
@@ -95,9 +95,9 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
         self._pt_converter = PrecisionTimestampConverter()
 
     @property
-    def python_typename(self) -> str:
+    def python_type(self) -> type:
         """The Python type that this converter handles."""
-        return f"{AnalogWaveform.__module__}.{AnalogWaveform.__name__}"
+        return AnalogWaveform
 
     @property
     def protobuf_message(self) -> Type[DoubleAnalogWaveform]:
@@ -192,9 +192,9 @@ class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
     """A converter for bintime.DateTime types."""
 
     @property
-    def python_typename(self) -> str:
+    def python_type(self) -> type:
         """The Python type that this converter handles."""
-        return f"{bt.DateTime.__module__}.{bt.DateTime.__name__}"
+        return bt.DateTime
 
     @property
     def protobuf_message(self) -> Type[PrecisionTimestamp]:
@@ -218,9 +218,9 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
     """A converter for Scalar objects."""
 
     @property
-    def python_typename(self) -> str:
+    def python_type(self) -> type:
         """The Python type that this converter handles."""
-        return f"{Scalar.__module__}.{Scalar.__name__}"
+        return Scalar
 
     @property
     def protobuf_message(self) -> Type[scalar_pb2.ScalarData]:

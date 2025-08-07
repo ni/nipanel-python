@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Collection
 from typing import Generic, Type, TypeVar
 
 from google.protobuf import any_pb2
 from google.protobuf.message import Message
 
+_TItemType = TypeVar("_TItemType")
 _TPythonType = TypeVar("_TPythonType")
 _TProtobufType = TypeVar("_TProtobufType", bound=Message)
 
@@ -17,8 +19,13 @@ class Converter(Generic[_TPythonType, _TProtobufType], ABC):
 
     @property
     @abstractmethod
-    def python_typename(self) -> str:
+    def python_type(self) -> type:
         """The Python type that this converter handles."""
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        return f"{self.python_type.__module__}.{self.python_type.__name__}"
 
     @property
     @abstractmethod
@@ -52,3 +59,56 @@ class Converter(Generic[_TPythonType, _TProtobufType], ABC):
     @abstractmethod
     def to_python_value(self, protobuf_message: _TProtobufType) -> _TPythonType:
         """Convert the protobuf wrapper message to its matching Python type."""
+
+
+class CollectionConverter(
+    Generic[_TItemType, _TProtobufType],
+    Converter[Collection[_TItemType], _TProtobufType],
+    ABC,
+):
+    """A converter between a collection of Python objects and protobuf Any messages."""
+
+    @property
+    @abstractmethod
+    def item_type(self) -> type:
+        """The Python item type that this converter handles."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return Collection
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        return "{}[{}]".format(
+            f"{Collection.__module__}.{Collection.__name__}",
+            f"{self.item_type.__module__}.{self.item_type.__name__}",
+        )
+
+
+class CollectionConverter2D(
+    Generic[_TItemType, _TProtobufType],
+    Converter[Collection[Collection[_TItemType]], _TProtobufType],
+    ABC,
+):
+    """A converter between a 2D collection of Python objects and protobuf Any messages."""
+
+    @property
+    @abstractmethod
+    def item_type(self) -> type:
+        """The Python item type that this converter handles."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return Collection
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        return "{}[{}[{}]]".format(
+            f"{Collection.__module__}.{Collection.__name__}",
+            f"{Collection.__module__}.{Collection.__name__}",
+            f"{self.item_type.__module__}.{self.item_type.__name__}",
+        )
