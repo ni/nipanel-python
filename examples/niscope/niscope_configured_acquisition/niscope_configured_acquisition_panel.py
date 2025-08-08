@@ -211,6 +211,7 @@ with right_col:
                     value=0,
                     step=1,
                     disabled=panel.get_value("is_running", False),
+                    max_value=7,
                     key="edge_source",
                 )
                 st.number_input(

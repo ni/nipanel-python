@@ -1,4 +1,4 @@
-"""Continuously acquires waveforms from NI-SCOPE, processes/scales them."""
+"""Continuously acquires waveforms from NI-SCOPE, and configures desired acquisition settings."""
 
 import time
 from pathlib import Path
@@ -51,13 +51,13 @@ try:
                     level=panel.get_value("edge_level", 0.0),
                     slope=panel.get_value("edge_slope", niscope.TriggerSlope.POSITIVE),
                     trigger_coupling=panel.get_value("edge_coupling", niscope.TriggerCoupling.DC),
-                    delay=hightime.timedelta(seconds=panel.get_value("digital_delay", 0.0)),
+                    delay=hightime.timedelta(seconds=panel.get_value("trigger_delay", 0.0)),
                 )
             elif trigger_type == 3:
                 digital = session.configure_trigger_digital(
                     trigger_source=panel.get_value("digital_source", "PFI 1"),
                     slope=panel.get_value("digital_slope", niscope.TriggerSlope.POSITIVE),
-                    delay=hightime.timedelta(seconds=panel.get_value("digital_delay", 0.0)),
+                    delay=hightime.timedelta(seconds=panel.get_value("trigger_delay", 0.0)),
                 )
             elif trigger_type == 4:
                 window = session.configure_trigger_window(
@@ -66,7 +66,7 @@ try:
                     low_level=panel.get_value("window_low_level", -0.1),
                     high_level=panel.get_value("window_high_level", 0.1),
                     trigger_coupling=panel.get_value("window_coupling", niscope.TriggerCoupling.DC),
-                    delay=hightime.timedelta(seconds=panel.get_value("digital_delay", 0.0)),
+                    delay=hightime.timedelta(seconds=panel.get_value("trigger_delay", 0.0)),
                 )
             else:
                 hysteresis = session.configure_trigger_hysteresis(
@@ -77,7 +77,7 @@ try:
                     trigger_coupling=panel.get_value(
                         "hysteresis_coupling", niscope.TriggerCoupling.DC
                     ),
-                    delay=hightime.timedelta(seconds=panel.get_value("digital_delay", 0.0)),
+                    delay=hightime.timedelta(seconds=panel.get_value("trigger_delay", 0.0)),
                 )
 
             with session.initiate():

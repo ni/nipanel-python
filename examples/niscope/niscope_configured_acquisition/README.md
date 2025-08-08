@@ -8,7 +8,7 @@ This is an nipanel example that displays an interactive Streamlit app and update
 
 ### Feature
 
-Script demonstrates waveform data getting continuously acquired and being converted to binary data.
+Script demonstrates how to configure vertical, horizontal, and triggering properties and allows you to experiment with numerous configurations, including acquisition types and triggering mode.
 - Supports various data types
 
 ### Required Software
