@@ -1,5 +1,7 @@
 """Streamlit dashboard for visualizing NI-SCOPE waveform data in real time."""
 
+from enum import Enum
+
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import niscope
 import streamlit as st
@@ -7,6 +9,20 @@ from streamlit_echarts import st_echarts
 
 import nipanel
 from nipanel.controls import enum_selectbox
+
+
+class ChannelSource(Enum):
+    """Enum for channel source options."""
+
+    CHANNEL_0 = 0
+    CHANNEL_1 = 1
+    CHANNEL_2 = 2
+    CHANNEL_3 = 3
+    CHANNEL_4 = 4
+    CHANNEL_5 = 5
+    CHANNEL_6 = 6
+    CHANNEL_7 = 7
+
 
 st.set_page_config(page_title="NI-SCOPE EX Configured Acquisition", page_icon="📈", layout="wide")
 st.title("NI-SCOPE EX Configured Acquisition")
@@ -206,12 +222,11 @@ with right_col:
                 )
         if trigger_type == "2":
             with st.container(border=True):
-                st.number_input(
+                st.selectbox(
                     "Trigger Source",
-                    value=0,
-                    step=1,
+                    options=list(ChannelSource),
+                    format_func=lambda x: f"Channel {x.value}",
                     disabled=panel.get_value("is_running", False),
-                    max_value=7,
                     key="edge_source",
                 )
                 st.number_input(
@@ -252,10 +267,10 @@ with right_col:
                 )
         if trigger_type == "4":
             with st.container(border=True):
-                st.number_input(
+                st.selectbox(
                     "Trigger Source",
-                    value=0,
-                    step=1,
+                    options=list(ChannelSource),
+                    format_func=lambda x: f"Channel {x.value}",
                     disabled=panel.get_value("is_running", False),
                     key="window_source",
                 )
@@ -290,10 +305,10 @@ with right_col:
 
         if trigger_type == "5":
             with st.container(border=True):
-                st.number_input(
+                st.selectbox(
                     "Trigger Source",
-                    value=0,
-                    step=1,
+                    options=list(ChannelSource),
+                    format_func=lambda x: f"Channel {x.value}",
                     disabled=panel.get_value("is_running", False),
                     key="hysteresis_source",
                 )
