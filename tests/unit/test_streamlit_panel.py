@@ -12,6 +12,7 @@ from tests.utils._fake_python_panel_service import FakePythonPanelService
 
 PATH_TO_SCRIPT = Path("path/to/script")
 
+
 def test___panel___has_panel_id_and_panel_script_path(fake_panel_channel: grpc.Channel) -> None:
     panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     assert panel.panel_id == "my_panel"
