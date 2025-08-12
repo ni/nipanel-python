@@ -43,8 +43,7 @@ def create_streamlit_panel(streamlit_script_path: Path, panel_id: str = "") -> S
     if not panel_id:
         panel_id = streamlit_script_path.stem
 
-    path_str = str(streamlit_script_path)
-    return StreamlitPanel(panel_id, path_str)
+    return StreamlitPanel(panel_id, streamlit_script_path)
 
 
 def get_streamlit_panel_accessor() -> PanelValueAccessor:
