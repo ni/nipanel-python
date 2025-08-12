@@ -19,9 +19,6 @@ from ni.protobuf.types.waveform_conversion import (
     float64_analog_waveform_to_protobuf,
 )
 from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform
 from typing_extensions import TypeAlias
@@ -154,7 +151,7 @@ class StrCollectionConverter(CollectionConverter[str, array_pb2.StringArray]):
 
 
 
-class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
+class Double2DArrayConverter(CollectionConverter2D[float, array_pb2.Double2DArray]):
     """A converter between Collection[Collection[float]] and Double2DArray."""
 
     @property
@@ -163,12 +160,12 @@ class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
         return float
 
     @property
-    def protobuf_message(self) -> Type[Double2DArray]:
+    def protobuf_message(self) -> Type[array_pb2.Double2DArray]:
         """The type-specific protobuf message for the Python type."""
-        return Double2DArray
+        return array_pb2.Double2DArray
 
-    def to_protobuf_message(self, python_value: Collection[Collection[float]]) -> Double2DArray:
-        """Convert the Python Collection[Collection[float]] to a protobuf Double2DArray."""
+    def to_protobuf_message(self, python_value: Collection[Collection[float]]) -> array_pb2.Double2DArray:
+        """Convert the Python Collection[Collection[float]] to a protobuf array_pb2.Double2DArray."""
         rows = len(python_value)
         if rows:
             visitor = iter(python_value)
@@ -181,10 +178,10 @@ class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
 
         # Create a flat list in row major order.
         flat_list = [item for subcollection in python_value for item in subcollection]
-        return Double2DArray(rows=rows, columns=columns, data=flat_list)
+        return array_pb2.Double2DArray(rows=rows, columns=columns, data=flat_list)
 
-    def to_python_value(self, protobuf_message: Double2DArray) -> Collection[Collection[float]]:
-        """Convert the protobuf Double2DArray to a Python Collection[Collection[float]]."""
+    def to_python_value(self, protobuf_message: array_pb2.Double2DArray) -> Collection[Collection[float]]:
+        """Convert the protobuf array_pb2.Double2DArray to a Python Collection[Collection[float]]."""
         if not protobuf_message.data:
             return []
         if len(protobuf_message.data) % protobuf_message.columns != 0:

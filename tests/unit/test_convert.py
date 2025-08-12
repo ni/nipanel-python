@@ -6,12 +6,7 @@ import pytest
 from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
 from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
-    DoubleAnalogWaveform,
-)
+from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform
 from typing_extensions import TypeAlias
@@ -303,10 +298,10 @@ def test___python_2dcollection_of_float___to_any___valid_double2darray(
     expected_rows = 2
     expected_columns = 2
     result = nipanel._convert.to_any(python_value)
-    unpack_dest = Double2DArray()
+    unpack_dest = array_pb2.Double2DArray()
     _assert_any_and_unpack(result, unpack_dest)
 
-    assert isinstance(unpack_dest, Double2DArray)
+    assert isinstance(unpack_dest, array_pb2.Double2DArray)
     assert unpack_dest.rows == expected_rows
     assert unpack_dest.columns == expected_columns
     assert unpack_dest.data == expected_data
@@ -328,10 +323,10 @@ def test___python_set_of_collection_of_float___to_any___valid_double2darray(
     expected_rows = 2
     expected_columns = 2
     result = nipanel._convert.to_any(python_value)
-    unpack_dest = Double2DArray()
+    unpack_dest = array_pb2.Double2DArray()
     _assert_any_and_unpack(result, unpack_dest)
 
-    assert isinstance(unpack_dest, Double2DArray)
+    assert isinstance(unpack_dest, array_pb2.Double2DArray)
     assert unpack_dest.rows == expected_rows
     assert unpack_dest.columns == expected_columns
     # Sets and frozensets don't maintain order, so sort before comparing.
@@ -387,7 +382,7 @@ def test___double_analog_waveform___from_any___valid_python_analog_waveform() ->
 
 
 def test___double2darray___from_any___valid_python_2dcollection() -> None:
-    pb_value = Double2DArray(data=[1.0, 2.0, 3.0, 4.0], rows=2, columns=2)
+    pb_value = array_pb2.Double2DArray(data=[1.0, 2.0, 3.0, 4.0], rows=2, columns=2)
     packed_any = _pack_into_any(pb_value)
 
     result = nipanel._convert.from_any(packed_any)

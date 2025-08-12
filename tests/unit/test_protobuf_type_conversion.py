@@ -3,10 +3,7 @@ from typing_extensions import Mapping
 
 import numpy
 import pytest
-from ni.protobuf.types import attribute_value_pb2, scalar_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
+from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
 from ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
@@ -63,17 +60,17 @@ def test___list_of_lists_inconsistent_column_length___convert___throws_value_err
     "double2darray, expected_data",
     [
         (
-            Double2DArray(rows=3, columns=2, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            array_pb2.Double2DArray(rows=3, columns=2, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
             [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]],
         ),
         (
-            Double2DArray(rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            array_pb2.Double2DArray(rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]],
         ),
     ],
 )
 def test___double2darray___convert___valid_list_of_lists(
-    double2darray: Double2DArray, expected_data: list[list[float]]
+    double2darray: array_pb2.Double2DArray, expected_data: list[list[float]]
 ) -> None:
     converter = Double2DArrayConverter()
     list_of_lists = converter.to_python_value(double2darray)
@@ -82,7 +79,7 @@ def test___double2darray___convert___valid_list_of_lists(
 
 
 def test___double2darray_invalid_num_columns___convert___throws_value_error() -> None:
-    double2darray = Double2DArray(rows=1, columns=2, data=[1.0, 2.0, 3.0])
+    double2darray = array_pb2.Double2DArray(rows=1, columns=2, data=[1.0, 2.0, 3.0])
     converter = Double2DArrayConverter()
 
     with pytest.raises(ValueError):
@@ -90,7 +87,7 @@ def test___double2darray_invalid_num_columns___convert___throws_value_error() ->
 
 
 def test___double2darray_empty_data___convert___returns_empty_list() -> None:
-    double2darray = Double2DArray(rows=0, columns=0, data=[])
+    double2darray = array_pb2.Double2DArray(rows=0, columns=0, data=[])
     converter = Double2DArrayConverter()
 
     list_of_lists = converter.to_python_value(double2darray)
