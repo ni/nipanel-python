@@ -1360,6 +1360,37 @@ niscope = ["niscope[grpc] (>=1.4.4)"]
 niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
+name = "ni-panels-v1-proto"
+version = "0.1.0.dev0"
+description = "Protobuf generated code for the ni.panels.v1 gRPC API"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_panels_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:cab29f7d90d81eacd62b70538ec7effcc174f43750a35d1cc112c7ff56342519"},
+    {file = "ni_panels_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:3d59b5bc570f8b1c2d30f05b83199761f17d537a6ae787e1a5f68b9ddda94648"},
+]
+
+[package.dependencies]
+grpcio = ">=1.49.0,<2.0"
+nitypes = ">=0.1.0dev3"
+protobuf = ">=4.21"
+
+[[package]]
+name = "ni-protobuf-types"
+version = "0.1.0.dev1"
+description = "Protobuf data types for NI gRPC APIs"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "ni_protobuf_types-0.1.0.dev1-py3-none-any.whl", hash = "sha256:ff04a5b0ab26088ca96710009feddd04c80c60031f114ffc461c2ee257d96559"},
+    {file = "ni_protobuf_types-0.1.0.dev1.tar.gz", hash = "sha256:10d5abf5ffd9d0e07f657fcecac7b3956b263847eecba1c1feb2f6b24eec3eba"},
+]
+
+[package.dependencies]
+nitypes = ">=0.1.0dev3"
+protobuf = ">=4.21"
+
+[[package]]
 name = "ni-python-styleguide"
 version = "0.4.7"
 description = "NI's internal and external Python linter rules and plugins"
@@ -1454,13 +1485,13 @@ hightime = ">=0.2.0"
 
 [[package]]
 name = "nitypes"
-version = "0.1.0.dev6"
+version = "0.1.0.dev7"
 description = "Data types for NI Python APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "nitypes-0.1.0.dev6-py3-none-any.whl", hash = "sha256:44ecc849d4a26137919a5406cbb103281d965102d0061682a939d58668de44ea"},
-    {file = "nitypes-0.1.0.dev6.tar.gz", hash = "sha256:37ae3494ecaa98d866ebe3c27898c21961c4f47082cfb7a921dc842debd74526"},
+    {file = "nitypes-0.1.0.dev7-py3-none-any.whl", hash = "sha256:a1452da4bfaf57bbc4d34ab7859add661cc42d8a88f14aeaa4d56d51af0ef3b1"},
+    {file = "nitypes-0.1.0.dev7.tar.gz", hash = "sha256:b34aa4b6c8b54c0c1aaf38e0bdaee8dcc259f15560b56b1f4c947566c0456424"},
 ]
 
 [package.dependencies]
@@ -3322,4 +3353,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "1b4c4105e78ce7eca099f1a45a130c93565d568f2263e70d6389ab59ed3bbe27"
+content-hash = "d9a888f00cff8b2102dba41631280724ca9514574d557e5332243a29c1600ff7"

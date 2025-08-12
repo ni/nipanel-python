@@ -17,23 +17,23 @@ from nipanel.converters.builtin import (
     FloatConverter,
     IntConverter,
     StrConverter,
-    BoolCollectionConverter,
-    BytesCollectionConverter,
-    FloatCollectionConverter,
-    IntCollectionConverter,
-    StrCollectionConverter,
 )
 from nipanel.converters.protobuf_types import (
+    BoolCollectionConverter,
+    BytesCollectionConverter,
     Double2DArrayConverter,
     DoubleAnalogWaveformConverter,
+    FloatCollectionConverter,
+    IntCollectionConverter,
     ScalarConverter,
+    StrCollectionConverter,
 )
 
 _logger = logging.getLogger(__name__)
 
 # FFV -- consider adding a RegisterConverter mechanism
 _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
-    # Scalars first
+    # Built-in Types
     BoolConverter(),
     BytesConverter(),
     FloatConverter(),
@@ -41,15 +41,14 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     StrConverter(),
     DTDateTimeConverter(),
     DTTimeDeltaConverter(),
-    # Containers next
+    # Protobuf Types
     BoolCollectionConverter(),
     BytesCollectionConverter(),
+    Double2DArrayConverter(),
+    DoubleAnalogWaveformConverter(),
     FloatCollectionConverter(),
     IntCollectionConverter(),
     StrCollectionConverter(),
-    # Protobuf Types
-    Double2DArrayConverter(),
-    DoubleAnalogWaveformConverter(),
     ScalarConverter(),
 ]
 

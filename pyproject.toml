@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "NI Panel Python API"
 authors = ["NI <opensource@ni.com>"]
 readme = "README.md"
-packages = [{ include = "nipanel", from = "src" }, { include = "ni", from = "src" }]
+packages = [{ include = "nipanel", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
@@ -13,7 +13,9 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev3", allow-prereleases=true}
+nitypes = {version=">=0.1.0dev7", allow-prereleases=true}
+ni-protobuf-types = { version = ">=0.1.0dev1", allow-prereleases = true }
+ni-panels-v1-proto = { version = ">=0.1.0dev0", allow-prereleases = true }
 numpy = [
   { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
   { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
@@ -73,10 +75,10 @@ requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
-extend_exclude = ".tox,docs,src/ni/panels/v1,src/ni/protobuf/types/"
+extend_exclude = ".tox,docs"
 
 [tool.black]
-extend-exclude = '\.tox/|docs/|src/ni/panels/v1/|src/ni/protobuf/types/'
+extend-exclude = '\.tox/|docs/'
 line-length = 100
 
 [tool.mypy]
@@ -106,4 +108,4 @@ testpaths = ["src/nipanel", "tests"]
 
 [tool.pyright]
 include = ["examples/", "src/", "tests/"]
-exclude = ["src/ni/protobuf/types/", "src/ni/panels/v1/","examples/nidaqmx/nidaqmx_continuous_analog_input.py","examples/niscope/niscope_ex_fetch_forever.py"]
+exclude = ["examples/nidaqmx/nidaqmx_continuous_analog_input.py","examples/niscope/niscope_ex_fetch_forever.py"]

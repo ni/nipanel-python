@@ -1,13 +1,11 @@
 """Classes to convert between builtin Python scalars and containers."""
 
 import datetime as dt
-from collections.abc import Collection
 from typing import Type
 
 from google.protobuf import duration_pb2, timestamp_pb2, wrappers_pb2
-from ni.panels.v1 import panel_types_pb2
 
-from nipanel.converters import Converter, CollectionConverter
+from nipanel.converters import Converter
 
 
 class BoolConverter(Converter[bool, wrappers_pb2.BoolValue]):
@@ -166,125 +164,3 @@ class DTTimeDeltaConverter(Converter[dt.timedelta, duration_pb2.Duration]):
     def to_python_value(self, protobuf_message: duration_pb2.Duration) -> dt.timedelta:
         """Convert the protobuf timestamp_pb2.Timestamp to a Python dt.timedelta."""
         return protobuf_message.ToTimedelta()
-
-
-class BoolCollectionConverter(CollectionConverter[bool, panel_types_pb2.BoolCollection]):
-    """A converter for a Collection of bools."""
-
-    @property
-    def item_type(self) -> type:
-        """The Python type that this converter handles."""
-        return bool
-
-    @property
-    def protobuf_message(self) -> Type[panel_types_pb2.BoolCollection]:
-        """The type-specific protobuf message for the Python type."""
-        return panel_types_pb2.BoolCollection
-
-    def to_protobuf_message(self, python_value: Collection[bool]) -> panel_types_pb2.BoolCollection:
-        """Convert the collection of bools to panel_types_pb2.BoolCollection."""
-        return self.protobuf_message(values=python_value)
-
-    def to_python_value(self, protobuf_message: panel_types_pb2.BoolCollection) -> Collection[bool]:
-        """Convert the protobuf message to a Python collection of bools."""
-        return list(protobuf_message.values)
-
-
-class BytesCollectionConverter(CollectionConverter[bytes, panel_types_pb2.ByteStringCollection]):
-    """A converter for a Collection of byte strings."""
-
-    @property
-    def item_type(self) -> type:
-        """The Python type that this converter handles."""
-        return bytes
-
-    @property
-    def protobuf_message(self) -> Type[panel_types_pb2.ByteStringCollection]:
-        """The type-specific protobuf message for the Python type."""
-        return panel_types_pb2.ByteStringCollection
-
-    def to_protobuf_message(
-        self, python_value: Collection[bytes]
-    ) -> panel_types_pb2.ByteStringCollection:
-        """Convert the collection of byte strings to panel_types_pb2.ByteStringCollection."""
-        return self.protobuf_message(values=python_value)
-
-    def to_python_value(
-        self, protobuf_message: panel_types_pb2.ByteStringCollection
-    ) -> Collection[bytes]:
-        """Convert the protobuf message to a Python collection of byte strings."""
-        return list(protobuf_message.values)
-
-
-class FloatCollectionConverter(CollectionConverter[float, panel_types_pb2.FloatCollection]):
-    """A converter for a Collection of floats."""
-
-    @property
-    def item_type(self) -> type:
-        """The Python type that this converter handles."""
-        return float
-
-    @property
-    def protobuf_message(self) -> Type[panel_types_pb2.FloatCollection]:
-        """The type-specific protobuf message for the Python type."""
-        return panel_types_pb2.FloatCollection
-
-    def to_protobuf_message(
-        self, python_value: Collection[float]
-    ) -> panel_types_pb2.FloatCollection:
-        """Convert the collection of floats to panel_types_pb2.FloatCollection."""
-        return self.protobuf_message(values=python_value)
-
-    def to_python_value(
-        self, protobuf_message: panel_types_pb2.FloatCollection
-    ) -> Collection[float]:
-        """Convert the protobuf message to a Python collection of floats."""
-        return list(protobuf_message.values)
-
-
-class IntCollectionConverter(CollectionConverter[int, panel_types_pb2.IntCollection]):
-    """A converter for a Collection of integers."""
-
-    @property
-    def item_type(self) -> type:
-        """The Python type that this converter handles."""
-        return int
-
-    @property
-    def protobuf_message(self) -> Type[panel_types_pb2.IntCollection]:
-        """The type-specific protobuf message for the Python type."""
-        return panel_types_pb2.IntCollection
-
-    def to_protobuf_message(self, python_value: Collection[int]) -> panel_types_pb2.IntCollection:
-        """Convert the collection of integers to panel_types_pb2.IntCollection."""
-        return self.protobuf_message(values=python_value)
-
-    def to_python_value(self, protobuf_message: panel_types_pb2.IntCollection) -> Collection[int]:
-        """Convert the protobuf message to a Python collection of integers."""
-        return list(protobuf_message.values)
-
-
-class StrCollectionConverter(CollectionConverter[str, panel_types_pb2.StringCollection]):
-    """A converter for a Collection of strings."""
-
-    @property
-    def item_type(self) -> type:
-        """The Python type that this converter handles."""
-        return str
-
-    @property
-    def protobuf_message(self) -> Type[panel_types_pb2.StringCollection]:
-        """The type-specific protobuf message for the Python type."""
-        return panel_types_pb2.StringCollection
-
-    def to_protobuf_message(
-        self, python_value: Collection[str]
-    ) -> panel_types_pb2.StringCollection:
-        """Convert the collection of strings to panel_types_pb2.StringCollection."""
-        return self.protobuf_message(values=python_value)
-
-    def to_python_value(
-        self, protobuf_message: panel_types_pb2.StringCollection
-    ) -> Collection[str]:
-        """Convert the protobuf message to a Python collection of strings."""
-        return list(protobuf_message.values)
