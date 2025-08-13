@@ -87,7 +87,7 @@ class StreamlitPanel(PanelValueAccessor):
             # If not in a .venv environment, use sys.executable
             python_path = Path(sys.executable).resolve()
 
-        if sys.prefix not in str(python_path):
+        if python_path.is_relative_to(Path(sys.prefix)) is False:
             # Ensure the Python path is within the current environment
             raise RuntimeError(
                 f"Python path '{python_path}' does not match the current environment prefix '{sys.prefix}'."
