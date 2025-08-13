@@ -1,38 +1,41 @@
 import datetime as dt
 import enum
+from pathlib import Path
 
 import grpc
 import pytest
 from typing_extensions import assert_type
 
 import tests.types as test_types
-from nipanel import StreamlitPanel, PanelValueAccessor
+from nipanel import PanelValueAccessor, StreamlitPanel
 from tests.utils._fake_python_panel_service import FakePythonPanelService
+
+PATH_TO_SCRIPT = Path("path/to/script")
 
 
 def test___panel___has_panel_id_and_panel_script_path(fake_panel_channel: grpc.Channel) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     assert panel.panel_id == "my_panel"
-    assert panel.panel_script_path == "path/to/script"
+    assert panel.panel_script_path == PATH_TO_SCRIPT
 
 
 def test___different_panels___have_different_panel_ids_and_panel_script_paths(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel1 = StreamlitPanel("panel1", "path/to/script1", grpc_channel=fake_panel_channel)
-    panel2 = StreamlitPanel("panel2", "path/to/script2", grpc_channel=fake_panel_channel)
+    panel1 = StreamlitPanel("panel1", Path("path/to/script1"), grpc_channel=fake_panel_channel)
+    panel2 = StreamlitPanel("panel2", Path("path/to/script2"), grpc_channel=fake_panel_channel)
 
     assert panel1.panel_id == "panel1"
     assert panel2.panel_id == "panel2"
-    assert panel1._panel_script_path == "path/to/script1"
-    assert panel2._panel_script_path == "path/to/script2"
+    assert panel1._panel_script_path == Path("path/to/script1")
+    assert panel2._panel_script_path == Path("path/to/script2")
     assert panel1._panel_client != panel2._panel_client
 
 
 def test___panel___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -44,7 +47,7 @@ def test___panel___set_value___gets_same_value(
 def test___panel___panel_set_value___accessor_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     accessor = PanelValueAccessor(panel_id="my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -57,7 +60,7 @@ def test___panel___panel_set_value___accessor_gets_same_value(
 def test___panel___accessor_set_value___panel_gets_same_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     accessor = PanelValueAccessor(panel_id="my_panel", grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
@@ -72,7 +75,7 @@ def test___panel___set_value___notifies(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     service = fake_python_panel_service
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     assert service.servicer.notification_count == 0
 
     panel.set_value("value_id", "string_value")
@@ -104,7 +107,7 @@ def test___first_start_will_fail___start_panel___panel_is_functional(
     # Simulate a failure on the first attempt
     service.servicer.fail_next_start_panel()
 
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -118,7 +121,7 @@ def test___first_start_will_fail___start_panel___panel_is_functional(
 def test___panel___set_value___sets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -133,7 +136,7 @@ def test___panel___get_unset_value_with_no_default___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     """Test that get_value() raises an exception for an unset value."""
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     with pytest.raises(KeyError):
@@ -143,7 +146,7 @@ def test___panel___get_unset_value_with_no_default___raises_exception(
 def test___panel___set_value___gets_value(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -155,7 +158,7 @@ def test___panel___set_value___gets_value(
 def test___panel___set_value___get_value_ignores_default(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     string_value = "test_value"
@@ -167,7 +170,7 @@ def test___panel___set_value___get_value_ignores_default(
 def test___no_set_value___get_value_returns_default(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     assert panel.get_value("missing_string", "default") == "default"
     assert panel.get_value("missing_int", 123) == 123
@@ -184,7 +187,7 @@ def test___no_set_value___get_value_returns_default(
 def test___set_string_type___get_value_with_string_default___returns_string_type(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
@@ -198,7 +201,7 @@ def test___set_string_type___get_value_with_string_default___returns_string_type
 def test___set_int_type___get_value_with_int_default___returns_int_type(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     int_value = 10
     panel.set_value(value_id, int_value)
@@ -212,7 +215,7 @@ def test___set_int_type___get_value_with_int_default___returns_int_type(
 def test___set_bool_type___get_value_with_bool_default___returns_bool_type(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     bool_value = True
     panel.set_value(value_id, bool_value)
@@ -226,7 +229,7 @@ def test___set_bool_type___get_value_with_bool_default___returns_bool_type(
 def test___set_string_type___get_value_with_int_default___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     string_value = "test_value"
     panel.set_value(value_id, string_value)
@@ -238,7 +241,7 @@ def test___set_string_type___get_value_with_int_default___raises_exception(
 def test___set_int_type___get_value_with_bool_default___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     int_value = 10
     panel.set_value(value_id, int_value)
@@ -250,7 +253,7 @@ def test___set_int_type___get_value_with_bool_default___raises_exception(
 def test___set_string_enum_type___get_value_with_int_enum_default___raises_exception(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     panel.set_value(value_id, test_types.MyStrEnum.VALUE3)
 
@@ -274,7 +277,7 @@ def test___builtin_scalar_type___set_value___gets_same_value(
     value_payload: object,
 ) -> None:
     """Test that set_value() and get_value() work for builtin scalar types."""
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     panel.set_value(value_id, value_payload)
@@ -301,7 +304,7 @@ def test___enum_type___set_value___gets_same_value(
     value_payload: enum.Enum,
 ) -> None:
     """Test that set_value() and get_value() work for enum types."""
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     panel.set_value(value_id, value_payload)
@@ -330,7 +333,7 @@ def test___unsupported_type___set_value___raises(
     value_payload: object,
 ) -> None:
     """Test that set_value() raises for unsupported types."""
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     with pytest.raises(TypeError):
@@ -380,7 +383,7 @@ def test___sequence_of_builtin_type___set_value___gets_same_value(
     fake_panel_channel: grpc.Channel,
     value_payload: object,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     value_id = "test_id"
     panel.set_value(value_id, value_payload)
@@ -392,7 +395,7 @@ def test___sequence_of_builtin_type___set_value___gets_same_value(
 def test___set_int_enum_value___get_value___returns_int_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     enum_value = test_types.MyIntEnum.VALUE20
     panel.set_value(value_id, enum_value)
@@ -408,7 +411,7 @@ def test___set_int_enum_value___get_value___returns_int_enum(
 def test___set_intable_enum_value___get_value___returns_intable_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     enum_value = test_types.MyIntableEnum.VALUE200
     panel.set_value(value_id, enum_value)
@@ -424,7 +427,7 @@ def test___set_intable_enum_value___get_value___returns_intable_enum(
 def test___set_string_enum_value___get_value___returns_string_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     enum_value = test_types.MyStrEnum.VALUE3
     panel.set_value(value_id, enum_value)
@@ -440,7 +443,7 @@ def test___set_string_enum_value___get_value___returns_string_enum(
 def test___set_stringable_enum_value___get_value___returns_stringable_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     enum_value = test_types.MyStringableEnum.VALUE3
     panel.set_value(value_id, enum_value)
@@ -456,7 +459,7 @@ def test___set_stringable_enum_value___get_value___returns_stringable_enum(
 def test___set_mixed_enum_value___get_value___returns_mixed_enum(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     enum_value = test_types.MyMixedEnum.VALUE2
     panel.set_value(value_id, enum_value)
@@ -472,7 +475,7 @@ def test___set_mixed_enum_value___get_value___returns_mixed_enum(
 def test___set_int_flags_value___get_value___returns_int_flags(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     flags_value = test_types.MyIntFlags.VALUE1 | test_types.MyIntFlags.VALUE4
     panel.set_value(value_id, flags_value)
@@ -487,7 +490,7 @@ def test___set_int_flags_value___get_value___returns_int_flags(
 def test___set_intable_flags_value___get_value___returns_intable_flags(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
     value_id = "test_id"
     flags_value = test_types.MyIntableFlags.VALUE16 | test_types.MyIntableFlags.VALUE32
     panel.set_value(value_id, flags_value)
@@ -503,7 +506,7 @@ def test___set_intable_flags_value___get_value___returns_intable_flags(
 def test___panel___panel_is_running_and_in_memory(
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    panel = StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    panel = StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     assert is_panel_in_memory(panel)
     assert is_panel_running(panel)
@@ -513,7 +516,7 @@ def test___panel___python_interpreter_url_is_in_venv(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     assert fake_python_panel_service.servicer.python_interpreter_url.startswith("file:///")
     assert ".venv" in fake_python_panel_service.servicer.python_interpreter_url
@@ -523,7 +526,7 @@ def test___panel___python_script_url_starts_with_file(
     fake_python_panel_service: FakePythonPanelService,
     fake_panel_channel: grpc.Channel,
 ) -> None:
-    StreamlitPanel("my_panel", "path/to/script", grpc_channel=fake_panel_channel)
+    StreamlitPanel("my_panel", PATH_TO_SCRIPT, grpc_channel=fake_panel_channel)
 
     assert fake_python_panel_service.servicer.python_script_url.startswith("file:///")
 

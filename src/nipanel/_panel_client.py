@@ -8,12 +8,12 @@ from typing import Callable, TypeVar
 import grpc
 from google.protobuf.any_pb2 import Any
 from ni.panels.v1.panel_service_pb2 import (
-    StartPanelRequest,
-    StopPanelRequest,
     EnumeratePanelsRequest,
     GetValueRequest,
-    TryGetValueRequest,
     SetValueRequest,
+    StartPanelRequest,
+    StopPanelRequest,
+    TryGetValueRequest,
 )
 from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
 from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
@@ -49,11 +49,11 @@ class _PanelClient:
         self._stub: PanelServiceStub | None = None
 
     def start_streamlit_panel(
-        self, panel_id: str, panel_script_path: str, python_interpreter_path: str
+        self, panel_id: str, panel_script_path: pathlib.Path, python_interpreter_path: pathlib.Path
     ) -> str:
 
-        panel_script_url = pathlib.Path(panel_script_path).absolute().as_uri()
-        python_interpreter_url = pathlib.Path(python_interpreter_path).absolute().as_uri()
+        panel_script_url = panel_script_path.absolute().as_uri()
+        python_interpreter_url = python_interpreter_path.absolute().as_uri()
         streamlit_panel_configuration = StreamlitPanelConfiguration(
             panel_script_url=panel_script_url, python_interpreter_url=python_interpreter_url
         )
