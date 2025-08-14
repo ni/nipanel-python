@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
-from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
+from ni.protobuf.types import attribute_value_pb2, scalar_pb2, array_pb2
 from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform

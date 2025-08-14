@@ -7,7 +7,7 @@ from typing import Type, Union
 
 import nitypes.bintime as bt
 import numpy as np
-from ni.protobuf.types import array_pb2, scalar_pb2
+from ni.protobuf.types import attribute_value_pb2, scalar_pb2, array_pb2
 from ni.protobuf.types.precision_timestamp_pb2 import PrecisionTimestamp
 from ni.protobuf.types.scalar_conversion import scalar_from_protobuf, scalar_to_protobuf
 from ni.protobuf.types.precision_timestamp_conversion import (

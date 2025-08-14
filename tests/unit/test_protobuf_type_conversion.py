@@ -3,7 +3,7 @@ from typing_extensions import Mapping
 
 import numpy
 import pytest
-from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
+from ni.protobuf.types import attribute_value_pb2, scalar_pb2, array_pb2
 from ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
