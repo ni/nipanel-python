@@ -1374,8 +1374,8 @@ files = [
 black = ">=23.1"
 click = ">=7.1.2"
 flake8 = [
-    {version = ">=5.0,<6.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
     {version = ">=6.1,<7.0", markers = "python_version >= \"3.12\" and python_version < \"4.0\""},
+    {version = ">=5.0,<6.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
 ]
 flake8-black = ">=0.2.1"
 flake8-docstrings = ">=1.5.0"
@@ -1384,8 +1384,8 @@ isort = ">=5.10"
 pathspec = ">=0.11.1"
 pep8-naming = ">=0.11.1"
 pycodestyle = [
-    {version = ">=2.9,<3.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
     {version = ">=2.11,<3.0", markers = "python_version >= \"3.12\" and python_version < \"4.0\""},
+    {version = ">=2.9,<3.0", markers = "python_version >= \"3.7\" and python_version < \"3.12\""},
 ]
 toml = ">=0.10.1"
 
@@ -1402,15 +1402,15 @@ files = [
 
 [package.dependencies]
 click = [
-    {version = ">=8.0.0,<8.2.0", markers = "python_version == \"3.9\""},
     {version = ">=8.0.0", markers = "python_version >= \"3.10\" and python_version < \"4.0\""},
+    {version = ">=8.0.0,<8.2.0", markers = "python_version == \"3.9\""},
 ]
 deprecation = ">=2.1"
 distro = {version = ">=1.9.0", markers = "sys_platform == \"linux\""}
 hightime = ">=0.2.2"
 numpy = [
-    {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.12\""},
     {version = ">=1.26", markers = "python_version == \"3.12\""},
+    {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.12\""},
     {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
 ]
 python-decouple = ">=3.8"
@@ -1466,10 +1466,10 @@ files = [
 [package.dependencies]
 hightime = ">=0.2.2"
 numpy = [
-    {version = ">=1.22", markers = "implementation_name != \"pypy\" and python_version >= \"3.9\" and python_version < \"3.12\""},
     {version = ">=1.26", markers = "python_version >= \"3.12\" and python_version < \"3.13\" and implementation_name != \"pypy\""},
     {version = ">=2.1", markers = "python_version >= \"3.10\" and python_version < \"3.11\" and implementation_name == \"pypy\" or python_version >= \"3.13\" and python_version < \"4.0\" and implementation_name != \"pypy\""},
     {version = ">=2.3", markers = "implementation_name == \"pypy\" and python_version >= \"3.11\" and python_version < \"4.0\""},
+    {version = ">=1.22", markers = "implementation_name != \"pypy\" and python_version >= \"3.9\" and python_version < \"3.12\""},
 ]
 typing-extensions = ">=4.13.2"
 
@@ -1767,9 +1767,9 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
     {version = ">=1.23.2", markers = "python_version == \"3.11\""},
-    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -2872,8 +2872,8 @@ files = [
 
 [package.dependencies]
 astroid = [
-    {version = ">=2.7", markers = "python_version < \"3.12\""},
     {version = ">=3", markers = "python_version >= \"3.12\""},
+    {version = ">=2.7", markers = "python_version < \"3.12\""},
 ]
 Jinja2 = "*"
 PyYAML = "*"
@@ -3322,4 +3322,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "1b4c4105e78ce7eca099f1a45a130c93565d568f2263e70d6389ab59ed3bbe27"
+content-hash = "e7e875cd38e26b336ea1ab1510c3b08d5de4055dcbfebe3ce6ce3e1ba9cf70ce"
