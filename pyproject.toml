@@ -13,21 +13,18 @@ protobuf = {version=">=4.21"}
 ni-measurement-plugin-sdk = {version=">=2.3"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev7", allow-prereleases=true}
-ni-protobuf-types = { version = ">=0.1.0dev1", allow-prereleases = true }
-ni-panels-v1-proto = { version = ">=0.1.0dev0", allow-prereleases = true }
-numpy = [
-  { version = ">=1.22", python = ">=3.9,<3.12", markers = "implementation_name != 'pypy'" },
-  { version = ">=1.26", python = ">=3.12,<3.13", markers = "implementation_name != 'pypy'" },
-  { version = ">=2.1", python = "^3.13", markers = "implementation_name != 'pypy'" },
-  { version = ">=2.1", python = ">=3.10,<3.11", markers = "implementation_name == 'pypy'" },
-  { version = ">=2.3", python = "^3.11", markers = "implementation_name == 'pypy'" },
-]
+nitypes = {version=">=0.1.0dev8", allow-prereleases=true}
+numpy = ">=1.22"
 debugpy = ">=1.8.1"
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
 types-protobuf = ">=4.21"
+numpy = [
+  { version = ">=1.22", python = ">=3.9,<3.12" },
+  { version = ">=1.26", python = ">=3.12,<3.13" },
+  { version = ">=2.1", python = "^3.13" },
+]
 
 [tool.poetry.group.lint.dependencies]
 bandit = { version = ">=1.7", extras = ["toml"] }

@@ -20,7 +20,7 @@ class StreamlitPanel(PanelValueAccessor):
     def __init__(
         self,
         panel_id: str,
-        panel_script_path: str,
+        panel_script_path: Path,
         *,
         discovery_client: DiscoveryClient | None = None,
         grpc_channel_pool: GrpcChannelPool | None = None,
@@ -51,7 +51,7 @@ class StreamlitPanel(PanelValueAccessor):
         )
 
     @property
-    def panel_script_path(self) -> str:
+    def panel_script_path(self) -> Path:
         """Read-only accessor for the streamlit script file path."""
         return self._panel_script_path
 
@@ -60,7 +60,7 @@ class StreamlitPanel(PanelValueAccessor):
         """Read-only accessor for the panel's streamlit webpage URL."""
         return self._panel_url
 
-    def _get_python_path(self) -> str:
+    def _get_python_path(self) -> Path:
         """Get the Python interpreter path for the panel that ensures the same environment."""
         if sys.executable is None or sys.executable == "":
             raise RuntimeError("Python environment not found")
@@ -78,16 +78,16 @@ class StreamlitPanel(PanelValueAccessor):
                 bin_dir = "bin"
 
             # Construct path to the Python in the virtual environment based on sys.prefix
-            python_path = str(Path(sys.prefix) / bin_dir / python_executable)
+            python_path = Path(sys.prefix) / bin_dir / python_executable
 
             # Fall back to sys.executable if the constructed path doesn't exist
-            if not Path(python_path).exists():
-                python_path = str(Path(sys.executable).resolve())
+            if not python_path.exists():
+                python_path = Path(sys.executable).resolve()
         else:
             # If not in a .venv environment, use sys.executable
-            python_path = str(Path(sys.executable).resolve())
+            python_path = Path(sys.executable).resolve()
 
-        if sys.prefix not in python_path:
+        if python_path.is_relative_to(Path(sys.prefix)) is False:
             # Ensure the Python path is within the current environment
             raise RuntimeError(
                 f"Python path '{python_path}' does not match the current environment prefix '{sys.prefix}'."

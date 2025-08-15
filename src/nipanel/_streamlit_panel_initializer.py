@@ -34,6 +34,8 @@ def create_streamlit_panel(streamlit_script_path: Path, panel_id: str = "") -> S
         raise RuntimeError(
             "nipanel.create_panel() should not be called from a Streamlit script. Call nipanel.get_panel_accessor() instead."
         )
+    if not isinstance(streamlit_script_path, Path):
+        raise TypeError("The provided script path must be a pathlib.Path instance.")
 
     if streamlit_script_path.suffix != ".py":
         raise ValueError(
@@ -43,8 +45,7 @@ def create_streamlit_panel(streamlit_script_path: Path, panel_id: str = "") -> S
     if not panel_id:
         panel_id = streamlit_script_path.stem
 
-    path_str = str(streamlit_script_path)
-    return StreamlitPanel(panel_id, path_str)
+    return StreamlitPanel(panel_id, streamlit_script_path)
 
 
 def get_streamlit_panel_accessor() -> PanelValueAccessor:

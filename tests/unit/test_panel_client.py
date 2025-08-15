@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import grpc
 import pytest
 
@@ -13,8 +15,8 @@ def test___enumerate_is_empty(fake_panel_channel: grpc.Channel) -> None:
 def test___start_panels___enumerate_has_panels(fake_panel_channel: grpc.Channel) -> None:
     client = _PanelClient(grpc_channel=fake_panel_channel)
 
-    client.start_streamlit_panel("panel1", "uri1", "python.exe")
-    client.start_streamlit_panel("panel2", "uri2", "python.exe")
+    client.start_streamlit_panel("panel1", Path("uri1"), Path("python.exe"))
+    client.start_streamlit_panel("panel2", Path("uri2"), Path("python.exe"))
 
     assert client.enumerate_panels() == {
         "panel1": ("http://localhost:50051/panel1", []),
@@ -26,8 +28,8 @@ def test___start_panels___stop_panel_1_with_reset___enumerate_has_panel_2(
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = _PanelClient(grpc_channel=fake_panel_channel)
-    client.start_streamlit_panel("panel1", "uri1", "python.exe")
-    client.start_streamlit_panel("panel2", "uri2", "python.exe")
+    client.start_streamlit_panel("panel1", Path("uri1"), Path("python.exe"))
+    client.start_streamlit_panel("panel2", Path("uri2"), Path("python.exe"))
 
     client.stop_panel("panel1", reset=True)
 
@@ -40,8 +42,8 @@ def test___start_panels___stop_panel_1_without_reset___enumerate_has_both_panels
     fake_panel_channel: grpc.Channel,
 ) -> None:
     client = _PanelClient(grpc_channel=fake_panel_channel)
-    client.start_streamlit_panel("panel1", "uri1", "python.exe")
-    client.start_streamlit_panel("panel2", "uri2", "python.exe")
+    client.start_streamlit_panel("panel1", Path("uri1"), Path("python.exe"))
+    client.start_streamlit_panel("panel2", Path("uri2"), Path("python.exe"))
 
     client.stop_panel("panel1", reset=False)
 
