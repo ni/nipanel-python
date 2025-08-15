@@ -1,9 +1,9 @@
 import datetime as dt
-from typing_extensions import Mapping
+
 
 import numpy
 import pytest
-from ni.protobuf.types import attribute_value_pb2, scalar_pb2, array_pb2
+from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
 from ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
@@ -11,6 +11,7 @@ from ni.protobuf.types.waveform_pb2 import (
 from nitypes.bintime import DateTime
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform, NoneScaleMode, SampleIntervalMode, Timing
+from typing_extensions import Mapping
 
 from nipanel.converters.protobuf_types import (
     Double2DArrayConverter,
@@ -298,7 +299,7 @@ def test___scalar_protobuf_value_unset___convert___throws_type_error() -> None:
     with pytest.raises(ValueError) as exc:
         _ = converter.to_python_value(protobuf_value)
 
-    assert exc.value.args[0].startswith("Unexpected value for protobuf_value.WhichOneOf")
+    assert exc.value.args[0].startswith("Could not determine the data type of 'value'.")
 
 
 def test___scalar_protobuf_units_unset___convert___python_units_blank() -> None:

@@ -1297,13 +1297,13 @@ sqlframe = ["sqlframe (>=3.22.0)"]
 
 [[package]]
 name = "ni-measurement-plugin-sdk"
-version = "2.3.1"
+version = "2.4.0.dev1"
 description = "Measurement Plug-In SDK for Python"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurement_plugin_sdk-2.3.1-py3-none-any.whl", hash = "sha256:a7f0f60acb5e15461c815001bab5365cd4baf12651ecedf1021634a1b4d128f9"},
-    {file = "ni_measurement_plugin_sdk-2.3.1.tar.gz", hash = "sha256:3e279640cd21d5a9fb8815d2dabbda1a04ef0895456b4d139ed6a2f15c1203c6"},
+    {file = "ni_measurement_plugin_sdk-2.4.0.dev1-py3-none-any.whl", hash = "sha256:fe0adc542b98d73a6977c6d6103d452a8540090e5c3ae2bbdc5c2e4ae32d8052"},
+    {file = "ni_measurement_plugin_sdk-2.4.0.dev1.tar.gz", hash = "sha256:2e2a145b65b9a3d084aaba42e167c665f952fac90d9f4fdbf1c6ce2c4af96866"},
 ]
 
 [package.dependencies]
@@ -1312,38 +1312,43 @@ ni-measurement-plugin-sdk-service = "*"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-generator"
-version = "2.3.1"
+version = "2.4.0.dev1"
 description = "Measurement Plug-In Code Generator for Python"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurement_plugin_sdk_generator-2.3.1-py3-none-any.whl", hash = "sha256:f37dad47ea53d9f17aa86405b6249d986cae77de7c13025cdb265e7e11c48606"},
-    {file = "ni_measurement_plugin_sdk_generator-2.3.1.tar.gz", hash = "sha256:ae1bd331110944e366fffc7e01e55a7f12b8f23249dd923ae06764cea874cc08"},
+    {file = "ni_measurement_plugin_sdk_generator-2.4.0.dev1-py3-none-any.whl", hash = "sha256:d8609ac9082fd272a85e27456bd6d0e18362ff8d323b240f4a80ed11bf5c6a48"},
+    {file = "ni_measurement_plugin_sdk_generator-2.4.0.dev1.tar.gz", hash = "sha256:19fc6ad61241da41b748df75811421ab74f5e6e65e48bba73390e475e39660ee"},
 ]
 
 [package.dependencies]
 black = ">=24.8.0"
-click = ">=8.1.3"
+click = [
+    {version = ">=8.1.3", markers = "python_version >= \"3.10\" and python_version < \"4.0\""},
+    {version = ">=8.1.3,<8.2.0", markers = "python_version >= \"3.9\" and python_version < \"3.10\""},
+]
 click-option-group = ">=0.5.6"
 grpcio = ">=1.49.1,<2.0.0"
 Mako = ">=1.2.1,<2.0.0"
-ni-measurement-plugin-sdk-service = ">=2.3.0,<3.0.0"
+ni-measurement-plugin-sdk-service = ">=2.2.0,<3.0.0"
+ni-protobuf-types = ">=0.1.0dev2"
 protobuf = ">=4.21"
 
 [[package]]
 name = "ni-measurement-plugin-sdk-service"
-version = "2.3.1"
+version = "2.4.0.dev1"
 description = "Measurement Plug-In Support for Python"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_measurement_plugin_sdk_service-2.3.1-py3-none-any.whl", hash = "sha256:465e61f3f533ba9e4629815d3266b0bfe2f5cb440a8057bdf056674c61f18894"},
-    {file = "ni_measurement_plugin_sdk_service-2.3.1.tar.gz", hash = "sha256:afd4e08f40e1d11cf58e07d2394dd2a84c22d20972eb3249171200197c8b7d7a"},
+    {file = "ni_measurement_plugin_sdk_service-2.4.0.dev1-py3-none-any.whl", hash = "sha256:c501add4aacdd7795e1cd05d187a1487da1c49504a16f81f1dc96690cb4114e4"},
+    {file = "ni_measurement_plugin_sdk_service-2.4.0.dev1.tar.gz", hash = "sha256:9e51d20ea05a3948dad1338aab9e9169dfd0992922d4a4d05b2c086af466ab6e"},
 ]
 
 [package.dependencies]
 deprecation = ">=2.1"
 grpcio = ">=1.49.1,<2.0.0"
+ni-protobuf-types = ">=0.1.0dev2"
 protobuf = ">=4.21"
 python-decouple = ">=3.8"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
@@ -1361,33 +1366,32 @@ niswitch = ["niswitch[grpc] (>=1.4.4)"]
 
 [[package]]
 name = "ni-panels-v1-proto"
-version = "0.1.0.dev0"
+version = "0.1.0.dev1"
 description = "Protobuf generated code for the ni.panels.v1 gRPC API"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_panels_v1_proto-0.1.0.dev0-py3-none-any.whl", hash = "sha256:cab29f7d90d81eacd62b70538ec7effcc174f43750a35d1cc112c7ff56342519"},
-    {file = "ni_panels_v1_proto-0.1.0.dev0.tar.gz", hash = "sha256:3d59b5bc570f8b1c2d30f05b83199761f17d537a6ae787e1a5f68b9ddda94648"},
+    {file = "ni_panels_v1_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:8fa5cec4b2e69760d1cc4e2ef833e33c304093b5ca7d4d41dc90ed3cf678bfb7"},
+    {file = "ni_panels_v1_proto-0.1.0.dev1.tar.gz", hash = "sha256:5e7ed77517cc2eac3a9ebf0881b462129425faf77c0a1acd865d4e03893d12be"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-nitypes = ">=0.1.0dev3"
 protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "ni_protobuf_types-0.1.0.dev1-py3-none-any.whl", hash = "sha256:ff04a5b0ab26088ca96710009feddd04c80c60031f114ffc461c2ee257d96559"},
-    {file = "ni_protobuf_types-0.1.0.dev1.tar.gz", hash = "sha256:10d5abf5ffd9d0e07f657fcecac7b3956b263847eecba1c1feb2f6b24eec3eba"},
+    {file = "ni_protobuf_types-0.1.0.dev2-py3-none-any.whl", hash = "sha256:671eba9a39939047c16dcee740b037aea130634305516c9fb9006f13be99b8f3"},
+    {file = "ni_protobuf_types-0.1.0.dev2.tar.gz", hash = "sha256:373e0e4c41b8a168fdbcc674c165e6d9e09d6e9a5f77f7a99fa60e23763a5fb7"},
 ]
 
 [package.dependencies]
-nitypes = ">=0.1.0dev3"
+nitypes = ">=0.1.0dev8"
 protobuf = ">=4.21"
 
 [[package]]
@@ -3284,4 +3288,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0,!=3.9.7"
-content-hash = "9bd19048bdaa6426e3b08e692c20e1104871ff25691ab02e66dd95a570ed9ae3"
+content-hash = "aa82b3cba823d43bd56b1407d38e841ec3993f6b6ffbb65946527eb604a2fd1a"

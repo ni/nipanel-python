@@ -10,12 +10,16 @@ packages = [{ include = "nipanel", from = "src" }]
 python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
-ni-measurement-plugin-sdk = {version=">=2.3"}
+ni-measurement-plugin-sdk = {version=">=2.4.0dev1", allow-prereleases = true }
+# ni-measurement-plugin-sdk-service = {version=">=2.4.0dev1"}
+# ni-measurement-plugin-sdk-generator = {version=">=2.4.0dev1"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
 nitypes = {version=">=0.1.0dev8", allow-prereleases=true}
 numpy = ">=1.22"
 debugpy = ">=1.8.1"
+ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
+ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"

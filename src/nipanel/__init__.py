@@ -2,7 +2,6 @@
 
 from importlib.metadata import version
 
-from ni.protobuf.types import array_pb2
 from nipanel._panel_value_accessor import PanelValueAccessor
 from nipanel._streamlit_panel import StreamlitPanel
 from nipanel._streamlit_panel_initializer import (
