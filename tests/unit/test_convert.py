@@ -5,14 +5,8 @@ import numpy as np
 import pytest
 from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
-from ni.panels.v1 import panel_types_pb2
-from ni.protobuf.types.scalar_pb2 import ScalarData
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
-    DoubleAnalogWaveform,
-)
+from ni.protobuf.types import attribute_value_pb2, scalar_pb2, array_pb2
+from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform
 from typing_extensions import TypeAlias
@@ -30,11 +24,11 @@ _AnyWrappersPb2: TypeAlias = Union[
 ]
 
 _AnyPanelPbTypes: TypeAlias = Union[
-    panel_types_pb2.BoolCollection,
-    panel_types_pb2.ByteStringCollection,
-    panel_types_pb2.FloatCollection,
-    panel_types_pb2.IntCollection,
-    panel_types_pb2.StringCollection,
+    array_pb2.BoolArray,
+    array_pb2.BytesArray,
+    array_pb2.DoubleArray,
+    array_pb2.SInt64Array,
+    array_pb2.StringArray,
 ]
 
 
@@ -182,27 +176,6 @@ def test___python_datetime_timedelta___to_any___valid_durationpb2_value() -> Non
     assert unpack_dest.ToTimedelta() == expected_value
 
 
-@pytest.mark.parametrize(
-    "proto_type, default_value, expected_value",
-    [
-        (panel_types_pb2.BoolCollection, [False, False, False], [True, True, True]),
-        (panel_types_pb2.ByteStringCollection, [b"", b"", b""], [b"a", b"b", b"c"]),
-        (panel_types_pb2.FloatCollection, [0.0, 0.0, 0.0], [1.0, 2.0, 3.0]),
-        (panel_types_pb2.IntCollection, [0, 0, 0], [1, 2, 3]),
-        (panel_types_pb2.StringCollection, ["", "", ""], ["a", "b", "c"]),
-    ],
-)
-def test___python_panel_collection___to_any___valid_paneltype_value(
-    proto_type: type[_AnyPanelPbTypes], default_value: Any, expected_value: Any
-) -> None:
-    result = nipanel._convert.to_any(expected_value)
-    unpack_dest = proto_type(values=default_value)
-    _assert_any_and_unpack(result, unpack_dest)
-
-    assert isinstance(unpack_dest, proto_type)
-    assert unpack_dest.values == expected_value
-
-
 def test___none_value___to_any___raises_type_error() -> None:
     """Test that passing None to to_any() raises a TypeError."""
     with pytest.raises(TypeError):
@@ -258,40 +231,39 @@ def test___durationpb2_timestamp___from_any___valid_python_value() -> None:
     assert result == expected_value
 
 
-@pytest.mark.parametrize(
-    "proto_type, expected_value",
-    [
-        (panel_types_pb2.BoolCollection, [True, True, True]),
-        (panel_types_pb2.ByteStringCollection, [b"a", b"b", b"c"]),
-        (panel_types_pb2.FloatCollection, [1.0, 2.0, 3.0]),
-        (panel_types_pb2.IntCollection, [1, 2, 3]),
-        (panel_types_pb2.StringCollection, ["a", "b", "c"]),
-    ],
-)
-def test___paneltype_value___from_any___valid_python_value(
-    proto_type: type[_AnyPanelPbTypes], expected_value: Any
-) -> None:
-    pb_value = proto_type(values=expected_value)
-    packed_any = _pack_into_any(pb_value)
-
-    result = nipanel._convert.from_any(packed_any)
-
-    assert isinstance(result, type(expected_value))
-    assert result == expected_value
-
-
 # ========================================================
 # Protobuf Types: Python to Protobuf
 # ========================================================
+@pytest.mark.parametrize(
+    "proto_type, default_value, expected_value",
+    [
+        (array_pb2.BoolArray, [False, False, False], [True, True, True]),
+        (array_pb2.BytesArray, [b"", b"", b""], [b"a", b"b", b"c"]),
+        (array_pb2.DoubleArray, [0.0, 0.0, 0.0], [1.0, 2.0, 3.0]),
+        (array_pb2.SInt64Array, [0, 0, 0], [1, 2, 3]),
+        (array_pb2.StringArray, ["", "", ""], ["a", "b", "c"]),
+    ],
+)
+def test___python_panel_collection___to_any___valid_paneltype_value(
+    proto_type: type[_AnyPanelPbTypes], default_value: Any, expected_value: Any
+) -> None:
+    result = nipanel._convert.to_any(expected_value)
+    unpack_dest = proto_type(values=default_value)
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, proto_type)
+    assert unpack_dest.values == expected_value
+
+
 def test___python_scalar_object___to_any___valid_scalar_data_value() -> None:
     scalar_obj = Scalar(1.0, "amps")
     result = nipanel._convert.to_any(scalar_obj)
-    unpack_dest = ScalarData()
+    unpack_dest = scalar_pb2.Scalar()
     _assert_any_and_unpack(result, unpack_dest)
 
-    assert isinstance(unpack_dest, ScalarData)
+    assert isinstance(unpack_dest, scalar_pb2.Scalar)
     assert unpack_dest.double_value == 1.0
-    assert unpack_dest.units == "amps"
+    assert unpack_dest.attributes["NI_UnitDescription"].string_value == "amps"
 
 
 def test___python_analog_waveform___to_any___valid_double_analog_waveform() -> None:
@@ -326,10 +298,10 @@ def test___python_2dcollection_of_float___to_any___valid_double2darray(
     expected_rows = 2
     expected_columns = 2
     result = nipanel._convert.to_any(python_value)
-    unpack_dest = Double2DArray()
+    unpack_dest = array_pb2.Double2DArray()
     _assert_any_and_unpack(result, unpack_dest)
 
-    assert isinstance(unpack_dest, Double2DArray)
+    assert isinstance(unpack_dest, array_pb2.Double2DArray)
     assert unpack_dest.rows == expected_rows
     assert unpack_dest.columns == expected_columns
     assert unpack_dest.data == expected_data
@@ -351,10 +323,10 @@ def test___python_set_of_collection_of_float___to_any___valid_double2darray(
     expected_rows = 2
     expected_columns = 2
     result = nipanel._convert.to_any(python_value)
-    unpack_dest = Double2DArray()
+    unpack_dest = array_pb2.Double2DArray()
     _assert_any_and_unpack(result, unpack_dest)
 
-    assert isinstance(unpack_dest, Double2DArray)
+    assert isinstance(unpack_dest, array_pb2.Double2DArray)
     assert unpack_dest.rows == expected_rows
     assert unpack_dest.columns == expected_columns
     # Sets and frozensets don't maintain order, so sort before comparing.
@@ -364,8 +336,31 @@ def test___python_set_of_collection_of_float___to_any___valid_double2darray(
 # ========================================================
 # Protobuf Types: Protobuf to Python
 # ========================================================
+@pytest.mark.parametrize(
+    "proto_type, expected_value",
+    [
+        (array_pb2.BoolArray, [True, True, True]),
+        (array_pb2.BytesArray, [b"a", b"b", b"c"]),
+        (array_pb2.DoubleArray, [1.0, 2.0, 3.0]),
+        (array_pb2.SInt64Array, [1, 2, 3]),
+        (array_pb2.StringArray, ["a", "b", "c"]),
+    ],
+)
+def test___paneltype_value___from_any___valid_python_value(
+    proto_type: type[_AnyPanelPbTypes], expected_value: Any
+) -> None:
+    pb_value = proto_type(values=expected_value)
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    assert isinstance(result, type(expected_value))
+    assert result == expected_value
+
+
 def test___scalar_data___from_any___valid_python_scalar_object() -> None:
-    pb_value = ScalarData(units="amps", double_value=1.0)
+    attrs = {"NI_UnitDescription": attribute_value_pb2.AttributeValue(string_value="amps")}
+    pb_value = scalar_pb2.Scalar(attributes=attrs, double_value=1.0)
     packed_any = _pack_into_any(pb_value)
 
     result = nipanel._convert.from_any(packed_any)
@@ -387,7 +382,7 @@ def test___double_analog_waveform___from_any___valid_python_analog_waveform() ->
 
 
 def test___double2darray___from_any___valid_python_2dcollection() -> None:
-    pb_value = Double2DArray(data=[1.0, 2.0, 3.0, 4.0], rows=2, columns=2)
+    pb_value = array_pb2.Double2DArray(data=[1.0, 2.0, 3.0, 4.0], rows=2, columns=2)
     packed_any = _pack_into_any(pb_value)
 
     result = nipanel._convert.from_any(packed_any)

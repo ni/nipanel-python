@@ -1,18 +1,17 @@
 import datetime as dt
 
+
 import numpy
 import pytest
-from ni.protobuf.types.scalar_pb2 import ScalarData
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
-)
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
+from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2
+from ni.protobuf.types.waveform_pb2 import (
     DoubleAnalogWaveform,
     WaveformAttributeValue,
 )
 from nitypes.bintime import DateTime
 from nitypes.scalar import Scalar
 from nitypes.waveform import AnalogWaveform, NoneScaleMode, SampleIntervalMode, Timing
+from typing_extensions import Mapping
 
 from nipanel.converters.protobuf_types import (
     Double2DArrayConverter,
@@ -62,17 +61,17 @@ def test___list_of_lists_inconsistent_column_length___convert___throws_value_err
     "double2darray, expected_data",
     [
         (
-            Double2DArray(rows=3, columns=2, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            array_pb2.Double2DArray(rows=3, columns=2, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
             [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]],
         ),
         (
-            Double2DArray(rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
+            array_pb2.Double2DArray(rows=2, columns=3, data=[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]),
             [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]],
         ),
     ],
 )
 def test___double2darray___convert___valid_list_of_lists(
-    double2darray: Double2DArray, expected_data: list[list[float]]
+    double2darray: array_pb2.Double2DArray, expected_data: list[list[float]]
 ) -> None:
     converter = Double2DArrayConverter()
     list_of_lists = converter.to_python_value(double2darray)
@@ -81,7 +80,7 @@ def test___double2darray___convert___valid_list_of_lists(
 
 
 def test___double2darray_invalid_num_columns___convert___throws_value_error() -> None:
-    double2darray = Double2DArray(rows=1, columns=2, data=[1.0, 2.0, 3.0])
+    double2darray = array_pb2.Double2DArray(rows=1, columns=2, data=[1.0, 2.0, 3.0])
     converter = Double2DArrayConverter()
 
     with pytest.raises(ValueError):
@@ -89,7 +88,7 @@ def test___double2darray_invalid_num_columns___convert___throws_value_error() ->
 
 
 def test___double2darray_empty_data___convert___returns_empty_list() -> None:
-    double2darray = Double2DArray(rows=0, columns=0, data=[])
+    double2darray = array_pb2.Double2DArray(rows=0, columns=0, data=[])
     converter = Double2DArrayConverter()
 
     list_of_lists = converter.to_python_value(double2darray)
@@ -241,8 +240,8 @@ def test___dbl_analog_wfm_with_timing_no_dt___convert___valid_python_object() ->
 # Scalar: Protobuf to Python
 # ========================================================
 def test___bool_scalar_protobuf___convert___valid_bool_scalar() -> None:
-    protobuf_value = ScalarData()
-    protobuf_value.units = "volts"
+    attrs = _units_to_scalar_attribute_map("volts")
+    protobuf_value = scalar_pb2.Scalar(attributes=attrs)
     protobuf_value.bool_value = True
 
     converter = ScalarConverter()
@@ -254,9 +253,9 @@ def test___bool_scalar_protobuf___convert___valid_bool_scalar() -> None:
 
 
 def test___int32_scalar_protobuf___convert___valid_int_scalar() -> None:
-    protobuf_value = ScalarData()
-    protobuf_value.units = "volts"
-    protobuf_value.int32_value = 10
+    attrs = _units_to_scalar_attribute_map("volts")
+    protobuf_value = scalar_pb2.Scalar(attributes=attrs)
+    protobuf_value.sint32_value = 10
 
     converter = ScalarConverter()
     python_value = converter.to_python_value(protobuf_value)
@@ -267,8 +266,8 @@ def test___int32_scalar_protobuf___convert___valid_int_scalar() -> None:
 
 
 def test___double_scalar_protobuf___convert___valid_float_scalar() -> None:
-    protobuf_value = ScalarData()
-    protobuf_value.units = "volts"
+    attrs = _units_to_scalar_attribute_map("volts")
+    protobuf_value = scalar_pb2.Scalar(attributes=attrs)
     protobuf_value.double_value = 20.0
 
     converter = ScalarConverter()
@@ -280,8 +279,8 @@ def test___double_scalar_protobuf___convert___valid_float_scalar() -> None:
 
 
 def test___string_scalar_protobuf___convert___valid_str_scalar() -> None:
-    protobuf_value = ScalarData()
-    protobuf_value.units = "volts"
+    attrs = _units_to_scalar_attribute_map("volts")
+    protobuf_value = scalar_pb2.Scalar(attributes=attrs)
     protobuf_value.string_value = "value"
 
     converter = ScalarConverter()
@@ -293,18 +292,18 @@ def test___string_scalar_protobuf___convert___valid_str_scalar() -> None:
 
 
 def test___scalar_protobuf_value_unset___convert___throws_type_error() -> None:
-    protobuf_value = ScalarData()
-    protobuf_value.units = "volts"
+    attrs = _units_to_scalar_attribute_map("volts")
+    protobuf_value = scalar_pb2.Scalar(attributes=attrs)
 
     converter = ScalarConverter()
     with pytest.raises(ValueError) as exc:
         _ = converter.to_python_value(protobuf_value)
 
-    assert exc.value.args[0].startswith("Unexpected value for protobuf_value.WhichOneOf")
+    assert exc.value.args[0].startswith("Could not determine the data type of 'value'.")
 
 
 def test___scalar_protobuf_units_unset___convert___python_units_blank() -> None:
-    protobuf_value = ScalarData()
+    protobuf_value = scalar_pb2.Scalar()
     protobuf_value.bool_value = True
 
     converter = ScalarConverter()
@@ -326,7 +325,7 @@ def test___bool_scalar___convert___valid_bool_scalar_protobuf() -> None:
 
     assert protobuf_value.WhichOneof("value") == "bool_value"
     assert protobuf_value.bool_value is True
-    assert protobuf_value.units == "volts"
+    assert protobuf_value.attributes["NI_UnitDescription"].string_value == "volts"
 
 
 def test___int_scalar___convert___valid_int32_scalar_protobuf() -> None:
@@ -335,9 +334,9 @@ def test___int_scalar___convert___valid_int32_scalar_protobuf() -> None:
     converter = ScalarConverter()
     protobuf_value = converter.to_protobuf_message(python_value)
 
-    assert protobuf_value.WhichOneof("value") == "int32_value"
-    assert protobuf_value.int32_value == 10
-    assert protobuf_value.units == "volts"
+    assert protobuf_value.WhichOneof("value") == "sint32_value"
+    assert protobuf_value.sint32_value == 10
+    assert protobuf_value.attributes["NI_UnitDescription"].string_value == "volts"
 
 
 def test___float_scalar___convert___valid_double_scalar_protobuf() -> None:
@@ -348,7 +347,7 @@ def test___float_scalar___convert___valid_double_scalar_protobuf() -> None:
 
     assert protobuf_value.WhichOneof("value") == "double_value"
     assert protobuf_value.double_value == 20.0
-    assert protobuf_value.units == "volts"
+    assert protobuf_value.attributes["NI_UnitDescription"].string_value == "volts"
 
 
 def test___str_scalar___convert___valid_string_scalar_protobuf() -> None:
@@ -359,7 +358,7 @@ def test___str_scalar___convert___valid_string_scalar_protobuf() -> None:
 
     assert protobuf_value.WhichOneof("value") == "string_value"
     assert protobuf_value.string_value == "value"
-    assert protobuf_value.units == "volts"
+    assert protobuf_value.attributes["NI_UnitDescription"].string_value == "volts"
 
 
 def test___scalar_units_unset___convert___protobuf_units_blank() -> None:
@@ -368,6 +367,11 @@ def test___scalar_units_unset___convert___protobuf_units_blank() -> None:
     converter = ScalarConverter()
     protobuf_value = converter.to_protobuf_message(python_value)
 
-    assert protobuf_value.WhichOneof("value") == "int32_value"
-    assert protobuf_value.int32_value == 10
-    assert protobuf_value.units == ""
+    assert protobuf_value.WhichOneof("value") == "sint32_value"
+    assert protobuf_value.sint32_value == 10
+    assert protobuf_value.attributes["NI_UnitDescription"].string_value == ""
+
+
+def _units_to_scalar_attribute_map(units: str) -> Mapping[str, attribute_value_pb2.AttributeValue]:
+    value = attribute_value_pb2.AttributeValue(string_value=units)
+    return {"NI_UnitDescription": value}

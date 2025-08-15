@@ -2,47 +2,143 @@
 
 from __future__ import annotations
 
-import datetime as dt
-from collections.abc import Collection, Mapping
+from collections.abc import Collection
 from typing import Type, Union
 
-import hightime as ht
 import nitypes.bintime as bt
 import numpy as np
-from ni.protobuf.types import scalar_pb2
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.array_pb2 import (
-    Double2DArray,
+from ni.protobuf.types import scalar_pb2, array_pb2
+from ni.protobuf.types.precision_timestamp_conversion import (
+    bintime_datetime_from_protobuf,
+    bintime_datetime_to_protobuf,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.precision_timestamp_pb2 import (
-    PrecisionTimestamp,
+from ni.protobuf.types.precision_timestamp_pb2 import PrecisionTimestamp
+from ni.protobuf.types.scalar_conversion import scalar_from_protobuf, scalar_to_protobuf
+from ni.protobuf.types.waveform_conversion import (
+    float64_analog_waveform_from_protobuf,
+    float64_analog_waveform_to_protobuf,
 )
-from ni_measurement_plugin_sdk_service._internal.stubs.ni.protobuf.types.waveform_pb2 import (
-    DoubleAnalogWaveform,
-    WaveformAttributeValue,
-)
+from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
 from nitypes.scalar import Scalar
-from nitypes.time import convert_datetime
-from nitypes.waveform import (
-    AnalogWaveform,
-    ExtendedPropertyDictionary,
-    NoneScaleMode,
-    Timing,
-)
-from nitypes.waveform.typing import ExtendedPropertyValue
+from nitypes.waveform import AnalogWaveform
 from typing_extensions import TypeAlias
 
-from nipanel.converters import Converter, CollectionConverter2D
+from nipanel.converters import Converter, CollectionConverter, CollectionConverter2D
 
 _AnyScalarType: TypeAlias = Union[bool, int, float, str]
-_SCALAR_TYPE_TO_PB_ATTR_MAP = {
-    bool: "bool_value",
-    int: "int32_value",
-    float: "double_value",
-    str: "string_value",
-}
 
 
-class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
+class BoolCollectionConverter(CollectionConverter[bool, array_pb2.BoolArray]):
+    """A converter for a Collection of bools."""
+
+    @property
+    def item_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bool
+
+    @property
+    def protobuf_message(self) -> Type[array_pb2.BoolArray]:
+        """The type-specific protobuf message for the Python type."""
+        return array_pb2.BoolArray
+
+    def to_protobuf_message(self, python_value: Collection[bool]) -> array_pb2.BoolArray:
+        """Convert the collection of bools to array_pb2.BoolArray."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_message: array_pb2.BoolArray) -> Collection[bool]:
+        """Convert the protobuf message to a Python collection of bools."""
+        return list(protobuf_message.values)
+
+
+class BytesCollectionConverter(CollectionConverter[bytes, array_pb2.BytesArray]):
+    """A converter for a Collection of byte strings."""
+
+    @property
+    def item_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bytes
+
+    @property
+    def protobuf_message(self) -> Type[array_pb2.BytesArray]:
+        """The type-specific protobuf message for the Python type."""
+        return array_pb2.BytesArray
+
+    def to_protobuf_message(self, python_value: Collection[bytes]) -> array_pb2.BytesArray:
+        """Convert the collection of byte strings to array_pb2.BytesArray."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_message: array_pb2.BytesArray) -> Collection[bytes]:
+        """Convert the protobuf message to a Python collection of byte strings."""
+        return list(protobuf_message.values)
+
+
+class FloatCollectionConverter(CollectionConverter[float, array_pb2.DoubleArray]):
+    """A converter for a Collection of floats."""
+
+    @property
+    def item_type(self) -> type:
+        """The Python type that this converter handles."""
+        return float
+
+    @property
+    def protobuf_message(self) -> Type[array_pb2.DoubleArray]:
+        """The type-specific protobuf message for the Python type."""
+        return array_pb2.DoubleArray
+
+    def to_protobuf_message(self, python_value: Collection[float]) -> array_pb2.DoubleArray:
+        """Convert the collection of floats to array_pb2.DoubleArray."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_message: array_pb2.DoubleArray) -> Collection[float]:
+        """Convert the protobuf message to a Python collection of floats."""
+        return list(protobuf_message.values)
+
+
+class IntCollectionConverter(CollectionConverter[int, array_pb2.SInt64Array]):
+    """A converter for a Collection of integers."""
+
+    @property
+    def item_type(self) -> type:
+        """The Python type that this converter handles."""
+        return int
+
+    @property
+    def protobuf_message(self) -> Type[array_pb2.SInt64Array]:
+        """The type-specific protobuf message for the Python type."""
+        return array_pb2.SInt64Array
+
+    def to_protobuf_message(self, python_value: Collection[int]) -> array_pb2.SInt64Array:
+        """Convert the collection of integers to array_pb2.SInt64Array."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_message: array_pb2.SInt64Array) -> Collection[int]:
+        """Convert the protobuf message to a Python collection of integers."""
+        return list(protobuf_message.values)
+
+
+class StrCollectionConverter(CollectionConverter[str, array_pb2.StringArray]):
+    """A converter for a Collection of strings."""
+
+    @property
+    def item_type(self) -> type:
+        """The Python type that this converter handles."""
+        return str
+
+    @property
+    def protobuf_message(self) -> Type[array_pb2.StringArray]:
+        """The type-specific protobuf message for the Python type."""
+        return array_pb2.StringArray
+
+    def to_protobuf_message(self, python_value: Collection[str]) -> array_pb2.StringArray:
+        """Convert the collection of strings to panel_types_pb2.StringCollection."""
+        return self.protobuf_message(values=python_value)
+
+    def to_python_value(self, protobuf_message: array_pb2.StringArray) -> Collection[str]:
+        """Convert the protobuf message to a Python collection of strings."""
+        return list(protobuf_message.values)
+
+
+class Double2DArrayConverter(CollectionConverter2D[float, array_pb2.Double2DArray]):
     """A converter between Collection[Collection[float]] and Double2DArray."""
 
     @property
@@ -51,11 +147,13 @@ class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
         return float
 
     @property
-    def protobuf_message(self) -> Type[Double2DArray]:
+    def protobuf_message(self) -> Type[array_pb2.Double2DArray]:
         """The type-specific protobuf message for the Python type."""
-        return Double2DArray
+        return array_pb2.Double2DArray
 
-    def to_protobuf_message(self, python_value: Collection[Collection[float]]) -> Double2DArray:
+    def to_protobuf_message(
+        self, python_value: Collection[Collection[float]]
+    ) -> array_pb2.Double2DArray:
         """Convert the Python Collection[Collection[float]] to a protobuf Double2DArray."""
         rows = len(python_value)
         if rows:
@@ -69,9 +167,11 @@ class Double2DArrayConverter(CollectionConverter2D[float, Double2DArray]):
 
         # Create a flat list in row major order.
         flat_list = [item for subcollection in python_value for item in subcollection]
-        return Double2DArray(rows=rows, columns=columns, data=flat_list)
+        return array_pb2.Double2DArray(rows=rows, columns=columns, data=flat_list)
 
-    def to_python_value(self, protobuf_message: Double2DArray) -> Collection[Collection[float]]:
+    def to_python_value(
+        self, protobuf_message: array_pb2.Double2DArray
+    ) -> Collection[Collection[float]]:
         """Convert the protobuf Double2DArray to a Python Collection[Collection[float]]."""
         if not protobuf_message.data:
             return []
@@ -106,86 +206,11 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
 
     def to_protobuf_message(self, python_value: AnalogWaveform[np.float64]) -> DoubleAnalogWaveform:
         """Convert the Python AnalogWaveform to a protobuf DoubleAnalogWaveform."""
-        if python_value.timing.has_start_time:
-            bin_datetime = convert_datetime(bt.DateTime, python_value.timing.start_time)
-            precision_timestamp = self._pt_converter.to_protobuf_message(bin_datetime)
-        else:
-            precision_timestamp = None
-
-        if python_value.timing.has_sample_interval:
-            time_interval = python_value.timing.sample_interval.total_seconds()
-        else:
-            time_interval = 0
-
-        attributes = self._extended_properties_to_attributes(python_value.extended_properties)
-
-        return self.protobuf_message(
-            t0=precision_timestamp,
-            dt=time_interval,
-            y_data=python_value.scaled_data,
-            attributes=attributes,
-        )
-
-    def _extended_properties_to_attributes(
-        self,
-        extended_properties: ExtendedPropertyDictionary,
-    ) -> Mapping[str, WaveformAttributeValue]:
-        return {key: self._value_to_attribute(value) for key, value in extended_properties.items()}
-
-    def _value_to_attribute(self, value: ExtendedPropertyValue) -> WaveformAttributeValue:
-        attr_value = WaveformAttributeValue()
-        if isinstance(value, bool):
-            attr_value.bool_value = value
-        elif isinstance(value, int):
-            attr_value.integer_value = value
-        elif isinstance(value, float):
-            attr_value.double_value = value
-        elif isinstance(value, str):
-            attr_value.string_value = value
-        else:
-            raise TypeError(f"Unexpected type for extended property value {type(value)}")
-
-        return attr_value
+        return float64_analog_waveform_to_protobuf(python_value)
 
     def to_python_value(self, protobuf_message: DoubleAnalogWaveform) -> AnalogWaveform[np.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
-        # Declare timing to accept both bintime and dt.datetime to satisfy mypy.
-        timing: Timing[bt.DateTime | dt.datetime]
-        if not protobuf_message.dt and not protobuf_message.HasField("t0"):
-            # If both dt and t0 are unset, use Timing.empty.
-            timing = Timing.empty
-        else:
-            # Timestamp
-            pt_converter = PrecisionTimestampConverter()
-            bin_datetime = pt_converter.to_python_value(protobuf_message.t0)
-
-            # Sample Interval
-            if not protobuf_message.dt:
-                timing = Timing.create_with_no_interval(timestamp=bin_datetime)
-            else:
-                sample_interval = ht.timedelta(seconds=protobuf_message.dt)
-                timing = Timing.create_with_regular_interval(
-                    sample_interval=sample_interval,
-                    timestamp=bin_datetime,
-                )
-
-        extended_properties = {}
-        for key, value in protobuf_message.attributes.items():
-            attr_type = value.WhichOneof("attribute")
-            extended_properties[key] = getattr(value, str(attr_type))
-
-        data_array = np.array(protobuf_message.y_data)
-        return AnalogWaveform(
-            sample_count=data_array.size,
-            dtype=np.float64,
-            raw_data=data_array,
-            start_index=0,
-            capacity=data_array.size,
-            extended_properties=extended_properties,
-            copy_extended_properties=True,
-            timing=timing,
-            scale_mode=NoneScaleMode(),
-        )
+        return float64_analog_waveform_from_protobuf(protobuf_message)
 
 
 class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
@@ -203,18 +228,14 @@ class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
 
     def to_protobuf_message(self, python_value: bt.DateTime) -> PrecisionTimestamp:
         """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
-        seconds, fractional_seconds = python_value.to_tuple()
-        return self.protobuf_message(seconds=seconds, fractional_seconds=fractional_seconds)
+        return bintime_datetime_to_protobuf(python_value)
 
     def to_python_value(self, protobuf_message: PrecisionTimestamp) -> bt.DateTime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
-        time_value_tuple = bt.TimeValueTuple(
-            protobuf_message.seconds, protobuf_message.fractional_seconds
-        )
-        return bt.DateTime.from_tuple(time_value_tuple)
+        return bintime_datetime_from_protobuf(protobuf_message)
 
 
-class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
+class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):
     """A converter for Scalar objects."""
 
     @property
@@ -223,30 +244,14 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.ScalarData]):
         return Scalar
 
     @property
-    def protobuf_message(self) -> Type[scalar_pb2.ScalarData]:
+    def protobuf_message(self) -> Type[scalar_pb2.Scalar]:
         """The type-specific protobuf message for the Python type."""
-        return scalar_pb2.ScalarData
+        return scalar_pb2.Scalar
 
-    def to_protobuf_message(self, python_value: Scalar[_AnyScalarType]) -> scalar_pb2.ScalarData:
-        """Convert the Python Scalar to a protobuf scalar_pb2.ScalarData."""
-        message = self.protobuf_message()
-        message.units = python_value.units
+    def to_protobuf_message(self, python_value: Scalar[_AnyScalarType]) -> scalar_pb2.Scalar:
+        """Convert the Python Scalar to a protobuf scalar_pb2.Scalar."""
+        return scalar_to_protobuf(python_value)
 
-        value_attr = _SCALAR_TYPE_TO_PB_ATTR_MAP.get(type(python_value.value), None)
-        if not value_attr:
-            raise TypeError(f"Unexpected type for python_value.value: {type(python_value.value)}")
-        setattr(message, value_attr, python_value.value)
-
-        return message
-
-    def to_python_value(self, protobuf_message: scalar_pb2.ScalarData) -> Scalar[_AnyScalarType]:
+    def to_python_value(self, protobuf_message: scalar_pb2.Scalar) -> Scalar[_AnyScalarType]:
         """Convert the protobuf message to a Python Scalar."""
-        if protobuf_message.units is None:
-            raise ValueError("protobuf.units cannot be None.")
-
-        pb_type = str(protobuf_message.WhichOneof("value"))
-        if pb_type not in _SCALAR_TYPE_TO_PB_ATTR_MAP.values():
-            raise ValueError(f"Unexpected value for protobuf_value.WhichOneOf: {pb_type}")
-
-        value = getattr(protobuf_message, pb_type)
-        return Scalar(value, protobuf_message.units)
+        return scalar_from_protobuf(protobuf_message)
