@@ -1,6 +1,6 @@
 import datetime as dt
 from collections.abc import MutableMapping
-from typing import Any
+from typing import Any, Union
 
 import nitypes.bintime as bt
 import numpy as np
@@ -289,7 +289,7 @@ def _get_t0_pt() -> precision_timestamp_pb2.PrecisionTimestamp:
 
 
 def _set_python_attributes(
-    waveform: NumericWaveform[Any, Any] | DigitalWaveform[Any] | Spectrum[Any],
+    waveform: Union[NumericWaveform[Any, Any], DigitalWaveform[Any], Spectrum[Any]],
 ) -> None:
     waveform.channel_name = EXPECTED_CHANNEL_NAME
     if isinstance(waveform, NumericWaveform) or isinstance(waveform, Spectrum):
@@ -297,7 +297,7 @@ def _set_python_attributes(
 
 
 def _check_python_attributes(
-    waveform: NumericWaveform[Any, Any] | DigitalWaveform[Any] | Spectrum[Any],
+    waveform: Union[NumericWaveform[Any, Any], DigitalWaveform[Any], Spectrum[Any]],
 ) -> None:
     assert waveform.channel_name == EXPECTED_CHANNEL_NAME
     if isinstance(waveform, NumericWaveform) or isinstance(waveform, Spectrum):
@@ -313,14 +313,14 @@ def _check_protobuf_attributes(
         assert attributes["NI_UnitDescription"].string_value == EXPECTED_UNITS
 
 
-def _set_python_timing(waveform: NumericWaveform[Any, Any] | DigitalWaveform[Any]) -> None:
+def _set_python_timing(waveform: Union[NumericWaveform[Any, Any], DigitalWaveform[Any]]) -> None:
     waveform.timing = Timing.create_with_regular_interval(
         sample_interval=dt.timedelta(milliseconds=EXPECTED_SAMPLE_INTERVAL * 1000),
         timestamp=EXPECTED_T0_DT,
     )
 
 
-def _check_python_timing(waveform: NumericWaveform[Any, Any] | DigitalWaveform[Any]) -> None:
+def _check_python_timing(waveform: Union[NumericWaveform[Any, Any], DigitalWaveform[Any]]) -> None:
     assert waveform.timing.start_time == EXPECTED_T0_DT
     assert waveform.timing.sample_interval == dt.timedelta(seconds=EXPECTED_SAMPLE_INTERVAL)
     assert waveform.timing.sample_interval_mode == SampleIntervalMode.REGULAR
