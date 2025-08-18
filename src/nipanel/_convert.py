@@ -7,6 +7,7 @@ from collections.abc import Collection
 from typing import Any, Iterable
 
 from google.protobuf import any_pb2
+from nitypes.waveform import AnalogWaveform, ComplexWaveform
 
 from nipanel.converters import Converter
 from nipanel.converters.builtin import (
@@ -21,9 +22,14 @@ from nipanel.converters.builtin import (
 from nipanel.converters.protobuf_types import (
     BoolCollectionConverter,
     BytesCollectionConverter,
+    DigitalWaveformConverter,
     Double2DArrayConverter,
     DoubleAnalogWaveformConverter,
+    DoubleComplexWaveformConverter,
+    DoubleSpectrumConverter,
     FloatCollectionConverter,
+    Int16AnalogWaveformConverter,
+    Int16ComplexWaveformConverter,
     IntCollectionConverter,
     ScalarConverter,
     StrCollectionConverter,
@@ -44,9 +50,14 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     # Protobuf Types
     BoolCollectionConverter(),
     BytesCollectionConverter(),
+    DigitalWaveformConverter(),
     Double2DArrayConverter(),
     DoubleAnalogWaveformConverter(),
+    DoubleComplexWaveformConverter(),
+    DoubleSpectrumConverter(),
     FloatCollectionConverter(),
+    Int16AnalogWaveformConverter(),
+    Int16ComplexWaveformConverter(),
     IntCollectionConverter(),
     StrCollectionConverter(),
     ScalarConverter(),
@@ -73,6 +84,7 @@ def to_any(python_value: object) -> any_pb2.Any:
 
 def _get_best_matching_type(python_value: object) -> str:
     underlying_parents = type(python_value).mro()  # This covers enum.IntEnum and similar
+    additional_info_string = _get_additional_type_info_string(python_value)
 
     container_types = []
     value_is_collection = any(_CONVERTIBLE_COLLECTION_TYPES.intersection(underlying_parents))
@@ -105,7 +117,9 @@ def _get_best_matching_type(python_value: object) -> str:
     best_matching_type = None
     candidates = _get_candidate_strings(underlying_parents)
     for candidate in candidates:
-        python_typename = _create_python_typename(candidate, container_types)
+        python_typename = _create_python_typename(
+            candidate, container_types, additional_info_string
+        )
         if python_typename not in _SUPPORTED_PYTHON_TYPES:
             continue
         best_matching_type = python_typename
@@ -115,7 +129,8 @@ def _get_best_matching_type(python_value: object) -> str:
         payload_type = underlying_parents[0]
         raise TypeError(
             f"Unsupported type: ({container_types}, {payload_type}) with parents "
-            f"{underlying_parents}. Supported types are: {_SUPPORTED_PYTHON_TYPES}"
+            f"{underlying_parents}.\n\nSupported types are: {_SUPPORTED_PYTHON_TYPES}"
+            f"\n\nAdditional type info: {additional_info_string}"
         )
     _logger.debug(f"Best matching type for '{repr(python_value)}' resolved to {best_matching_type}")
     return best_matching_type
@@ -146,12 +161,24 @@ def _get_candidate_strings(candidates: Iterable[type]) -> list[str]:
     candidate_names = []
     for candidate in candidates:
         candidate_names.append(f"{candidate.__module__}.{candidate.__name__}")
-
     return candidate_names
 
 
-def _create_python_typename(candidate_name: str, container_types: Iterable[type]) -> str:
+def _create_python_typename(
+    candidate_name: str, container_types: Iterable[type], additional_info: str
+) -> str:
     name = candidate_name
+    if additional_info:
+        name = f"{name}[{additional_info}]"
     for container_type in container_types:
         name = f"{container_type.__module__}.{container_type.__name__}[{name}]"
     return name
+
+
+def _get_additional_type_info_string(python_value: object) -> str:
+    if isinstance(python_value, AnalogWaveform):
+        return str(python_value.dtype)
+    elif isinstance(python_value, ComplexWaveform):
+        return str(python_value.dtype)
+    else:
+        return ""
