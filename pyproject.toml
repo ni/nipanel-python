@@ -16,7 +16,7 @@ streamlit = ">=1.24"
 nitypes = {version=">=0.1.0dev8", allow-prereleases=true}
 numpy = ">=1.22"
 debugpy = ">=1.8.1"
-ni-protobuf-types = { version = ">=0.1.0dev2", allow-prereleases = true }
+ni-protobuf-types = { version = ">=0.1.0dev3", allow-prereleases = true }
 ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 [tool.poetry.group.dev.dependencies]

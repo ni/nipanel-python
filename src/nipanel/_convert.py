@@ -33,6 +33,7 @@ from nipanel.converters.protobuf_types import (
     IntCollectionConverter,
     ScalarConverter,
     StrCollectionConverter,
+    VectorConverter,
 )
 
 _logger = logging.getLogger(__name__)
@@ -61,6 +62,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     IntCollectionConverter(),
     StrCollectionConverter(),
     ScalarConverter(),
+    VectorConverter(),
 ]
 
 _CONVERTIBLE_COLLECTION_TYPES = {

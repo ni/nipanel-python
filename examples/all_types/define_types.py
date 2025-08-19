@@ -6,6 +6,7 @@ import enum
 import numpy as np
 from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
+from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 
 
@@ -84,6 +85,7 @@ all_types_with_values = {
     "mixedenum": MyMixedEnum.VALUE2,
     # NI types
     "nitypes_Scalar": Scalar(42, "m"),
+    "nitypes_Vector": Vector([1, 2, 3], "volts"),
     "nitypes_DoubleAnalogWaveform": AnalogWaveform.from_array_1d(np.array([1.0, 2.0, 3.0])),
     "nitypes_I16AnalogWaveform": AnalogWaveform.from_array_1d(np.array([1, 2, 3]), dtype=np.int16),
     "nitypes_DoubleComplexWaveform": ComplexWaveform(2, np.complex128),
