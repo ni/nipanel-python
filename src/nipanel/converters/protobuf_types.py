@@ -3,24 +3,22 @@
 from __future__ import annotations
 
 from collections.abc import Collection
-from typing import Type, Union
+from typing import Any, Type, Union
 
 import nitypes.bintime as bt
 import numpy as np
-from ni.protobuf.types import scalar_pb2, array_pb2
-from ni.protobuf.types.precision_timestamp_conversion import (
-    bintime_datetime_from_protobuf,
-    bintime_datetime_to_protobuf,
+from ni.protobuf.types import (
+    array_pb2,
+    precision_timestamp_pb2,
+    precision_timestamp_conversion,
+    scalar_conversion,
+    scalar_pb2,
+    waveform_conversion,
+    waveform_pb2,
 )
-from ni.protobuf.types.precision_timestamp_pb2 import PrecisionTimestamp
-from ni.protobuf.types.scalar_conversion import scalar_from_protobuf, scalar_to_protobuf
-from ni.protobuf.types.waveform_conversion import (
-    float64_analog_waveform_from_protobuf,
-    float64_analog_waveform_to_protobuf,
-)
-from ni.protobuf.types.waveform_pb2 import DoubleAnalogWaveform
+from nitypes.complex import ComplexInt32Base
 from nitypes.scalar import Scalar
-from nitypes.waveform import AnalogWaveform
+from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 from typing_extensions import TypeAlias
 
 from nipanel.converters import Converter, CollectionConverter, CollectionConverter2D
@@ -130,7 +128,7 @@ class StrCollectionConverter(CollectionConverter[str, array_pb2.StringArray]):
         return array_pb2.StringArray
 
     def to_protobuf_message(self, python_value: Collection[str]) -> array_pb2.StringArray:
-        """Convert the collection of strings to panel_types_pb2.StringCollection."""
+        """Convert the collection of strings to array_pb2.StringCollection."""
         return self.protobuf_message(values=python_value)
 
     def to_python_value(self, protobuf_message: array_pb2.StringArray) -> Collection[str]:
@@ -187,12 +185,10 @@ class Double2DArrayConverter(CollectionConverter2D[float, array_pb2.Double2DArra
         return list_of_lists
 
 
-class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], DoubleAnalogWaveform]):
-    """A converter for AnalogWaveform types with scaled data (double)."""
-
-    def __init__(self) -> None:
-        """Initialize a DoubleAnalogWaveformConverter object."""
-        self._pt_converter = PrecisionTimestampConverter()
+class DoubleAnalogWaveformConverter(
+    Converter[AnalogWaveform[np.float64], waveform_pb2.DoubleAnalogWaveform]
+):
+    """A converter for AnalogWaveform types with double-precision data."""
 
     @property
     def python_type(self) -> type:
@@ -200,20 +196,187 @@ class DoubleAnalogWaveformConverter(Converter[AnalogWaveform[np.float64], Double
         return AnalogWaveform
 
     @property
-    def protobuf_message(self) -> Type[DoubleAnalogWaveform]:
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        base_typename = super().python_typename
+        return f"{base_typename}[float64]"
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.DoubleAnalogWaveform]:
         """The type-specific protobuf message for the Python type."""
-        return DoubleAnalogWaveform
+        return waveform_pb2.DoubleAnalogWaveform
 
-    def to_protobuf_message(self, python_value: AnalogWaveform[np.float64]) -> DoubleAnalogWaveform:
+    def to_protobuf_message(
+        self, python_value: AnalogWaveform[np.float64]
+    ) -> waveform_pb2.DoubleAnalogWaveform:
         """Convert the Python AnalogWaveform to a protobuf DoubleAnalogWaveform."""
-        return float64_analog_waveform_to_protobuf(python_value)
+        return waveform_conversion.float64_analog_waveform_to_protobuf(python_value)
 
-    def to_python_value(self, protobuf_message: DoubleAnalogWaveform) -> AnalogWaveform[np.float64]:
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.DoubleAnalogWaveform
+    ) -> AnalogWaveform[np.float64]:
         """Convert the protobuf DoubleAnalogWaveform to a Python AnalogWaveform."""
-        return float64_analog_waveform_from_protobuf(protobuf_message)
+        return waveform_conversion.float64_analog_waveform_from_protobuf(protobuf_message)
 
 
-class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
+class Int16AnalogWaveformConverter(
+    Converter[AnalogWaveform[np.int16], waveform_pb2.I16AnalogWaveform]
+):
+    """A converter for AnalogWaveform types with 16-bit integer data."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return AnalogWaveform
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        base_typename = super().python_typename
+        return f"{base_typename}[int16]"
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.I16AnalogWaveform]:
+        """The type-specific protobuf message for the Python type."""
+        return waveform_pb2.I16AnalogWaveform
+
+    def to_protobuf_message(
+        self, python_value: AnalogWaveform[np.int16]
+    ) -> waveform_pb2.I16AnalogWaveform:
+        """Convert the Python AnalogWaveform to a protobuf Int16AnalogWaveformConverter."""
+        return waveform_conversion.int16_analog_waveform_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.I16AnalogWaveform
+    ) -> AnalogWaveform[np.int16]:
+        """Convert the protobuf Int16AnalogWaveformConverter to a Python AnalogWaveform."""
+        return waveform_conversion.int16_analog_waveform_from_protobuf(protobuf_message)
+
+
+class DoubleComplexWaveformConverter(
+    Converter[ComplexWaveform[np.complex128], waveform_pb2.DoubleComplexWaveform]
+):
+    """A converter for complex waveform types with 64-bit real and imaginary data."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return ComplexWaveform
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        base_typename = super().python_typename
+        return f"{base_typename}[complex128]"
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.DoubleComplexWaveform]:
+        """The type-specific protobuf message for the Python type."""
+        return waveform_pb2.DoubleComplexWaveform
+
+    def to_protobuf_message(
+        self, python_value: ComplexWaveform[np.complex128]
+    ) -> waveform_pb2.DoubleComplexWaveform:
+        """Convert the Python ComplexWaveform to a protobuf DoubleComplexWaveform."""
+        return waveform_conversion.float64_complex_waveform_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.DoubleComplexWaveform
+    ) -> ComplexWaveform[np.complex128]:
+        """Convert the protobuf DoubleComplexWaveform to a Python ComplexWaveform."""
+        return waveform_conversion.float64_complex_waveform_from_protobuf(protobuf_message)
+
+
+class Int16ComplexWaveformConverter(
+    Converter[ComplexWaveform[ComplexInt32Base], waveform_pb2.I16ComplexWaveform]
+):
+    """A converter for complex waveform types with 16-bit real and imaginary data."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return ComplexWaveform
+
+    @property
+    def python_typename(self) -> str:
+        """The Python type name that this converter handles."""
+        base_typename = super().python_typename
+        # Use the string representation of ComplexInt32DType
+        return f"{base_typename}[[('real', '<i2'), ('imag', '<i2')]]"
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.I16ComplexWaveform]:
+        """The type-specific protobuf message for the Python type."""
+        return waveform_pb2.I16ComplexWaveform
+
+    def to_protobuf_message(
+        self, python_value: ComplexWaveform[ComplexInt32Base]
+    ) -> waveform_pb2.I16ComplexWaveform:
+        """Convert the Python ComplexWaveform to a protobuf I16ComplexWaveform."""
+        return waveform_conversion.int16_complex_waveform_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.I16ComplexWaveform
+    ) -> ComplexWaveform[ComplexInt32Base]:
+        """Convert the protobuf I16ComplexWaveform to a Python ComplexWaveform."""
+        return waveform_conversion.int16_complex_waveform_from_protobuf(protobuf_message)
+
+
+class DigitalWaveformConverter(Converter[DigitalWaveform[Any], waveform_pb2.DigitalWaveform]):
+    """A converter for digital waveform types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return DigitalWaveform
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.DigitalWaveform]:
+        """The type-specific protobuf message for the Python type."""
+        return waveform_pb2.DigitalWaveform
+
+    def to_protobuf_message(
+        self, python_value: DigitalWaveform[Any]
+    ) -> waveform_pb2.DigitalWaveform:
+        """Convert the Python DigitalWaveform to a protobuf DigitalWaveform."""
+        return waveform_conversion.digital_waveform_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.DigitalWaveform
+    ) -> DigitalWaveform[Any]:
+        """Convert the protobuf DigitalWaveform to a Python DigitalWaveform."""
+        return waveform_conversion.digital_waveform_from_protobuf(protobuf_message)
+
+
+class DoubleSpectrumConverter(Converter[Spectrum[np.float64], waveform_pb2.DoubleSpectrum]):
+    """A converter for spectrums with float64 data."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return Spectrum
+
+    @property
+    def protobuf_message(self) -> Type[waveform_pb2.DoubleSpectrum]:
+        """The type-specific protobuf message for the Python type."""
+        return waveform_pb2.DoubleSpectrum
+
+    def to_protobuf_message(
+        self, python_value: Spectrum[np.float64]
+    ) -> waveform_pb2.DoubleSpectrum:
+        """Convert the Python Spectrum to a protobuf DoubleSpectrum."""
+        return waveform_conversion.float64_spectrum_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: waveform_pb2.DoubleSpectrum
+    ) -> Spectrum[np.float64]:
+        """Convert the protobuf DoubleSpectrum to a Python Spectrum."""
+        return waveform_conversion.float64_spectrum_from_protobuf(protobuf_message)
+
+
+class PrecisionTimestampConverter(
+    Converter[bt.DateTime, precision_timestamp_pb2.PrecisionTimestamp]
+):
     """A converter for bintime.DateTime types."""
 
     @property
@@ -222,17 +385,21 @@ class PrecisionTimestampConverter(Converter[bt.DateTime, PrecisionTimestamp]):
         return bt.DateTime
 
     @property
-    def protobuf_message(self) -> Type[PrecisionTimestamp]:
+    def protobuf_message(self) -> Type[precision_timestamp_pb2.PrecisionTimestamp]:
         """The type-specific protobuf message for the Python type."""
-        return PrecisionTimestamp
+        return precision_timestamp_pb2.PrecisionTimestamp
 
-    def to_protobuf_message(self, python_value: bt.DateTime) -> PrecisionTimestamp:
+    def to_protobuf_message(
+        self, python_value: bt.DateTime
+    ) -> precision_timestamp_pb2.PrecisionTimestamp:
         """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
-        return bintime_datetime_to_protobuf(python_value)
+        return precision_timestamp_conversion.bintime_datetime_to_protobuf(python_value)
 
-    def to_python_value(self, protobuf_message: PrecisionTimestamp) -> bt.DateTime:
+    def to_python_value(
+        self, protobuf_message: precision_timestamp_pb2.PrecisionTimestamp
+    ) -> bt.DateTime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
-        return bintime_datetime_from_protobuf(protobuf_message)
+        return precision_timestamp_conversion.bintime_datetime_from_protobuf(protobuf_message)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):
@@ -250,8 +417,8 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):
 
     def to_protobuf_message(self, python_value: Scalar[_AnyScalarType]) -> scalar_pb2.Scalar:
         """Convert the Python Scalar to a protobuf scalar_pb2.Scalar."""
-        return scalar_to_protobuf(python_value)
+        return scalar_conversion.scalar_to_protobuf(python_value)
 
     def to_python_value(self, protobuf_message: scalar_pb2.Scalar) -> Scalar[_AnyScalarType]:
         """Convert the protobuf message to a Python Scalar."""
-        return scalar_from_protobuf(protobuf_message)
+        return scalar_conversion.scalar_from_protobuf(protobuf_message)

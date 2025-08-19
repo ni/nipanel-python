@@ -4,8 +4,9 @@ import datetime as dt
 import enum
 
 import numpy as np
+from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
-from nitypes.waveform import AnalogWaveform
+from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 
 
 class MyIntFlags(enum.IntFlag):
@@ -83,7 +84,14 @@ all_types_with_values = {
     "mixedenum": MyMixedEnum.VALUE2,
     # NI types
     "nitypes_Scalar": Scalar(42, "m"),
-    "nitypes_AnalogWaveform": AnalogWaveform.from_array_1d(np.array([1.0, 2.0, 3.0])),
+    "nitypes_DoubleAnalogWaveform": AnalogWaveform.from_array_1d(np.array([1.0, 2.0, 3.0])),
+    "nitypes_I16AnalogWaveform": AnalogWaveform.from_array_1d(np.array([1, 2, 3]), dtype=np.int16),
+    "nitypes_DoubleComplexWaveform": ComplexWaveform(2, np.complex128),
+    "nitypes_I16ComplexWaveform": ComplexWaveform(2, ComplexInt32DType),
+    "nitypes_DigitalWaveform": DigitalWaveform.from_lines(
+        np.array([[0, 1, 0], [1, 0, 1]], dtype=np.bool), dtype=np.bool, signal_count=3
+    ),
+    "nitypes_Spectrum": Spectrum.from_array_1d(np.array([1.0, 2.0, 3.0])),
     # supported collection types
     "bool_collection": [True, False, True],
     "bytes_collection": [b"one", b"two", b"three"],
