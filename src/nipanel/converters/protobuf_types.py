@@ -128,7 +128,7 @@ class StrCollectionConverter(CollectionConverter[str, array_pb2.StringArray]):
         return array_pb2.StringArray
 
     def to_protobuf_message(self, python_value: Collection[str]) -> array_pb2.StringArray:
-        """Convert the collection of strings to panel_types_pb2.StringCollection."""
+        """Convert the collection of strings to array_pb2.StringCollection."""
         return self.protobuf_message(values=python_value)
 
     def to_python_value(self, protobuf_message: array_pb2.StringArray) -> Collection[str]:
@@ -188,7 +188,7 @@ class Double2DArrayConverter(CollectionConverter2D[float, array_pb2.Double2DArra
 class DoubleAnalogWaveformConverter(
     Converter[AnalogWaveform[np.float64], waveform_pb2.DoubleAnalogWaveform]
 ):
-    """A converter for AnalogWaveform types with scaled data (double)."""
+    """A converter for AnalogWaveform types with double-precision data."""
 
     @property
     def python_type(self) -> type:
@@ -222,7 +222,7 @@ class DoubleAnalogWaveformConverter(
 class Int16AnalogWaveformConverter(
     Converter[AnalogWaveform[np.int16], waveform_pb2.I16AnalogWaveform]
 ):
-    """A converter for AnalogWaveform types with scaled data (double)."""
+    """A converter for AnalogWaveform types with 16-bit integer data."""
 
     @property
     def python_type(self) -> type:
@@ -256,7 +256,7 @@ class Int16AnalogWaveformConverter(
 class DoubleComplexWaveformConverter(
     Converter[ComplexWaveform[np.complex128], waveform_pb2.DoubleComplexWaveform]
 ):
-    """A converter for complex waveform types with scaled data (double)."""
+    """A converter for complex waveform types with 64-bit real and imaginary data."""
 
     @property
     def python_type(self) -> type:
@@ -290,7 +290,7 @@ class DoubleComplexWaveformConverter(
 class Int16ComplexWaveformConverter(
     Converter[ComplexWaveform[ComplexInt32Base], waveform_pb2.I16ComplexWaveform]
 ):
-    """A converter for complex waveform types with raw data (int16)."""
+    """A converter for complex waveform types with 16-bit real and imaginary data."""
 
     @property
     def python_type(self) -> type:
@@ -323,7 +323,7 @@ class Int16ComplexWaveformConverter(
 
 
 class DigitalWaveformConverter(Converter[DigitalWaveform[Any], waveform_pb2.DigitalWaveform]):
-    """A converter for complex waveform types with raw data (int16)."""
+    """A converter for digital waveform types."""
 
     @property
     def python_type(self) -> type:
@@ -338,13 +338,13 @@ class DigitalWaveformConverter(Converter[DigitalWaveform[Any], waveform_pb2.Digi
     def to_protobuf_message(
         self, python_value: DigitalWaveform[Any]
     ) -> waveform_pb2.DigitalWaveform:
-        """Convert the Python ComplexWaveform to a protobuf DigitalWaveform."""
+        """Convert the Python DigitalWaveform to a protobuf DigitalWaveform."""
         return waveform_conversion.digital_waveform_to_protobuf(python_value)
 
     def to_python_value(
         self, protobuf_message: waveform_pb2.DigitalWaveform
     ) -> DigitalWaveform[Any]:
-        """Convert the protobuf DigitalWaveform to a Python ComplexWaveform."""
+        """Convert the protobuf DigitalWaveform to a Python DigitalWaveform."""
         return waveform_conversion.digital_waveform_from_protobuf(protobuf_message)
 
 
