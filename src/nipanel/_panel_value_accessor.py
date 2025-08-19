@@ -93,7 +93,7 @@ class PanelValueAccessor(ABC):
             # lists are allowed to not match, since sets and tuples are converted to lists
             if not isinstance(value, list):
                 raise TypeError(
-                    f"!!!Value type {type(value).__module__}{type(value).__name__} does not match default value type {type(default_value).__module__}{type(default_value).__name__}."
+                    f"Value type {type(value).__name__} does not match default value type {type(default_value).__name__}."
                 )
 
         return value
