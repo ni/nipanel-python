@@ -5,9 +5,10 @@ import numpy as np
 import pytest
 from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
-from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2, waveform_pb2
+from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2, vector_pb2, waveform_pb2
 from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
+from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 from typing_extensions import TypeAlias
 
@@ -131,6 +132,8 @@ _AnyPanelPbTypes: TypeAlias = Union[
         ),
         (DigitalWaveform(10, 2, np.bool, False), "nitypes.waveform.DigitalWaveform"),
         (Spectrum(10, np.float64), "nitypes.waveform.Spectrum"),
+        (Scalar("one"), "nitypes.scalar.Scalar"),
+        (Vector([1, 2, 3]), "nitypes.vector.Vector"),
     ],
 )
 def test___various_python_objects___get_best_matching_type___returns_correct_type_string(
@@ -271,6 +274,17 @@ def test___python_scalar_object___to_any___valid_scalar_proto() -> None:
 
     assert isinstance(unpack_dest, scalar_pb2.Scalar)
     assert unpack_dest.double_value == 1.0
+    assert unpack_dest.attributes["NI_UnitDescription"].string_value == "amps"
+
+
+def test___python_vector_object___to_any___valid_vector_proto() -> None:
+    vector_obj = Vector([1.0, 2.0, 3.0], "amps")
+    result = nipanel._convert.to_any(vector_obj)
+    unpack_dest = vector_pb2.Vector()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    assert isinstance(unpack_dest, vector_pb2.Vector)
+    assert list(unpack_dest.double_array.values) == [1.0, 2.0, 3.0]
     assert unpack_dest.attributes["NI_UnitDescription"].string_value == "amps"
 
 
@@ -446,6 +460,21 @@ def test___scalar_proto___from_any___valid_python_scalar() -> None:
 
     assert isinstance(result, Scalar)
     assert result.value == 1.0
+    assert result.units == "amps"
+
+
+def test___vector_proto___from_any___valid_python_vector() -> None:
+    attrs = {"NI_UnitDescription": attribute_value_pb2.AttributeValue(string_value="amps")}
+    pb_value = vector_pb2.Vector(
+        attributes=attrs,
+        double_array=array_pb2.DoubleArray(values=[1.0, 2.0, 3.0]),
+    )
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    assert isinstance(result, Vector)
+    assert list(result) == [1.0, 2.0, 3.0]
     assert result.units == "amps"
 
 

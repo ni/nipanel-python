@@ -13,11 +13,14 @@ from ni.protobuf.types import (
     precision_timestamp_conversion,
     scalar_conversion,
     scalar_pb2,
+    vector_pb2,
+    vector_conversion,
     waveform_conversion,
     waveform_pb2,
 )
 from nitypes.complex import ComplexInt32Base
 from nitypes.scalar import Scalar
+from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 from typing_extensions import TypeAlias
 
@@ -422,3 +425,25 @@ class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):
     def to_python_value(self, protobuf_message: scalar_pb2.Scalar) -> Scalar[_AnyScalarType]:
         """Convert the protobuf message to a Python Scalar."""
         return scalar_conversion.scalar_from_protobuf(protobuf_message)
+
+
+class VectorConverter(Converter[Vector[_AnyScalarType], vector_pb2.Vector]):
+    """A converter for Vector objects."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return Vector
+
+    @property
+    def protobuf_message(self) -> Type[vector_pb2.Vector]:
+        """The type-specific protobuf message for the Python type."""
+        return vector_pb2.Vector
+
+    def to_protobuf_message(self, python_value: Vector[Any]) -> vector_pb2.Vector:
+        """Convert the Python Vector to a protobuf vector_pb2.Vector."""
+        return vector_conversion.vector_to_protobuf(python_value)
+
+    def to_python_value(self, protobuf_message: vector_pb2.Vector) -> Vector[_AnyScalarType]:
+        """Convert the protobuf message to a Python Vector."""
+        return vector_conversion.vector_from_protobuf(protobuf_message)
