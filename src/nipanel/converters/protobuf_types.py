@@ -441,9 +441,9 @@ class VectorConverter(Converter[Vector[_AnyScalarType], vector_pb2.Vector]):
         return vector_pb2.Vector
 
     def to_protobuf_message(self, python_value: Vector[Any]) -> vector_pb2.Vector:
-        """Convert the Python Scalar to a protobuf scalar_pb2.Scalar."""
+        """Convert the Python Vector to a protobuf vector_pb2.Vector."""
         return vector_conversion.vector_to_protobuf(python_value)
 
     def to_python_value(self, protobuf_message: vector_pb2.Vector) -> Vector[_AnyScalarType]:
-        """Convert the protobuf message to a Python Scalar."""
+        """Convert the protobuf message to a Python Vector."""
         return vector_conversion.vector_from_protobuf(protobuf_message)

@@ -466,7 +466,8 @@ def test___scalar_proto___from_any___valid_python_scalar() -> None:
 def test___vector_proto___from_any___valid_python_vector() -> None:
     attrs = {"NI_UnitDescription": attribute_value_pb2.AttributeValue(string_value="amps")}
     pb_value = vector_pb2.Vector(
-        attributes=attrs, double_array=array_pb2.DoubleArray(values=[1.0, 2.0, 3.0]),
+        attributes=attrs,
+        double_array=array_pb2.DoubleArray(values=[1.0, 2.0, 3.0]),
     )
     packed_any = _pack_into_any(pb_value)
 
