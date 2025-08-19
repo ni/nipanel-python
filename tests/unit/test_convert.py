@@ -1,13 +1,23 @@
 import datetime as dt
 from typing import Any, Collection, Union
 
+import hightime as ht
+import nitypes.bintime as bt
 import numpy as np
 import pytest
 from google.protobuf import any_pb2, duration_pb2, timestamp_pb2, wrappers_pb2
 from google.protobuf.message import Message
-from ni.protobuf.types import array_pb2, attribute_value_pb2, scalar_pb2, vector_pb2, waveform_pb2
+from ni.protobuf.types import (
+    array_pb2,
+    attribute_value_pb2,
+    precision_timestamp_pb2,
+    scalar_pb2,
+    vector_pb2,
+    waveform_pb2,
+)
 from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
+from nitypes.time import convert_datetime
 from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 from typing_extensions import TypeAlias
@@ -50,6 +60,8 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (tests.types.MixinStrEnum.VALUE11, "builtins.str"),
         (dt.datetime.now(), "datetime.datetime"),
         (dt.timedelta(days=1), "datetime.timedelta"),
+        (bt.DateTime.now(tz=dt.timezone.utc), "nitypes.bintime.DateTime"),
+        (ht.datetime.now(), "hightime.datetime"),
         ([False, False], "collections.abc.Collection[builtins.bool]"),
         ([b"mystr", b"mystr"], "collections.abc.Collection[builtins.bytes]"),
         ([456.2, 1.0], "collections.abc.Collection[builtins.float]"),
@@ -369,6 +381,31 @@ def test___python_float64_spectrum___to_any___valid_double_spectrum_proto() -> N
     assert unpack_dest.frequency_increment == 10.0
 
 
+def test___python_bintime_datetime__to_any___valid_precision_timestamp_proto() -> None:
+    python_value = bt.DateTime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = precision_timestamp_pb2.PrecisionTimestamp()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    expected_tuple = python_value.to_tuple()
+    assert unpack_dest.seconds == expected_tuple.whole_seconds
+    assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
+
+
+def test___python_hightime_datetime__to_any___valid_precision_timestamp_proto() -> None:
+    python_value = ht.datetime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = precision_timestamp_pb2.PrecisionTimestamp()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    expected_bt_datetime = convert_datetime(bt.DateTime, python_value)
+    expected_tuple = expected_bt_datetime.to_tuple()
+    assert unpack_dest.seconds == expected_tuple.whole_seconds
+    assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
+
+
 @pytest.mark.parametrize(
     "python_value",
     [
@@ -562,6 +599,21 @@ def test___double_spectrum_proto___from_any___valid_python_spectrum() -> None:
     assert list(result.data) == [1.0, 2.0, 3.0]
     assert result.start_frequency == 100.0
     assert result.frequency_increment == 10.0
+
+
+def test___precision_timestamp_proto__from_any___valid_bintime_datetime() -> None:
+    expected_bt_dt = bt.DateTime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+    expected_tuple = expected_bt_dt.to_tuple()
+    pb_value = precision_timestamp_pb2.PrecisionTimestamp(
+        seconds=expected_tuple.whole_seconds,
+        fractional_seconds=expected_tuple.fractional_seconds,
+    )
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    assert isinstance(result, bt.DateTime)
+    assert result == expected_bt_dt
 
 
 def test___double2darray___from_any___valid_python_2dcollection() -> None:

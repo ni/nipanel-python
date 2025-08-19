@@ -3,6 +3,8 @@
 import datetime as dt
 import enum
 
+import hightime as ht
+import nitypes.bintime as bt
 import numpy as np
 from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
@@ -74,6 +76,8 @@ all_types_with_values = {
     "int": 42,
     "str": "sample string",
     "dt_datetime": dt.datetime.now(),
+    "ht_datetime": ht.datetime.now(tz=dt.timezone.utc),
+    "bt_datetime": bt.DateTime.now(tz=dt.timezone.utc),
     "dt_timedelta": dt.timedelta(weeks=2, days=5, minutes=12, milliseconds=75),
     # supported enum and flag types
     "intflags": MyIntFlags.VALUE1 | MyIntFlags.VALUE4,

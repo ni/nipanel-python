@@ -3,6 +3,7 @@
 import datetime as dt
 from enum import Enum, Flag
 
+import hightime as ht
 import streamlit as st
 from define_types import all_types_with_values
 
@@ -121,11 +122,20 @@ for name in all_types_with_values.keys():
             st.number_input(label=name, value=default_value, key=name, format="%.2f")
         elif isinstance(default_value, str):
             st.text_input(label=name, value=default_value, key=name)
+        elif isinstance(default_value, ht.datetime):
+            # In order to avoid multiple date_input elements with the same ID,
+            # specify a unique key for both ht.datetime and dt.datetime.
+            date = st.date_input(label="date", key="ht1", value=default_value)
+            time = st.time_input(label="time", key="ht2", value=default_value)
+            ht_datetime = ht.datetime.combine(date, time, tzinfo=dt.timezone.utc)
+            panel.set_value(name, ht_datetime)
         elif isinstance(default_value, dt.datetime):
-            date = st.date_input(label="date", value=default_value)
-            time = st.time_input(label="time", value=default_value)
-            datetime = dt.datetime.combine(date, time)
-            panel.set_value(name, datetime)
+            # In order to avoid multiple date_input elements with the same ID,
+            # specify a unique key for both ht.datetime and dt.datetime.
+            date = st.date_input(label="date", key="dt1", value=default_value)
+            time = st.time_input(label="time", key="dt2", value=default_value)
+            dt_datetime = dt.datetime.combine(date, time)
+            panel.set_value(name, dt_datetime)
 
     with col3:
         st.write(panel.get_value(name, default_value=default_value))
