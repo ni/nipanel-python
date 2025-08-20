@@ -407,10 +407,10 @@ class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.Precisi
 class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
     """A converter for hightime.datetime objects.
 
-    Note: The nipanel package will always convert PrecisionTimestamp messages to
-    bintime.DateTime objects using BTDateTimeConverter. To use hightime.datetime
-    values in a panel, you must pass a hightime.datetime value for the default_value
-    parameter of the get_value() method on the panel.
+    .. note:: The nipanel package will always convert PrecisionTimestamp messages to
+        bintime.DateTime objects using BTDateTimeConverter. To use hightime.datetime
+        values in a panel, you must pass a hightime.datetime value for the default_value
+        parameter of the get_value() method on the panel.
     """
 
     @property
