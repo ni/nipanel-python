@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Collection
 from typing import Any, Type, Union
 
+import hightime as ht
 import nitypes.bintime as bt
 import numpy as np
 from ni.protobuf.types import (
@@ -377,9 +378,7 @@ class DoubleSpectrumConverter(Converter[Spectrum[np.float64], waveform_pb2.Doubl
         return waveform_conversion.float64_spectrum_from_protobuf(protobuf_message)
 
 
-class PrecisionTimestampConverter(
-    Converter[bt.DateTime, precision_timestamp_pb2.PrecisionTimestamp]
-):
+class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.PrecisionTimestamp]):
     """A converter for bintime.DateTime types."""
 
     @property
@@ -403,6 +402,44 @@ class PrecisionTimestampConverter(
     ) -> bt.DateTime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
         return precision_timestamp_conversion.bintime_datetime_from_protobuf(protobuf_message)
+
+
+class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
+    """A converter for hightime.datetime objects."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return ht.datetime
+
+    @property
+    def protobuf_message(self) -> Type[precision_timestamp_pb2.PrecisionTimestamp]:
+        """The type-specific protobuf message for the Python type."""
+        return precision_timestamp_pb2.PrecisionTimestamp
+
+    @property
+    def protobuf_typename(self) -> str:
+        """The protobuf name for the type.
+
+        Override the base class here because there can only be one converter that
+        converts ``PrecisionTimestamp`` objects. Since there are two converters that convert
+        to ``PrecisionTimestamp``, we have to choose one to handle conversion from protobuf.
+        For the purposes of nipanel, we'll convert ``PrecisionTimestamp`` messages to
+        bintime.DateTime. See ``BTDateTimeConverter``.
+        """
+        return "PrecisionTimestamp_Placeholder"
+
+    def to_protobuf_message(
+        self, python_value: ht.datetime
+    ) -> precision_timestamp_pb2.PrecisionTimestamp:
+        """Convert the Python DateTime to a protobuf PrecisionTimestamp."""
+        return precision_timestamp_conversion.hightime_datetime_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: precision_timestamp_pb2.PrecisionTimestamp
+    ) -> ht.datetime:
+        """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
+        return precision_timestamp_conversion.hightime_datetime_from_protobuf(protobuf_message)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):

@@ -4,7 +4,11 @@ from typing import Any, Union
 
 import nitypes.bintime as bt
 import numpy as np
-from ni.protobuf.types import precision_timestamp_pb2, waveform_pb2
+from ni.protobuf.types import (
+    precision_timestamp_conversion,
+    precision_timestamp_pb2,
+    waveform_pb2,
+)
 from nitypes.complex import ComplexInt32DType
 from nitypes.waveform import (
     AnalogWaveform,
@@ -23,7 +27,6 @@ from nipanel.converters.protobuf_types import (
     DoubleSpectrumConverter,
     Int16AnalogWaveformConverter,
     Int16ComplexWaveformConverter,
-    PrecisionTimestampConverter,
 )
 
 EXPECTED_SAMPLE_INTERVAL = 0.1
@@ -284,8 +287,7 @@ def test___double_spectrum___convert___valid_python_object() -> None:
 # Helpers
 # ========================================================
 def _get_t0_pt() -> precision_timestamp_pb2.PrecisionTimestamp:
-    pt_converter = PrecisionTimestampConverter()
-    return pt_converter.to_protobuf_message(EXPECTED_T0_BT)
+    return precision_timestamp_conversion.bintime_datetime_to_protobuf(EXPECTED_T0_BT)
 
 
 def _set_python_attributes(

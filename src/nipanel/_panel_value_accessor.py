@@ -6,8 +6,11 @@ from abc import ABC
 from typing import TypeVar, overload
 
 import grpc
+import hightime as ht
+import nitypes.bintime as bt
 from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
 from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from nitypes.time import convert_datetime
 
 from nipanel._panel_client import _PanelClient
 
@@ -65,7 +68,8 @@ class PanelValueAccessor(ABC):
             default_value: The default value to return if the value is not set
 
         Returns:
-            The value, or the default value if not set
+            The value, or the default value if not set. The returned value will
+            be the same as default_value, if one was provided.
 
         Raises:
             KeyError: If the value is not set and no default value is provided
@@ -80,6 +84,12 @@ class PanelValueAccessor(ABC):
             if isinstance(default_value, enum.Enum):
                 enum_type = type(default_value)
                 return enum_type(value)
+
+            # The grpc converter always converts PrecisionTimestamp into bt.DateTime, so
+            # we need to handle the case where they provide an ht.datetime default by
+            # converting to hightime.
+            if isinstance(default_value, ht.datetime) and isinstance(value, bt.DateTime):
+                return convert_datetime(ht.datetime, value)
 
             # lists are allowed to not match, since sets and tuples are converted to lists
             if not isinstance(value, list):
