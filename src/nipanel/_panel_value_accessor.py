@@ -68,7 +68,8 @@ class PanelValueAccessor(ABC):
             default_value: The default value to return if the value is not set
 
         Returns:
-            The value, or the default value if not set
+            The value, or the default value if not set. The returned value will
+            be the same as default_value, if one was provided.
 
         Raises:
             KeyError: If the value is not set and no default value is provided
