@@ -405,7 +405,13 @@ class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.Precisi
 
 
 class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
-    """A converter for hightime.datetime objects."""
+    """A converter for hightime.datetime objects.
+
+    .. note:: The nipanel package will always convert PrecisionTimestamp messages to
+        bintime.DateTime objects using BTDateTimeConverter. To use hightime.datetime
+        values in a panel, you must pass a hightime.datetime value for the default_value
+        parameter of the get_value() method on the panel.
+    """
 
     @property
     def python_type(self) -> type:
@@ -419,14 +425,12 @@ class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.Precisi
 
     @property
     def protobuf_typename(self) -> str:
-        """The protobuf name for the type.
-
-        Override the base class here because there can only be one converter that
-        converts ``PrecisionTimestamp`` objects. Since there are two converters that convert
-        to ``PrecisionTimestamp``, we have to choose one to handle conversion from protobuf.
-        For the purposes of nipanel, we'll convert ``PrecisionTimestamp`` messages to
-        bintime.DateTime. See ``BTDateTimeConverter``.
-        """
+        """The protobuf name for the type."""
+        # Override the base class here because there can only be one converter that
+        # converts PrecisionTimestamp objects. Since there are two converters that convert
+        # to PrecisionTimestamp, we have to choose one to handle conversion from protobuf.
+        # For the purposes of nipanel, we'll convert PrecisionTimestamp messages to
+        # bintime.DateTime. See BTDateTimeConverter.
         return "PrecisionTimestamp_Placeholder"
 
     def to_protobuf_message(
