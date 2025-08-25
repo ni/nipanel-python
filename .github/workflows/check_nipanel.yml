@@ -24,7 +24,7 @@ jobs:
           path: .venv
           key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install nipanel
-        run: poetry install -v --extras "examples docs lint"
+        run: poetry install -v --extras "dev examples docs lint"
       - name: Lint
         run: poetry run ni-python-styleguide lint
       - name: Mypy static analysis (Linux)

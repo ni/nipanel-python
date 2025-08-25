@@ -24,7 +24,7 @@ jobs:
           path: .venv
           key: nipanel-with-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install nipanel (with docs)
-        run: poetry install -v --only main,docs
+        run: poetry install -v --extras docs
       - name: Generate docs
         run:  poetry run sphinx-build docs docs/_build -b html -W
       - name: Upload docs artifact
