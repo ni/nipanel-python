@@ -13,6 +13,6 @@ This is an example for `nipanel` that demonstrates all supported data types.
 ### Usage
 
 ```pwsh
-poetry install --with examples
+poetry install --extras examples
 poetry run python examples/all_types/all_types.py
 ```

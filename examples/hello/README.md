@@ -13,6 +13,6 @@ This is a simple `nipanel` example that displays a Streamlit app.
 ### Usage
 
 ```pwsh
-poetry install --with examples
+poetry install --extras examples
 poetry run python examples/hello/hello.py
 ```

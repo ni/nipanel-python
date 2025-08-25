@@ -16,6 +16,6 @@ This example measures the performance of a streamlit panel with a graph.
 ### Usage
 
 ```pwsh
-poetry install --with examples
+poetry install --extras examples
 poetry run python examples/performance_checker/performance_checker.py
 ```

@@ -31,7 +31,7 @@ git fetch
 git switch --create users/{username}/{branch-purpose} origin/main
 
 # Install the project dependencies
-poetry install --with docs
+poetry install --extras docs
 
 # ✍ Make source changes
 
@@ -54,7 +54,7 @@ start docs\_build\index.html
 ## Running examples
 
 1. Run the **PythonPanelService** (not part of this repo, provided seperately)
-2. `poetry install --with examples` to get the dependencies needed for the examples
+2. `poetry install --extras examples` to get the dependencies needed for the examples
 3. Run the examples with these command(s):
     - `poetry run python examples/hello/hello.py`
     - `poetry run python examples/all_types/all_types.py`

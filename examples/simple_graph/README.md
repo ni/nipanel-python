@@ -16,6 +16,6 @@ This example demonstrates using `nipanel` with Streamlit to display a dynamic si
 ### Usage
 
 ```pwsh
-poetry install --with examples
+poetry install --extras examples
 poetry run python examples/simple_graph/simple_graph.py
 ```
