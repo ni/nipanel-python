@@ -21,9 +21,6 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 # Getting Started
 
-This is the command to generate the files in /src/ni/panels/v1/:
-`poetry run python -m grpc_tools.protoc --proto_path=protos --python_out=src/ --grpc_python_out=src/ --mypy_out=src/ --mypy_grpc_out=src/ ni/panels/v1/panel_service.proto ni/panels/v1/panel_types.proto ni/panels/v1/streamlit_panel_configuration.proto`
-
 # Testing
 
 ## Simple development loop
@@ -34,17 +31,17 @@ git fetch
 git switch --create users/{username}/{branch-purpose} origin/main
 
 # Install the project dependencies
-poetry install --with docs
+poetry install --extras docs
 
 # ✍ Make source changes
 
 # Run the analyzers -- see files in .github/workflows for details
-poetry run nps lint
+poetry run ni-python-styleguide lint
 poetry run mypy
 poetry run bandit -c pyproject.toml -r src/nipanel
 
 # Apply safe fixes
-poetry run nps fix
+poetry run ni-python-styleguide fix
 
 # Run the tests
 poetry run pytest -v
@@ -57,7 +54,7 @@ start docs\_build\index.html
 ## Running examples
 
 1. Run the **PythonPanelService** (not part of this repo, provided seperately)
-2. `poetry install --with examples` to get the dependencies needed for the examples
+2. `poetry install --extras examples` to get the dependencies needed for the examples
 3. Run the examples with these command(s):
     - `poetry run python examples/hello/hello.py`
     - `poetry run python examples/all_types/all_types.py`

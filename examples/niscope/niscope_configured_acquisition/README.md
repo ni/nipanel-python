@@ -18,6 +18,6 @@ Script demonstrates how to configure vertical, horizontal, and triggering proper
 ### Usage
 
 ```pwsh
-poetry install --with examples
+poetry install --extras examples
 poetry run examples\niscope\niscope_configured_acquisition\niscope_configured_acquisition.py
 ```
