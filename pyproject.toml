@@ -40,12 +40,6 @@ test = [
     "pytest-mock>=3.0",
     "hightime>=0.2.2",
 ]
-codegen = [
-    "grpcio-tools==1.49.1; python_version>='3.9' and python_version<'3.12'",
-    "grpcio-tools==1.59.0; python_version>='3.12' and python_version<'3.13'",
-    "grpcio-tools==1.67.0; python_version>='3.13'",
-    "mypy-protobuf>=3.4",
-]
 docs = [
     "Sphinx>=8.2; python_version>='3.11'",
     "sphinx-rtd-theme>=1.0.0",
