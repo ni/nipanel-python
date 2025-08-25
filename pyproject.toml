@@ -1,73 +1,67 @@
-[tool.poetry]
+[project]
 name = "nipanel"
 version = "0.1.0"
 description = "NI Panel Python API"
-authors = ["NI <opensource@ni.com>"]
+authors = [
+    {name = "NI", email = "opensource@ni.com"}
+]
 readme = "README.md"
+requires-python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
+dependencies = [
+    "grpcio>=1.49.0,<2.0",
+    "protobuf>=4.21",
+    "ni-measurement-plugin-sdk>=2.4.0dev1",
+    "typing-extensions>=4.13.2",
+    "streamlit>=1.24",
+    "nitypes>=0.1.0dev8",
+    "numpy>=1.22",
+    "debugpy>=1.8.1",
+    "ni-protobuf-types>=0.1.0dev3",
+    "ni-panels-v1-proto>=0.1.0dev1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "types-grpcio>=1.0",
+    "types-protobuf>=4.21",
+    "numpy>=1.22; python_version>='3.9' and python_version<'3.12'",
+    "numpy>=1.26; python_version>='3.12' and python_version<'3.13'",
+    "numpy>=2.1; python_version>='3.13'",
+]
+lint = [
+    "bandit[toml]>=1.7",
+    "ni-python-styleguide>=0.4.1",
+    "mypy>=1.0",
+    "pyright[nodejs]>=1.1.400",
+]
+test = [
+    "pytest>=7.2",
+    "pytest-cov>=4.0",
+    "pytest-mock>=3.0",
+    "hightime>=0.2.2",
+]
+codegen = [
+    "grpcio-tools==1.49.1; python_version>='3.9' and python_version<'3.12'",
+    "grpcio-tools==1.59.0; python_version>='3.12' and python_version<'3.13'",
+    "grpcio-tools==1.67.0; python_version>='3.13'",
+    "mypy-protobuf>=3.4",
+]
+docs = [
+    "Sphinx>=8.2; python_version>='3.11'",
+    "sphinx-rtd-theme>=1.0.0",
+    "sphinx-autoapi>=1.8.4",
+    "m2r2>=0.3.2",
+    "toml>=0.10.2",
+]
+examples = [
+    "streamlit-echarts>=0.4.0",
+    "extra-streamlit-components>=0.1.80",
+    "nidaqmx>=0.8.0",
+    "niscope>=1.4.9",
+]
+
+[tool.poetry]
 packages = [{ include = "nipanel", from = "src" }]
-
-[tool.poetry.dependencies]
-python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
-grpcio = {version=">=1.49.0,<2.0"}
-protobuf = {version=">=4.21"}
-ni-measurement-plugin-sdk = {version=">=2.4.0dev1", allow-prereleases = true }
-typing-extensions = ">=4.13.2"
-streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev8", allow-prereleases=true}
-numpy = ">=1.22"
-debugpy = ">=1.8.1"
-ni-protobuf-types = { version = ">=0.1.0dev3", allow-prereleases = true }
-ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
-
-[tool.poetry.group.dev.dependencies]
-types-grpcio = ">=1.0"
-types-protobuf = ">=4.21"
-numpy = [
-  { version = ">=1.22", python = ">=3.9,<3.12" },
-  { version = ">=1.26", python = ">=3.12,<3.13" },
-  { version = ">=2.1", python = "^3.13" },
-]
-
-[tool.poetry.group.lint.dependencies]
-bandit = { version = ">=1.7", extras = ["toml"] }
-ni-python-styleguide = ">=0.4.1"
-mypy = ">=1.0"
-pyright = { version = ">=1.1.400", extras = ["nodejs"] }
-
-[tool.poetry.group.test.dependencies]
-pytest = ">=7.2"
-pytest-cov = ">=4.0"
-pytest-mock = ">=3.0"
-# Use a prerelease version of hightime for testing.
-hightime = { version = ">=0.2.2", allow-prereleases = true }
-
-[tool.poetry.group.codegen.dependencies]
-grpcio-tools = [
-  {version = "1.49.1", python = ">=3.9,<3.12"},
-  {version = "1.59.0", python = ">=3.12,<3.13"},
-  {version = "1.67.0", python = "^3.13"},
-]
-mypy-protobuf = ">=3.4"
-
-[tool.poetry.group.docs]
-optional = true
-
-[tool.poetry.group.docs.dependencies]
-# The latest Sphinx requires a recent Python version.
-Sphinx = { version = ">=8.2", python = "^3.11" }
-sphinx-rtd-theme = ">=1.0.0"
-sphinx-autoapi = ">=1.8.4"
-m2r2 = ">=0.3.2"
-toml = ">=0.10.2"
-
-[tool.poetry.group.examples]
-optional = true
-
-[tool.poetry.group.examples.dependencies]
-streamlit-echarts = ">=0.4.0"
-extra-streamlit-components = "^0.1.80"
-nidaqmx = { version = ">=0.8.0", allow-prereleases = true }
-niscope = "^1.4.9"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
@@ -75,6 +69,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ni-python-styleguide]
 extend_exclude = ".tox,docs"
+application-import-names = "nipanel,tests"
 
 [tool.black]
 extend-exclude = '\.tox/|docs/'
