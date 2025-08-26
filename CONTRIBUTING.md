@@ -21,6 +21,19 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 # Getting Started
 
+To contribute to this project, it is recommended that you follow these steps:
+
+1. Ensure you have poetry installed
+1. Fork the repository on GitHub.
+1. Install `nipanel` dependencies using `poetry install`
+1. Run the regression tests on your system (see Testing section). At this point, if any tests fail, do not begin development. Try to investigate these failures. If you're unable to do so, report an issue through our [GitHub issues page](https://github.com/ni/nipanel-python/issues).
+1. Write new tests that demonstrate your bug or feature. Ensure that these new tests fail.
+1. Make your change.
+1. Run all the regression tests again (including the tests you just added), and confirm that they all pass.
+1. Run `poetry run nps lint` to check that the updated code follows NI's Python coding conventions. If this reports errors, first run `poetry run nps fix` in order to sort imports and format the code with Black, then manually fix any remaining errors.
+1. Run `poetry run mypy` to statically type-check the updated code.
+1. Send a GitHub Pull Request to the main repository's main branch. GitHub Pull Requests are the expected method of code collaboration on this project.
+
 # Testing
 
 ## Simple development loop
@@ -31,17 +44,17 @@ git fetch
 git switch --create users/{username}/{branch-purpose} origin/main
 
 # Install the project dependencies
-poetry install --extras docs
+poetry install --with docs
 
 # ✍ Make source changes
 
 # Run the analyzers -- see files in .github/workflows for details
-poetry run ni-python-styleguide lint
+poetry run nps lint
 poetry run mypy
 poetry run bandit -c pyproject.toml -r src/nipanel
 
 # Apply safe fixes
-poetry run ni-python-styleguide fix
+poetry run nps fix
 
 # Run the tests
 poetry run pytest -v
@@ -54,7 +67,7 @@ start docs\_build\index.html
 ## Running examples
 
 1. Run the **PythonPanelService** (not part of this repo, provided seperately)
-2. `poetry install --extras examples` to get the dependencies needed for the examples
+2. `poetry install --with examples` to get the dependencies needed for the examples
 3. Run the examples with these command(s):
     - `poetry run python examples/hello/hello.py`
     - `poetry run python examples/all_types/all_types.py`

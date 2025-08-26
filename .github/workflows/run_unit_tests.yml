@@ -31,7 +31,7 @@ jobs:
           path: .venv
           key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install nipanel
-        run: poetry install -v --extras test
+        run: poetry install -v
       - name: Run unit tests and code coverage
         run: poetry run pytest ./tests/unit -v --cov=nipanel --junitxml=test_results/nipanel-${{ matrix.os }}-py${{ matrix.python-version }}.xml
       - name: Upload test results
