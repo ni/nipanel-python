@@ -36,12 +36,12 @@ poetry install --with docs
 # ✍ Make source changes
 
 # Run the analyzers -- see files in .github/workflows for details
-poetry run ni-python-styleguide lint
+poetry run nps lint
 poetry run mypy
 poetry run bandit -c pyproject.toml -r src/nipanel
 
 # Apply safe fixes
-poetry run ni-python-styleguide fix
+poetry run nps fix
 
 # Run the tests
 poetry run pytest -v
