@@ -21,6 +21,19 @@ See [GitHub's official documentation](https://help.github.com/articles/using-pul
 
 # Getting Started
 
+To contribute to this project, it is recommended that you follow these steps:
+
+1. Ensure you have poetry installed
+1. Fork the repository on GitHub.
+1. Install `nipanel` dependencies using `poetry install`
+1. Run the regression tests on your system (see Testing section). At this point, if any tests fail, do not begin development. Try to investigate these failures. If you're unable to do so, report an issue through our [GitHub issues page](https://github.com/ni/nipanel-python/issues).
+1. Write new tests that demonstrate your bug or feature. Ensure that these new tests fail.
+1. Make your change.
+1. Run all the regression tests again (including the tests you just added), and confirm that they all pass.
+1. Run `poetry run nps lint` to check that the updated code follows NI's Python coding conventions. If this reports errors, first run `poetry run nps fix` in order to sort imports and format the code with Black, then manually fix any remaining errors.
+1. Run `poetry run mypy` to statically type-check the updated code.
+1. Send a GitHub Pull Request to the main repository's main branch. GitHub Pull Requests are the expected method of code collaboration on this project.
+
 # Testing
 
 ## Simple development loop
