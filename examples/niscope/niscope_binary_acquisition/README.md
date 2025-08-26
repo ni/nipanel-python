@@ -18,6 +18,6 @@ Script demonstrates waveform data getting continuously acquired and being conver
 ### Usage
 
 ```pwsh
-poetry install --extras examples
+poetry install --with examples
 poetry run examples\niscope\niscope_binary_acquisition\niscope_binary_acquisition.py
 ```

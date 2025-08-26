@@ -17,6 +17,6 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 ### Usage
 
 ```pwsh
-poetry install --extras examples
+poetry install --with examples
 poetry run examples\nidaqmx\nidaqmx_analog_output_voltage\nidaqmx_analog_output_voltage.py
 ```
