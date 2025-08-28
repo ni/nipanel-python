@@ -1,6 +1,6 @@
 [project]
 name = "nipanel"
-version = "0.1.0-dev0"
+version = "0.1.0-dev1"
 description = "NI Panel Python API"
 authors = [{name = "NI", email = "opensource@ni.com"}]
 readme = "README.md"
