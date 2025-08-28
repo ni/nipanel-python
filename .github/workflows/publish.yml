@@ -18,7 +18,7 @@ on:
 
 env:
   dist-artifact-name: nipanel-distribution-packages
-  environment: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+  environment: ${{ github.event_name == 'release' && 'testpypi' || inputs.environment }}
   environment-info: |
     {
       "pypi": {
@@ -66,7 +66,7 @@ jobs:
     needs: [build_nipanel]
     environment:
       # This logic is duplicated because `name` doesn't support the `env` context.
-      name: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+      name: ${{ github.event_name == 'release' && 'testpypi' || inputs.environment }}
       url: ${{ fromJson(env.environment-info)[env.environment].base-url }}/p/nipanel
     permissions:
       id-token: write
