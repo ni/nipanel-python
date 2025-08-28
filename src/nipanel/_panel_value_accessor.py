@@ -8,8 +8,8 @@ from typing import TypeVar, overload
 import grpc
 import hightime as ht
 import nitypes.bintime as bt
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 from nitypes.time import convert_datetime
 
 from nipanel._panel_client import _PanelClient

@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import final
 
 import grpc
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 
 from nipanel._panel_value_accessor import PanelValueAccessor
 
