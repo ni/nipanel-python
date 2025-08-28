@@ -7,7 +7,7 @@ on:
     inputs:
       environment:
         description: The environment to publish to.
-        default: 'testpypi'
+        default: 'none'
         required: true
         type: choice
         options:
@@ -17,7 +17,7 @@ on:
 
 env:
   dist-artifact-name: nipanel-distribution-packages
-  environment: ${{ github.event_name == 'release' && 'testpypi' || inputs.environment }}
+  environment: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
   environment-info: |
     {
       "pypi": {
@@ -65,7 +65,7 @@ jobs:
     needs: [build_nipanel]
     environment:
       # This logic is duplicated because `name` doesn't support the `env` context.
-      name: ${{ github.event_name == 'release' && 'testpypi' || inputs.environment }}
+      name: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
       url: ${{ fromJson(env.environment-info)[env.environment].base-url }}/p/nipanel
     permissions:
       id-token: write
