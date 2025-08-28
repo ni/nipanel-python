@@ -1,0 +1,98 @@
+name: Publish nipanel
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The environment to publish to.
+        default: 'none'
+        required: true
+        type: choice
+        options:
+          - none
+          - pypi
+          - testpypi
+
+env:
+  dist-artifact-name: nipanel-distribution-packages
+  environment: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+  environment-info: |
+    {
+      "pypi": {
+        "base-url": "https://pypi.org",
+        "upload-url": "https://upload.pypi.org/legacy/"
+      },
+      "testpypi": {
+        "base-url": "https://test.pypi.org",
+        "upload-url": "https://test.pypi.org/legacy/"
+      }
+    }
+
+jobs:
+  check_nipanel:
+    name: Check nipanel
+    uses: ./.github/workflows/check_nipanel.yml
+  check_docs:
+    name: Check docs
+    uses: ./.github/workflows/check_docs.yml
+  build_nipanel:
+    name: Build nipanel
+    runs-on: ubuntu-latest
+    needs: [check_nipanel, check_docs]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Set up Python
+        uses: ni/python-actions/setup-python@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Set up Poetry
+        uses: ni/python-actions/setup-poetry@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Check project version
+        if: github.event_name == 'release'
+        uses: ni/python-actions/check-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Build distribution packages
+        run: poetry build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ env.dist-artifact-name }}
+          path: dist/*
+  publish_to_pypi:
+    name: Publish nipanel to PyPI
+    if: github.event_name == 'release' || inputs.environment != 'none'
+    runs-on: ubuntu-latest
+    needs: [build_nipanel]
+    environment:
+      # This logic is duplicated because `name` doesn't support the `env` context.
+      name: ${{ github.event_name == 'release' && 'pypi' || inputs.environment }}
+      url: ${{ fromJson(env.environment-info)[env.environment].base-url }}/p/nipanel
+    permissions:
+      id-token: write
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+      with:
+        name: ${{ env.dist-artifact-name }}
+        path: dist/
+    - run: ls -lR
+    - name: Upload to ${{ env.environment }}
+      uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
+      with:
+        repository-url: ${{ fromJson(env.environment-info)[env.environment].upload-url }}
+  update_version:
+    name: Update nipanel version
+    runs-on: ubuntu-latest
+    needs: [build_nipanel]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Set up Python
+        uses: ni/python-actions/setup-python@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Set up Poetry
+        uses: ni/python-actions/setup-poetry@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
+      - name: Update project version
+        uses: ni/python-actions/update-project-version@f0276f7f58868ec0d0d1a86377287c9e6fe0c6e7 # v0.5.0
