@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import threading
 
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 from streamlit.components.v1 import declare_component
 from streamlit.components.v1.custom_component import CustomComponent
 

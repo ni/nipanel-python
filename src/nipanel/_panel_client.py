@@ -7,6 +7,7 @@ from typing import Callable, TypeVar
 
 import grpc
 from google.protobuf.any_pb2 import Any
+from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni.panels.v1.panel_service_pb2 import (
     EnumeratePanelsRequest,
     GetValueRequest,
@@ -17,8 +18,7 @@ from ni.panels.v1.panel_service_pb2 import (
 )
 from ni.panels.v1.panel_service_pb2_grpc import PanelServiceStub
 from ni.panels.v1.streamlit_panel_configuration_pb2 import StreamlitPanelConfiguration
-from ni_measurement_plugin_sdk_service.discovery import DiscoveryClient
-from ni_measurement_plugin_sdk_service.grpc.channelpool import GrpcChannelPool
+from ni_grpc_extensions.channelpool import GrpcChannelPool
 from typing_extensions import ParamSpec
 
 from nipanel._convert import (
