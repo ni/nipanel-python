@@ -7,7 +7,7 @@ on:
     inputs:
       environment:
         description: The environment to publish to.
-        default: 'none'
+        default: 'testpypi'
         required: true
         type: choice
         options:
