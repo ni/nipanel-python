@@ -134,6 +134,28 @@ clicking the **Attach to Streamlit at localhost:5678** button in the VS Code
 standard debugging features in your Streamlit script, as well as in any nipanel
 code invoked by the Streamlit script.
 
+# Publishing on PyPI
+
+You can publish the nipanel package by creating a GitHub release
+in the nipanel-python repo. Here are the steps to follow to publish the package:
+
+1. From the main GitHub repo page, select "Create a new release".
+2. On the "New Release" page, create a new tag using the "Select Tag" drop down. The tag must be the package version, matching the
+value found in pyproject.toml. Example: `0.1.0-dev0`.
+3. Enter a title in the "Release title" field. The title should contain the package name and
+version in the format `nipanel <package-version>`. For example: `nipanel 0.1.0-dev0`.
+4. Click "Generate release notes" and edit the release notes.
+  - Delete entries for PRs that do not affect users, such as "chore(deps):" and "fix(deps):" PRs.
+  - Consider grouping related entries.
+  - Reformat entries to be more readable. For example, change "Blah blah by so-and-so in \#123" to "Blah blah (\#123)".
+5. If this is a pre-release release, check the "Set as a pre-release" checkbox.
+6. Click "Publish release".
+7. Creating a release will start the publish workflow. You can track the
+progress of this workflow in the "Actions" page of the GitHub repo.
+8. The workflow job that publishes a package to pypi requires code owner approval. This job will automatically send code owners a notification email, then it will wait for them to log in and approve the deployment.
+9. After receiving code owner approval, the publish workflow will resume.
+10. Once the publish workflow has finished, you should see your release on pypi.
+
 # Developer Certificate of Origin (DCO)
 
    Developer's Certificate of Origin 1.1
