@@ -112,8 +112,6 @@ def _get_best_matching_type(python_value: object) -> str:
             # collection type.
             value_is_collection = _is_collection_for_convert(working_python_value)
         container_types.append(Collection)
-        if len(container_types) > 5:
-            raise RuntimeError(f"Infinite collection loop: {type(working_python_value)}")
 
     best_matching_type = None
     candidates = _get_candidate_strings(underlying_parents)
