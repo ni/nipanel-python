@@ -21,6 +21,7 @@ from nipanel.converters.builtin import (
 )
 from nipanel.converters.protobuf_types import (
     BTDateTimeConverter,
+    BTTimeDeltaConverter,
     BoolCollectionConverter,
     BytesCollectionConverter,
     DigitalWaveformConverter,
@@ -30,6 +31,7 @@ from nipanel.converters.protobuf_types import (
     DoubleSpectrumConverter,
     FloatCollectionConverter,
     HTDateTimeConverter,
+    HTTimeDeltaConverter,
     Int16AnalogWaveformConverter,
     Int16ComplexWaveformConverter,
     IntCollectionConverter,
@@ -52,6 +54,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     DTTimeDeltaConverter(),
     # Protobuf Types
     BTDateTimeConverter(),
+    BTTimeDeltaConverter(),
     BoolCollectionConverter(),
     BytesCollectionConverter(),
     DigitalWaveformConverter(),
@@ -61,6 +64,7 @@ _CONVERTIBLE_TYPES: list[Converter[Any, Any]] = [
     DoubleSpectrumConverter(),
     FloatCollectionConverter(),
     HTDateTimeConverter(),
+    HTTimeDeltaConverter(),
     Int16AnalogWaveformConverter(),
     Int16ComplexWaveformConverter(),
     IntCollectionConverter(),

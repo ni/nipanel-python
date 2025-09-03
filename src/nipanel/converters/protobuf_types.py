@@ -10,6 +10,8 @@ import nitypes.bintime as bt
 import numpy as np
 from ni.protobuf.types import (
     array_pb2,
+    precision_duration_pb2,
+    precision_duration_conversion,
     precision_timestamp_pb2,
     precision_timestamp_conversion,
     scalar_conversion,
@@ -404,6 +406,32 @@ class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.Precisi
         return precision_timestamp_conversion.bintime_datetime_from_protobuf(protobuf_message)
 
 
+class BTTimeDeltaConverter(Converter[bt.TimeDelta, precision_duration_pb2.PrecisionDuration]):
+    """A converter for bintime.TimeDelta types."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bt.TimeDelta
+
+    @property
+    def protobuf_message(self) -> Type[precision_duration_pb2.PrecisionDuration]:
+        """The type-specific protobuf message for the Python type."""
+        return precision_duration_pb2.PrecisionDuration
+
+    def to_protobuf_message(
+        self, python_value: bt.TimeDelta
+    ) -> precision_duration_pb2.PrecisionDuration:
+        """Convert the Python TimeDelta to a protobuf PrecisionDuration."""
+        return precision_duration_conversion.bintime_timedelta_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: precision_duration_pb2.PrecisionDuration
+    ) -> bt.TimeDelta:
+        """Convert the protobuf PrecisionDuration to a Python TimeDelta."""
+        return precision_duration_conversion.bintime_timedelta_from_protobuf(protobuf_message)
+
+
 class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
     """A converter for hightime.datetime objects.
 
@@ -444,6 +472,48 @@ class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.Precisi
     ) -> ht.datetime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
         return precision_timestamp_conversion.hightime_datetime_from_protobuf(protobuf_message)
+
+
+class HTTimeDeltaConverter(Converter[ht.timedelta, precision_duration_pb2.PrecisionDuration]):
+    """A converter for hightime.timedelta objects.
+
+    .. note:: The nipanel package will always convert PrecisionDuration messages to
+        bintime.TimeDelta objects using BTTimeDeltaConverter. To use hightime.timedelta
+        values in a panel, you must pass a hightime.datetime value for the default_value
+        parameter of the get_value() method on the panel.
+    """
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return ht.timedelta
+
+    @property
+    def protobuf_message(self) -> Type[precision_duration_pb2.PrecisionDuration]:
+        """The type-specific protobuf message for the Python type."""
+        return precision_duration_pb2.PrecisionDuration
+
+    @property
+    def protobuf_typename(self) -> str:
+        """The protobuf name for the type."""
+        # Override the base class here because there can only be one converter that
+        # converts PrecisionDuration objects. Since there are two converters that convert
+        # to PrecisionDuration, we have to choose one to handle conversion from protobuf.
+        # For the purposes of nipanel, we'll convert PrecisionDuration messages to
+        # bintime.TimeDelta. See BTTimeDeltaConverter.
+        return "PrecisionDuration_Placeholder"
+
+    def to_protobuf_message(
+        self, python_value: ht.timedelta
+    ) -> precision_duration_pb2.PrecisionDuration:
+        """Convert the Python timedelta to a protobuf PrecisionDuration."""
+        return precision_duration_conversion.hightime_timedelta_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: precision_duration_pb2.PrecisionDuration
+    ) -> ht.timedelta:
+        """Convert the protobuf PrecisionDuration to a Python timedelta."""
+        return precision_duration_conversion.hightime_timedelta_from_protobuf(protobuf_message)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):
