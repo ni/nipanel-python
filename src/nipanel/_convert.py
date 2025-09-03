@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import enum
 import logging
 from collections.abc import Collection
 from typing import Any, Iterable
 
 from google.protobuf import any_pb2
+from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform
 
 from nipanel.converters import Converter
@@ -20,8 +22,8 @@ from nipanel.converters.builtin import (
     StrConverter,
 )
 from nipanel.converters.protobuf_types import (
-    BTDateTimeConverter,
     BoolCollectionConverter,
+    BTDateTimeConverter,
     BytesCollectionConverter,
     DigitalWaveformConverter,
     Double2DArrayConverter,
@@ -86,7 +88,7 @@ def _get_best_matching_type(python_value: object) -> str:
     additional_info_string = _get_additional_type_info_string(python_value)
 
     container_types = []
-    value_is_collection = _is_non_string_collection(python_value)
+    value_is_collection = _is_collection_for_convert(python_value)
     # Variable to use when traversing down through collection types.
     working_python_value = python_value
     while value_is_collection:
@@ -108,8 +110,10 @@ def _get_best_matching_type(python_value: object) -> str:
             # If this element is a collection, we want to continue traversing. Once we find a
             # non-collection, underlying_parents will refer to the candidates for the non-
             # collection type.
-            value_is_collection = _is_non_string_collection(working_python_value)
+            value_is_collection = _is_collection_for_convert(working_python_value)
         container_types.append(Collection)
+        if len(container_types) > 5:
+            raise RuntimeError(f"Infinite collection loop: {type(working_python_value)}")
 
     best_matching_type = None
     candidates = _get_candidate_strings(underlying_parents)
@@ -181,5 +185,9 @@ def _get_additional_type_info_string(python_value: object) -> str:
         return ""
 
 
-def _is_non_string_collection(python_value: object) -> bool:
-    return isinstance(python_value, Collection) and not isinstance(python_value, str)
+def _is_collection_for_convert(python_value: object) -> bool:
+    # str, bytes, dict, Enum, and Vector are instances of Collection
+    # but they are either invalid types or have custom converters.
+    return isinstance(python_value, Collection) and not isinstance(
+        python_value, (str, bytes, dict, enum.Enum, Vector)
+    )
