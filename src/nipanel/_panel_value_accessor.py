@@ -10,7 +10,7 @@ import hightime as ht
 import nitypes.bintime as bt
 from ni.measurementlink.discovery.v1.client import DiscoveryClient
 from ni_grpc_extensions.channelpool import GrpcChannelPool
-from nitypes.time import convert_datetime
+from nitypes.time import convert_datetime, convert_timedelta
 
 from nipanel._panel_client import _PanelClient
 
@@ -85,11 +85,17 @@ class PanelValueAccessor(ABC):
                 enum_type = type(default_value)
                 return enum_type(value)
 
-            # The grpc converter always converts PrecisionTimestamp into bt.DateTime, so
-            # we need to handle the case where they provide an ht.datetime default by
-            # converting to hightime.
-            if isinstance(default_value, ht.datetime) and isinstance(value, bt.DateTime):
-                return convert_datetime(ht.datetime, value)
+            # The grpc converter always converts PrecisionTimestamp into ht.datetime, so
+            # we need to handle the case where they provide a bt.DateTime default by
+            # converting to bintime.
+            if isinstance(default_value, bt.DateTime) and isinstance(value, ht.datetime):
+                return convert_datetime(bt.DateTime, value)
+
+            # The grpc converter always converts PrecisionDuration into ht.timedelta, so
+            # we need to handle the case where they provide a bt.TimeDelta default by
+            # converting to bintime.
+            if isinstance(default_value, bt.TimeDelta) and isinstance(value, ht.timedelta):
+                return convert_timedelta(bt.TimeDelta, value)
 
             # lists are allowed to not match, since sets and tuples are converted to lists
             if not isinstance(value, list):

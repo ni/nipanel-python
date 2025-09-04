@@ -10,6 +10,8 @@ import nitypes.bintime as bt
 import numpy as np
 from ni.protobuf.types import (
     array_pb2,
+    precision_duration_pb2,
+    precision_duration_conversion,
     precision_timestamp_pb2,
     precision_timestamp_conversion,
     scalar_conversion,
@@ -379,7 +381,13 @@ class DoubleSpectrumConverter(Converter[Spectrum[np.float64], waveform_pb2.Doubl
 
 
 class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.PrecisionTimestamp]):
-    """A converter for bintime.DateTime types."""
+    """A converter for bintime.DateTime types.
+
+    .. note:: The nipanel package will always convert PrecisionTimestamp messages to
+        hightime.datetime objects using HTDateTimeConverter. To use bintime.DateTime
+        values in a panel, you must pass a bintime.DateTime value for the default_value
+        parameter of the get_value() method on the panel.
+    """
 
     @property
     def python_type(self) -> type:
@@ -390,6 +398,16 @@ class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.Precisi
     def protobuf_message(self) -> Type[precision_timestamp_pb2.PrecisionTimestamp]:
         """The type-specific protobuf message for the Python type."""
         return precision_timestamp_pb2.PrecisionTimestamp
+
+    @property
+    def protobuf_typename(self) -> str:
+        """The protobuf name for the type."""
+        # Override the base class here because there can only be one converter that
+        # converts PrecisionTimestamp objects. Since there are two converters that convert
+        # to PrecisionTimestamp, we have to choose one to handle conversion from protobuf.
+        # For the purposes of nipanel, we'll convert PrecisionTimestamp messages to
+        # hightime.datetime. See HTDateTimeConverter.
+        return "PrecisionTimestamp_Placeholder"
 
     def to_protobuf_message(
         self, python_value: bt.DateTime
@@ -404,14 +422,50 @@ class BTDateTimeConverter(Converter[bt.DateTime, precision_timestamp_pb2.Precisi
         return precision_timestamp_conversion.bintime_datetime_from_protobuf(protobuf_message)
 
 
-class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
-    """A converter for hightime.datetime objects.
+class BTTimeDeltaConverter(Converter[bt.TimeDelta, precision_duration_pb2.PrecisionDuration]):
+    """A converter for bintime.TimeDelta types.
 
-    .. note:: The nipanel package will always convert PrecisionTimestamp messages to
-        bintime.DateTime objects using BTDateTimeConverter. To use hightime.datetime
-        values in a panel, you must pass a hightime.datetime value for the default_value
+    .. note:: The nipanel package will always convert PrecisionDuration messages to
+        hightime.timedelta objects using HTTimeDeltaConverter. To use bintime.TimeDelta
+        values in a panel, you must pass a bintime.TimeDelta value for the default_value
         parameter of the get_value() method on the panel.
     """
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return bt.TimeDelta
+
+    @property
+    def protobuf_message(self) -> Type[precision_duration_pb2.PrecisionDuration]:
+        """The type-specific protobuf message for the Python type."""
+        return precision_duration_pb2.PrecisionDuration
+
+    @property
+    def protobuf_typename(self) -> str:
+        """The protobuf name for the type."""
+        # Override the base class here because there can only be one converter that
+        # converts PrecisionDuration objects. Since there are two converters that convert
+        # to PrecisionDuration, we have to choose one to handle conversion from protobuf.
+        # For the purposes of nipanel, we'll convert PrecisionDuration messages to
+        # hightime.timedelta. See HTTimeDeltaConverter.
+        return "PrecisionDuration_Placeholder"
+
+    def to_protobuf_message(
+        self, python_value: bt.TimeDelta
+    ) -> precision_duration_pb2.PrecisionDuration:
+        """Convert the Python TimeDelta to a protobuf PrecisionDuration."""
+        return precision_duration_conversion.bintime_timedelta_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: precision_duration_pb2.PrecisionDuration
+    ) -> bt.TimeDelta:
+        """Convert the protobuf PrecisionDuration to a Python TimeDelta."""
+        return precision_duration_conversion.bintime_timedelta_from_protobuf(protobuf_message)
+
+
+class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.PrecisionTimestamp]):
+    """A converter for hightime.datetime objects."""
 
     @property
     def python_type(self) -> type:
@@ -422,16 +476,6 @@ class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.Precisi
     def protobuf_message(self) -> Type[precision_timestamp_pb2.PrecisionTimestamp]:
         """The type-specific protobuf message for the Python type."""
         return precision_timestamp_pb2.PrecisionTimestamp
-
-    @property
-    def protobuf_typename(self) -> str:
-        """The protobuf name for the type."""
-        # Override the base class here because there can only be one converter that
-        # converts PrecisionTimestamp objects. Since there are two converters that convert
-        # to PrecisionTimestamp, we have to choose one to handle conversion from protobuf.
-        # For the purposes of nipanel, we'll convert PrecisionTimestamp messages to
-        # bintime.DateTime. See BTDateTimeConverter.
-        return "PrecisionTimestamp_Placeholder"
 
     def to_protobuf_message(
         self, python_value: ht.datetime
@@ -444,6 +488,32 @@ class HTDateTimeConverter(Converter[ht.datetime, precision_timestamp_pb2.Precisi
     ) -> ht.datetime:
         """Convert the protobuf PrecisionTimestamp to a Python DateTime."""
         return precision_timestamp_conversion.hightime_datetime_from_protobuf(protobuf_message)
+
+
+class HTTimeDeltaConverter(Converter[ht.timedelta, precision_duration_pb2.PrecisionDuration]):
+    """A converter for hightime.timedelta objects."""
+
+    @property
+    def python_type(self) -> type:
+        """The Python type that this converter handles."""
+        return ht.timedelta
+
+    @property
+    def protobuf_message(self) -> Type[precision_duration_pb2.PrecisionDuration]:
+        """The type-specific protobuf message for the Python type."""
+        return precision_duration_pb2.PrecisionDuration
+
+    def to_protobuf_message(
+        self, python_value: ht.timedelta
+    ) -> precision_duration_pb2.PrecisionDuration:
+        """Convert the Python timedelta to a protobuf PrecisionDuration."""
+        return precision_duration_conversion.hightime_timedelta_to_protobuf(python_value)
+
+    def to_python_value(
+        self, protobuf_message: precision_duration_pb2.PrecisionDuration
+    ) -> ht.timedelta:
+        """Convert the protobuf PrecisionDuration to a Python timedelta."""
+        return precision_duration_conversion.hightime_timedelta_from_protobuf(protobuf_message)
 
 
 class ScalarConverter(Converter[Scalar[_AnyScalarType], scalar_pb2.Scalar]):

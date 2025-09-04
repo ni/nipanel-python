@@ -1,9 +1,32 @@
 [project]
 name = "nipanel"
 version = "0.1.0-dev1"
-description = "NI Panel Python API"
+license = "MIT"
+description = "NI Panel client for Python"
 authors = [{name = "NI", email = "opensource@ni.com"}]
+maintainers = [
+  {name = "Mike Prosser", email = "mike.prosser@emerson.com"},
+  {name = "Johann Scholtz", email = "johann.scholtz@emerson.com"},
+]
 readme = "README.md"
+keywords = ["nipanel", "panels"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Manufacturing",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+requires-python = ">=3.9"
 dynamic = ["dependencies"]
 
 [project.urls]
@@ -24,7 +47,7 @@ numpy = ">=1.22"
 debugpy = ">=1.8.1"
 ni-grpc-extensions = { version = ">=0.1.0.dev1", allow-prereleases = true }
 ni-measurementlink-discovery-v1-client = { version = ">=0.1.0dev0", allow-prereleases = true }
-ni-protobuf-types = { version = ">=0.1.0dev3", allow-prereleases = true }
+ni-protobuf-types = { version = ">=0.1.0dev4", allow-prereleases = true }
 ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 [tool.poetry.group.dev.dependencies]
