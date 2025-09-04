@@ -79,6 +79,14 @@ _CONVERTER_FOR_PYTHON_TYPE = {entry.python_typename: entry for entry in _CONVERT
 _CONVERTER_FOR_GRPC_TYPE = {entry.protobuf_typename: entry for entry in _CONVERTIBLE_TYPES}
 _SUPPORTED_PYTHON_TYPES = _CONVERTER_FOR_PYTHON_TYPE.keys()
 
+_SKIPPED_COLLECTIONS = (
+    str,  # Handled by StrConverter
+    bytes,  # Handled by BytesConverter
+    dict,  # Unsupported data type
+    enum.Enum,  # Handled by IntConverter
+    Vector,  # Handled by VectorConverter
+)
+
 
 def to_any(python_value: object) -> any_pb2.Any:
     """Convert a Python object to a protobuf Any."""
@@ -191,5 +199,5 @@ def _is_collection_for_convert(python_value: object) -> bool:
     # str, bytes, dict, Enum, and Vector are instances of Collection
     # but they are either invalid types or have custom converters.
     return isinstance(python_value, Collection) and not isinstance(
-        python_value, (str, bytes, dict, enum.Enum, Vector)
+        python_value, _SKIPPED_COLLECTIONS
     )
