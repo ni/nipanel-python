@@ -42,6 +42,8 @@ _AnyPanelPbTypes: TypeAlias = Union[
     array_pb2.StringArray,
 ]
 
+_BT_EPSILON = ht.timedelta(yoctoseconds=54210)
+
 
 # ========================================================
 # _get_best_matching_type() tests
@@ -629,8 +631,9 @@ def test___double_spectrum_proto___from_any___valid_python_spectrum() -> None:
     assert result.frequency_increment == 10.0
 
 
-def test___precision_timestamp_proto__from_any___valid_bintime_datetime() -> None:
-    expected_bt_dt = bt.DateTime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+def test___precision_timestamp_proto__from_any___valid_hightime_datetime() -> None:
+    expected_ht_dt = ht.datetime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+    expected_bt_dt = convert_datetime(bt.DateTime, expected_ht_dt)
     expected_tuple = expected_bt_dt.to_tuple()
     pb_value = precision_timestamp_pb2.PrecisionTimestamp(
         seconds=expected_tuple.whole_seconds,
@@ -640,12 +643,13 @@ def test___precision_timestamp_proto__from_any___valid_bintime_datetime() -> Non
 
     result = nipanel._convert.from_any(packed_any)
 
-    assert isinstance(result, bt.DateTime)
-    assert result == expected_bt_dt
+    assert isinstance(result, ht.datetime)
+    assert abs(result - expected_ht_dt) <= _BT_EPSILON
 
 
-def test___precision_duration_proto__from_any___valid_bintime_timedelta() -> None:
-    expected_bt_td = bt.TimeDelta(seconds=45.678)
+def test___precision_duration_proto__from_any___valid_hightime_timedelta() -> None:
+    expected_ht_td = ht.timedelta(days=1, seconds=25, microseconds=17)
+    expected_bt_td = convert_timedelta(bt.TimeDelta, expected_ht_td)
     expected_tuple = expected_bt_td.to_tuple()
     pb_value = precision_duration_pb2.PrecisionDuration(
         seconds=expected_tuple.whole_seconds,
@@ -655,8 +659,8 @@ def test___precision_duration_proto__from_any___valid_bintime_timedelta() -> Non
 
     result = nipanel._convert.from_any(packed_any)
 
-    assert isinstance(result, bt.TimeDelta)
-    assert result == expected_bt_td
+    assert isinstance(result, ht.timedelta)
+    assert abs(result - expected_ht_td) <= _BT_EPSILON
 
 
 def test___double2darray___from_any___valid_python_2dcollection() -> None:
