@@ -196,8 +196,6 @@ def _get_additional_type_info_string(python_value: object) -> str:
 
 
 def _is_collection_for_convert(python_value: object) -> bool:
-    # str, bytes, dict, Enum, and Vector are instances of Collection
-    # but they are either invalid types or have custom converters.
     return isinstance(python_value, Collection) and not isinstance(
         python_value, _SKIPPED_COLLECTIONS
     )
