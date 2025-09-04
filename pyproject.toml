@@ -47,7 +47,7 @@ numpy = ">=1.22"
 debugpy = ">=1.8.1"
 ni-grpc-extensions = { version = ">=0.1.0.dev1", allow-prereleases = true }
 ni-measurementlink-discovery-v1-client = { version = ">=0.1.0dev0", allow-prereleases = true }
-ni-protobuf-types = { version = ">=0.1.0dev3", allow-prereleases = true }
+ni-protobuf-types = { version = ">=0.1.0dev4", allow-prereleases = true }
 ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 
 [tool.poetry.group.dev.dependencies]

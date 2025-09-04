@@ -10,6 +10,7 @@ from google.protobuf.message import Message
 from ni.protobuf.types import (
     array_pb2,
     attribute_value_pb2,
+    precision_duration_pb2,
     precision_timestamp_pb2,
     scalar_pb2,
     vector_pb2,
@@ -17,7 +18,7 @@ from ni.protobuf.types import (
 )
 from nitypes.complex import ComplexInt32DType
 from nitypes.scalar import Scalar
-from nitypes.time import convert_datetime
+from nitypes.time import convert_datetime, convert_timedelta
 from nitypes.vector import Vector
 from nitypes.waveform import AnalogWaveform, ComplexWaveform, DigitalWaveform, Spectrum
 from typing_extensions import TypeAlias
@@ -41,6 +42,8 @@ _AnyPanelPbTypes: TypeAlias = Union[
     array_pb2.StringArray,
 ]
 
+_BT_EPSILON = ht.timedelta(yoctoseconds=54210)
+
 
 # ========================================================
 # _get_best_matching_type() tests
@@ -61,7 +64,9 @@ _AnyPanelPbTypes: TypeAlias = Union[
         (dt.datetime.now(), "datetime.datetime"),
         (dt.timedelta(days=1), "datetime.timedelta"),
         (bt.DateTime.now(tz=dt.timezone.utc), "nitypes.bintime.DateTime"),
+        (bt.TimeDelta(seconds=1), "nitypes.bintime.TimeDelta"),
         (ht.datetime.now(), "hightime.datetime"),
+        (ht.timedelta(days=1), "hightime.timedelta"),
         ([False, False], "collections.abc.Collection[builtins.bool]"),
         ([b"mystr", b"mystr"], "collections.abc.Collection[builtins.bytes]"),
         ([456.2, 1.0], "collections.abc.Collection[builtins.float]"),
@@ -393,6 +398,18 @@ def test___python_bintime_datetime__to_any___valid_precision_timestamp_proto() -
     assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
 
 
+def test___python_bintime_timedelta__to_any___valid_precision_duration_proto() -> None:
+    python_value = bt.TimeDelta(seconds=12.345)
+
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = precision_duration_pb2.PrecisionDuration()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    expected_tuple = python_value.to_tuple()
+    assert unpack_dest.seconds == expected_tuple.whole_seconds
+    assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
+
+
 def test___python_hightime_datetime__to_any___valid_precision_timestamp_proto() -> None:
     python_value = ht.datetime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
 
@@ -402,6 +419,19 @@ def test___python_hightime_datetime__to_any___valid_precision_timestamp_proto() 
 
     expected_bt_datetime = convert_datetime(bt.DateTime, python_value)
     expected_tuple = expected_bt_datetime.to_tuple()
+    assert unpack_dest.seconds == expected_tuple.whole_seconds
+    assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
+
+
+def test___python_hightime_timedelta__to_any___valid_precision_duration_proto() -> None:
+    python_value = ht.timedelta(days=10, seconds=45, picoseconds=60)
+
+    result = nipanel._convert.to_any(python_value)
+    unpack_dest = precision_duration_pb2.PrecisionDuration()
+    _assert_any_and_unpack(result, unpack_dest)
+
+    expected_bt_timedelta = convert_timedelta(bt.TimeDelta, python_value)
+    expected_tuple = expected_bt_timedelta.to_tuple()
     assert unpack_dest.seconds == expected_tuple.whole_seconds
     assert unpack_dest.fractional_seconds == expected_tuple.fractional_seconds
 
@@ -601,8 +631,9 @@ def test___double_spectrum_proto___from_any___valid_python_spectrum() -> None:
     assert result.frequency_increment == 10.0
 
 
-def test___precision_timestamp_proto__from_any___valid_bintime_datetime() -> None:
-    expected_bt_dt = bt.DateTime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+def test___precision_timestamp_proto__from_any___valid_hightime_datetime() -> None:
+    expected_ht_dt = ht.datetime(year=2020, month=1, day=10, second=45, tzinfo=dt.timezone.utc)
+    expected_bt_dt = convert_datetime(bt.DateTime, expected_ht_dt)
     expected_tuple = expected_bt_dt.to_tuple()
     pb_value = precision_timestamp_pb2.PrecisionTimestamp(
         seconds=expected_tuple.whole_seconds,
@@ -612,8 +643,24 @@ def test___precision_timestamp_proto__from_any___valid_bintime_datetime() -> Non
 
     result = nipanel._convert.from_any(packed_any)
 
-    assert isinstance(result, bt.DateTime)
-    assert result == expected_bt_dt
+    assert isinstance(result, ht.datetime)
+    assert abs(result - expected_ht_dt) <= _BT_EPSILON
+
+
+def test___precision_duration_proto__from_any___valid_hightime_timedelta() -> None:
+    expected_ht_td = ht.timedelta(days=1, seconds=25, microseconds=17)
+    expected_bt_td = convert_timedelta(bt.TimeDelta, expected_ht_td)
+    expected_tuple = expected_bt_td.to_tuple()
+    pb_value = precision_duration_pb2.PrecisionDuration(
+        seconds=expected_tuple.whole_seconds,
+        fractional_seconds=expected_tuple.fractional_seconds,
+    )
+    packed_any = _pack_into_any(pb_value)
+
+    result = nipanel._convert.from_any(packed_any)
+
+    assert isinstance(result, ht.timedelta)
+    assert abs(result - expected_ht_td) <= _BT_EPSILON
 
 
 def test___double2darray___from_any___valid_python_2dcollection() -> None:
