@@ -541,14 +541,14 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "extra-streamlit-components"
-version = "0.1.80"
+version = "0.1.81"
 description = "An all-in-one place, to find complex or just natively unavailable components on streamlit."
 optional = false
 python-versions = ">=3.6"
 groups = ["examples"]
 files = [
-    {file = "extra_streamlit_components-0.1.80-py3-none-any.whl", hash = "sha256:7a8c151da5dcd1f1f97b6c29caa812a1d77928d20fc4bf42a3a4fd788274dd9e"},
-    {file = "extra_streamlit_components-0.1.80.tar.gz", hash = "sha256:87d6c38e07381501d8882796adef17d1c1d4e3a79615864d95c1163d2bc136f6"},
+    {file = "extra_streamlit_components-0.1.81-py3-none-any.whl", hash = "sha256:11a4651dbd03cac04edfbb8711757b1d10e3cdf280b8fa3a43f970d05e684619"},
+    {file = "extra_streamlit_components-0.1.81.tar.gz", hash = "sha256:eb9beb7bacfe8b3d238f1888a21c78ac6cfa569341be484bca08c3ea0b15f20d"},
 ]
 
 [package.dependencies]
@@ -1314,19 +1314,22 @@ hightime = ">=0.2.0"
 
 [[package]]
 name = "nitypes"
-version = "0.1.0.dev8"
+version = "0.1.0.dev9"
 description = "Data types for NI Python APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "nitypes-0.1.0.dev8-py3-none-any.whl", hash = "sha256:2d717ae65b65a573cd488610fd413eafa0ebec801c7219c8ee8475d877e6cb48"},
-    {file = "nitypes-0.1.0.dev8.tar.gz", hash = "sha256:50bd1b728c7dce1a6b4bb716525d59b9352543daf622528b4b34bc844d4cd9b7"},
+    {file = "nitypes-0.1.0.dev9-py3-none-any.whl", hash = "sha256:1e2928f9a2c57f289f5743433299e09d151ab4951bacffbf67238093a82c3f67"},
+    {file = "nitypes-0.1.0.dev9.tar.gz", hash = "sha256:bc36861cc4a5ff0cfe74050afeed82bcdd652fc4de36860cd43492beee388b5d"},
 ]
 
 [package.dependencies]
 hightime = ">=0.2.2"
-numpy = ">=1.22"
+numpy = [
+    {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.13\""},
+    {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
+]
 typing-extensions = ">=4.13.2"
 
 [[package]]
@@ -2025,14 +2028,14 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyright"
-version = "1.1.403"
+version = "1.1.405"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 groups = ["lint"]
 files = [
-    {file = "pyright-1.1.403-py3-none-any.whl", hash = "sha256:c0eeca5aa76cbef3fcc271259bbd785753c7ad7bcac99a9162b4c4c7daed23b3"},
-    {file = "pyright-1.1.403.tar.gz", hash = "sha256:3ab69b9f41c67fb5bbb4d7a36243256f0d549ed3608678d381d5f51863921104"},
+    {file = "pyright-1.1.405-py3-none-any.whl", hash = "sha256:a2cb13700b5508ce8e5d4546034cb7ea4aedb60215c6c33f56cec7f53996035a"},
+    {file = "pyright-1.1.405.tar.gz", hash = "sha256:5c2a30e1037af27eb463a1cc0b9f6d65fec48478ccf092c1ac28385a15c55763"},
 ]
 
 [package.dependencies]
