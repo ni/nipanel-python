@@ -295,7 +295,7 @@ def _set_python_attributes(
 ) -> None:
     waveform.channel_name = EXPECTED_CHANNEL_NAME
     if isinstance(waveform, NumericWaveform) or isinstance(waveform, Spectrum):
-        waveform.unit_description = EXPECTED_UNITS
+        waveform.units = EXPECTED_UNITS
 
 
 def _check_python_attributes(
@@ -303,7 +303,7 @@ def _check_python_attributes(
 ) -> None:
     assert waveform.channel_name == EXPECTED_CHANNEL_NAME
     if isinstance(waveform, NumericWaveform) or isinstance(waveform, Spectrum):
-        assert waveform.unit_description == EXPECTED_UNITS
+        assert waveform.units == EXPECTED_UNITS
 
 
 def _check_protobuf_attributes(
