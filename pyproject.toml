@@ -77,7 +77,11 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 # The latest Sphinx requires a recent Python version.
-Sphinx = { version = ">=8.2", python = "^3.11" }
+Sphinx = [
+  { version = ">=7.4", python = ">=3.9,<3.10" },
+  { version = ">=8.1", python = ">=3.10,<3.11" },
+  { version = ">=8.2", python = "^3.11" },
+]
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-autoapi = ">=1.8.4"
 m2r2 = ">=0.3.2"
