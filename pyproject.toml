@@ -1,6 +1,6 @@
 [project]
 name = "nipanel"
-version = "0.1.0-dev1"
+version = "0.1.0-dev2"
 license = "MIT"
 description = "NI Panel client for Python"
 authors = [{name = "NI", email = "opensource@ni.com"}]
