@@ -22,6 +22,6 @@ jobs:
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@8554e7ef74e95c9762962205f45a1e10c48de671 # v0.5.1
       - name: Analyze Python Project
-        uses: ni/python-actions/analyze-project@21cdaf6ea6eaed0a7d5e49ea28c99a82c3840c39
+        uses: ni/python-actions/analyze-project@07d9779a12a14c3f86229078b6b467a7f8df1755
       - name: Bandit security checks
         run:  poetry run bandit -c pyproject.toml -r src/nipanel
