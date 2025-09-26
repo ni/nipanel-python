@@ -15,10 +15,16 @@ jobs:
   check_docs:
     name: Check docs
     uses: ./.github/workflows/check_docs.yml
+  checks_succeeded:
+    name: Checks succeeded
+    needs: [check_nipanel, check_docs]
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
   run_unit_tests:
     name: Run unit tests
     uses: ./.github/workflows/run_unit_tests.yml
-    needs: [check_nipanel]
+    needs: [checks_succeeded]
   report_test_results:
     name: Report test results
     uses: ./.github/workflows/report_test_results.yml
