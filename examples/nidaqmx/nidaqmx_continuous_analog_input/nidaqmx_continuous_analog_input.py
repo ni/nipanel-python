@@ -1,10 +1,13 @@
 """Data acquisition script that continuously acquires analog input data."""
 
+import os
 import time
 from pathlib import Path
+from typing import cast
 
-import nidaqmx
-from nidaqmx.constants import (
+os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
+import nidaqmx  # noqa: E402 # Must import after setting os environment variable
+from nidaqmx.constants import (  # noqa: E402
     AcquisitionType,
     CJCSource,
     LoggingMode,
@@ -13,22 +16,23 @@ from nidaqmx.constants import (
     TerminalConfiguration,
     ThermocoupleType,
 )
-from nidaqmx.errors import DaqError
+from nidaqmx.errors import DaqError  # noqa: E402
+from nitypes.waveform import AnalogWaveform  # noqa: E402
 
-import nipanel
+import nipanel  # noqa: E402
 
 panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
 panel = nipanel.create_streamlit_panel(panel_script_path)
 
 try:
     panel.set_value("daq_error", "")
+    panel.set_value("is_running", False)
 
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
     while True:
-        panel.set_value("run_button", False)
-        while not panel.get_value("run_button", False):
+        while not panel.get_value("is_running", False):
             time.sleep(0.1)
 
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
@@ -66,15 +70,13 @@ try:
             try:
                 print(f"Starting data acquisition...")
                 task.start()
-                panel.set_value("is_running", True)
 
-                panel.set_value("stop_button", False)
-                while not panel.get_value("stop_button", False):
-                    data = task.read(
-                        number_of_samples_per_channel=1000  # pyright: ignore[reportArgumentType]
+                while panel.get_value("is_running", False):
+                    waveforms = cast(
+                        list[AnalogWaveform], task.read_waveform(number_of_samples_per_channel=1000)
                     )
-                    panel.set_value("voltage_data", data[0])
-                    panel.set_value("thermocouple_data", data[1])
+                    panel.set_value("voltage_waveform", waveforms[0])
+                    panel.set_value("thermocouple_waveform", waveforms[1])
             except KeyboardInterrupt:
                 raise
             finally:

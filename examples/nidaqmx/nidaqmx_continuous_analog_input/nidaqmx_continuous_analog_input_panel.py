@@ -1,5 +1,8 @@
 """Streamlit visualization script to display data acquired by nidaqmx_continuous_analog_input.py."""
 
+from typing import cast
+
+import hightime as ht
 import streamlit as st
 from nidaqmx.constants import (
     TerminalConfiguration,
@@ -8,6 +11,7 @@ from nidaqmx.constants import (
     ThermocoupleType,
     LoggingMode,
 )
+from nitypes.waveform import AnalogWaveform
 from streamlit_echarts import st_echarts
 
 import nipanel
@@ -34,20 +38,27 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+def click_start():
+    panel.set_value("is_running", True)
+
+
+def click_stop():
+    panel.set_value("is_running", False)
+
+
 panel = nipanel.get_streamlit_panel_accessor()
 is_running = panel.get_value("is_running", False)
 
 if is_running:
-    st.button(r"⏹️ Stop", key="stop_button")
+    st.button(r"⏹️ Stop", key="stop_button", on_click=click_stop)
 elif not is_running and panel.get_value("daq_error", "") == "":
-    st.button(r"▶️ Run", key="run_button")
+    st.button(r"▶️ Run", key="run_button", on_click=click_start)
 else:
     st.error(
         f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
     )
 
-thermocouple_data = panel.get_value("thermocouple_data", [0.0])
-voltage_data = panel.get_value("voltage_data", [0.0])
 sample_rate = panel.get_value("sample_rate", 0.0)
 
 # Create two-column layout for the entire interface
@@ -176,15 +187,28 @@ with right_column:
     with st.container(border=True):
         # Graph section
         st.header("Voltage & Thermocouple")
+
+        thermocouple_waveform = panel.get_value("thermocouple_waveform", AnalogWaveform())
+        voltage_waveform = panel.get_value("voltage_waveform", AnalogWaveform())
+        if voltage_waveform.sample_count == 0:
+            time_labels = ["00:00:00.000"]
+        else:
+            timestamps = cast(
+                list[ht.datetime],
+                list(voltage_waveform.timing.get_timestamps(0, voltage_waveform.sample_count)),
+            )
+            time_labels = [
+                f"{ts.hour:02d}:{ts.minute:02d}:{ts.second:02d}.{ts.microsecond//1000:03d}"
+                for ts in timestamps
+            ]
+
         voltage_therm_graph = {
             "animation": False,
             "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)", "Temperature (C)"]},
+            "legend": {"data": [voltage_waveform.units, thermocouple_waveform.units]},
             "xAxis": {
                 "type": "category",
-                "data": [
-                    x / sample_rate if sample_rate > 0.001 else x for x in range(len(voltage_data))
-                ],
+                "data": time_labels,
                 "name": "Time",
                 "nameLocation": "center",
                 "nameGap": 40,
@@ -198,17 +222,17 @@ with right_column:
             },
             "series": [
                 {
-                    "name": "voltage_amplitude",
+                    "name": voltage_waveform.units,
                     "type": "line",
-                    "data": voltage_data,
+                    "data": list(voltage_waveform.scaled_data),
                     "emphasis": {"focus": "series"},
                     "smooth": True,
                     "seriesLayoutBy": "row",
                 },
                 {
-                    "name": "thermocouple_amplitude",
+                    "name": thermocouple_waveform.units,
                     "type": "line",
-                    "data": thermocouple_data,
+                    "data": list(thermocouple_waveform.scaled_data),
                     "color": "red",
                     "emphasis": {"focus": "series"},
                     "smooth": True,
