@@ -1,5 +1,8 @@
 """Streamlit visualization script to display data acquired by nidaqmx_analog_input_filtering.py."""
 
+from typing import cast
+
+import hightime as ht
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import streamlit as st
 from nidaqmx.constants import (
@@ -11,10 +14,20 @@ from nidaqmx.constants import (
     StrainGageBridgeType,
     TerminalConfiguration,
 )
+from nitypes.waveform import AnalogWaveform
 from streamlit_echarts import st_echarts
 
 import nipanel
 from nipanel.controls import enum_selectbox
+
+
+def click_start():
+    panel.set_value("is_running", True)
+
+
+def click_stop():
+    panel.set_value("is_running", False)
+
 
 st.set_page_config(page_title="Analog Input Filtering", page_icon="📈", layout="wide")
 st.title("Analog Input - Filtering")
@@ -49,9 +62,9 @@ with left_col:
     with st.container(border=True):
         with st.container(border=True):
             if panel.get_value("is_running", True):
-                st.button("Stop", key="stop_button")
+                st.button("Stop", key="stop_button", on_click=click_stop)
             elif not panel.get_value("is_running", True) and panel.get_value("daq_error", "") == "":
-                run_button = st.button("Run", key="run_button")
+                run_button = st.button("Run", key="run_button", on_click=click_start)
             else:
                 st.error(
                     f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_input_filtering.py \n\n {panel.get_value('daq_error', '')}"
@@ -148,31 +161,43 @@ with right_col:
 
     with st.container(border=True):
         st.title("Acquired Data")
-        acquired_data = panel.get_value("acquired_data", [0.0])
-        sample_rate = panel.get_value("sample_rate", 100.0)
+
+        waveform = panel.get_value("waveform", AnalogWaveform())
+        if waveform.sample_count == 0:
+            time_labels = ["00:00:00.000"]
+        else:
+            timestamps = cast(
+                list[ht.datetime],
+                list(waveform.timing.get_timestamps(0, waveform.sample_count)),
+            )
+            time_labels = [
+                f"{ts.hour:02d}:{ts.minute:02d}:{ts.second:02d}.{ts.microsecond//1000:03d}"
+                for ts in timestamps
+            ]
+
         acquired_data_graph = {
             "animation": False,
             "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)"]},
+            "legend": {"data": [waveform.units]},
             "xAxis": {
                 "type": "category",
-                "data": [x / sample_rate for x in range(len(acquired_data))],
+                "data": time_labels,
                 "name": "Time",
                 "nameLocation": "center",
                 "nameGap": 40,
             },
             "yAxis": {
                 "type": "value",
-                "name": "Volts",
+                "name": waveform.units,
                 "nameRotate": 90,
                 "nameLocation": "center",
                 "nameGap": 40,
             },
             "series": [
                 {
-                    "name": "voltage_amplitude",
+                    "name": waveform.units,
                     "type": "line",
-                    "data": acquired_data,
+                    "data": list(waveform.scaled_data),
                     "emphasis": {"focus": "series"},
                     "smooth": True,
                     "seriesLayoutBy": "row",
