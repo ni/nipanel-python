@@ -5,11 +5,10 @@ import time
 from pathlib import Path
 
 os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
+import hightime as ht  # noqa: E402
 import nidaqmx  # noqa: E402 # Must import after setting os environment variable
 import nidaqmx.stream_writers  # noqa: E402
 import nidaqmx.system  # noqa: E402
-import hightime as ht  # noqa: E402
-import datetime as dt  # noqa: E402
 import numpy as np  # noqa: E402
 from nidaqmx.constants import AcquisitionType, Edge  # noqa: E402
 from nidaqmx.errors import DaqError  # noqa: E402

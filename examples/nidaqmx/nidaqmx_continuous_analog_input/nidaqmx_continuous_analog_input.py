@@ -7,6 +7,7 @@ from typing import cast
 
 os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
 import nidaqmx  # noqa: E402 # Must import after setting os environment variable
+import numpy as np  # noqa: E402
 from nidaqmx.constants import (  # noqa: E402
     AcquisitionType,
     CJCSource,
@@ -73,7 +74,8 @@ try:
 
                 while panel.get_value("is_running", False):
                     waveforms = cast(
-                        list[AnalogWaveform], task.read_waveform(number_of_samples_per_channel=1000)
+                        list[AnalogWaveform[np.float64]],
+                        task.read_waveform(number_of_samples_per_channel=1000),
                     )
                     panel.set_value("voltage_waveform", waveforms[0])
                     panel.set_value("thermocouple_waveform", waveforms[1])

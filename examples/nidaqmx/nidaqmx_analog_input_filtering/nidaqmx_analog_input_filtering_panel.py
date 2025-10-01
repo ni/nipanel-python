@@ -2,8 +2,8 @@
 
 from typing import cast
 
-import hightime as ht
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
+import hightime as ht
 import streamlit as st
 from nidaqmx.constants import (
     CurrentShuntResistorLocation,
@@ -21,11 +21,11 @@ import nipanel
 from nipanel.controls import enum_selectbox
 
 
-def click_start():
+def _click_start() -> None:
     panel.set_value("is_running", True)
 
 
-def click_stop():
+def _click_stop() -> None:
     panel.set_value("is_running", False)
 
 
@@ -62,9 +62,9 @@ with left_col:
     with st.container(border=True):
         with st.container(border=True):
             if panel.get_value("is_running", True):
-                st.button("⏹️ Stop", key="stop_button", on_click=click_stop)
+                st.button("⏹️ Stop", key="stop_button", on_click=_click_stop)
             elif not panel.get_value("is_running", True) and panel.get_value("daq_error", "") == "":
-                run_button = st.button("▶️ Run", key="run_button", on_click=click_start)
+                run_button = st.button("▶️ Run", key="run_button", on_click=_click_start)
             else:
                 st.error(
                     f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_input_filtering.py \n\n {panel.get_value('daq_error', '')}"
