@@ -9,8 +9,8 @@ jobs:
     name: Check nipanel
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: [3.11]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: [3.9, 3.13]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repo
