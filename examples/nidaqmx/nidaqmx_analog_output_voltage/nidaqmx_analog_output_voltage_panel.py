@@ -31,14 +31,14 @@ st.markdown(
     """
     <style>
      div.stNumberInput {
-        max-width: 190px !important;
+        max-width: 250px !important;
     }
     div.stTextInput {
-        max-width: 190px !important;
+        max-width: 250px !important;
     }
    
     div[data-baseweb="select"] {
-        width: 190px !important; /* Adjust the width as needed */
+        width: 250px !important; /* Adjust the width as needed */
     }
     </style>
     <style>
@@ -54,21 +54,17 @@ with left_col:
         is_running = panel.get_value("is_running", False)
         if is_running:
             st.button("⏹️ Stop", key="stop_button", on_click=_click_stop)
-        elif not is_running and panel.get_value("daq_error", "") == "":
+        elif not is_running:
             run_button = st.button("▶️ Run", key="run_button", on_click=_click_start)
-        else:
-            st.error(
-                f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_output_voltage.py \n\n {panel.get_value('daq_error', '')}"
-            )
 
         st.title("Channel Settings")
-        physical_channel = st.selectbox(
-            options=panel.get_value("available_channel_names", ["Mod2/ai0"]),
+        st.selectbox(
+            options=panel.get_value("available_channel_names", [""]),
             index=0,
             label="Physical Channels",
             disabled=panel.get_value("is_running", False),
+            key="physical_channel",
         )
-        panel.set_value("physical_channel", physical_channel)
 
         max_value_voltage = st.number_input(
             "Max Value",
@@ -141,49 +137,54 @@ with left_col:
         panel.set_value("wave_type", wave_type)
 
 with right_col:
-    with st.container(border=True):
-        st.title("Output")
+    if panel.get_value("daq_error", "") != "":
+        st.error(
+            f"There was an error running the script. Fix the issue and click Run again. \n\n {panel.get_value('daq_error', '')}"
+        )
+    else:
+        with st.container(border=True):
+            st.title("Output")
 
-        waveform = panel.get_value("waveform", AnalogWaveform())
-        if waveform.sample_count == 0:
-            time_labels = ["0.000"]
-        else:
-            timestamps = cast(
-                list[ht.datetime],
-                list(waveform.timing.get_timestamps(0, waveform.sample_count)),
-            )
-            time_labels = [f"{ts.second}.{ts.microsecond//1000:03d}" for ts in timestamps]
+            waveform = panel.get_value("waveform", AnalogWaveform())
+            if waveform.sample_count == 0:
+                time_labels = ["0.000"]
+            else:
+                timestamps = cast(
+                    list[ht.datetime],
+                    list(waveform.timing.get_timestamps(0, waveform.sample_count)),
+                )
+                time_labels = [f"{ts.second}.{ts.microsecond//1000:03d}" for ts in timestamps]
 
-        graph = {
-            "animation": False,
-            "tooltip": {"trigger": "axis"},
-            "legend": {"data": [waveform.units]},
-            "xAxis": {
-                "type": "category",
-                "data": time_labels,
-                "name": "Time (s)",
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "yAxis": {
-                "type": "value",
-                "name": waveform.units,
-                "nameRotate": 90,
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "series": [
-                {
-                    "name": waveform.units,
-                    "type": "line",
-                    "data": list(waveform.scaled_data),
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
+            graph = {
+                "animation": False,
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": [waveform.units]},
+                "xAxis": {
+                    "type": "category",
+                    "data": time_labels,
+                    "name": "Time (s)",
+                    "nameLocation": "center",
+                    "nameGap": 40,
                 },
-            ],
-        }
-        st_echarts(options=graph, height="400px", key="graph", width="100%")
+                "yAxis": {
+                    "type": "value",
+                    "name": waveform.units,
+                    "nameRotate": 90,
+                    "nameLocation": "center",
+                    "nameGap": 40,
+                },
+                "series": [
+                    {
+                        "name": waveform.units,
+                        "type": "line",
+                        "data": list(waveform.scaled_data),
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                ],
+            }
+            st_echarts(options=graph, height="400px", key="graph", width="100%")
 
     with st.container(border=True):
         st.title("Trigger Settings")

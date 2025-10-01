@@ -52,12 +52,8 @@ is_running = panel.get_value("is_running", False)
 
 if is_running:
     st.button(r"⏹️ Stop", key="stop_button", on_click=_click_stop)
-elif not is_running and panel.get_value("daq_error", "") == "":
+elif not is_running:
     st.button(r"▶️ Run", key="run_button", on_click=_click_start)
-else:
-    st.error(
-        f"There was an error running the script. Fix the issue and re-run nidaqmx_continuous_analog_input.py \n\n {panel.get_value('daq_error', '')}"
-    )
 
 sample_rate = panel.get_value("sample_rate", 0.0)
 
@@ -75,7 +71,13 @@ with left_column:
         with voltage_tab:
             channel_left_column, channel_right_column = st.columns(2)
             with channel_left_column:
-                st.selectbox(options=["Dev1/ai0"], label="Physical Channels", disabled=True)
+                st.selectbox(
+                    options=panel.get_value("available_voltage_channels", [""]),
+                    index=0,
+                    label="Voltage Channel",
+                    disabled=panel.get_value("is_running", False),
+                    key="voltage_channel",
+                )
                 st.number_input(
                     "Min Value",
                     value=-5.0,
@@ -103,7 +105,13 @@ with left_column:
         with thermocouple_tab:
             channel_left_column, channel_middle_column, channel_right_column = st.columns(3)
             with channel_left_column:
-                st.selectbox(options=["Dev1/ai1"], label="Physical Channel", disabled=True)
+                st.selectbox(
+                    options=panel.get_value("available_thermocouple_channels", [""]),
+                    index=1,
+                    label="Thermocouple Channel",
+                    disabled=panel.get_value("is_running", False),
+                    key="thermocouple_channel",
+                )
                 st.number_input(
                     "Min Value",
                     value=0.0,
@@ -184,63 +192,68 @@ with left_column:
 
 # Right column - Graph and Logging Settings
 with right_column:
-    with st.container(border=True):
-        # Graph section
-        st.header("Voltage & Thermocouple")
+    if panel.get_value("daq_error", "") != "":
+        st.error(
+            f"There was an error running the script. Fix the issue and click Run again. \n\n {panel.get_value('daq_error', '')}"
+        )
+    else:
+        with st.container(border=True):
+            # Graph section
+            st.header("Voltage & Thermocouple")
 
-        thermocouple_waveform = panel.get_value("thermocouple_waveform", AnalogWaveform())
-        voltage_waveform = panel.get_value("voltage_waveform", AnalogWaveform())
-        if voltage_waveform.sample_count == 0:
-            time_labels = ["00:00:00.000"]
-        else:
-            timestamps = cast(
-                list[ht.datetime],
-                list(voltage_waveform.timing.get_timestamps(0, voltage_waveform.sample_count)),
-            )
-            time_labels = [
-                f"{ts.hour:02d}:{ts.minute:02d}:{ts.second:02d}.{ts.microsecond//1000:03d}"
-                for ts in timestamps
-            ]
+            thermocouple_waveform = panel.get_value("thermocouple_waveform", AnalogWaveform())
+            voltage_waveform = panel.get_value("voltage_waveform", AnalogWaveform())
+            if voltage_waveform.sample_count == 0:
+                time_labels = ["00:00:00.000"]
+            else:
+                timestamps = cast(
+                    list[ht.datetime],
+                    list(voltage_waveform.timing.get_timestamps(0, voltage_waveform.sample_count)),
+                )
+                time_labels = [
+                    f"{ts.hour:02d}:{ts.minute:02d}:{ts.second:02d}.{ts.microsecond//1000:03d}"
+                    for ts in timestamps
+                ]
 
-        voltage_therm_graph = {
-            "animation": False,
-            "tooltip": {"trigger": "axis"},
-            "legend": {"data": [voltage_waveform.units, thermocouple_waveform.units]},
-            "xAxis": {
-                "type": "category",
-                "data": time_labels,
-                "name": "Time",
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "yAxis": {
-                "type": "value",
-                "name": "Measurement",
-                "nameRotate": 90,
-                "nameLocation": "center",
-                "nameGap": 40,
-            },
-            "series": [
-                {
-                    "name": voltage_waveform.units,
-                    "type": "line",
-                    "data": list(voltage_waveform.scaled_data),
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
+            graph = {
+                "animation": False,
+                "tooltip": {"trigger": "axis"},
+                "legend": {"data": [voltage_waveform.units, thermocouple_waveform.units]},
+                "xAxis": {
+                    "type": "category",
+                    "data": time_labels,
+                    "name": "Time",
+                    "nameLocation": "center",
+                    "nameGap": 40,
                 },
-                {
-                    "name": thermocouple_waveform.units,
-                    "type": "line",
-                    "data": list(thermocouple_waveform.scaled_data),
-                    "color": "red",
-                    "emphasis": {"focus": "series"},
-                    "smooth": True,
-                    "seriesLayoutBy": "row",
+                "yAxis": {
+                    "type": "value",
+                    "name": "Measurement",
+                    "nameRotate": 90,
+                    "nameLocation": "center",
+                    "nameGap": 40,
                 },
-            ],
-        }
-        st_echarts(options=voltage_therm_graph, height="446px", key="voltage_therm_graph")
+                "series": [
+                    {
+                        "name": voltage_waveform.units,
+                        "type": "line",
+                        "data": list(voltage_waveform.scaled_data),
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                    {
+                        "name": thermocouple_waveform.units,
+                        "type": "line",
+                        "data": list(thermocouple_waveform.scaled_data),
+                        "color": "red",
+                        "emphasis": {"focus": "series"},
+                        "smooth": True,
+                        "seriesLayoutBy": "row",
+                    },
+                ],
+            }
+            st_echarts(options=graph, height="446px", key="voltage_therm_graph")
 
     # Logging Settings section in right column
     with st.container(border=True):
