@@ -21,11 +21,8 @@ def _click_stop() -> None:
     panel.set_value("is_running", False)
 
 
-st.set_page_config(page_title="Voltage - Continuous Output", page_icon="📈", layout="wide")
-st.title("Voltage - Continuous Output")
+st.set_page_config(page_title="NI-DAQmx - Analog Output - Voltage", page_icon="📈", layout="wide")
 panel = nipanel.get_streamlit_panel_accessor()
-
-left_col, right_col = st.columns(2)
 
 st.markdown(
     """
@@ -48,14 +45,17 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+st.header("NI-DAQmx - Analog Output - Voltage")
 if panel.get_value("is_running", False):
     st.button("⏹️ Stop", key="stop_button", on_click=_click_stop)
 else:
     st.button("▶️ Run", key="run_button", on_click=_click_start)
 
+left_col, right_col = st.columns(2)
+
 with left_col:
     with st.container(border=True):
-        st.title("Channel Settings")
+        st.header("Channel Settings")
         st.selectbox(
             options=panel.get_value("available_channel_names", [""]),
             index=0,
@@ -79,7 +79,7 @@ with left_col:
             disabled=panel.get_value("is_running", False),
             key="min_value_voltage",
         )
-        st.title("Timing and Buffer Settings")
+        st.header("Timing and Buffer Settings")
 
         source = st.selectbox(
             "Sample Clock Source",
@@ -111,7 +111,7 @@ with left_col:
             step=1.0,
             disabled=True,
         )
-        st.title("Waveform Settings")
+        st.header("Waveform Settings")
         st.number_input(
             "Frequency",
             value=panel.get_value("frequency", 10.0),
@@ -141,7 +141,7 @@ with right_col:
         )
     else:
         with st.container(border=True):
-            st.title("Output")
+            st.header("Output")
 
             waveform = panel.get_value("waveform", AnalogWaveform())
             if waveform.sample_count == 0:
@@ -185,22 +185,22 @@ with right_col:
             st_echarts(options=graph, height="400px", key="graph", width="100%")
 
     with st.container(border=True):
-        st.title("Trigger Settings")
+        st.header("Trigger Settings")
         trigger_type = stx.tab_bar(
             data=[
                 stx.TabBarItemData(id=1, title="No Trigger", description=""),
                 stx.TabBarItemData(id=2, title="Digital Start", description=""),
-                stx.TabBarItemData(id=3, title="Digital Pause", description=""),
-                stx.TabBarItemData(id=4, title="Digital Reference", description=""),
-                stx.TabBarItemData(id=5, title="Analog Start", description=""),
-                stx.TabBarItemData(id=6, title="Analog Pause", description=""),
-                stx.TabBarItemData(id=7, title="Analog Reference", description=""),
             ],
             default=1,
         )
         trigger_type = int(trigger_type)  # pyright: ignore[reportArgumentType]
         panel.set_value("trigger_type", trigger_type)
 
+        if trigger_type == 1:
+            with st.container(border=True):
+                st.write(
+                    "To enable triggers, select a tab above, and configure the settings. Not all hardware supports all trigger types. Refer to your device documentation for more information."
+                )
         if trigger_type == 2:
             with st.container(border=True):
                 source = st.selectbox(
@@ -214,13 +214,3 @@ with right_col:
                     disabled=panel.get_value("is_running", False),
                     key="edge",
                 )
-        elif trigger_type == 1:
-            with st.container(border=True):
-                st.write(
-                    "To enable triggers, select a tab above, and configure the settings. Not all hardware supports all trigger types. Refer to your device documentation for more information."
-                )
-
-        else:
-            st.write(
-                "This trigger type is not supported in output tasks. Refer to your device documentation for more information on which triggers are supported."
-            )

@@ -17,9 +17,9 @@ from streamlit_echarts import st_echarts
 import nipanel
 from nipanel.controls import enum_selectbox
 
-
-st.set_page_config(page_title="NI-DAQmx Example", page_icon="📈", layout="wide")
-st.title("Analog Input - Voltage and Thermocouple in a Single Task")
+st.set_page_config(
+    page_title="NI-DAQmx - Analog Input - Voltage and Thermocouple", page_icon="📈", layout="wide"
+)
 
 st.markdown(
     """
@@ -49,6 +49,7 @@ def _click_stop() -> None:
 
 panel = nipanel.get_streamlit_panel_accessor()
 
+st.header("NI-DAQmx - Analog Input - Voltage and Thermocouple")
 if panel.get_value("is_running", False):
     st.button(r"⏹️ Stop", key="stop_button", on_click=_click_stop)
 else:
@@ -198,7 +199,7 @@ with right_column:
     else:
         with st.container(border=True):
             # Graph section
-            st.header("Voltage & Thermocouple")
+            st.header("Acquired Data")
 
             thermocouple_waveform = panel.get_value("thermocouple_waveform", AnalogWaveform())
             voltage_waveform = panel.get_value("voltage_waveform", AnalogWaveform())
