@@ -57,15 +57,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+if panel.get_value("is_running", True):
+    st.button("⏹️ Stop", key="stop_button", on_click=_click_stop)
+else:
+    st.button("▶️ Run", key="run_button", on_click=_click_start)
 
 with left_col:
     with st.container(border=True):
         with st.container(border=True):
-            if panel.get_value("is_running", True):
-                st.button("⏹️ Stop", key="stop_button", on_click=_click_stop)
-            elif not panel.get_value("is_running", True):
-                run_button = st.button("▶️ Run", key="run_button", on_click=_click_start)
-
             st.title("Channel Settings")
             st.selectbox(
                 options=panel.get_value("available_channel_names", [""]),

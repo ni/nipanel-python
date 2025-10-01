@@ -48,11 +48,10 @@ def _click_stop() -> None:
 
 
 panel = nipanel.get_streamlit_panel_accessor()
-is_running = panel.get_value("is_running", False)
 
-if is_running:
+if panel.get_value("is_running", False):
     st.button(r"⏹️ Stop", key="stop_button", on_click=_click_stop)
-elif not is_running:
+else:
     st.button(r"▶️ Run", key="run_button", on_click=_click_start)
 
 sample_rate = panel.get_value("sample_rate", 0.0)
