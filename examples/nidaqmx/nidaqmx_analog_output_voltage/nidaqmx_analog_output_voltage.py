@@ -1,16 +1,21 @@
 """Data acquisition script that continuously generates analog output data."""
 
+import os
 import time
 from pathlib import Path
 
-import nidaqmx
-import nidaqmx.stream_writers
-import nidaqmx.system
-import numpy as np
-from nidaqmx.constants import AcquisitionType, Edge
-from nidaqmx.errors import DaqError
+os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
+import nidaqmx  # noqa: E402 # Must import after setting os environment variable
+import nidaqmx.stream_writers  # noqa: E402
+import nidaqmx.system  # noqa: E402
+import hightime as ht  # noqa: E402
+import datetime as dt  # noqa: E402
+import numpy as np  # noqa: E402
+from nidaqmx.constants import AcquisitionType, Edge  # noqa: E402
+from nidaqmx.errors import DaqError  # noqa: E402
+from nitypes.waveform import AnalogWaveform, SampleIntervalMode, Timing  # noqa: E402
 
-import nipanel
+import nipanel  # noqa: E402
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_output_voltage_panel.py")
 panel = nipanel.create_streamlit_panel(panel_script_path)
@@ -29,15 +34,14 @@ for dev in system.devices:
         for term in dev.terminals:
             available_trigger_sources.append(term)
 panel.set_value("available_trigger_sources", available_trigger_sources)
-panel.set_value("run_button", False)
+panel.set_value("is_running", False)
 try:
     panel.set_value("daq_error", "")
     print(f"Panel URL: {panel.panel_url}")
     print(f"Waiting for the 'Run' button to be pressed...")
     print(f"(Press Ctrl + C to quit)")
     while True:
-        panel.set_value("is_running", False)
-        while not panel.get_value("run_button", False):
+        while not panel.get_value("is_running", False):
             time.sleep(0.1)
         # How to use nidaqmx: https://nidaqmx-python.readthedocs.io/en/stable/
         with nidaqmx.Task() as task:
@@ -74,22 +78,31 @@ try:
             wave_type = panel.get_value("wave_type", "Sine Wave")
 
             if wave_type == "Sine Wave":
-                waveform = amplitude * np.sin(2 * np.pi * frequency * t)
+                waveform = AnalogWaveform.from_array_1d(
+                    amplitude * np.sin(2 * np.pi * frequency * t)
+                )
             elif wave_type == "Square Wave":
-                waveform = amplitude * np.sign(np.sin(2 * np.pi * frequency * t))
+                waveform = AnalogWaveform.from_array_1d(
+                    amplitude * np.sign(np.sin(2 * np.pi * frequency * t))
+                )
             else:
-                waveform = amplitude * (2 * np.abs(2 * (t * frequency % 1) - 1) - 1)
+                waveform = AnalogWaveform.from_array_1d(
+                    amplitude * (2 * np.abs(2 * (t * frequency % 1) - 1) - 1)
+                )
+            waveform.timing = Timing(
+                sample_interval_mode=SampleIntervalMode.REGULAR,
+                sample_interval=ht.timedelta(seconds=1.0 / sample_rate),
+            )
+            waveform.units = chan.ao_voltage_units.name
 
             writer = nidaqmx.stream_writers.AnalogSingleChannelWriter(
                 task.out_stream, auto_start=False  # pyright: ignore[reportArgumentType]
             )
-            writer.write_many_sample(waveform)
-            panel.set_value("data", waveform.tolist())
+            writer.write_waveform(waveform)
+            panel.set_value("waveform", waveform)
             try:
                 task.start()
-                panel.set_value("is_running", True)
-                panel.set_value("stop_button", False)
-                while not panel.get_value("stop_button", False):
+                while panel.get_value("is_running", False):
                     time.sleep(0.1)
 
             except KeyboardInterrupt:

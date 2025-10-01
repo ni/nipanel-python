@@ -1,12 +1,25 @@
 """Streamlit visualization script to display data acquired by nidaqmx_analog_output_voltage.py."""
 
+from typing import cast
+
+import hightime as ht
 import extra_streamlit_components as stx  # type: ignore[import-untyped]
 import streamlit as st
 from nidaqmx.constants import Edge
+from nitypes.waveform import AnalogWaveform
 from streamlit_echarts import st_echarts
 
 import nipanel
 from nipanel.controls import enum_selectbox
+
+
+def click_start():
+    panel.set_value("is_running", True)
+
+
+def click_stop():
+    panel.set_value("is_running", False)
+
 
 st.set_page_config(page_title="Voltage - Continuous Output", page_icon="📈", layout="wide")
 st.title("Voltage - Continuous Output")
@@ -40,9 +53,9 @@ with left_col:
     with st.container(border=True):
         is_running = panel.get_value("is_running", False)
         if is_running:
-            st.button("Stop", key="stop_button")
+            st.button("⏹️ Stop", key="stop_button", on_click=click_stop)
         elif not is_running and panel.get_value("daq_error", "") == "":
-            run_button = st.button("Run", key="run_button")
+            run_button = st.button("▶️ Run", key="run_button", on_click=click_start)
         else:
             st.error(
                 f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_output_voltage.py \n\n {panel.get_value('daq_error', '')}"
@@ -130,38 +143,47 @@ with left_col:
 with right_col:
     with st.container(border=True):
         st.title("Output")
-        acquired_data = panel.get_value("data", [0.0])
-        sample_rate = panel.get_value("sample_rate", 1000.0)
-        acquired_data_graph = {
+
+        waveform = panel.get_value("waveform", AnalogWaveform())
+        if waveform.sample_count == 0:
+            time_labels = ["0.000"]
+        else:
+            timestamps = cast(
+                list[ht.datetime],
+                list(waveform.timing.get_timestamps(0, waveform.sample_count)),
+            )
+            time_labels = [f"{ts.second}.{ts.microsecond//1000:03d}" for ts in timestamps]
+
+        graph = {
             "animation": False,
             "tooltip": {"trigger": "axis"},
-            "legend": {"data": ["Voltage (V)"]},
+            "legend": {"data": [waveform.units]},
             "xAxis": {
                 "type": "category",
-                "data": [x / sample_rate for x in range(len(acquired_data))],
-                "name": "Time",
+                "data": time_labels,
+                "name": "Time (s)",
                 "nameLocation": "center",
                 "nameGap": 40,
             },
             "yAxis": {
                 "type": "value",
-                "name": "Amplitude",
+                "name": waveform.units,
                 "nameRotate": 90,
                 "nameLocation": "center",
                 "nameGap": 40,
             },
             "series": [
                 {
-                    "name": "voltage_amplitude",
+                    "name": waveform.units,
                     "type": "line",
-                    "data": acquired_data,
+                    "data": list(waveform.scaled_data),
                     "emphasis": {"focus": "series"},
                     "smooth": True,
                     "seriesLayoutBy": "row",
                 },
             ],
         }
-        st_echarts(options=acquired_data_graph, height="400px", key="graph", width="100%")
+        st_echarts(options=graph, height="400px", key="graph", width="100%")
 
     with st.container(border=True):
         st.title("Trigger Settings")

@@ -62,9 +62,9 @@ with left_col:
     with st.container(border=True):
         with st.container(border=True):
             if panel.get_value("is_running", True):
-                st.button("Stop", key="stop_button", on_click=click_stop)
+                st.button("⏹️ Stop", key="stop_button", on_click=click_stop)
             elif not panel.get_value("is_running", True) and panel.get_value("daq_error", "") == "":
-                run_button = st.button("Run", key="run_button", on_click=click_start)
+                run_button = st.button("▶️ Run", key="run_button", on_click=click_start)
             else:
                 st.error(
                     f"There was an error running the script. Fix the issue and re-run nidaqmx_analog_input_filtering.py \n\n {panel.get_value('daq_error', '')}"
