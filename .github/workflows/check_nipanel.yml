@@ -7,41 +7,24 @@ on:
 jobs:
   check_nipanel:
     name: Check nipanel
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: [3.9, 3.13]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Set up Python
         uses: ni/python-actions/setup-python@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
         id: setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
         uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
-      - name: Check for lock changes
-        run: poetry check --lock
-      - name: Cache virtualenv
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+      - name: Analyze Python Project
+        uses: ni/python-actions/analyze-project@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
         with:
-          path: .venv
-          key: nipanel-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install nipanel
-        run: poetry install -v --with examples,docs
-      - name: Lint
-        run: poetry run ni-python-styleguide lint
-      - name: Mypy static analysis (Linux)
-        run:  poetry run mypy
-      - name: Mypy static analysis (Windows)
-        run:  poetry run mypy --platform win32
+          install-args: "--with examples"
       - name: Bandit security checks
         run:  poetry run bandit -c pyproject.toml -r src/nipanel
-      - name: Add virtualenv to the path for pyright-action
-        run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
-      - name: Pyright static analysis (Linux)
-        uses: jakebailey/pyright-action@6cabc0f01c4994be48fd45cd9dbacdd6e1ee6e5e # v2.3.3
-        with:
-          python-platform: Linux
-          version: PATH
-      - name: Pyright static analysis (Windows)
-        uses: jakebailey/pyright-action@6cabc0f01c4994be48fd45cd9dbacdd6e1ee6e5e # v2.3.3
-        with:
-          python-platform: Windows
-          version: PATH
