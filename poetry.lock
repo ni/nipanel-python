@@ -764,14 +764,14 @@ protobuf = ["grpcio-tools (>=1.75.1)"]
 
 [[package]]
 name = "hightime"
-version = "0.3.0.dev1"
+version = "1.0.0"
 description = "Hightime Python API"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main", "examples", "test"]
 files = [
-    {file = "hightime-0.3.0.dev1-py3-none-any.whl", hash = "sha256:33b05864264655929f6ecaade8a1f27070f1e3a2028e304e051825cbe6a505c9"},
-    {file = "hightime-0.3.0.dev1.tar.gz", hash = "sha256:e1ad569c034b61be5b906a5dc4b226af6b6fe4985f2550edc8b575a4df5fdaf0"},
+    {file = "hightime-1.0.0-py3-none-any.whl", hash = "sha256:ba86d42976c36451b14e11c736e61f296f9f00dbb79c8488e18d70c6b2dbb395"},
+    {file = "hightime-1.0.0.tar.gz", hash = "sha256:480d2a03e2c3ed44916d2406d40ab6d10a276ed7f101619fc3fcc1e00c46aacf"},
 ]
 
 [[package]]
@@ -1183,14 +1183,14 @@ sqlframe = ["sqlframe (>=3.22.0,!=3.39.3)"]
 
 [[package]]
 name = "ni-grpc-extensions"
-version = "0.1.0.dev1"
+version = "1.0.0"
 description = "gRPC Extensions"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "ni_grpc_extensions-0.1.0.dev1-py3-none-any.whl", hash = "sha256:171a16303a2cfcbd2f29ad5df448bf6b89b399be3ba52fc0c2e755c2e7075075"},
-    {file = "ni_grpc_extensions-0.1.0.dev1.tar.gz", hash = "sha256:99af79ab9054b15b8682c9540ea4e474236bfaab0b271b42731ba9fd2c5bb4c7"},
+    {file = "ni_grpc_extensions-1.0.0-py3-none-any.whl", hash = "sha256:6b8181284370a53546ffd371d334f15e293cae5e9ff06fa2e467d1714bf7a03f"},
+    {file = "ni_grpc_extensions-1.0.0.tar.gz", hash = "sha256:6e066246ce9a4b4420f5e503769b23c31a49c430be6ebd72324c5b5a15c34ebb"},
 ]
 
 [package.dependencies]
@@ -1199,20 +1199,20 @@ traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-client"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "gRPC Client for NI Discovery Service"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0-py3-none-any.whl", hash = "sha256:b27abeddb3465e2be3a8142f0884eaeabff82d89040a76d026501d8527064167"},
-    {file = "ni_measurementlink_discovery_v1_client-0.1.0.dev0.tar.gz", hash = "sha256:b964d48bc7942fc1eb6bcc5b03ce1a3fb031e9fa19d7d1a92c3c85b92fc44c17"},
+    {file = "ni_measurementlink_discovery_v1_client-1.0.0-py3-none-any.whl", hash = "sha256:6a4c45d2517a7c6017a3b7dd817a6d7ebc8ebec318243c4f17778115a1a192a6"},
+    {file = "ni_measurementlink_discovery_v1_client-1.0.0.tar.gz", hash = "sha256:2aa2a0c55f6599ffa3ff05e67e6ff89360f22bf0082e512348a41997ddfde3f8"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-ni-grpc-extensions = ">=0.1.0.dev0"
-ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev0"
+ni-grpc-extensions = ">=0.1.0.dev1"
+ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev1"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
@@ -1248,18 +1248,18 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "0.1.0.dev4"
+version = "1.0.1.dev0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "ni_protobuf_types-0.1.0.dev4-py3-none-any.whl", hash = "sha256:dceac83ca05c286e99b44898340f58b45eac91e9609444e252d89c17a7d7c1ff"},
-    {file = "ni_protobuf_types-0.1.0.dev4.tar.gz", hash = "sha256:11c6a486bcb3984078e100efac93b96d5a84d70f0d8035a2303eb5cf9c0b1532"},
+    {file = "ni_protobuf_types-1.0.1.dev0-py3-none-any.whl", hash = "sha256:2e93e62dee45dbf1bb13f812a28a445b4d3953ae3ee9b2c4dce117abf4f2a514"},
+    {file = "ni_protobuf_types-1.0.1.dev0.tar.gz", hash = "sha256:1a84af2eba688747d66bcf8b4e7c333177c4d31caf96537185250b023f2267e9"},
 ]
 
 [package.dependencies]
-nitypes = ">=0.1.0dev8"
+nitypes = ">=1.1.0dev0"
 protobuf = ">=4.21"
 
 [[package]]
@@ -1359,14 +1359,14 @@ hightime = ">=0.2.0"
 
 [[package]]
 name = "nitypes"
-version = "0.1.0.dev10"
+version = "1.1.0.dev0"
 description = "Data types for NI Python APIs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main", "examples"]
 files = [
-    {file = "nitypes-0.1.0.dev10-py3-none-any.whl", hash = "sha256:c4f097ffdeaf05697a7752a1e2b712760b28e84a4f6f446b4b7b76b349927490"},
-    {file = "nitypes-0.1.0.dev10.tar.gz", hash = "sha256:e319ebbdefca63db8e879b9f119cc4f76a086c550931dea2be0e33e9c10e9d9f"},
+    {file = "nitypes-1.1.0.dev0-py3-none-any.whl", hash = "sha256:1dd0d15bb741294672ea7d61d98e951c5802eec0130d0162f4f19008dd74c0f6"},
+    {file = "nitypes-1.1.0.dev0.tar.gz", hash = "sha256:a82d2f518f514a24bfb3b9c4e023db23097a786ca40155693610d09578d86f10"},
 ]
 
 [package.dependencies]
@@ -1375,6 +1375,7 @@ numpy = [
     {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.13\""},
     {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
 ]
+typing-extensions = ">=4.13.2"
 
 [[package]]
 name = "nodeenv"
