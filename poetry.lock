@@ -2119,14 +2119,14 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyright"
-version = "1.1.405"
+version = "1.1.406"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 groups = ["lint"]
 files = [
-    {file = "pyright-1.1.405-py3-none-any.whl", hash = "sha256:a2cb13700b5508ce8e5d4546034cb7ea4aedb60215c6c33f56cec7f53996035a"},
-    {file = "pyright-1.1.405.tar.gz", hash = "sha256:5c2a30e1037af27eb463a1cc0b9f6d65fec48478ccf092c1ac28385a15c55763"},
+    {file = "pyright-1.1.406-py3-none-any.whl", hash = "sha256:1d81fb43c2407bf566e97e57abb01c811973fdb21b2df8df59f870f688bdca71"},
+    {file = "pyright-1.1.406.tar.gz", hash = "sha256:c4872bc58c9643dac09e8a2e74d472c62036910b3bd37a32813989ef7576ea2c"},
 ]
 
 [package.dependencies]
@@ -3217,14 +3217,14 @@ files = [
 
 [[package]]
 name = "types-grpcio"
-version = "1.0.0.20250914"
+version = "1.0.0.20251009"
 description = "Typing stubs for grpcio"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "types_grpcio-1.0.0.20250914-py3-none-any.whl", hash = "sha256:47253be85c5ef5ff5397c23a596cb6b657580cdd0814a7e3fc75d2aacb08aa60"},
-    {file = "types_grpcio-1.0.0.20250914.tar.gz", hash = "sha256:6b6f42bfd90e8c73d3969e04978e8cb07651cf877f447779d4003a307d213016"},
+    {file = "types_grpcio-1.0.0.20251009-py3-none-any.whl", hash = "sha256:112ac4312a5b0a273a4c414f7f2c7668f342990d9c6ab0f647391c36331f95ed"},
+    {file = "types_grpcio-1.0.0.20251009.tar.gz", hash = "sha256:a8f615ea7a47b31f10da028ab5258d4f1611fbd70719ca450fc0ab3fb9c62b63"},
 ]
 
 [[package]]
