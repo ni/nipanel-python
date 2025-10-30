@@ -11,7 +11,7 @@ This example measures the performance of a streamlit panel with a graph.
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 

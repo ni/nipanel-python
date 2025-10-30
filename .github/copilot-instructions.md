@@ -5,7 +5,7 @@
 **nipanel** is a Python package that provides support for creating and controlling measurement and visualization panels. It's developed by NI and enables Python applications to create Streamlit-based panels that can be served and controlled via gRPC services.
 
 ### Key Repository Information
-- **Language**: Python (3.9+)
+- **Language**: Python (3.10+)
 - **Package Manager**: Poetry 2.1+
 - **Framework**: Uses Streamlit for panel UI, gRPC for communication
 - **Size**: Medium-sized repository (~1300 lines of code in src/)
@@ -64,7 +64,7 @@ poetry run sphinx-build docs docs/_build --builder html --fail-on-warning
 ```
 
 ### Runtime Requirements
-- **Python**: 3.9+ (excludes 3.9.7 due to Streamlit incompatibility)
+- **Python**: 3.10+
 - **Poetry**: 2.1+ required for build system
 - **Virtual Environment**: Configured in-project (`.venv/` directory)
 
@@ -114,12 +114,12 @@ examples/
 
 The repository uses a comprehensive GitHub Actions pipeline:
 
-1. **check_nipanel.yml**: Runs on Windows, Ubuntu, macOS with Python 3.9, 3.13
+1. **check_nipanel.yml**: Runs on Windows, Ubuntu, macOS with Python 3.10, 3.14
    - Linting with `poetry run nps lint`
    - Type checking with `poetry run mypy`
    - Security scanning with `poetry run bandit -c pyproject.toml -r src/nipanel`
 
-2. **run_unit_tests.yml**: Cross-platform testing (Windows, Ubuntu) with Python 3.9-3.13
+2. **run_unit_tests.yml**: Cross-platform testing (Windows, Ubuntu) with Python 3.10-3.14
    - Unit tests: `poetry run pytest ./tests/unit -v --cov=nipanel --junitxml=test_results/nipanel-{os}-py{version}.xml`
 
 3. **check_docs.yml**: Documentation validation
@@ -163,7 +163,6 @@ poetry run pytest -v
 1. **Poetry Lock Issues**: Run `poetry check --lock` to verify lock file consistency
 2. **Import Warnings**: flake8_import_order pkg_resources warnings are expected and harmless
 3. **Documentation SSL Errors**: External inventory fetch failures are known issues
-4. **Python 3.9.7**: Excluded due to Streamlit incompatibility - use different Python 3.9.x version
 
 ### File System Requirements
 - Virtual environment created in `.venv/` (configured in poetry.toml)

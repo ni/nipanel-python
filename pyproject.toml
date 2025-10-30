@@ -19,14 +19,14 @@ classifiers = [
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dynamic = ["dependencies"]
 
 [project.urls]
@@ -37,7 +37,7 @@ packages = [{ include = "nipanel", from = "src" }]
 requires-poetry = '>=2.1,<3.0'
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0,!=3.9.7" # Exclude 3.9.7 due to streamlit not supporting it
+python = ">=3.10,<4.0"
 grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 typing-extensions = ">=4.13.2"
@@ -54,7 +54,7 @@ ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
 types-grpcio = ">=1.0"
 types-protobuf = ">=4.21"
 numpy = [
-  { version = ">=1.22", python = ">=3.9,<3.12" },
+  { version = ">=1.22", python = ">=3.10,<3.12" },
   { version = ">=1.26", python = ">=3.12,<3.13" },
   { version = ">=2.1", python = "^3.13" },
 ]
@@ -78,7 +78,6 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 # The latest Sphinx requires a recent Python version.
 Sphinx = [
-  { version = ">=7.4", python = ">=3.9,<3.10" },
   { version = ">=8.1", python = ">=3.10,<3.11" },
   { version = ">=8.2", python = "^3.11" },
 ]

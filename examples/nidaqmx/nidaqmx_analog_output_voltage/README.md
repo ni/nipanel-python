@@ -12,7 +12,7 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 
