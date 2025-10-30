@@ -8,7 +8,7 @@ This is a simple `nipanel` example that displays a Streamlit app.
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 

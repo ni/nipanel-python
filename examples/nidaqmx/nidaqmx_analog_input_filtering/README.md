@@ -12,7 +12,7 @@ Script demonstrates analog input data getting continuously acquired, and being f
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 

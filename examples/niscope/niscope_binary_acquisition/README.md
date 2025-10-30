@@ -13,7 +13,7 @@ Script demonstrates waveform data getting continuously acquired and being conver
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 

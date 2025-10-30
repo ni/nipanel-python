@@ -4,6 +4,7 @@
 - [About](#about)
   - [Operating System Support](#operating-system-support)
   - [Python Version Support](#python-version-support)
+  - [Installation](#installation)
 
 # About
 
@@ -17,7 +18,7 @@ NI created and supports this package.
 
 ## Python Version Support
 
-`nipanel` supports CPython 3.9+.
+`nipanel` supports CPython 3.10+.
 
 ## Installation
 

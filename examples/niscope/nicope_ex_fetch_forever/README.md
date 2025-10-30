@@ -13,7 +13,7 @@ Script demonstrates NIScope waveform data getting continuously acquired.
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 

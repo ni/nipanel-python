@@ -11,7 +11,7 @@ This example demonstrates using `nipanel` with Streamlit to display a dynamic si
 
 ### Required Software
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Usage
 
