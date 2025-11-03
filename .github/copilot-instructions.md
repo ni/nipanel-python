@@ -114,12 +114,12 @@ examples/
 
 The repository uses a comprehensive GitHub Actions pipeline:
 
-1. **check_nipanel.yml**: Runs on Windows, Ubuntu, macOS with Python 3.10, 3.14
+1. **check_nipanel.yml**: Runs on Windows, Ubuntu, macOS with Python 3.10, 3.13
    - Linting with `poetry run nps lint`
    - Type checking with `poetry run mypy`
    - Security scanning with `poetry run bandit -c pyproject.toml -r src/nipanel`
 
-2. **run_unit_tests.yml**: Cross-platform testing (Windows, Ubuntu) with Python 3.10-3.14
+2. **run_unit_tests.yml**: Cross-platform testing (Windows, Ubuntu) with Python 3.10-3.13
    - Unit tests: `poetry run pytest ./tests/unit -v --cov=nipanel --junitxml=test_results/nipanel-{os}-py{version}.xml`
 
 3. **check_docs.yml**: Documentation validation
