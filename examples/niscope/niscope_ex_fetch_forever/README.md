@@ -19,5 +19,5 @@ Script demonstrates NIScope waveform data getting continuously acquired.
 
 ```pwsh
 poetry install --with examples
-poetry run examples\niscope\niscope_ex_fetch_forever\niscope_ex_fetch_forever.py
+poetry run python examples\niscope\niscope_ex_fetch_forever\niscope_ex_fetch_forever.py
 ```
