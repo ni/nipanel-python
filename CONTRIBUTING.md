@@ -72,7 +72,7 @@ start docs\_build\index.html
     - `poetry run python examples/hello/hello.py`
     - `poetry run python examples/all_types/all_types.py`
     - `poetry run python examples/simple_graph/simple_graph.py`
-    - `poetry run python examples/nidaqmx/nidaqmx_continuous_analog_input.py` (requires real or simulated devices)
+    - `poetry run python examples/nidaqmx/nidaqmx_continuous_analog_input/nidaqmx_continuous_analog_input.py` (requires real or simulated devices)
 4. Open http://localhost:42001/panel-service/ in your browser, which will show all running panels
 
 # Debugging on the streamlit side

@@ -19,5 +19,5 @@ Script demonstrates waveform data getting continuously acquired and being conver
 
 ```pwsh
 poetry install --with examples
-poetry run examples\niscope\niscope_binary_acquisition\niscope_binary_acquisition.py
+poetry run python examples\niscope\niscope_binary_acquisition\niscope_binary_acquisition.py
 ```
