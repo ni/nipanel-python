@@ -45,12 +45,12 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: Set up Python
-        uses: ni/python-actions/setup-python@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Check project version
         if: github.event_name == 'release'
-        uses: ni/python-actions/check-project-version@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/check-project-version@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Build distribution packages
         run: poetry build
       - name: Upload build artifacts
@@ -91,8 +91,8 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: Set up Python
-        uses: ni/python-actions/setup-python@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Update project version
-        uses: ni/python-actions/update-project-version@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/update-project-version@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1

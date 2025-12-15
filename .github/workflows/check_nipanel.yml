@@ -16,14 +16,14 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: Set up Python
-        uses: ni/python-actions/setup-python@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
         id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
       - name: Set up Poetry
-        uses: ni/python-actions/setup-poetry@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/setup-poetry@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
       - name: Analyze Python Project
-        uses: ni/python-actions/analyze-project@9768589f3e50672173dad75a6fc181e4a85d33fa # 0.7.0
+        uses: ni/python-actions/analyze-project@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
         with:
           install-args: "--with examples"
       - name: Bandit security checks
