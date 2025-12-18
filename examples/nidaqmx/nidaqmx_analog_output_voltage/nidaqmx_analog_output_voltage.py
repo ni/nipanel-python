@@ -1,20 +1,18 @@
 """Data acquisition script that continuously generates analog output data."""
 
-import os
 import time
 from pathlib import Path
 
-os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
-import hightime as ht  # noqa: E402
-import nidaqmx  # noqa: E402 # Must import after setting os environment variable
-import nidaqmx.stream_writers  # noqa: E402
-import nidaqmx.system  # noqa: E402
-import numpy as np  # noqa: E402
-from nidaqmx.constants import AcquisitionType, Edge, UsageTypeAO  # noqa: E402
-from nidaqmx.errors import DaqError  # noqa: E402
-from nitypes.waveform import AnalogWaveform, SampleIntervalMode, Timing  # noqa: E402
+import hightime as ht
+import nidaqmx
+import nidaqmx.stream_writers
+import nidaqmx.system
+import numpy as np
+from nidaqmx.constants import AcquisitionType, Edge, UsageTypeAO
+from nidaqmx.errors import DaqError
+from nitypes.waveform import AnalogWaveform, SampleIntervalMode, Timing
 
-import nipanel  # noqa: E402
+import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_analog_output_voltage_panel.py")
 panel = nipanel.create_streamlit_panel(panel_script_path)
