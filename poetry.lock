@@ -1372,14 +1372,14 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nidaqmx"
-version = "1.3.0"
+version = "1.4.0.dev2"
 description = "NI-DAQmx Python API"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["examples"]
 files = [
-    {file = "nidaqmx-1.3.0-py3-none-any.whl", hash = "sha256:2adfe7c2e997b46ce83b97d5bfa698651ba82f2542952d166dd824dd27abc891"},
-    {file = "nidaqmx-1.3.0.tar.gz", hash = "sha256:cb0567e6a43edabea2f18f0eb180928c06ee710ea1ffbb99c055065f147983ac"},
+    {file = "nidaqmx-1.4.0.dev2-py3-none-any.whl", hash = "sha256:3e3decf2e6479f4d8141b5106139088f3b7341bb10e30f5448bef74b3b16ddbc"},
+    {file = "nidaqmx-1.4.0.dev2.tar.gz", hash = "sha256:0f2fdd3fea0059a28671d42df023fb769f9f09ad92b73e108598ad4f661e4ac6"},
 ]
 
 [package.dependencies]
@@ -1387,7 +1387,7 @@ click = ">=8.0.0"
 deprecation = ">=2.1"
 distro = {version = ">=1.9.0", markers = "sys_platform == \"linux\""}
 hightime = ">=0.2.2"
-nitypes = ">=0.1.0dev10"
+nitypes = ">=1.0.1"
 numpy = [
     {version = ">=1.22", markers = "python_version >= \"3.9\" and python_version < \"3.13\""},
     {version = ">=2.1", markers = "python_version >= \"3.13\" and python_version < \"4.0\""},
@@ -1398,7 +1398,7 @@ typing_extensions = ">=4.0.0"
 tzlocal = ">=5.0,<6.0"
 
 [package.extras]
-grpc = ["grpcio (>=1.49.0,<2.0)", "ni-grpcdevice-v1-proto (>=1.0.0)", "protobuf (>=4.21)"]
+grpc = ["grpcio (>=1.49.0,<2.0)", "ni-grpcdevice-v1-proto (>=1.0.0)", "ni-protobuf-types (>=1.0.0)", "protobuf (>=4.21)"]
 
 [[package]]
 name = "niscope"
@@ -3327,4 +3327,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "82f3ea3ce69f52074431f74f2986e03ab6df75f6b116f5fdc80291b372332520"
+content-hash = "f214346ef64f6fb863ad645d4f92f4f9adde965d5e49622ca3aec34721d5d227"
