@@ -1,15 +1,13 @@
 """Data acquisition script that continuously acquires analog input data."""
 
-import os
 import time
 from pathlib import Path
 from typing import cast
 
-os.environ["NIDAQMX_ENABLE_WAVEFORM_SUPPORT"] = "1"
-import nidaqmx  # noqa: E402 # Must import after setting os environment variable
-import nidaqmx.system  # noqa: E402
-import numpy as np  # noqa: E402
-from nidaqmx.constants import (  # noqa: E402
+import nidaqmx
+import nidaqmx.system
+import numpy as np
+from nidaqmx.constants import (
     AcquisitionType,
     CJCSource,
     LoggingMode,
@@ -19,10 +17,10 @@ from nidaqmx.constants import (  # noqa: E402
     ThermocoupleType,
     UsageTypeAI,
 )
-from nidaqmx.errors import DaqError  # noqa: E402
-from nitypes.waveform import AnalogWaveform  # noqa: E402
+from nidaqmx.errors import DaqError
+from nitypes.waveform import AnalogWaveform
 
-import nipanel  # noqa: E402
+import nipanel
 
 panel_script_path = Path(__file__).with_name("nidaqmx_continuous_analog_input_panel.py")
 panel = nipanel.create_streamlit_panel(panel_script_path)
