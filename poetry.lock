@@ -1265,14 +1265,14 @@ sqlframe = ["sqlframe (>=3.22.0,!=3.39.3)"]
 
 [[package]]
 name = "ni-grpc-extensions"
-version = "1.0.0"
+version = "1.1.0"
 description = "gRPC Extensions"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ni_grpc_extensions-1.0.0-py3-none-any.whl", hash = "sha256:6b8181284370a53546ffd371d334f15e293cae5e9ff06fa2e467d1714bf7a03f"},
-    {file = "ni_grpc_extensions-1.0.0.tar.gz", hash = "sha256:6e066246ce9a4b4420f5e503769b23c31a49c430be6ebd72324c5b5a15c34ebb"},
+    {file = "ni_grpc_extensions-1.1.0-py3-none-any.whl", hash = "sha256:db0357acd244854f4acccf202c89fe6462b4283d264ed639f4e248e6cc86bc9b"},
+    {file = "ni_grpc_extensions-1.1.0.tar.gz", hash = "sha256:028ea33e5c5234bc050bf5dc99f5b61611531de8f012293e9d4c6985b7b37afb"},
 ]
 
 [package.dependencies]
@@ -1281,32 +1281,32 @@ traceloggingdynamic = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-client"
-version = "1.1.0.dev0"
+version = "1.1.0"
 description = "gRPC Client for NI Discovery Service"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_client-1.1.0.dev0-py3-none-any.whl", hash = "sha256:2ed52650223f7cf624559515de84a72ea7679a176702c1811462b5273ab9465a"},
-    {file = "ni_measurementlink_discovery_v1_client-1.1.0.dev0.tar.gz", hash = "sha256:d1063173561e1e014c5429ac47c51342dd1f0e1f0d06e46273a8df16cdc13511"},
+    {file = "ni_measurementlink_discovery_v1_client-1.1.0-py3-none-any.whl", hash = "sha256:366dcc3b93627ed1ede488955637e0768b29cb7a375e59ac1020f4c53892d00c"},
+    {file = "ni_measurementlink_discovery_v1_client-1.1.0.tar.gz", hash = "sha256:831b6145cf8def0021cb00579b08a2ad1da5a19fdeedea4522a3cb4a30978c48"},
 ]
 
 [package.dependencies]
 grpcio = ">=1.49.0,<2.0"
-ni-grpc-extensions = ">=0.1.0.dev1"
-ni-measurementlink-discovery-v1-proto = ">=0.1.0.dev1"
+ni-grpc-extensions = ">=1.1.0"
+ni-measurementlink-discovery-v1-proto = ">=1.1.0"
 pywin32 = {version = ">=303", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "ni-measurementlink-discovery-v1-proto"
-version = "1.0.0"
+version = "1.1.0"
 description = "Protobuf data types for NI discovery gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ni_measurementlink_discovery_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:093eb4ffd27338fbea4909aea30afbd3090f482f3a1dcc98e63bbaf1a6b4da8b"},
-    {file = "ni_measurementlink_discovery_v1_proto-1.0.0.tar.gz", hash = "sha256:11353eefdecc49244783d76a332bc855589eb0bb8c882f53c8f9b0a47ca91115"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.1.0-py3-none-any.whl", hash = "sha256:6a3061ca858d3ee887987dc5130074fc439ce6c2b26fe6b3f9401da023461d43"},
+    {file = "ni_measurementlink_discovery_v1_proto-1.1.0.tar.gz", hash = "sha256:f9a9b4572ac5d169fad21ab56e2639abdb77979cf0dc3a88cdb71b2c783d009c"},
 ]
 
 [package.dependencies]
@@ -1314,14 +1314,14 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-panels-v1-proto"
-version = "0.1.0.dev1"
+version = "1.0.0"
 description = "Protobuf generated code for the ni.panels.v1 gRPC API"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ni_panels_v1_proto-0.1.0.dev1-py3-none-any.whl", hash = "sha256:8fa5cec4b2e69760d1cc4e2ef833e33c304093b5ca7d4d41dc90ed3cf678bfb7"},
-    {file = "ni_panels_v1_proto-0.1.0.dev1.tar.gz", hash = "sha256:5e7ed77517cc2eac3a9ebf0881b462129425faf77c0a1acd865d4e03893d12be"},
+    {file = "ni_panels_v1_proto-1.0.0-py3-none-any.whl", hash = "sha256:800e2ee60c587a0bfdbbcf10ec12f7558ac7d0d022d19c4bad183ed691c58bb7"},
+    {file = "ni_panels_v1_proto-1.0.0.tar.gz", hash = "sha256:75f9fb184ffd05d3951244331d6f12c8f90f98cb45691cd8085e1acee6311932"},
 ]
 
 [package.dependencies]
@@ -1330,18 +1330,18 @@ protobuf = ">=4.21"
 
 [[package]]
 name = "ni-protobuf-types"
-version = "1.0.1.dev0"
+version = "1.1.0"
 description = "Protobuf data types for NI gRPC APIs"
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "ni_protobuf_types-1.0.1.dev0-py3-none-any.whl", hash = "sha256:2e93e62dee45dbf1bb13f812a28a445b4d3953ae3ee9b2c4dce117abf4f2a514"},
-    {file = "ni_protobuf_types-1.0.1.dev0.tar.gz", hash = "sha256:1a84af2eba688747d66bcf8b4e7c333177c4d31caf96537185250b023f2267e9"},
+    {file = "ni_protobuf_types-1.1.0-py3-none-any.whl", hash = "sha256:0c21c096cf8577483dade081c571305fe8d4cc759ce2c780e7437129a375942c"},
+    {file = "ni_protobuf_types-1.1.0.tar.gz", hash = "sha256:98f0583405e219f6e128133c2f6c033f03cd83ebd3ce8098ad74ab99b8a253c1"},
 ]
 
 [package.dependencies]
-nitypes = ">=1.1.0dev0"
+nitypes = ">=1.1.0dev1"
 protobuf = ">=4.21"
 
 [[package]]
@@ -1377,14 +1377,14 @@ toml = ">=0.10.1"
 
 [[package]]
 name = "nidaqmx"
-version = "1.4.0.dev2"
+version = "1.4.0"
 description = "NI-DAQmx Python API"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["examples"]
 files = [
-    {file = "nidaqmx-1.4.0.dev2-py3-none-any.whl", hash = "sha256:3e3decf2e6479f4d8141b5106139088f3b7341bb10e30f5448bef74b3b16ddbc"},
-    {file = "nidaqmx-1.4.0.dev2.tar.gz", hash = "sha256:0f2fdd3fea0059a28671d42df023fb769f9f09ad92b73e108598ad4f661e4ac6"},
+    {file = "nidaqmx-1.4.0-py3-none-any.whl", hash = "sha256:6efdeb099de40194f865dd5b2585f456c38c6d5c2f8d94483a355bcd956804aa"},
+    {file = "nidaqmx-1.4.0.tar.gz", hash = "sha256:29e3d2584d4976bce28c71861dc2fcfc76d0ece702fdccf0c7914b4f90976f42"},
 ]
 
 [package.dependencies]
@@ -2323,13 +2323,6 @@ optional = false
 python-versions = ">=3.8"
 groups = ["docs", "lint"]
 files = [
-    {file = "PyYAML-6.0.3-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:c2514fceb77bc5e7a2f7adfaa1feb2fb311607c9cb518dbc378688ec73d8292f"},
-    {file = "PyYAML-6.0.3-cp38-cp38-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:9c57bb8c96f6d1808c030b1687b9b5fb476abaa47f0db9c0101f5e9f394e97f4"},
-    {file = "PyYAML-6.0.3-cp38-cp38-manylinux2014_s390x.manylinux_2_17_s390x.manylinux_2_28_s390x.whl", hash = "sha256:efd7b85f94a6f21e4932043973a7ba2613b059c4a000551892ac9f1d11f5baf3"},
-    {file = "PyYAML-6.0.3-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:22ba7cfcad58ef3ecddc7ed1db3409af68d023b7f940da23c6c2a1890976eda6"},
-    {file = "PyYAML-6.0.3-cp38-cp38-musllinux_1_2_x86_64.whl", hash = "sha256:6344df0d5755a2c9a276d4473ae6b90647e216ab4757f8426893b5dd2ac3f369"},
-    {file = "PyYAML-6.0.3-cp38-cp38-win32.whl", hash = "sha256:3ff07ec89bae51176c0549bc4c63aa6202991da2d9a6129d7aef7f1407d3f295"},
-    {file = "PyYAML-6.0.3-cp38-cp38-win_amd64.whl", hash = "sha256:5cf4e27da7e3fbed4d6c3d8e797387aaad68102272f8f9752883bc32d61cb87b"},
     {file = "pyyaml-6.0.3-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:214ed4befebe12df36bcc8bc2b64b396ca31be9304b8f59e25c11cf94a4c033b"},
     {file = "pyyaml-6.0.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:02ea2dfa234451bbb8772601d7b8e426c2bfa197136796224e50e35a78777956"},
     {file = "pyyaml-6.0.3-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b30236e45cf30d2b8e7b3e85881719e98507abed1011bf463a8fa23e9c3e98a8"},
@@ -3347,4 +3340,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "f214346ef64f6fb863ad645d4f92f4f9adde965d5e49622ca3aec34721d5d227"
+content-hash = "c2f2d0941e069a9c971a6a282167f5a029e956f8a92142c26274b15d611324ad"
