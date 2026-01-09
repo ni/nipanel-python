@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Set up Python
         uses: ni/python-actions/setup-python@aa64e60612cb078b0c2ada666becbd70d4817d55 # 0.7.1
         id: setup-python
@@ -19,7 +19,7 @@ jobs:
       - name: Check for lock changes
         run: poetry check --lock
       - name: Cache virtualenv (with docs)
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: .venv
           key: nipanel-with-docs-${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
@@ -28,7 +28,7 @@ jobs:
       - name: Generate docs
         run:  poetry run sphinx-build docs docs/_build -b html -W
       - name: Upload docs artifact
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: nipanel-docs
           path: docs/_build/

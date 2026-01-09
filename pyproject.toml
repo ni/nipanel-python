@@ -1,6 +1,6 @@
 [project]
 name = "nipanel"
-version = "0.1.0-dev2"
+version = "1.1.0.dev0"
 license = "MIT"
 description = "NI Panel client for Python"
 authors = [{name = "NI", email = "opensource@ni.com"}]
@@ -11,7 +11,7 @@ maintainers = [
 readme = "README.md"
 keywords = ["nipanel", "panels"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Intended Audience :: Manufacturing",
   "Intended Audience :: Science/Research",
@@ -41,13 +41,13 @@ grpcio = {version=">=1.49.0,<2.0"}
 protobuf = {version=">=4.21"}
 typing-extensions = ">=4.13.2"
 streamlit = ">=1.24"
-nitypes = {version=">=0.1.0dev8", allow-prereleases=true}
+nitypes = { version=">=1.0.1" }
 numpy = ">=1.22"
 debugpy = ">=1.8.1"
-ni-grpc-extensions = { version = ">=0.1.0.dev1", allow-prereleases = true }
-ni-measurementlink-discovery-v1-client = { version = ">=0.1.0dev0", allow-prereleases = true }
-ni-protobuf-types = { version = ">=0.1.0dev4", allow-prereleases = true }
-ni-panels-v1-proto = { version = ">=0.1.0dev1", allow-prereleases = true }
+ni-grpc-extensions = { version = ">=1.1.0" }
+ni-measurementlink-discovery-v1-client = { version = ">=1.1.0" }
+ni-protobuf-types = { version = ">=1.1.0" }
+ni-panels-v1-proto = { version = ">=1.0.0" }
 
 [tool.poetry.group.dev.dependencies]
 types-grpcio = ">=1.0"
@@ -91,7 +91,7 @@ optional = true
 [tool.poetry.group.examples.dependencies]
 streamlit-echarts = ">=0.4.0"
 extra-streamlit-components = "^0.1.80"
-nidaqmx = { version = ">=1.4.0-dev2", allow-prereleases = true }
+nidaqmx = { version = ">=1.4.0" }
 niscope = "^1.4.9"
 
 [build-system]
