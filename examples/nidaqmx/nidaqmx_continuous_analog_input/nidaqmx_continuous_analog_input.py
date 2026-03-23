@@ -75,7 +75,7 @@ try:
                 task.timing.cfg_samp_clk_timing(
                     rate=panel.get_value("sample_rate_input", 1000.0),
                     sample_mode=AcquisitionType.CONTINUOUS,
-                    samps_per_chan=panel.get_value("samples_per_channel", 3000),
+                    samps_per_chan=panel.get_value("samples_per_channel", 100),
                 )
                 task.in_stream.configure_logging(
                     file_path=panel.get_value("tdms_file_path", "data.tdms"),
@@ -92,7 +92,7 @@ try:
                             list[AnalogWaveform[np.float64]],
                             task.read_waveform(
                                 number_of_samples_per_channel=panel.get_value(
-                                    "samples_per_channel", 3000
+                                    "samples_per_channel", 100
                                 )
                             ),
                         )

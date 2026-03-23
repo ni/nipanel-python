@@ -177,8 +177,8 @@ with left_column:
             )
         with timing_right_column:
             st.number_input(
-                "Samples per Loop",
-                value=3000,
+                "Samples to Read",
+                value=100,
                 step=100,
                 min_value=10,
                 disabled=panel.get_value("is_running", False),
