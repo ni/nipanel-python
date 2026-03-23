@@ -90,7 +90,11 @@ try:
                     while panel.get_value("is_running", False):
                         waveforms = cast(
                             list[AnalogWaveform[np.float64]],
-                            task.read_waveform(number_of_samples_per_channel=1000),
+                            task.read_waveform(
+                                number_of_samples_per_channel=panel.get_value(
+                                    "samples_per_channel", 3000
+                                )
+                            ),
                         )
                         panel.set_value("voltage_waveform", waveforms[0])
                         panel.set_value("thermocouple_waveform", waveforms[1])

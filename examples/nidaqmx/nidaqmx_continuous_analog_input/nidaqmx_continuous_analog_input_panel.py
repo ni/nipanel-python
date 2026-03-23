@@ -187,7 +187,7 @@ with left_column:
             st.text_input(
                 label="Actual Sample Rate",
                 value=str(sample_rate) if sample_rate else "",
-                key="actual_sample_rate_display",
+                disabled=True,
             )
 
 # Right column - Graph and Logging Settings
