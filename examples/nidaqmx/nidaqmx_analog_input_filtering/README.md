@@ -20,5 +20,5 @@ Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/b
 
 ```pwsh
 poetry install --with examples
-poetry run python examples\nidaqmx\nidaqmx_continuous_analog_input_filtering\nidaqmx_continuous_analog_input_filtering.py
+poetry run python examples\nidaqmx\nidaqmx_analog_input_filtering\nidaqmx_analog_input_filtering.py
 ```
