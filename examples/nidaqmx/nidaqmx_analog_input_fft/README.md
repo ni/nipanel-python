@@ -4,7 +4,7 @@ Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/b
 
 ## Sample
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog input examples.
+This is a nipanel example that displays an interactive Streamlit app and updates continuous analog input samples while measuring and displaying the FFT Spectrum Magnitude.
 
 ### Feature
 
@@ -18,5 +18,5 @@ This is a nipanel example that displays an interactive Streamlit app and updates
 
 ```pwsh
 poetry install --with examples
-poetry run python examples\nidaqmx\nidaqmx_continuous_analog_input\nidaqmx_continuous_analog_input.py
+poetry run python examples\nidaqmx\nidaqmx_analog_input_fft\nidaqmx_analog_input_fft.py
 ```
