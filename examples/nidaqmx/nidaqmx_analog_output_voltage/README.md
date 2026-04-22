@@ -1,6 +1,8 @@
-## Overview
+# NI-DAQmx Analog Output Voltage Example
 
-This is a nipanel example that outputs a continuous periodic waveform using an internal sample clock and displays it in an interactive Streamlit app.
+### Overview
+
+This is a nipanel example that outputs a continuous periodic waveform using an internal sample clock and displays it in an interactive Streamlit panel.
 
 ### Features
 
@@ -11,7 +13,7 @@ This is a nipanel example that outputs a continuous periodic waveform using an i
 
 - Python 3.10 or later
 - InstrumentStudio 2026 Q1 or later
-- A Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
+- A physical or simulated device, refer to the [NI-DAQmx Python README (Getting Started section)](https://github.com/ni/nidaqmx-python/blob/master/README.rst#getting-started)
 
 ### Usage
 
