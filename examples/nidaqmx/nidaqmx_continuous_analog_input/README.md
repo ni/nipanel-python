@@ -1,14 +1,16 @@
-Prerequisites
-===============
+## Overview
+
+This is a nipanel example that acquires a continuous amount of data using the DAQ device's internal clock and displays it in an interactive Streamlit app.
+
+### Prerequisites
+
 Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
 
-## Sample
+### Features
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog input samples.
-
-### Feature
-
-- Supports various data types
+- NI-DAQmx Python configuration and acquisition
+- Displays data in an interactive chart using ECharts
+- Updates automatically as new data is acquired
 
 ### Required Software
 

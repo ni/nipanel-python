@@ -1,14 +1,15 @@
-Prerequisites
-===============
+## Overview
+
+This is a nipanel example that outputs a continuous periodic waveform using an internal sample clock and displays it in an interactive Streamlit app.
+
+### Prerequisites
+
 Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
 
-## Sample
+### Features
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog output samples.
-
-### Feature
-
-- Supports various data types
+- NI-DAQmx Python configuration and generation
+- Displays data in interactive charts using ECharts
 
 ### Required Software
 
