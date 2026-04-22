@@ -4,7 +4,7 @@ Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/b
 
 ## Sample
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog output examples.
+This is a nipanel example that displays an interactive Streamlit app and updates continuous analog output samples.
 
 ### Feature
 
