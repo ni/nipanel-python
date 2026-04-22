@@ -1,4 +1,11 @@
-"""Data acquisition script that continuously acquires analog input data."""
+"""Example of analog input voltage acquisition with a Fast Fourier Transform.
+
+This example demonstrates how to acquire a continuous amount of data using the
+DAQ device's internal clock. The settings are configured from the Streamlit
+panel, and the acquired data is displayed on a graph. An FFT is computed from
+the acquired data and displayed on a separate graph. Refer to the panel script
+for details: nidaqmx_analog_input_fft_panel.py
+"""
 
 import time
 from pathlib import Path
@@ -64,9 +71,8 @@ try:
                     task.start()
 
                     while panel.get_value("is_running", False):
-                        waveform = cast(
-                            AnalogWaveform[np.float64],
-                            task.read_waveform(number_of_samples_per_channel=samples_per_channel),
+                        waveform: AnalogWaveform[np.float64] = task.read_waveform(
+                            samples_per_channel
                         )
                         panel.set_value("voltage_waveform", waveform)
 
