@@ -1,4 +1,11 @@
-"""Data acquisition script that continuously acquires analog input data."""
+"""Example of analog input voltage, current, or strain gage acquisition.
+
+This example demonstrates how to acquire a continuous amount of data using the
+DAQ device's internal clock. There is sensor-specific configuration and
+hardware filtering can be enabled. The settings are configured from the
+Streamlit panel, and the acquired data is displayed on a graph. Refer to the
+panel script for details: nidaqmx_analog_input_filtering_panel.py
+"""
 
 import time
 from pathlib import Path

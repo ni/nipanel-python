@@ -11,6 +11,7 @@ This is a nipanel example that acquires a continuous amount of data with filters
 ### Prerequisites
 
 - Python 3.10 or later
+- InstrumentStudio 2026 Q1 or later
 - A Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
 
 ### Usage

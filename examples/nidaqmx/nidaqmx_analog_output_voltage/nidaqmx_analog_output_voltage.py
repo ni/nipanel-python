@@ -1,4 +1,10 @@
-"""Data acquisition script that continuously generates analog output data."""
+"""Example of analog output voltage generation.
+
+This example demonstrates how to output a continuous periodic waveform using an
+internal sample clock. The settings are configured from the Streamlit panel,
+and the acquired data is displayed on a graph. Refer to the panel script for
+details: nidaqmx_analog_output_voltage_panel.py
+"""
 
 import time
 from pathlib import Path
