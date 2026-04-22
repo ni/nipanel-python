@@ -9,7 +9,6 @@ for details: nidaqmx_analog_input_fft_panel.py
 
 import time
 from pathlib import Path
-from typing import cast
 
 import nidaqmx
 import nidaqmx.system
