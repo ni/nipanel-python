@@ -218,4 +218,3 @@ with right_column:
                 ],
             }
             st_echarts(options=fft_graph, height="300px", key="fft_graph")
-

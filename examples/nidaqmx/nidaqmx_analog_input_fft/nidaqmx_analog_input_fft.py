@@ -60,21 +60,21 @@ try:
                 panel.set_value("sample_rate", task.timing.samp_clk_rate)
                 try:
                     print(f"Starting data acquisition...")
-                    samples_per_channel=panel.get_value("samples_per_channel", 100)
+                    samples_per_channel = panel.get_value("samples_per_channel", 100)
                     task.start()
 
                     while panel.get_value("is_running", False):
                         waveform = cast(
                             AnalogWaveform[np.float64],
-                            task.read_waveform(
-                                number_of_samples_per_channel=samples_per_channel
-                            ),
+                            task.read_waveform(number_of_samples_per_channel=samples_per_channel),
                         )
                         panel.set_value("voltage_waveform", waveform)
 
                         # calculate the Discrete Fourier Transform
                         fft = np.fft.fft(waveform.scaled_data)
-                        dft_sample_freqs = np.fft.fftfreq(waveform.sample_count, d=waveform.timing.sample_interval.total_seconds())
+                        dft_sample_freqs = np.fft.fftfreq(
+                            waveform.sample_count, d=waveform.timing.sample_interval.total_seconds()
+                        )
 
                         # convert to decibels
                         magnitudes = np.abs(fft)
@@ -82,7 +82,7 @@ try:
                         dbs = 20 * np.log10(normalized_magnitudes)
 
                         # only graph up to Nyquist
-                        num_freqs_to_graph = samples_per_channel//2
+                        num_freqs_to_graph = samples_per_channel // 2
                         panel.set_value("fft_freqs", dft_sample_freqs[0:num_freqs_to_graph])
                         panel.set_value("fft_mags", dbs[0:num_freqs_to_graph])
                 except KeyboardInterrupt:
