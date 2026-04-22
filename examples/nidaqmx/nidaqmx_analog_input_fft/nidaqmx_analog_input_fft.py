@@ -9,6 +9,7 @@ for details: nidaqmx_analog_input_fft_panel.py
 
 import time
 from pathlib import Path
+from typing import cast
 
 import nidaqmx
 import nidaqmx.system
@@ -70,8 +71,9 @@ try:
                     task.start()
 
                     while panel.get_value("is_running", False):
-                        waveform: AnalogWaveform[np.float64] = task.read_waveform(
-                            samples_per_channel
+                        waveform = cast(
+                            AnalogWaveform[np.float64],
+                            task.read_waveform(number_of_samples_per_channel=samples_per_channel),
                         )
                         panel.set_value("voltage_waveform", waveform)
 
