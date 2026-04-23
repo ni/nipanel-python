@@ -1,4 +1,10 @@
-"""Data acquisition script that continuously acquires analog input data."""
+"""Example of analog input voltage acquisition.
+
+This example demonstrates how to acquire a continuous amount of data using the
+DAQ device's internal clock. The settings are configured from the Streamlit
+panel, and the acquired data is displayed on a graph. Refer to the panel script
+for details: nidaqmx_continuous_analog_input_panel.py
+"""
 
 import time
 from pathlib import Path

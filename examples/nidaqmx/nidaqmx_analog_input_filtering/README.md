@@ -1,18 +1,20 @@
-Prerequisites 
-===============
-Requires a Physical or Simulated Device. Refer to the [Getting Started Section](https://github.com/ni/nidaqmx-python/blob/master/README.rst) to learn how to create a simulated device. 
-## Sample
+# NI-DAQmx Analog Input Filtering Example
 
-This is an nipanel example that displays an interactive Streamlit app and updates and fetches data from device.
+### Overview
 
-### Feature
+This is a nipanel example that acquires a continuous amount of data with filters enabled using the DAQ device's internal clock and displays it in an interactive Streamlit panel.
 
-Script demonstrates analog input data getting continuously acquired, and being filtered. 
-- Supports various data types
+### Features
 
-### Required Software
+- NI-DAQmx Python configuration and acquisition
+- Displays data in an interactive chart using ECharts
+- Updates automatically as new data is acquired
+
+### Prerequisites
 
 - Python 3.10 or later
+- InstrumentStudio 2026 Q1 or later
+- A physical or simulated device, refer to the [NI-DAQmx Python README (Getting Started section)](https://github.com/ni/nidaqmx-python/blob/master/README.rst#getting-started)
 
 ### Usage
 
@@ -20,4 +22,3 @@ Script demonstrates analog input data getting continuously acquired, and being f
 poetry install --with examples
 poetry run python examples\nidaqmx\nidaqmx_analog_input_filtering\nidaqmx_analog_input_filtering.py
 ```
-

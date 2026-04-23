@@ -1,18 +1,19 @@
-Prerequisites
-===============
-Requires a Physical or Simulated Device : https://github.com/ni/nidaqmx-python/blob/master/README.rst (Getting Started Section)
+# NI-DAQmx Analog Output Voltage Example
 
-## Sample
+### Overview
 
-This is a nipanel example that displays an interactive Streamlit app and updates continuous analog output examples.
+This is a nipanel example that outputs a continuous periodic waveform using an internal sample clock and displays it in an interactive Streamlit panel.
 
-### Feature
+### Features
 
-- Supports various data types
+- NI-DAQmx Python configuration and generation
+- Displays data in interactive charts using ECharts
 
-### Required Software
+### Prerequisites
 
 - Python 3.10 or later
+- InstrumentStudio 2026 Q1 or later
+- A physical or simulated device, refer to the [NI-DAQmx Python README (Getting Started section)](https://github.com/ni/nidaqmx-python/blob/master/README.rst#getting-started)
 
 ### Usage
 
