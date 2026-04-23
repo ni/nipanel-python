@@ -2,7 +2,7 @@
 
 ### Overview
 
-This is a nipanel example that displays an interactive Streamlit panel and updates continuous analog input samples while measuring and displaying the FFT Spectrum Magnitude.
+This is a nipanel example that acquires a continuous amount of data using the DAQ device's internal clock and graphs the acquired data in both the time domain and frequency domain in an interactive Streamlit panel.
 
 ### Features
 
