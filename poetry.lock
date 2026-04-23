@@ -3031,27 +3031,27 @@ files = [
 
 [[package]]
 name = "streamlit"
-version = "1.53.1"
+version = "1.56.0"
 description = "A faster way to build and share data apps"
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "examples"]
 files = [
-    {file = "streamlit-1.53.1-py3-none-any.whl", hash = "sha256:9534d151feea485b69200dd36448f95f418c511e8c81186ceb57133bdf1443f7"},
-    {file = "streamlit-1.53.1.tar.gz", hash = "sha256:ae656af3b68b4bb2d669fa977606096f2021bcbaa14a454a290f8e0a37bab277"},
+    {file = "streamlit-1.56.0-py3-none-any.whl", hash = "sha256:8677a335734a30a51bc57ad0ec910e365d95f7c456fc02c60032927cd0729dc5"},
+    {file = "streamlit-1.56.0.tar.gz", hash = "sha256:1176acfa89ae1318b79078e8efe689a9d02e8d58e325c00fc0e55fa2f3fe8d6a"},
 ]
 
 [package.dependencies]
 altair = ">=4.0,<5.4.0 || >5.4.0,<5.4.1 || >5.4.1,<7"
 blinker = ">=1.5.0,<2"
-cachetools = ">=5.5,<7"
+cachetools = ">=5.5,<8"
 click = ">=7.0,<9"
 gitpython = ">=3.0.7,<3.1.19 || >3.1.19,<4"
 numpy = ">=1.23,<3"
 packaging = ">=20"
-pandas = ">=1.4.0,<3"
+pandas = ">=1.4.0,<4"
 pillow = ">=7.1.0,<13"
-protobuf = ">=3.20,<7"
+protobuf = ">=3.20,<8"
 pyarrow = ">=7.0"
 pydeck = ">=0.8.0b4,<1"
 requests = ">=2.27,<3"
