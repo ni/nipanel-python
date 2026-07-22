@@ -35,7 +35,7 @@ class Converter(Generic[_TPythonType, _TProtobufType], ABC):
     @property
     def protobuf_typename(self) -> str:
         """The protobuf name for the type."""
-        return self.protobuf_message.DESCRIPTOR.full_name  # type: ignore[no-any-return]
+        return self.protobuf_message.DESCRIPTOR.full_name
 
     def to_protobuf_any(self, python_value: _TPythonType) -> any_pb2.Any:
         """Convert the Python object to its type-specific message and pack it as any_pb2.Any."""
